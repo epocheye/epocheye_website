@@ -1,5 +1,6 @@
 import React, { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
+import Link from "next/link";
 
 export const StaggeredMenu = ({
 	position = "right",
@@ -442,10 +443,10 @@ export const StaggeredMenu = ({
 				<aside
 					id="staggered-menu-panel"
 					ref={panelRef}
-					className="staggered-menu-panel absolute top-0 right-0 h-full bg-white flex flex-col p-[6em_2em_2em_2em] overflow-y-auto z-10 backdrop-blur-[12px]"
+					className="staggered-menu-panel absolute top-0 right-0 h-full bg-white flex flex-col p-[6em_2em_2em_2em] overflow-y-auto z-10 backdrop-blur-[12px] pointer-events-auto"
 					style={{ WebkitBackdropFilter: "blur(12px)" }}
 					aria-hidden={!open}>
-					<div className="sm-panel-inner flex-1 flex flex-col gap-5">
+					<div className="sm-panel-inner flex-1 flex flex-col gap-5 pointer-events-auto">
 						<ul
 							className="sm-panel-list list-none m-0 p-0 flex flex-col gap-2"
 							role="list"
@@ -455,7 +456,7 @@ export const StaggeredMenu = ({
 									<li
 										className="sm-panel-itemWrap relative overflow-hidden leading-none"
 										key={it.label + idx}>
-										<a
+										<Link
 											className="sm-panel-item relative text-black font-semibold text-[4rem] cursor-pointer leading-none tracking-[-2px] uppercase transition-[background,color] duration-150 ease-linear inline-block no-underline pr-[1.4em]"
 											href={it.link}
 											aria-label={it.ariaLabel}
@@ -463,7 +464,7 @@ export const StaggeredMenu = ({
 											<span className="sm-panel-itemLabel inline-block [transform-origin:50%_100%] will-change-transform">
 												{it.label}
 											</span>
-										</a>
+										</Link>
 									</li>
 								))
 							) : (

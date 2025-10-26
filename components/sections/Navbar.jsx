@@ -11,26 +11,28 @@ const Navbar = () => {
 
 	const socialItems = [
 		{ label: "Twitter", link: "https://twitter.com" },
-		{ label: "GitHub", link: "https://github.com" },
+		{ label: "GitHub", link: "https://github.com/epocheye" },
 		{ label: "LinkedIn", link: "https://linkedin.com" },
 	];
 
 	return (
-		<div className="relative w-full h-full pointer-events-auto">
-			<StaggeredMenu
-				position="right"
-				items={menuItems}
-				socialItems={socialItems}
-				displaySocials={true}
-				displayItemNumbering={true}
-				menuButtonColor="#fff"
-				openMenuButtonColor="#fff"
-				changeMenuColorOnOpen={true}
-				colors={["#B19EEF", "#5227FF"]}
-				logoUrl="/logo-white.png"
-				accentColor="#ff6b6b"
-			/>
-		</div>
+		<>
+			<div className="w-full h-full">
+				<StaggeredMenu
+					position="right"
+					items={menuItems}
+					socialItems={socialItems}
+					displaySocials={true}
+					displayItemNumbering={true}
+					menuButtonColor="#fff"
+					openMenuButtonColor="#fff"
+					changeMenuColorOnOpen={true}
+					colors={["#B19EEF", "#5227FF"]}
+					logoUrl="/logo-white.png"
+					accentColor="#ff6b6b"
+				/>
+			</div>
+		</>
 	);
 };
 
