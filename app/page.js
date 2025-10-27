@@ -3,11 +3,15 @@
 import React from "react";
 
 import Hero from "@/components/sections/Hero";
+import Problem from "@/components/sections/Problem";
+import Solution from "@/components/sections/Solution";
 
 const Home = () => {
 	return (
-		<section className="flex-1">
+		<section className="flex-1 overflow-x-hidden">
 			<Hero />
+			<Problem />
+			<Solution />
 		</section>
 	);
 };

@@ -2,7 +2,7 @@ import React from "react";
 import LiquidEther from "../LiquidEther";
 import ShinyText from "../ShinyText";
 import Navbar from "./Navbar";
-import { ArrowUpIcon } from "lucide-react";
+import { ArrowUpIcon, Download } from "lucide-react";
 
 const Hero = () => {
 	return (
@@ -34,7 +34,7 @@ const Hero = () => {
 			</div>
 
 			{/* Content Layer */}
-			<div className="relative z-10 text-center px-6 max-w-5xl mx-auto font-montserrat flex flex-col items-center justify-center">
+			<div className="relative z-10 text-center px-6 max-w-5xl mx-auto font-montserrat flex flex-col items-center justify-center h-full">
 				<p className="text-sm md:text-lg text-gray-400 font-sans font-light">
 					Turn Your Smartphone Into a Time Machine
 				</p>
@@ -42,13 +42,17 @@ const Hero = () => {
 					text="Epocheye"
 					disabled={false}
 					speed={2}
-					className="text-6xl md:text-8xl font-semibold text-white mb-6"
+					className="text-6xl md:text-8xl font-semibold text-white mb-6 leading-tight"
 				/>
 
 				<button
-					className="mt-4 px-6 py-3 border border-white text-white rounded-md hover:bg-white hover:text-black transition duration-300 pointer-events-auto"
+					className="my-10 px-6 py-1 border border-white text-white rounded-full hover:bg-white hover:text-black transition duration-300 pointer-events-auto flex items-center gap-3 cursor-pointer"
 					onClick={() => console.log("Button Clicked")}>
-					Explore Now
+					<Download
+						size={40}
+						className="bg-white text-black rounded-full p-2 -ml-5"
+					/>
+					Join the waitlist
 				</button>
 			</div>
 		</div>
