@@ -86,8 +86,8 @@ const Problem = () => {
 				<div
 					key={index}
 					ref={(el) => (textsRef.current[index] = el)}
-					className="absolute inset-0 flex items-center justify-center px-10">
-					<h2 className="text-4xl md:text-6xl lg:text-7xl font-medium text-black text-center font-montserrat">
+					className="absolute inset-0 flex items-center justify-center px-5 md:px-10">
+					<h2 className="text-2xl md:text-4xl lg:text-5xl font-medium text-black text-center font-montserrat">
 						{text}
 					</h2>
 				</div>
