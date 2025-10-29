@@ -2,6 +2,7 @@
 import React, { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import LiquidEther from "../LiquidEther";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -29,21 +30,28 @@ const Problem = () => {
 				gsap.set(text, { opacity: 0, scale: 0.8, y: 50 });
 			});
 
-			// Create main timeline with ScrollTrigger
+			// Create main timeline with ScrollTrigger - reduced scroll distance
 			const mainTl = gsap.timeline({
 				scrollTrigger: {
 					trigger: section,
 					start: "top top",
-					end: `+=${window.innerHeight * texts.length * 2}`,
+					end: `+=${window.innerHeight * texts.length * 0.8}`, // Reduced from 2 to 0.8
 					pin: true,
 					scrub: 1,
+					snap: {
+						snapTo: 1 / (texts.length - 1), // Snap to each text position
+						duration: 0.3,
+						ease: "power2.inOut",
+					},
 					markers: false,
 				},
 			});
 
-			// Add animations for each text
+			// Add animations for each text with adjusted timing
 			textElements.forEach((text, index) => {
 				if (!text) return;
+
+				const startTime = index * 1.6; // Reduced from 2 to 1.6
 
 				// Fade in
 				mainTl.to(
@@ -52,10 +60,10 @@ const Problem = () => {
 						opacity: 1,
 						scale: 1,
 						y: 0,
-						duration: 1,
+						duration: 0.6, // Slightly faster
 						ease: "power2.out",
 					},
-					index * 2
+					startTime
 				);
 
 				// Fade out (except last one)
@@ -66,10 +74,10 @@ const Problem = () => {
 							opacity: 0,
 							scale: 0.9,
 							y: -50,
-							duration: 1,
+							duration: 0.6, // Slightly faster
 							ease: "power2.in",
 						},
-						index * 2 + 1
+						startTime + 1
 					);
 				}
 			});

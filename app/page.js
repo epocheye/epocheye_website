@@ -8,7 +8,7 @@ import Solution from "@/components/sections/Solution";
 
 const Home = () => {
 	return (
-		<section className="flex-1 overflow-x-hidden">
+		<section className="flex-1 overflow-x-hidden" style={{ scrollSnapType: "y mandatory" }}>
 			<Hero />
 			<Problem />
 			<Solution />

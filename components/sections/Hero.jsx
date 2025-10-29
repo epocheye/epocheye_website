@@ -1,10 +1,57 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import LiquidEther from "../LiquidEther";
 import ShinyText from "../ShinyText";
 import Navbar from "./Navbar";
 import { ArrowUpIcon, Download } from "lucide-react";
 
 const Hero = () => {
+	const [timeLeft, setTimeLeft] = useState({
+		days: 0,
+		hours: 0,
+		minutes: 0,
+		seconds: 0,
+	});
+
+	const [showScrollIndicator, setShowScrollIndicator] = useState(false);
+
+	useEffect(() => {
+		// Calculate launch date (60 days from October 28, 2025)
+		const launchDate = new Date("December 31, 2025 00:00:00").getTime();
+
+		const updateCountdown = () => {
+			const now = new Date().getTime();
+			const difference = launchDate - now;
+
+			if (difference > 0) {
+				setTimeLeft({
+					days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+					hours: Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+					minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
+					seconds: Math.floor((difference % (1000 * 60)) / 1000),
+				});
+			}
+		};
+
+		updateCountdown();
+		const timer = setInterval(updateCountdown, 1000);
+
+		return () => clearInterval(timer);
+	}, []);
+
+	useEffect(() => {
+		const handleMouseMove = (e) => {
+			// Show indicator when mouse is in the bottom 20% of the viewport
+			const bottomThreshold = window.innerHeight * 0.8;
+			setShowScrollIndicator(e.clientY > bottomThreshold);
+		};
+
+		window.addEventListener("mousemove", handleMouseMove);
+
+		return () => {
+			window.removeEventListener("mousemove", handleMouseMove);
+		};
+	}, []);
+
 	return (
 		<div className="relative flex justify-center items-center m-auto bg-black h-screen overflow-hidden">
 			{/* Background LiquidEther */}
@@ -54,6 +101,38 @@ const Hero = () => {
 					/>
 					Join the waitlist
 				</button>
+
+				{/* Countdown Timer */}
+				<div className="pointer-events-none mt-8">
+					<p className="text-gray-400 text-sm md:text-base mb-2 font-light">
+						Launching in
+					</p>
+					<div className="text-xl md:text-3xl font-light text-white tracking-widest">
+						{timeLeft.days}d : {timeLeft.hours}h : {timeLeft.minutes}m :{" "}
+						{timeLeft.seconds}s
+					</div>
+				</div>
+			</div>
+
+			{/* Scroll Indicator - Bottom Center */}
+			<div
+				className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-50 pointer-events-none transition-all duration-500 ease-out ${
+					showScrollIndicator ? "opacity-100 scale-100" : "opacity-0 scale-50"
+				}`}>
+				<div className="relative flex items-center justify-center w-16 h-16 bg-white/20 backdrop-blur-md rounded-full border-2 border-white/40 shadow-2xl">
+					<svg
+						className="w-6 h-6 text-white animate-bounce"
+						fill="none"
+						stroke="currentColor"
+						viewBox="0 0 24 24">
+						<path
+							strokeLinecap="round"
+							strokeLinejoin="round"
+							strokeWidth={2}
+							d="M19 14l-7 7m0 0l-7-7m7 7V3"
+						/>
+					</svg>
+				</div>
 			</div>
 		</div>
 	);
