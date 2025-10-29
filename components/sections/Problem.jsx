@@ -35,7 +35,7 @@ const Problem = () => {
 				scrollTrigger: {
 					trigger: section,
 					start: "top top",
-					end: `+=${window.innerHeight * texts.length * 0.8}`, // Reduced from 2 to 0.8
+					end: `+=${window.innerHeight * texts.length * 0.5}`, // Further reduced to minimize white space
 					pin: true,
 					scrub: 1,
 					snap: {
@@ -51,7 +51,7 @@ const Problem = () => {
 			textElements.forEach((text, index) => {
 				if (!text) return;
 
-				const startTime = index * 1.6; // Reduced from 2 to 1.6
+				const startTime = index * 1.2; // Further reduced for faster transitions
 
 				// Fade in
 				mainTl.to(
@@ -60,7 +60,7 @@ const Problem = () => {
 						opacity: 1,
 						scale: 1,
 						y: 0,
-						duration: 0.6, // Slightly faster
+						duration: 0.5, // Faster fade in
 						ease: "power2.out",
 					},
 					startTime
@@ -74,10 +74,10 @@ const Problem = () => {
 							opacity: 0,
 							scale: 0.9,
 							y: -50,
-							duration: 0.6, // Slightly faster
+							duration: 0.5, // Faster fade out
 							ease: "power2.in",
 						},
-						startTime + 1
+						startTime + 0.8
 					);
 				}
 			});

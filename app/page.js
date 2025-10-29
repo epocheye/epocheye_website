@@ -5,6 +5,7 @@ import React from "react";
 import Hero from "@/components/sections/Hero";
 import Problem from "@/components/sections/Problem";
 import Solution from "@/components/sections/Solution";
+import Features from "@/components/sections/Features";
 
 const Home = () => {
 	return (
@@ -12,6 +13,7 @@ const Home = () => {
 			<Hero />
 			<Problem />
 			<Solution />
+			<Features/>
 		</section>
 	);
 };
