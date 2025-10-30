@@ -9,6 +9,20 @@ import { ArrowLeft, Home, Clock } from "lucide-react";
 export default function NotFound() {
 	const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 	const [isHovering, setIsHovering] = useState(false);
+	const [stars, setStars] = useState([]);
+
+	useEffect(() => {
+		// Generate stars only on client side to avoid hydration mismatch
+		const generatedStars = [...Array(20)].map((_, i) => ({
+			id: i,
+			left: Math.random() * 100,
+			top: Math.random() * 100,
+			animationDelay: Math.random() * 3,
+			animationDuration: 2 + Math.random() * 3,
+			opacity: Math.random() * 0.5,
+		}));
+		setStars(generatedStars);
+	}, []);
 
 	useEffect(() => {
 		const handleMouseMove = (e) => {
@@ -44,16 +58,16 @@ export default function NotFound() {
 
 			{/* Floating particles effect */}
 			<div className="absolute inset-0 overflow-hidden pointer-events-none">
-				{[...Array(20)].map((_, i) => (
+				{stars.map((star) => (
 					<div
-						key={i}
+						key={star.id}
 						className="absolute w-1 h-1 bg-white rounded-full animate-pulse"
 						style={{
-							left: `${Math.random() * 100}%`,
-							top: `${Math.random() * 100}%`,
-							animationDelay: `${Math.random() * 3}s`,
-							animationDuration: `${2 + Math.random() * 3}s`,
-							opacity: Math.random() * 0.5,
+							left: `${star.left}%`,
+							top: `${star.top}%`,
+							animationDelay: `${star.animationDelay}s`,
+							animationDuration: `${star.animationDuration}s`,
+							opacity: star.opacity,
 						}}
 					/>
 				))}
