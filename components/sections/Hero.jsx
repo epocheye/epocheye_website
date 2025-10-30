@@ -73,7 +73,7 @@ const Hero = () => {
 				<LiquidEther
 					colors={["#fff", "#fff", "#fff"]}
 					mouseForce={15}
-					cursorSize={80}
+					cursorSize={50}
 					isViscous={false}
 					viscous={30}
 					iterationsViscous={16}
