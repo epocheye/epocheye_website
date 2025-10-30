@@ -16,7 +16,7 @@ const Hero = () => {
 
 	useEffect(() => {
 		// Calculate launch date (60 days from October 28, 2025)
-		const launchDate = new Date("December 31, 2025 00:00:00").getTime();
+		const launchDate = new Date("January 1, 2026 00:00:00").getTime();
 
 		const updateCountdown = () => {
 			const now = new Date().getTime();
