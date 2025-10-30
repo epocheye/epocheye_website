@@ -34,7 +34,7 @@ const Waitlist = () => {
 				{/* Bottom CTA Section */}
 				<div className="relative bg-black rounded-3xl p-10 sm:p-16 text-center overflow-hidden  mx-auto">
 					{/* Animated gradient background */}
-					<div className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 via-purple-500/20 to-pink-500/20 animate-gradient-x"></div>
+					<div className="absolute inset-0 bg-linear-to-r from-cyan-500/20 via-purple-500/20 to-pink-500/20 animate-gradient-x"></div>
 
 					<div className="relative z-10">
 						<h2 className="text-2xl md:text-4xl font-bold text-white mb-4 font-montserrat">

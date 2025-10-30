@@ -56,7 +56,7 @@ const Solution = () => {
 			<div className="lg:hidden relative z-10 w-full max-w-md mx-auto space-y-8">
 				{/* Card 1 - Mobile */}
 				<div className="flex flex-col items-center">
-					<div className="w-full aspect-[3/4] max-w-[320px]">
+					<div className="w-full aspect-3/4 max-w-[320px]">
 						<video
 							src="/cap.mp4"
 							autoPlay
@@ -74,7 +74,7 @@ const Solution = () => {
 
 				{/* Card 2 - Mobile */}
 				<div className="flex flex-col items-center">
-					<div className="w-full aspect-[3/4] max-w-[320px]">
+					<div className="w-full aspect-3/4 max-w-[320px]">
 						<video
 							src="/cap2.mp4"
 							autoPlay
@@ -92,7 +92,7 @@ const Solution = () => {
 
 				{/* Card 3 - Mobile */}
 				<div className="flex flex-col items-center">
-					<div className="w-full aspect-[3/4] max-w-[320px]">
+					<div className="w-full aspect-3/4 max-w-[320px]">
 						<video
 							src="/cap4.mp4"
 							autoPlay

@@ -10,9 +10,9 @@ const Navbar = () => {
 	];
 
 	const socialItems = [
-		{ label: "Twitter", link: "https://twitter.com" },
+		{ label: "Twitter", link: "https://x.com/sambitsingha01" },
 		{ label: "GitHub", link: "https://github.com/epocheye" },
-		{ label: "LinkedIn", link: "https://linkedin.com" },
+		{ label: "LinkedIn", link: "https://www.linkedin.com/company/epocheye" },
 	];
 
 	return (
