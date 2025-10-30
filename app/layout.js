@@ -4,18 +4,25 @@ import "./globals.css";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: "swap",
+  preload: true,
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: "swap",
+  preload: false,
 });
 
+// Optimize font loading - only load weights actually used
 const montserratAlternates = Montserrat_Alternates({
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
-  style: ["normal", "italic"],
+  weight: ["300", "400", "500", "600", "700"],
+  style: ["normal"],
   subsets: ["latin"],
   variable: "--font-montserrat-alternates",
+  display: "swap",
+  preload: true,
 });
 
 export const metadata = {
@@ -34,16 +41,25 @@ export const metadata = {
   },
 };
 
+import Script from "next/script";
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
-        <script async src="https://tally.so/widgets/embed.js"></script>
+        {/* Preconnect to external domains for faster loading */}
+        <link rel="preconnect" href="https://tally.so" />
+        <link rel="dns-prefetch" href="https://tally.so" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${montserratAlternates.variable} antialiased`}
       >
         {children}
+        {/* Load Tally script with strategy for better performance */}
+        <Script 
+          src="https://tally.so/widgets/embed.js" 
+          strategy="lazyOnload"
+        />
       </body>
     </html>
   );

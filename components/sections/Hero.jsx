@@ -1,8 +1,14 @@
-import React, { useState, useEffect } from "react";
-import LiquidEther from "../LiquidEther";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
+import dynamic from "next/dynamic";
 import ShinyText from "../ShinyText";
 import Navbar from "./Navbar";
-import { ArrowUpIcon, Download } from "lucide-react";
+import { Download } from "lucide-react";
+
+// Lazy load LiquidEther with lower priority
+const LiquidEther = dynamic(() => import("../LiquidEther"), {
+	loading: () => <div className="absolute inset-0 w-full h-full bg-black" />,
+	ssr: false,
+});
 
 const Hero = () => {
 	const [timeLeft, setTimeLeft] = useState({
@@ -14,10 +20,10 @@ const Hero = () => {
 
 	const [showScrollIndicator, setShowScrollIndicator] = useState(false);
 
-	useEffect(() => {
-		// Calculate launch date (60 days from October 28, 2025)
-		const launchDate = new Date("January 1, 2026 00:00:00").getTime();
+	// Memoize launch date calculation
+	const launchDate = useMemo(() => new Date("January 1, 2026 00:00:00").getTime(), []);
 
+	useEffect(() => {
 		const updateCountdown = () => {
 			const now = new Date().getTime();
 			const difference = launchDate - now;
@@ -36,42 +42,50 @@ const Hero = () => {
 		const timer = setInterval(updateCountdown, 1000);
 
 		return () => clearInterval(timer);
-	}, []);
+	}, [launchDate]);
 
+	// Use throttled mouse move handler for better performance
 	useEffect(() => {
+		let timeoutId;
 		const handleMouseMove = (e) => {
-			// Show indicator when mouse is in the bottom 20% of the viewport
-			const bottomThreshold = window.innerHeight * 0.8;
-			setShowScrollIndicator(e.clientY > bottomThreshold);
+			if (timeoutId) return;
+
+			timeoutId = setTimeout(() => {
+				// Show indicator when mouse is in the bottom 20% of the viewport
+				const bottomThreshold = window.innerHeight * 0.8;
+				setShowScrollIndicator(e.clientY > bottomThreshold);
+				timeoutId = null;
+			}, 100);
 		};
 
-		window.addEventListener("mousemove", handleMouseMove);
+		window.addEventListener("mousemove", handleMouseMove, { passive: true });
 
 		return () => {
 			window.removeEventListener("mousemove", handleMouseMove);
+			if (timeoutId) clearTimeout(timeoutId);
 		};
 	}, []);
 
 	return (
 		<div className="relative flex justify-center items-center m-auto bg-black h-screen overflow-hidden">
-			{/* Background LiquidEther */}
+			{/* Background LiquidEther - Optimized with lower resolution */}
 			<div className="absolute inset-0 w-full h-full pointer-events-auto">
 				<LiquidEther
 					colors={["#fff", "#fff", "#fff"]}
-					mouseForce={20}
-					cursorSize={90}
+					mouseForce={15}
+					cursorSize={80}
 					isViscous={false}
 					viscous={30}
-					iterationsViscous={32}
-					iterationsPoisson={32}
-					resolution={0.5}
+					iterationsViscous={16}
+					iterationsPoisson={16}
+					resolution={0.3}
 					isBounce={false}
 					autoDemo={true}
-					autoSpeed={0.5}
-					autoIntensity={2.2}
-					takeoverDuration={0.25}
+					autoSpeed={0.4}
+					autoIntensity={1.8}
+					takeoverDuration={0.2}
 					autoResumeDelay={3000}
-					autoRampDuration={0.6}
+					autoRampDuration={0.5}
 				/>
 			</div>
 

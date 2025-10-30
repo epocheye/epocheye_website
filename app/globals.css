@@ -144,7 +144,7 @@ body::-webkit-scrollbar {
   display: none;
 }
 
-/* Shine animation for ShinyText */
+/* Shine animation for ShinyText - Optimized with will-change */
 @keyframes shine {
   0% {
     background-position: 100%;
@@ -156,6 +156,9 @@ body::-webkit-scrollbar {
 
 .animate-shine {
   animation: shine 5s linear infinite;
+  will-change: background-position;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 /* Glitch animations for 404 page */
@@ -213,19 +216,7 @@ body::-webkit-scrollbar {
   animation: glitch-2 0.7s infinite;
 }
 
-/* Montserrat Alternates Font Classes */
-.montserrat-alternates-thin {
-  font-family: var(--font-montserrat-alternates), sans-serif;
-  font-weight: 100;
-  font-style: normal;
-}
-
-.montserrat-alternates-extralight {
-  font-family: var(--font-montserrat-alternates), sans-serif;
-  font-weight: 200;
-  font-style: normal;
-}
-
+/* Montserrat Alternates Font Classes - Reduced to only used weights */
 .montserrat-alternates-light {
   font-family: var(--font-montserrat-alternates), sans-serif;
   font-weight: 300;
@@ -254,70 +245,4 @@ body::-webkit-scrollbar {
   font-family: var(--font-montserrat-alternates), sans-serif;
   font-weight: 700;
   font-style: normal;
-}
-
-.montserrat-alternates-extrabold {
-  font-family: var(--font-montserrat-alternates), sans-serif;
-  font-weight: 800;
-  font-style: normal;
-}
-
-.montserrat-alternates-black {
-  font-family: var(--font-montserrat-alternates), sans-serif;
-  font-weight: 900;
-  font-style: normal;
-}
-
-.montserrat-alternates-thin-italic {
-  font-family: var(--font-montserrat-alternates), sans-serif;
-  font-weight: 100;
-  font-style: italic;
-}
-
-.montserrat-alternates-extralight-italic {
-  font-family: var(--font-montserrat-alternates), sans-serif;
-  font-weight: 200;
-  font-style: italic;
-}
-
-.montserrat-alternates-light-italic {
-  font-family: var(--font-montserrat-alternates), sans-serif;
-  font-weight: 300;
-  font-style: italic;
-}
-
-.montserrat-alternates-regular-italic {
-  font-family: var(--font-montserrat-alternates), sans-serif;
-  font-weight: 400;
-  font-style: italic;
-}
-
-.montserrat-alternates-medium-italic {
-  font-family: var(--font-montserrat-alternates), sans-serif;
-  font-weight: 500;
-  font-style: italic;
-}
-
-.montserrat-alternates-semibold-italic {
-  font-family: var(--font-montserrat-alternates), sans-serif;
-  font-weight: 600;
-  font-style: italic;
-}
-
-.montserrat-alternates-bold-italic {
-  font-family: var(--font-montserrat-alternates), sans-serif;
-  font-weight: 700;
-  font-style: italic;
-}
-
-.montserrat-alternates-extrabold-italic {
-  font-family: var(--font-montserrat-alternates), sans-serif;
-  font-weight: 800;
-  font-style: italic;
-}
-
-.montserrat-alternates-black-italic {
-  font-family: var(--font-montserrat-alternates), sans-serif;
-  font-weight: 900;
-  font-style: italic;
 }

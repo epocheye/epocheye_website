@@ -1,71 +1,91 @@
 "use client";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import PixelCard from "../PixelCard";
 import TiltedCard from "../TiltedCard";
-import LiquidEther from "../LiquidEther";
 import TextType from "../TextType";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const Solution = () => {
 	const sectionRef = useRef(null);
+	const [isInView, setIsInView] = useState(false);
 
 	useEffect(() => {
 		const section = sectionRef.current;
 		if (!section) return;
 
+		// Intersection Observer for lazy loading videos
+		const observer = new IntersectionObserver(
+			(entries) => {
+				entries.forEach((entry) => {
+					if (entry.isIntersecting && !isInView) {
+						setIsInView(true);
+					}
+				});
+			},
+			{ threshold: 0.1, rootMargin: "100px" }
+		);
+
+		observer.observe(section);
+
 		const ctx = gsap.context(() => {
-			// Initial state - scaled down and transparent
+			// Initial state - simplified animation
 			gsap.set(section, {
-				scale: 0.8,
 				opacity: 0,
+				y: 30,
 			});
 
-			// Zoom in animation
+			// Zoom in animation - optimized
 			gsap.to(section, {
-				scale: 1,
 				opacity: 1,
-				duration: 1,
-				ease: "power3.out",
+				y: 0,
+				duration: 0.8,
+				ease: "power2.out",
 				scrollTrigger: {
 					trigger: section,
-					start: "top 90%", // Start earlier to reduce white space
-					end: "top 30%",
-					scrub: 1,
+					start: "top 85%",
+					end: "top 40%",
+					scrub: 0.5,
 					markers: false,
 				},
 			});
 		}, section);
 
-		return () => ctx.revert();
-	}, []);
+		return () => {
+			ctx.revert();
+			observer.disconnect();
+		};
+	}, [isInView]);
 
 	return (
 		<div
 			ref={sectionRef}
 			className="relative w-full min-h-screen flex flex-col items-center justify-center bg-black overflow-hidden py-10 sm:py-16 md:py-20 px-4 sm:px-6 md:px-10">
-			{/* Background LiquidEther */}
-
 			<h2 className="relative z-10 text-xl sm:text-2xl md:text-3xl font-semibold text-white text-center font-montserrat mb-8 sm:mb-12 md:mb-16">
 				History Meets Technology
 			</h2>
 
-			{/* Mobile Version - Stacked Cards */}
+			{/* Mobile Version - Stacked Cards - Optimized with lazy loading */}
 			<div className="lg:hidden relative z-10 w-full max-w-md mx-auto space-y-8">
 				{/* Card 1 - Mobile */}
 				<div className="flex flex-col items-center">
 					<div className="w-full aspect-3/4 max-w-[320px]">
-						<video
-							src="/cap.mp4"
-							autoPlay
-							loop
-							muted
-							playsInline
-							preload="auto"
-							className="w-full h-full object-cover rounded-2xl shadow-xl"
-						/>
+						{isInView ? (
+							<video
+								src="/cap.mp4"
+								autoPlay
+								loop
+								muted
+								playsInline
+								preload="metadata"
+								loading="lazy"
+								className="w-full h-full object-cover rounded-2xl shadow-xl"
+							/>
+						) : (
+							<div className="w-full h-full bg-gray-900 rounded-2xl shadow-xl" />
+						)}
 					</div>
 					<p className="text-gray-400 text-sm mt-4 text-center px-4">
 						Point your camera at any historical site
@@ -75,15 +95,20 @@ const Solution = () => {
 				{/* Card 2 - Mobile */}
 				<div className="flex flex-col items-center">
 					<div className="w-full aspect-3/4 max-w-[320px]">
-						<video
-							src="/cap2.mp4"
-							autoPlay
-							loop
-							muted
-							playsInline
-							preload="auto"
-							className="w-full h-full object-cover rounded-2xl shadow-xl"
-						/>
+						{isInView ? (
+							<video
+								src="/cap2.mp4"
+								autoPlay
+								loop
+								muted
+								playsInline
+								preload="metadata"
+								loading="lazy"
+								className="w-full h-full object-cover rounded-2xl shadow-xl"
+							/>
+						) : (
+							<div className="w-full h-full bg-gray-900 rounded-2xl shadow-xl" />
+						)}
 					</div>
 					<p className="text-gray-400 text-sm mt-4 text-center px-4">
 						Explore immersive historical experiences
@@ -93,15 +118,20 @@ const Solution = () => {
 				{/* Card 3 - Mobile */}
 				<div className="flex flex-col items-center">
 					<div className="w-full aspect-3/4 max-w-[320px]">
-						<video
-							src="/cap4.mp4"
-							autoPlay
-							loop
-							muted
-							playsInline
-							preload="auto"
-							className="w-full h-full object-cover rounded-2xl shadow-xl"
-						/>
+						{isInView ? (
+							<video
+								src="/cap4.mp4"
+								autoPlay
+								loop
+								muted
+								playsInline
+								preload="metadata"
+								loading="lazy"
+								className="w-full h-full object-cover rounded-2xl shadow-xl"
+							/>
+						) : (
+							<div className="w-full h-full bg-gray-900 rounded-2xl shadow-xl" />
+						)}
 					</div>
 					<p className="text-gray-400 text-sm mt-4 text-center px-4">
 						AI Tells Your Story

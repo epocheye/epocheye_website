@@ -27,57 +27,55 @@ const Problem = () => {
 		const ctx = gsap.context(() => {
 			// Set initial state - hide all texts
 			textElements.forEach((text) => {
-				gsap.set(text, { opacity: 0, scale: 0.8, y: 50 });
+				gsap.set(text, { opacity: 0, y: 30 });
 			});
 
-			// Create main timeline with ScrollTrigger - reduced scroll distance
+			// Create main timeline with ScrollTrigger - optimized with shorter duration
 			const mainTl = gsap.timeline({
 				scrollTrigger: {
 					trigger: section,
 					start: "top top",
-					end: `+=${window.innerHeight * texts.length * 0.5}`, // Further reduced to minimize white space
+					end: `+=${window.innerHeight * texts.length * 0.4}`, // Reduced for better performance
 					pin: true,
-					scrub: 1,
+					scrub: 0.5,
 					snap: {
-						snapTo: 1 / (texts.length - 1), // Snap to each text position
-						duration: 0.3,
-						ease: "power2.inOut",
+						snapTo: 1 / (texts.length - 1),
+						duration: 0.2,
+						ease: "power1.inOut",
 					},
 					markers: false,
 				},
 			});
 
-			// Add animations for each text with adjusted timing
+			// Add animations for each text with optimized timing
 			textElements.forEach((text, index) => {
 				if (!text) return;
 
-				const startTime = index * 1.2; // Further reduced for faster transitions
+				const startTime = index * 1.0; // Faster transitions
 
-				// Fade in
+				// Fade in - simplified
 				mainTl.to(
 					text,
 					{
 						opacity: 1,
-						scale: 1,
 						y: 0,
-						duration: 0.5, // Faster fade in
-						ease: "power2.out",
+						duration: 0.4,
+						ease: "power1.out",
 					},
 					startTime
 				);
 
-				// Fade out (except last one)
+				// Fade out (except last one) - simplified
 				if (index < texts.length - 1) {
 					mainTl.to(
 						text,
 						{
 							opacity: 0,
-							scale: 0.9,
-							y: -50,
-							duration: 0.5, // Faster fade out
-							ease: "power2.in",
+							y: -30,
+							duration: 0.4,
+							ease: "power1.in",
 						},
-						startTime + 0.8
+						startTime + 0.6
 					);
 				}
 			});

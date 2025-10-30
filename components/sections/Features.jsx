@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import TextType from "../TextType";
@@ -8,9 +8,7 @@ import LogoLoop from "../LogoLoop";
 gsap.registerPlugin(ScrollTrigger);
 
 const Features = () => {
-	const canvasRef = useRef(null);
 	const sectionRef = useRef(null);
-	const [nodePositions, setNodePositions] = useState([0, 0, 0, 0]);
 
 	const destinations = [
 		{
@@ -128,31 +126,7 @@ const Features = () => {
 		},
 	];
 
-	// Animate light nodes along the wires
-	useEffect(() => {
-		let animationFrame;
-		let progress = 0;
-
-		const animate = () => {
-			progress += 0.005;
-			if (progress > 1) progress = 0;
-
-			setNodePositions([
-				progress,
-				(progress + 0.25) % 1,
-				(progress + 0.5) % 1,
-				(progress + 0.75) % 1,
-			]);
-
-			animationFrame = requestAnimationFrame(animate);
-		};
-
-		animate();
-
-		return () => cancelAnimationFrame(animationFrame);
-	}, []);
-
-	// GSAP transition animation
+	// Optimized GSAP transition animation - removed heavy canvas animation
 	useEffect(() => {
 		const section = sectionRef.current;
 		if (!section) return;
@@ -161,22 +135,20 @@ const Features = () => {
 			// Set initial state - fade in from bottom with scale
 			gsap.set(section, {
 				opacity: 0,
-				scale: 0.9,
-				y: 100,
+				y: 50,
 			});
 
-			// Animate in on scroll
+			// Animate in on scroll - simplified for better performance
 			gsap.to(section, {
 				opacity: 1,
-				scale: 1,
 				y: 0,
-				duration: 1.2,
-				ease: "power3.out",
+				duration: 0.8,
+				ease: "power2.out",
 				scrollTrigger: {
 					trigger: section,
 					start: "top 85%",
-					end: "top 30%",
-					scrub: 1,
+					end: "top 50%",
+					scrub: 0.5,
 					markers: false,
 				},
 			});
@@ -184,93 +156,6 @@ const Features = () => {
 
 		return () => ctx.revert();
 	}, []);
-
-	// Draw connecting wires
-	useEffect(() => {
-		const canvas = canvasRef.current;
-		if (!canvas) return;
-
-		const ctx = canvas.getContext("2d");
-		const rect = canvas.getBoundingClientRect();
-
-		canvas.width = rect.width;
-		canvas.height = rect.height;
-
-		const drawWires = () => {
-			ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-			// Define card center positions (approximate)
-			const cards = [
-				{ x: canvas.width * 0.15, y: canvas.height * 0.2 },
-				{ x: canvas.width * 0.82, y: canvas.height * 0.23 },
-				{ x: canvas.width * 0.18, y: canvas.height * 0.8 },
-				{ x: canvas.width * 0.8, y: canvas.height * 0.8 },
-			];
-
-			// Draw connections in a loop
-			const connections = [
-				[0, 1],
-				[1, 3],
-				[3, 2],
-				[2, 0],
-			];
-
-			connections.forEach(([from, to], index) => {
-				const start = cards[from];
-				const end = cards[to];
-
-				// Draw wire (curved line)
-				ctx.beginPath();
-				ctx.strokeStyle = "rgba(255,255,255,0.1)";
-				ctx.lineWidth = 2;
-
-				const controlX = (start.x + end.x) / 2;
-				const controlY = (start.y + end.y) / 2 - 50;
-
-				ctx.moveTo(start.x, start.y);
-				ctx.quadraticCurveTo(controlX, controlY, end.x, end.y);
-				ctx.stroke();
-
-				// Draw animated light node - small diamond shape
-				const t = nodePositions[index];
-				const nodeX =
-					(1 - t) * (1 - t) * start.x + 2 * (1 - t) * t * controlX + t * t * end.x;
-				const nodeY =
-					(1 - t) * (1 - t) * start.y + 2 * (1 - t) * t * controlY + t * t * end.y;
-
-				// Small dim glow
-				const gradient = ctx.createRadialGradient(nodeX, nodeY, 0, nodeX, nodeY, 8);
-				gradient.addColorStop(0, "rgba(255,255,255,0.2)");
-				gradient.addColorStop(0.5, "rgba(255,255,255,0.2)");
-
-				ctx.beginPath();
-				ctx.fillStyle = gradient;
-				ctx.arc(nodeX, nodeY, 8, 0, Math.PI * 2);
-				ctx.fill();
-
-				// Diamond-shaped light node
-				ctx.save();
-				ctx.translate(nodeX, nodeY);
-				ctx.rotate(Math.PI / 4);
-				ctx.fillStyle = "rgba(150, 180, 255, 0.6)";
-				ctx.fillRect(-2, -2, 4, 4);
-				ctx.restore();
-			});
-		};
-
-		drawWires();
-
-		const resizeHandler = () => {
-			const rect = canvas.getBoundingClientRect();
-			canvas.width = rect.width;
-			canvas.height = rect.height;
-			drawWires();
-		};
-
-		window.addEventListener("resize", resizeHandler);
-
-		return () => window.removeEventListener("resize", resizeHandler);
-	}, [nodePositions]);
 
 	return (
 		<div
@@ -287,12 +172,6 @@ const Features = () => {
 						time travel companion.
 					</p>
 				</div>
-				{/* Canvas for connecting wires */}
-				<canvas
-					ref={canvasRef}
-					className="absolute inset-0 w-full h-full pointer-events-none"
-					style={{ zIndex: -1 }}
-				/>
 
 				{/* Feature Cards */}
 				<div className="relative w-full h-44 md:h-[1000px]" style={{ zIndex: 2 }}>
@@ -330,6 +209,7 @@ const Features = () => {
 									<img
 										src={`/${index + 1}.png`}
 										alt={feature.title}
+										loading="lazy"
 										className="w-full h-full object-cover rounded-lg"
 									/>
 									<h1 className="text-white my-2">{feature.title}</h1>
@@ -352,6 +232,7 @@ const Features = () => {
 									<img
 										src={`/${index + 1}.png`}
 										alt={feature.title}
+										loading="lazy"
 										className="w-full h-full object-cover rounded-lg"
 									/>
 									<h1 className="text-white my-2 text-sm sm:text-base">
