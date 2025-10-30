@@ -295,7 +295,7 @@ const Features = () => {
 				/>
 
 				{/* Feature Cards */}
-				<div className="relative w-full h-[800px] md:h-[1000px]" style={{ zIndex: 2 }}>
+				<div className="relative w-full h-44 md:h-[1000px]" style={{ zIndex: 2 }}>
 					{/* Text in the center between cards */}
 					<div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 w-full max-w-3xl text-center px-4">
 						<TextType
@@ -308,7 +308,7 @@ const Features = () => {
 							pauseDuration={1500}
 							showCursor={true}
 							cursorCharacter="|"
-							className="text-white text-base sm:text-xl md:text-3xl font-montserrat font-light"
+							className="text-white text-base sm:text-xl md:text-3xl font-montserrat font-semibold"
 							loop={true}
 						/>
 					</div>
@@ -363,7 +363,7 @@ const Features = () => {
 					))}
 				</div>
 
-				<div className="flex justify-center items-center px-4 flex-col">
+				<div className="flex justify-center items-center px-4 flex-col h-96">
 					<h1 className="text-xl sm:text-2xl md:text-5xl font-medium text-white font-montserrat text-center">
 						Launch Destinations
 					</h1>
