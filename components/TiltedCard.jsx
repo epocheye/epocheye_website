@@ -41,6 +41,9 @@ export default function TiltedCard({
 	function handleMouse(e) {
 		if (!ref.current) return;
 
+		// Disable tilt on mobile/tablet for better performance
+		if (window.innerWidth < 1024) return;
+
 		const rect = ref.current.getBoundingClientRect();
 		const offsetX = e.clientX - rect.left - rect.width / 2;
 		const offsetY = e.clientY - rect.top - rect.height / 2;
@@ -60,8 +63,11 @@ export default function TiltedCard({
 	}
 
 	function handleMouseEnter() {
-		scale.set(scaleOnHover);
-		opacity.set(1);
+		// Only apply hover effects on desktop
+		if (window.innerWidth >= 1024) {
+			scale.set(scaleOnHover);
+			opacity.set(1);
+		}
 	}
 
 	function handleMouseLeave() {
@@ -104,20 +110,24 @@ export default function TiltedCard({
 						loop
 						muted
 						playsInline
-						className="absolute top-0 left-0 object-cover rounded-[15px] will-change-transform transform-[translateZ(0)]"
+						preload="auto"
+						className="absolute top-0 left-0 w-full h-full object-cover rounded-[15px] will-change-transform"
 						style={{
-							width: imageWidth,
-							height: imageHeight,
+							transform: "translateZ(0)",
+							backfaceVisibility: "hidden",
+							WebkitBackfaceVisibility: "hidden",
 						}}
 					/>
 				) : (
 					<motion.img
 						src={imageSrc}
 						alt={altText}
-						className="absolute top-0 left-0 object-cover rounded-[15px] will-change-transform transform-[translateZ(0)]"
+						loading="lazy"
+						className="absolute top-0 left-0 w-full h-full object-cover rounded-[15px] will-change-transform"
 						style={{
-							width: imageWidth,
-							height: imageHeight,
+							transform: "translateZ(0)",
+							backfaceVisibility: "hidden",
+							WebkitBackfaceVisibility: "hidden",
 						}}
 					/>
 				)}

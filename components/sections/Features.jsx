@@ -1,12 +1,89 @@
 import React, { useEffect, useRef, useState } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import TextType from "../TextType";
-import Galaxy from "../Galaxy";
 import PixelCard from "../PixelCard";
-import ScrollReveal from "../ScrollReveal";
+import LogoLoop from "../LogoLoop";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const Features = () => {
 	const canvasRef = useRef(null);
+	const sectionRef = useRef(null);
 	const [nodePositions, setNodePositions] = useState([0, 0, 0, 0]);
+
+	const destinations = [
+		{
+			node: (
+				<span className="text-white text-lg md:text-2xl font-montserrat">
+					Taj Mahal - Agra, India
+				</span>
+			),
+		},
+		{
+			node: (
+				<span className="text-white text-lg md:text-2xl font-montserrat">
+					Colosseum - Rome, Italy
+				</span>
+			),
+		},
+		{
+			node: (
+				<span className="text-white text-lg md:text-2xl font-montserrat">
+					Machu Picchu - Cusco, Peru
+				</span>
+			),
+		},
+		{
+			node: (
+				<span className="text-white text-lg md:text-2xl font-montserrat">
+					Pyramids of Giza - Cairo, Egypt
+				</span>
+			),
+		},
+		{
+			node: (
+				<span className="text-white text-lg md:text-2xl font-montserrat">
+					Parthenon - Athens, Greece
+				</span>
+			),
+		},
+		{
+			node: (
+				<span className="text-white text-lg md:text-2xl font-montserrat">
+					Great Wall - Beijing, China
+				</span>
+			),
+		},
+		{
+			node: (
+				<span className="text-white text-lg md:text-2xl font-montserrat">
+					Petra - Jordan
+				</span>
+			),
+		},
+		{
+			node: (
+				<span className="text-white text-lg md:text-2xl font-montserrat">
+					Notre-Dame - Paris, France
+				</span>
+			),
+		},
+		{
+			node: (
+				<span className="text-white text-lg md:text-2xl font-montserrat">
+					Stonehenge - UK
+				</span>
+			),
+		},
+		{
+			node: (
+				<span className="text-white text-lg md:text-2xl font-montserrat">
+					Chichen Itza - Mexico
+				</span>
+			),
+		},
+	];
 
 	const features = [
 		{
@@ -73,6 +150,39 @@ const Features = () => {
 		animate();
 
 		return () => cancelAnimationFrame(animationFrame);
+	}, []);
+
+	// GSAP transition animation
+	useEffect(() => {
+		const section = sectionRef.current;
+		if (!section) return;
+
+		const ctx = gsap.context(() => {
+			// Set initial state - fade in from bottom with scale
+			gsap.set(section, {
+				opacity: 0,
+				scale: 0.9,
+				y: 100,
+			});
+
+			// Animate in on scroll
+			gsap.to(section, {
+				opacity: 1,
+				scale: 1,
+				y: 0,
+				duration: 1.2,
+				ease: "power3.out",
+				scrollTrigger: {
+					trigger: section,
+					start: "top 85%",
+					end: "top 30%",
+					scrub: 1,
+					markers: false,
+				},
+			});
+		}, section);
+
+		return () => ctx.revert();
 	}, []);
 
 	// Draw connecting wires
@@ -163,14 +273,16 @@ const Features = () => {
 	}, [nodePositions]);
 
 	return (
-		<div className="relative bg-black w-full min-h-screen flex-1 px-10 pt-20 pb-20 overflow-hidden">
+		<div
+			ref={sectionRef}
+			className="relative bg-black w-full min-h-screen flex-1 px-4 sm:px-6 md:px-10 pt-12 sm:pt-16 md:pt-20 pb-12 sm:pb-16 md:pb-20 overflow-hidden">
 			{/* Content Layer */}
 			<div className="relative z-10 max-w-7xl mx-auto">
-				<div className="relative z-20 mb-16 text-center">
-					<h2 className="text-3xl md:text-5xl font-semibold text-white font-montserrat mb-4">
+				<div className="relative z-20 mb-12 sm:mb-16 text-center">
+					<h2 className="text-2xl sm:text-3xl md:text-5xl font-semibold text-white font-montserrat mb-4">
 						Best Features !!!
 					</h2>
-					<p className="text-white text-lg md:text-xl font-light font-montserrat">
+					<p className="text-white text-base sm:text-lg md:text-xl font-light font-montserrat px-4">
 						Discover the cutting-edge features that make Epocheye your ultimate
 						time travel companion.
 					</p>
@@ -183,9 +295,9 @@ const Features = () => {
 				/>
 
 				{/* Feature Cards */}
-				<div className="relative w-full h-[1000px]" style={{ zIndex: 2 }}>
+				<div className="relative w-full h-[800px] md:h-[1000px]" style={{ zIndex: 2 }}>
 					{/* Text in the center between cards */}
-					<div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 w-full max-w-3xl text-center">
+					<div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 w-full max-w-3xl text-center px-4">
 						<TextType
 							text={[
 								"Everything You Need for an Unforgettable Experience",
@@ -196,7 +308,7 @@ const Features = () => {
 							pauseDuration={1500}
 							showCursor={true}
 							cursorCharacter="|"
-							className="text-white text-xl md:text-3xl font-montserrat font-light"
+							className="text-white text-base sm:text-xl md:text-3xl font-montserrat font-light"
 							loop={true}
 						/>
 					</div>
@@ -204,7 +316,7 @@ const Features = () => {
 					{features.map((feature, index) => (
 						<div
 							key={index}
-							className="absolute"
+							className="absolute hidden md:block"
 							style={{
 								...feature.position,
 								transform: `rotate(${index % 2 === 0 ? -3 : 3}deg)`,
@@ -226,6 +338,52 @@ const Features = () => {
 						</div>
 					))}
 				</div>
+
+				{/* Mobile Feature Grid */}
+				<div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:hidden mb-16">
+					{features.map((feature, index) => (
+						<div key={index} className="flex justify-center">
+							<PixelCard
+								variant="blue"
+								gap={6}
+								speed={30}
+								className="w-full max-w-[300px] h-[350px]">
+								<div className="absolute inset-0 flex items-center justify-center flex-col p-4">
+									<img
+										src={`/${index + 1}.png`}
+										alt={feature.title}
+										className="w-full h-full object-cover rounded-lg"
+									/>
+									<h1 className="text-white my-2 text-sm sm:text-base">
+										{feature.title}
+									</h1>
+								</div>
+							</PixelCard>
+						</div>
+					))}
+				</div>
+
+				<div className="flex justify-center items-center px-4 flex-col">
+					<h1 className="text-xl sm:text-2xl md:text-5xl font-medium text-white font-montserrat text-center">
+						Launch Destinations
+					</h1>
+					<div className="w-full py-5">
+						<LogoLoop
+							logos={destinations}
+							speed={100}
+							direction="left"
+							logoHeight={40}
+							gap={48}
+							pauseOnHover={true}
+							fadeOut={true}
+							fadeOutColor="rgba(0, 0, 0, 1)"
+							scaleOnHover={true}
+							ariaLabel="Launch destinations"
+						/>
+					</div>
+				</div>
+
+				{/* Logo Loop with Destinations */}
 			</div>
 		</div>
 	);

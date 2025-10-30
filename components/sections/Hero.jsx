@@ -81,33 +81,33 @@ const Hero = () => {
 			</div>
 
 			{/* Content Layer */}
-			<div className="relative z-10 text-center px-6 max-w-5xl mx-auto font-montserrat flex flex-col items-center justify-center h-full">
-				<p className="text-sm md:text-lg text-gray-400 font-sans font-light">
+			<div className="relative z-10 text-center px-4 sm:px-6 max-w-5xl mx-auto font-montserrat flex flex-col items-center justify-center h-full">
+				<p className="text-xs sm:text-sm md:text-lg text-gray-400 font-sans font-light">
 					Turn Your Smartphone Into a Time Machine
 				</p>
 				<ShinyText
 					text="Epocheye"
 					disabled={false}
 					speed={2}
-					className="text-6xl md:text-8xl font-semibold text-white mb-6 leading-tight"
+					className="text-5xl sm:text-6xl md:text-8xl font-semibold text-white mb-6 leading-tight"
 				/>
 
 				<button
-					className="my-10 px-6 py-1 border border-white text-white rounded-full hover:bg-white hover:text-black transition duration-300 pointer-events-auto flex items-center gap-3 cursor-pointer"
+					className="my-8 sm:my-10 px-5 sm:px-6 py-1 border border-white text-white text-sm sm:text-base rounded-full hover:bg-white hover:text-black transition duration-300 pointer-events-auto flex items-center gap-2 sm:gap-3 cursor-pointer"
 					onClick={() => console.log("Button Clicked")}>
 					<Download
-						size={40}
-						className="bg-white text-black rounded-full p-2 -ml-5"
+						size={36}
+						className="bg-white text-black rounded-full p-2 -ml-4 sm:-ml-5"
 					/>
 					Join the waitlist
 				</button>
 
 				{/* Countdown Timer */}
-				<div className="pointer-events-none mt-8">
-					<p className="text-gray-400 text-sm md:text-base mb-2 font-light">
+				<div className="pointer-events-none mt-6 sm:mt-8">
+					<p className="text-gray-400 text-xs sm:text-sm md:text-base mb-2 font-light">
 						Launching in
 					</p>
-					<div className="text-xl md:text-3xl font-light text-white tracking-widest">
+					<div className="text-lg sm:text-xl md:text-3xl font-light text-white tracking-widest">
 						{timeLeft.days}d : {timeLeft.hours}h : {timeLeft.minutes}m :{" "}
 						{timeLeft.seconds}s
 					</div>

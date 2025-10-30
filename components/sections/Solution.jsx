@@ -45,16 +45,73 @@ const Solution = () => {
 	return (
 		<div
 			ref={sectionRef}
-			className="relative w-full min-h-screen flex flex-col items-center justify-center bg-black overflow-hidden pb-10 px-6">
+			className="relative w-full min-h-screen flex flex-col items-center justify-center bg-black overflow-hidden py-10 sm:py-16 md:py-20 px-4 sm:px-6 md:px-10">
 			{/* Background LiquidEther */}
 
-			<h2 className="relative z-10 text-xl md:text-3xl font-semibold text-white text-center font-montserrat my-20">
+			<h2 className="relative z-10 text-xl sm:text-2xl md:text-3xl font-semibold text-white text-center font-montserrat mb-8 sm:mb-12 md:mb-16">
 				History Meets Technology
 			</h2>
 
-			{/* Three Cards Side by Side */}
-			<div className="relative z-10 flex flex-col lg:flex-row items-center justify-around gap-10 w-full">
-				{/* Card 1 - TiltedCard with Video */}
+			{/* Mobile Version - Stacked Cards */}
+			<div className="lg:hidden relative z-10 w-full max-w-md mx-auto space-y-8">
+				{/* Card 1 - Mobile */}
+				<div className="flex flex-col items-center">
+					<div className="w-full aspect-[3/4] max-w-[320px]">
+						<video
+							src="/cap.mp4"
+							autoPlay
+							loop
+							muted
+							playsInline
+							preload="auto"
+							className="w-full h-full object-cover rounded-2xl shadow-xl"
+						/>
+					</div>
+					<p className="text-gray-400 text-sm mt-4 text-center px-4">
+						Point your camera at any historical site
+					</p>
+				</div>
+
+				{/* Card 2 - Mobile */}
+				<div className="flex flex-col items-center">
+					<div className="w-full aspect-[3/4] max-w-[320px]">
+						<video
+							src="/cap2.mp4"
+							autoPlay
+							loop
+							muted
+							playsInline
+							preload="auto"
+							className="w-full h-full object-cover rounded-2xl shadow-xl"
+						/>
+					</div>
+					<p className="text-gray-400 text-sm mt-4 text-center px-4">
+						Explore immersive historical experiences
+					</p>
+				</div>
+
+				{/* Card 3 - Mobile */}
+				<div className="flex flex-col items-center">
+					<div className="w-full aspect-[3/4] max-w-[320px]">
+						<video
+							src="/cap4.mp4"
+							autoPlay
+							loop
+							muted
+							playsInline
+							preload="auto"
+							className="w-full h-full object-cover rounded-2xl shadow-xl"
+						/>
+					</div>
+					<p className="text-gray-400 text-sm mt-4 text-center px-4">
+						AI Tells Your Story
+					</p>
+				</div>
+			</div>
+
+			{/* Desktop Version - Three Cards Side by Side */}
+			<div className="hidden lg:flex relative z-10 items-center justify-around gap-8 w-full max-w-7xl">
+				{/* Card 1 - Desktop */}
 				<div className="flex flex-col items-center">
 					<div className="w-[350px] h-[500px]">
 						<TiltedCard
@@ -77,7 +134,7 @@ const Solution = () => {
 					</p>
 				</div>
 
-				{/* Card 2 - TiltedCard with Video */}
+				{/* Card 2 - Desktop */}
 				<div className="flex flex-col items-center">
 					<div className="w-[350px] h-[500px]">
 						<TiltedCard
@@ -100,9 +157,9 @@ const Solution = () => {
 					</p>
 				</div>
 
-				{/* Card 3 - TiltedCard with Video */}
+				{/* Card 3 - Desktop */}
 				<div className="flex flex-col items-center">
-					<div className="w-[400px] h-[500px]">
+					<div className="w-[350px] h-[500px]">
 						<TiltedCard
 							imageSrc="/cap4.mp4"
 							altText="AI Stories"
