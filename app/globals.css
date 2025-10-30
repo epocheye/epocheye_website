@@ -158,6 +158,61 @@ body::-webkit-scrollbar {
   animation: shine 5s linear infinite;
 }
 
+/* Glitch animations for 404 page */
+@keyframes glitch-1 {
+  0%, 100% {
+    transform: translate(0);
+    opacity: 0.8;
+  }
+  20% {
+    transform: translate(-3px, 3px);
+    opacity: 0.8;
+  }
+  40% {
+    transform: translate(-3px, -3px);
+    opacity: 0.8;
+  }
+  60% {
+    transform: translate(3px, 3px);
+    opacity: 0.8;
+  }
+  80% {
+    transform: translate(3px, -3px);
+    opacity: 0.8;
+  }
+}
+
+@keyframes glitch-2 {
+  0%, 100% {
+    transform: translate(0);
+    opacity: 0.8;
+  }
+  20% {
+    transform: translate(3px, -3px);
+    opacity: 0.8;
+  }
+  40% {
+    transform: translate(3px, 3px);
+    opacity: 0.8;
+  }
+  60% {
+    transform: translate(-3px, -3px);
+    opacity: 0.8;
+  }
+  80% {
+    transform: translate(-3px, 3px);
+    opacity: 0.8;
+  }
+}
+
+.animate-glitch-1 {
+  animation: glitch-1 0.5s infinite;
+}
+
+.animate-glitch-2 {
+  animation: glitch-2 0.7s infinite;
+}
+
 /* Montserrat Alternates Font Classes */
 .montserrat-alternates-thin {
   font-family: var(--font-montserrat-alternates), sans-serif;

@@ -8,6 +8,7 @@ import Solution from "@/components/sections/Solution";
 import Features from "@/components/sections/Features";
 import Testimonials from "@/components/sections/Testimonials";
 import Waitlist from "@/components/sections/Waitlist";
+import Footer from "@/components/sections/Footer";
 
 const Home = () => {
 	return (
@@ -17,7 +18,8 @@ const Home = () => {
 			<Solution />
 			<Features />
 			<Testimonials />
-			<Waitlist />
+			{/* <Waitlist /> */}
+			<Footer />
 		</section>
 	);
 };

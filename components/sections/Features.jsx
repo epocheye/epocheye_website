@@ -363,14 +363,14 @@ const Features = () => {
 					))}
 				</div>
 
-				<div className="flex justify-center items-center px-4 flex-col h-96">
-					<h1 className="text-xl sm:text-2xl md:text-5xl font-medium text-white font-montserrat text-center">
+				<div className="flex justify-center items-center px-4 flex-col h-96 md:gap-10">
+					<h1 className="text-2xl sm:text-2xl md:text-5xl font-medium text-white font-montserrat text-center md:mt-20">
 						Launch Destinations
 					</h1>
-					<div className="w-full py-5">
+					<div className="w-full py-5 md:py-10">
 						<LogoLoop
 							logos={destinations}
-							speed={100}
+							speed={80}
 							direction="left"
 							logoHeight={40}
 							gap={48}

@@ -94,7 +94,10 @@ const Hero = () => {
 
 				<button
 					className="my-8 sm:my-10 px-5 sm:px-6 py-1 border border-white text-white text-sm sm:text-base rounded-full hover:bg-white hover:text-black transition duration-300 pointer-events-auto flex items-center gap-2 sm:gap-3 cursor-pointer"
-					onClick={() => console.log("Button Clicked")}>
+					data-tally-open="mZ4Aa0"
+					data-tally-layout="modal"
+					data-tally-width="600"
+					data-tally-auto-close="1000">
 					<Download
 						size={36}
 						className="bg-white text-black rounded-full p-2 -ml-4 sm:-ml-5"
