@@ -45,9 +45,9 @@ const Home = () => {
 			<Suspense fallback={<div className="min-h-screen bg-black" />}>
 				<Features />
 			</Suspense>
-			<Suspense fallback={<div className="min-h-screen bg-black" />}>
+			{/* <Suspense fallback={<div className="min-h-screen bg-black" />}>
 				<Testimonials />
-			</Suspense>
+			</Suspense> */}
 			<Suspense fallback={<div className="min-h-[50vh] bg-black" />}>
 				<Footer />
 			</Suspense>

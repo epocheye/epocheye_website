@@ -15,70 +15,70 @@ const Features = () => {
 		{
 			node: (
 				<span className="text-white text-lg md:text-2xl font-montserrat">
-					Taj Mahal - Agra, India
+					Taj Mahal - Agra
 				</span>
 			),
 		},
 		{
 			node: (
 				<span className="text-white text-lg md:text-2xl font-montserrat">
-					Colosseum - Rome, Italy
+					Red Fort - Delhi
 				</span>
 			),
 		},
 		{
 			node: (
 				<span className="text-white text-lg md:text-2xl font-montserrat">
-					Machu Picchu - Cusco, Peru
+					Qutub Minar - Delhi
 				</span>
 			),
 		},
 		{
 			node: (
 				<span className="text-white text-lg md:text-2xl font-montserrat">
-					Pyramids of Giza - Cairo, Egypt
+					Humayun's Tomb - Delhi
 				</span>
 			),
 		},
 		{
 			node: (
 				<span className="text-white text-lg md:text-2xl font-montserrat">
-					Parthenon - Athens, Greece
+					Ajanta Caves - Maharashtra
 				</span>
 			),
 		},
 		{
 			node: (
 				<span className="text-white text-lg md:text-2xl font-montserrat">
-					Great Wall - Beijing, China
+					Ellora Caves - Maharashtra
 				</span>
 			),
 		},
 		{
 			node: (
 				<span className="text-white text-lg md:text-2xl font-montserrat">
-					Petra - Jordan
+					Khajuraho Temples - Madhya Pradesh
 				</span>
 			),
 		},
 		{
 			node: (
 				<span className="text-white text-lg md:text-2xl font-montserrat">
-					Notre-Dame - Paris, France
+					Hampi - Karnataka
 				</span>
 			),
 		},
 		{
 			node: (
 				<span className="text-white text-lg md:text-2xl font-montserrat">
-					Stonehenge - UK
+					Fatehpur Sikri - Uttar Pradesh
 				</span>
 			),
 		},
 		{
 			node: (
 				<span className="text-white text-lg md:text-2xl font-montserrat">
-					Chichen Itza - Mexico
+					Konark Sun Temple - Odisha
 				</span>
 			),
 		},
