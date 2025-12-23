@@ -125,9 +125,10 @@ const Hero = () => {
 					<p className="text-gray-400 text-xs sm:text-sm md:text-base mb-2 font-light">
 						Launching in
 					</p>
-					<div className="text-lg sm:text-xl md:text-3xl font-light text-white tracking-widest">
-						{timeLeft.days}d : {timeLeft.hours}h : {timeLeft.minutes}m :{" "}
-						{timeLeft.seconds}s
+					<div className="text-lg sm:text-xl md:text-5xl font-semibold text-white tracking-widest">
+						{/* {timeLeft.days}d : {timeLeft.hours}h : {timeLeft.minutes}m :{" "}
+						{timeLeft.seconds}s */}
+						Early 2026
 					</div>
 				</div>
 			</div>
