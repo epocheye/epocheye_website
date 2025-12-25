@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import ShinyText from "../ShinyText";
 import Navbar from "./Navbar";
@@ -11,39 +11,7 @@ const LiquidEther = dynamic(() => import("../LiquidEther"), {
 });
 
 const Hero = () => {
-	const [timeLeft, setTimeLeft] = useState({
-		days: 0,
-		hours: 0,
-		minutes: 0,
-		seconds: 0,
-	});
-
 	const [showScrollIndicator, setShowScrollIndicator] = useState(false);
-
-	// Memoize launch date calculation
-	const launchDate = useMemo(() => new Date("January 1, 2026 00:00:00").getTime(), []);
-
-	useEffect(() => {
-		const updateCountdown = () => {
-			const now = new Date().getTime();
-			const difference = launchDate - now;
-
-			if (difference > 0) {
-				setTimeLeft({
-					days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-					hours: Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-					minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
-					seconds: Math.floor((difference % (1000 * 60)) / 1000),
-				});
-			}
-		};
-
-		updateCountdown();
-		const timer = setInterval(updateCountdown, 1000);
-
-		return () => clearInterval(timer);
-	}, [launchDate]);
-
 	// Use throttled mouse move handler for better performance
 	useEffect(() => {
 		let timeoutId;
@@ -95,19 +63,21 @@ const Hero = () => {
 			</div>
 
 			{/* Content Layer */}
-			<div className="relative z-10 text-center px-4 sm:px-6 max-w-5xl mx-auto font-montserrat flex flex-col items-center justify-center h-full">
+			<div className="relative z-10 text-center px-4 sm:px-6 max-w-4xl mx-auto font-montserrat flex flex-col items-center justify-center h-full gap-4">
 				<p className="text-xs sm:text-sm md:text-lg text-gray-400 font-sans font-light">
 					Turn Your Smartphone Into a Time Machine
 				</p>
+
 				<ShinyText
 					text="Epocheye"
 					disabled={false}
 					speed={2}
-					className="text-5xl sm:text-6xl md:text-8xl font-semibold text-white mb-6 leading-tight"
+					className="text-5xl sm:text-6xl md:text-8xl font-semibold text-white mb-2 leading-tight"
 				/>
 
 				<button
-					className="my-8 sm:my-10 px-5 sm:px-6 py-1 border border-white text-white text-sm sm:text-base rounded-full hover:bg-white hover:text-black transition duration-300 pointer-events-auto flex items-center gap-2 sm:gap-3 cursor-pointer"
+					title="Get 1 month free + exclusive beta perks"
+					className="my-6 sm:my-8 px-6 sm:px-8 py-3 border border-white/80 text-white text-sm sm:text-base rounded-full hover:bg-white hover:text-black transition duration-300 pointer-events-auto flex items-center gap-3 cursor-pointer shadow-lg shadow-white/10"
 					data-tally-open="mVR7OJ"
 					data-tally-layout="modal"
 					data-tally-width="600"
@@ -115,21 +85,42 @@ const Hero = () => {
 					data-tally-form-events-forwarding="1">
 					<Download
 						size={36}
-						className="bg-white text-black rounded-full p-2 -ml-4 sm:-ml-5"
+						className="bg-white text-black rounded-full p-2 -ml-2"
 					/>
-					Join the waitlist
+					Reserve Your Early Access - Get 1 Month Free
 				</button>
 
-				{/* Countdown Timer */}
-				<div className="pointer-events-none mt-6 sm:mt-8">
-					<p className="text-gray-400 text-xs sm:text-sm md:text-base mb-2 font-light">
-						Launching in
-					</p>
-					<div className="text-lg sm:text-xl md:text-5xl font-semibold text-white tracking-widest">
-						{/* {timeLeft.days}d : {timeLeft.hours}h : {timeLeft.minutes}m :{" "}
-						{timeLeft.seconds}s */}
-						Early 2026
+				<div className="flex items-center gap-3 text-xs sm:text-sm text-gray-200 font-sans">
+					<div className="flex -space-x-2">
+						<span
+							className="w-8 h-8 rounded-full bg-white/80 border border-black/10"
+							aria-hidden="true"
+						/>
+						<span
+							className="w-8 h-8 rounded-full bg-white/60 border border-black/10"
+							aria-hidden="true"
+						/>
+						<span
+							className="w-8 h-8 rounded-full bg-white/40 border border-black/10"
+							aria-hidden="true"
+						/>
 					</div>
+					<span className="font-light">
+						Join 5,000+ history enthusiasts already signed up
+					</span>
+				</div>
+
+				<a
+					href="#how-it-works"
+					className="mt-3 text-sm text-gray-300 underline decoration-dotted decoration-gray-500 hover:text-white">
+					See How It Works
+				</a>
+
+				{/* Countdown Timer */}
+				<div className="pointer-events-none mt-6 sm:mt-7 bg-white/5 px-4 py-3 rounded-full border border-white/10 backdrop-blur">
+					<p className="text-gray-300 text-xs sm:text-sm md:text-base font-medium tracking-wide">
+						Launch in Early 2026
+					</p>
 				</div>
 			</div>
 

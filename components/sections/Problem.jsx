@@ -11,11 +11,11 @@ const Problem = () => {
 	const textsRef = useRef([]);
 
 	const texts = [
-		"Heritage Tourism is Broken",
+		"You stand before a 1,000-year-old monument, but all you see is stone. Audio guides are boring. Plaques tell you dates, not stories.",
 		"90% of tourists cite lack of context as their #1 frustration",
-		"'I spent $50 on a Taj Mahal guide and couldn't remember a single fact two hours later' — Every tourist ever",
-		"The Solution ??",
-		"Your phone can do so much more than play a podcast",
+		"Heritage tourists spend over $50 billion annually on unsatisfactory experiences",
+		"Traditional guides can't show you what these sites looked like in their glory days",
+		"Until now.",
 	];
 
 	useEffect(() => {

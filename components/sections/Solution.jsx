@@ -61,6 +61,7 @@ const Solution = () => {
 
 	return (
 		<div
+			id="solution"
 			ref={sectionRef}
 			className="relative w-full min-h-screen flex flex-col items-center justify-center bg-black overflow-hidden py-10 sm:py-16 md:py-20 px-4 sm:px-6 md:px-10">
 			<h2 className="relative z-10 text-xl sm:text-2xl md:text-3xl font-semibold text-white text-center font-montserrat mb-8 sm:mb-12 md:mb-16">

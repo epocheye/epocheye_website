@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Mail, Star, Zap, Trophy } from "lucide-react";
+import { Mail } from "lucide-react";
 
 const Waitlist = () => {
 	return (
@@ -40,61 +40,25 @@ const Waitlist = () => {
 						<h2 className="text-2xl md:text-4xl font-bold text-white mb-4 font-montserrat">
 							Ready to Travel Through Time?
 						</h2>
-						<p className="text-gray-300 text-lg mb-8 max-w-2xl mx-auto">
-							Launch date: December 31, 2025
+						<p className="text-gray-300 text-lg mb-6 max-w-2xl mx-auto">
+							Private beta launches March 2026. Reserve your early access and
+							get 1 month free.
 						</p>
-						<button
-							data-tally-open="mZ4Aa0"
-							data-tally-layout="modal"
-							data-tally-width="600"
-							data-tally-auto-close="1000"
-							className="inline-flex items-center gap-3 px-8 py-4 bg-white text-black rounded-full font-semibold text-lg hover:scale-105 transition-transform duration-300 shadow-lg hover:shadow-2xl">
-							<Mail className="w-5 h-5" />
-							Join the Waitlist Now
-						</button>
+						<div className="flex flex-col items-center gap-4">
+							<button
+								title="Get 1 month free + exclusive beta perks"
+								data-tally-open="mZ4Aa0"
+								data-tally-layout="modal"
+								data-tally-width="600"
+								data-tally-auto-close="1000"
+								className="inline-flex items-center gap-3 px-8 py-4 bg-white text-black rounded-full font-semibold text-lg hover:scale-105 transition-transform duration-300 shadow-lg hover:shadow-2xl">
+								<Mail className="w-5 h-5" />
+								Reserve Your Early Access
+							</button>
+						</div>
 					</div>
 				</div>
 			</div>
-
-			<style jsx>{`
-				@keyframes float {
-					0%,
-					100% {
-						transform: translateY(0px);
-					}
-					50% {
-						transform: translateY(-20px);
-					}
-				}
-				@keyframes float-delayed {
-					0%,
-					100% {
-						transform: translateY(0px);
-					}
-					50% {
-						transform: translateY(-30px);
-					}
-				}
-				@keyframes gradient-x {
-					0%,
-					100% {
-						background-position: 0% 50%;
-					}
-					50% {
-						background-position: 100% 50%;
-					}
-				}
-				.animate-float {
-					animation: float 6s ease-in-out infinite;
-				}
-				.animate-float-delayed {
-					animation: float-delayed 8s ease-in-out infinite;
-				}
-				.animate-gradient-x {
-					background-size: 200% 200%;
-					animation: gradient-x 15s ease infinite;
-				}
-			`}</style>
 		</div>
 	);
 };

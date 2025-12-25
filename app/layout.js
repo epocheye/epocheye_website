@@ -26,18 +26,31 @@ const montserratAlternates = Montserrat_Alternates({
 });
 
 export const metadata = {
-  title: "Epocheye | Turn Your Phone Into an AR Time Machine",
-  description: "Experience heritage sites like never before. Point your camera, watch history rebuild in AR, and discover personalized stories. Join the waitlist.",
-  keywords: "AR tourism, heritage travel app, interactive museum, augmented reality monuments, smart travel guide",
+  title: "Epocheye - Turn Your Phone Into an AR Time Machine | Heritage Tourism Reimagined",
+  description:
+    "Experience India's UNESCO World Heritage Sites through AR time travel. Point your phone and watch history unfold. 10 destinations launching March 2026. Join 5,000+ early adopters.",
+  keywords:
+    "AR heritage tourism, historical site AR app, UNESCO World Heritage AR, India heritage tourism, time travel app, historical reconstruction AR, smart tourism India",
   openGraph: {
-    title: "Epocheye | Turn Your Phone Into an AR Time Machine",
-    description: "Experience heritage sites like never before. Point your camera, watch history rebuild in AR, and discover personalized stories. Join the waitlist.",
+    title: "Epocheye - AR Time Travel for Heritage Sites",
+    description:
+      "See historical monuments in their original glory through your smartphone. Launching March 2026 with 10 UNESCO sites in India.",
     type: "website",
+    images: [
+      {
+        url: "/1.png",
+        width: 1200,
+        height: 630,
+        alt: "Epocheye AR time travel demo",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Epocheye | Turn Your Phone Into an AR Time Machine",
-    description: "Experience heritage sites like never before. Point your camera, watch history rebuild in AR, and discover personalized stories. Join the waitlist.",
+    title: "Epocheye - AR Time Travel for Heritage Sites",
+    description:
+      "See historical monuments in their original glory through your smartphone. Launching March 2026 with 10 UNESCO sites in India.",
+    images: ["/1.png"],
   },
 };
 
