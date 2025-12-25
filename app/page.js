@@ -57,7 +57,7 @@ const Home = () => {
 	return (
 		<section className="flex-1 overflow-x-hidden bg-black" style={{ scrollSnapType: "y mandatory" }}>
 			<Hero />
-			<SocialProof />
+			{/* <SocialProof /> */}
 			<Suspense fallback={<div className="min-h-screen bg-white" />}>
 				<Problem />
 			</Suspense>
