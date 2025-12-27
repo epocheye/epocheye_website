@@ -5,34 +5,41 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ArrowRight, Landmark, Lock, Mail, ShieldCheck, Sparkles } from "lucide-react";
 
-const demo = {
-  email: "sambit@epocheye.app",
-  password: "1234",
-};
-
 export default function LoginPage() {
   const router = useRouter();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [form, setForm] = useState({ email: "", password: "", remember: true });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
 
-    const formData = new FormData(e.currentTarget);
-    const email = formData.get("email");
-    const password = formData.get("password");
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: form.email, password: form.password }),
+      });
 
-    setTimeout(() => {
-      const match = email === demo.email && password === demo.password;
-      if (match) {
-        router.push("/dashboard/analytics");
-      } else {
-        setError("Invalid credentials for this mock login. Use the demo email/password shown.");
+      const data = await res.json();
+
+      if (!res.ok || !data?.success) {
+        throw new Error(data?.message || "Unable to sign in");
       }
+
+      if (form.remember) {
+        localStorage.setItem("epocheye_token", data.token);
+        localStorage.setItem("epocheye_user", JSON.stringify(data.user));
+      }
+
+      router.push("/dashboard/analytics");
+    } catch (err) {
+      setError(err.message || "Invalid credentials");
+    } finally {
       setLoading(false);
-    }, 450);
+    }
   };
 
   return (
@@ -55,10 +62,6 @@ export default function LoginPage() {
               Access real-time heritage operations, visitor analytics, and staff controls.
             </p>
 
-            <div className="mt-6 flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-emerald-100">
-              <ShieldCheck className="size-5" /> Demo credentials pre-filled for quick access.
-            </div>
-
             <form onSubmit={handleSubmit} className="mt-8 space-y-5">
               <label className="block space-y-2 text-sm">
                 <span className="text-zinc-300">Email address</span>
@@ -67,7 +70,8 @@ export default function LoginPage() {
                   <input
                     type="email"
                     name="email"
-                    defaultValue={demo.email}
+                    value={form.email}
+                    onChange={(e) => setForm((prev) => ({ ...prev, email: e.target.value }))}
                     className="w-full bg-transparent text-white outline-none placeholder:text-zinc-500"
                     placeholder="name@asi.gov.in"
                     required
@@ -82,18 +86,23 @@ export default function LoginPage() {
                   <input
                     type="password"
                     name="password"
-                    defaultValue={demo.password}
+                    value={form.password}
+                    onChange={(e) => setForm((prev) => ({ ...prev, password: e.target.value }))}
                     className="w-full bg-transparent text-white outline-none placeholder:text-zinc-500"
                     placeholder="••••"
                     required
                   />
                 </div>
-                <p className="text-xs text-zinc-500">Mock only. You can replace with API auth later.</p>
               </label>
 
               <div className="flex items-center justify-between text-sm text-zinc-400">
                 <label className="inline-flex items-center gap-2">
-                  <input type="checkbox" defaultChecked className="h-4 w-4 rounded border-white/20 bg-white/10" />
+                  <input
+                    type="checkbox"
+                    checked={form.remember}
+                    onChange={(e) => setForm((prev) => ({ ...prev, remember: e.target.checked }))}
+                    className="h-4 w-4 rounded border-white/20 bg-white/10"
+                  />
                   Keep me signed in (secure devices)
                 </label>
                 <Link href="#" className="text-emerald-300 hover:text-emerald-200">Need help?</Link>
@@ -127,9 +136,9 @@ export default function LoginPage() {
                 <ShieldCheck className="size-6" />
               </div>
               <div>
-                <p className="text-sm text-emerald-200">Demo credentials</p>
-                <p className="text-lg font-semibold text-white">{demo.email}</p>
-                <p className="text-sm text-zinc-400">Password: {demo.password}</p>
+                <p className="text-sm text-emerald-200">Secure access</p>
+                <p className="text-lg font-semibold text-white">JWT-protected dashboards</p>
+                <p className="text-sm text-zinc-400">Connects to Supabase-backed auth</p>
               </div>
             </div>
 

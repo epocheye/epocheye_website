@@ -1,11 +1,55 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { ArrowRight, Landmark, Mail, ShieldPlus, UserPlus, KeyRound, Sparkles } from "lucide-react";
 
 export default function SignupPage() {
-  const handleSubmit = (e) => {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+    org_name: "",
+    site_name: "",
+    annual_visitors: "",
+  });
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    try {
+      const body = {
+        email: form.email,
+        password: form.password,
+        org_name: form.org_name,
+        site_name: form.site_name,
+        annual_visitors: form.annual_visitors ? Number(form.annual_visitors) : undefined,
+      };
+
+      const res = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data?.success) {
+        throw new Error(data?.message || "Unable to sign up");
+      }
+
+      localStorage.setItem("epocheye_token", data.token);
+      localStorage.setItem("epocheye_user", JSON.stringify(data.user));
+      router.push("/dashboard/analytics");
+    } catch (err) {
+      setError(err.message || "Signup failed");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -36,6 +80,8 @@ export default function SignupPage() {
                   <input
                     type="email"
                     name="email"
+                    value={form.email}
+                    onChange={(e) => setForm((prev) => ({ ...prev, email: e.target.value }))}
                     className="w-full bg-transparent text-white outline-none placeholder:text-zinc-500"
                     placeholder="name@asi.gov.in"
                     required
@@ -50,12 +96,13 @@ export default function SignupPage() {
                   <input
                     type="password"
                     name="password"
+                    value={form.password}
+                    onChange={(e) => setForm((prev) => ({ ...prev, password: e.target.value }))}
                     className="w-full bg-transparent text-white outline-none placeholder:text-zinc-500"
                     placeholder="••••••"
                     required
                   />
                 </div>
-                <p className="text-xs text-zinc-500">Mock only. Wire up to your auth API later.</p>
               </label>
 
               <label className="block space-y-2 text-sm">
@@ -65,8 +112,43 @@ export default function SignupPage() {
                   <input
                     type="text"
                     name="org"
+                    value={form.org_name}
+                    onChange={(e) => setForm((prev) => ({ ...prev, org_name: e.target.value }))}
                     className="w-full bg-transparent text-white outline-none placeholder:text-zinc-500"
                     placeholder="Humayun's Tomb Command, Delhi"
+                    required
+                  />
+                </div>
+              </label>
+
+              <label className="block space-y-2 text-sm">
+                <span className="text-zinc-300">Primary site name</span>
+                <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/40 px-4 py-3 focus-within:border-emerald-400/60">
+                  <ShieldPlus className="size-5 text-emerald-300" />
+                  <input
+                    type="text"
+                    name="site"
+                    value={form.site_name}
+                    onChange={(e) => setForm((prev) => ({ ...prev, site_name: e.target.value }))}
+                    className="w-full bg-transparent text-white outline-none placeholder:text-zinc-500"
+                    placeholder="Red Fort"
+                    required
+                  />
+                </div>
+              </label>
+
+              <label className="block space-y-2 text-sm">
+                <span className="text-zinc-300">Annual visitors (optional)</span>
+                <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/40 px-4 py-3 focus-within:border-emerald-400/60">
+                  <ShieldPlus className="size-5 text-emerald-300" />
+                  <input
+                    type="number"
+                    min="0"
+                    name="annual_visitors"
+                    value={form.annual_visitors}
+                    onChange={(e) => setForm((prev) => ({ ...prev, annual_visitors: e.target.value }))}
+                    className="w-full bg-transparent text-white outline-none placeholder:text-zinc-500"
+                    placeholder="500000"
                   />
                 </div>
               </label>
@@ -94,10 +176,17 @@ export default function SignupPage() {
 
               <button
                 type="submit"
-                className="group flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-400 px-4 py-3 text-black font-semibold shadow-[0_12px_40px_rgba(52,211,153,0.35)] transition hover:bg-emerald-300">
-                Create account
+                disabled={loading}
+                className="group flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-400 px-4 py-3 text-black font-semibold shadow-[0_12px_40px_rgba(52,211,153,0.35)] transition hover:bg-emerald-300 disabled:opacity-60 disabled:cursor-not-allowed">
+                {loading ? "Creating account..." : "Create account"}
                 <ArrowRight className="size-4 transition group-hover:translate-x-1" />
               </button>
+
+              {error && (
+                <div className="rounded-lg border border-red-400/40 bg-red-500/10 px-3 py-2 text-sm text-red-100">
+                  {error}
+                </div>
+              )}
 
               <div className="flex items-center justify-between text-xs text-zinc-400">
                 <span>Designed for Archaeological Survey of India & partners.</span>

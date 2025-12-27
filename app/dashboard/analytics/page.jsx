@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import {
 	Activity,
 	ArrowDownRight,
@@ -96,94 +97,7 @@ const kpis = [
 	},
 ];
 
-const baseTrend = [
-	{ day: "Mon", visitors: 1290 },
-	{ day: "Tue", visitors: 1410 },
-	{ day: "Wed", visitors: 1580 },
-	{ day: "Thu", visitors: 1490 },
-	{ day: "Fri", visitors: 1660 },
-	{ day: "Sat", visitors: 1890 },
-	{ day: "Sun", visitors: 1745 },
-];
-
-const baseZones = [
-	{
-		id: "entry",
-		name: "Entry Gate",
-		visitors: 180,
-		capacity: 72,
-		staff: 12,
-		rec: 10,
-		peak: "11:00",
-	},
-	{
-		id: "temple",
-		name: "Main Temple",
-		visitors: 220,
-		capacity: 88,
-		staff: 16,
-		rec: 14,
-		peak: "12:30",
-	},
-	{ id: "museum", name: "Museum", visitors: 140, capacity: 56, staff: 9, rec: 8, peak: "14:00" },
-	{ id: "garden", name: "Garden", visitors: 95, capacity: 38, staff: 6, rec: 6, peak: "17:00" },
-	{
-		id: "gallery",
-		name: "Art Gallery",
-		visitors: 160,
-		capacity: 64,
-		staff: 8,
-		rec: 9,
-		peak: "15:00",
-	},
-	{
-		id: "food",
-		name: "Food Court",
-		visitors: 210,
-		capacity: 84,
-		staff: 14,
-		rec: 12,
-		peak: "13:30",
-	},
-];
-
-const peakHours = [
-	{ hour: "9 AM", expected: 480 },
-	{ hour: "11 AM", expected: 720 },
-	{ hour: "1 PM", expected: 910 },
-	{ hour: "3 PM", expected: 840 },
-	{ hour: "5 PM", expected: 760 },
-	{ hour: "7 PM", expected: 540 },
-];
-
-const demographics = [
-	{ name: "Domestic", value: 62, color: neon.primary },
-	{ name: "Foreign", value: 38, color: neon.teal },
-	{ name: "Families", value: 35, color: "#a78bfa" },
-	{ name: "Students", value: 22, color: "#fbbf24" },
-	{ name: "Solo", value: 21, color: "#f97316" },
-];
-
-const staffSeed = [
-	{ slot: "9:00", expected: 520, current: 18, rec: 16, save: 260, status: "over" },
-	{ slot: "10:00", expected: 610, current: 20, rec: 18, save: 240, status: "over" },
-	{ slot: "11:00", expected: 720, current: 22, rec: 21, save: 130, status: "optimal" },
-	{ slot: "12:00", expected: 880, current: 25, rec: 26, save: -120, status: "under" },
-	{ slot: "13:00", expected: 930, current: 26, rec: 27, save: -140, status: "under" },
-	{ slot: "14:00", expected: 890, current: 25, rec: 24, save: 90, status: "optimal" },
-	{ slot: "15:00", expected: 810, current: 23, rec: 22, save: 110, status: "optimal" },
-	{ slot: "16:00", expected: 760, current: 22, rec: 21, save: 95, status: "optimal" },
-	{ slot: "17:00", expected: 690, current: 20, rec: 20, save: 0, status: "optimal" },
-	{ slot: "18:00", expected: 640, current: 19, rec: 18, save: 75, status: "optimal" },
-	{ slot: "19:00", expected: 520, current: 16, rec: 15, save: 85, status: "optimal" },
-	{ slot: "20:00", expected: 430, current: 14, rec: 12, save: 160, status: "over" },
-];
-
-const anomalies = [
-	"Unusual spike expected on Dec 31 (New Year lights)",
-	"School group arrivals Jan 05",
-	"Heatwave likely; evening traffic to rise",
-];
+const anomalies = [];
 
 function StatusBadge({ status }) {
 	const tone = status === "optimal" ? "emerald" : status === "over" ? "red" : "amber";
@@ -225,153 +139,240 @@ function Section({
 }
 
 export default function AnalyticsPage() {
+	const searchParams = useSearchParams();
 	const [loading, setLoading] = useState(true);
 	const [mounted, setMounted] = useState(false);
 	const [socketStatus, setSocketStatus] = useState("connecting");
+	const [loadError, setLoadError] = useState("");
+	const [siteId, setSiteId] = useState(null);
 	const [metrics, setMetrics] = useState({
-		currentVisitors: 1745,
-		avgStay: 68,
-		foreignPct: 32,
-		staffUtil: 78,
+		currentVisitors: 0,
+		avgStay: 0,
+		foreignPct: 0,
+		staffUtil: 0,
 		trends: {
-			currentVisitors: { dir: "up", change: 12 },
-			avgStay: { dir: "up", change: 3.4 },
-			foreignPct: { dir: "down", change: -2.1 },
-			staffUtil: { dir: "up", change: 6 },
+			currentVisitors: { dir: "up", change: 0 },
+			avgStay: { dir: "up", change: 0 },
+			foreignPct: { dir: "up", change: 0 },
+			staffUtil: { dir: "up", change: 0 },
 		},
-		// IMPORTANT: Avoid hydration mismatches by not rendering a real-time value during SSR.
-		// We'll set this after mount (client-side) via effects.
 		lastUpdated: 0,
 	});
-	const [trend, setTrend] = useState(baseTrend);
-	const [zones, setZones] = useState(baseZones);
+	const [trend, setTrend] = useState([]);
+	const [zones, setZones] = useState([]);
 	const [selectedZone, setSelectedZone] = useState(null);
-	const [forecast, setForecast] = useState(() => {
-		// Use a stable reference date + UTC formatting to avoid server/client timezone mismatches.
-		const today = new Date("2025-12-27T00:00:00.000Z");
-		const fmt = new Intl.DateTimeFormat("en-US", {
-			month: "short",
-			day: "numeric",
-			timeZone: "UTC",
-		});
-		return Array.from({ length: 30 }, (_, i) => {
-			const d = new Date(today);
-			d.setDate(d.getDate() + i);
-			const predicted = 1400 + Math.round(Math.sin(i / 3) * 160) + i * 8;
-			return {
-				date: fmt.format(d),
-				predicted,
-				lower: predicted - 120,
-				upper: predicted + 140,
-				historical: i < 7 ? 1100 + i * 60 : null,
-			};
-		});
-	});
-	const [staffRows, setStaffRows] = useState(staffSeed);
+	const [forecast, setForecast] = useState([]);
+	const [staffRows, setStaffRows] = useState([]);
 	const [reportType, setReportType] = useState("Weekly");
-	const [dateRange, setDateRange] = useState({ start: "2025-12-01", end: "2025-12-31" });
+	const [dateRange, setDateRange] = useState({ start: "", end: "" });
 	const [reportLoading, setReportLoading] = useState(false);
-	const [history, setHistory] = useState([
-		{ id: "r1", name: "Weekly Footfall", date: "Dec 18, 2025", link: "#" },
-		{ id: "r2", name: "November Staffing", date: "Dec 01, 2025", link: "#" },
-	]);
+	const [history, setHistory] = useState([]);
+	const [demographics, setDemographics] = useState([]);
 	const mapRef = useRef(null);
+	const peakHours = useMemo(() => {
+		if (!zones.length) return [];
+		const top = [...zones].sort((a, b) => (b.capacity || 0) - (a.capacity || 0)).slice(0, 6);
+		return top.map((z, idx) => ({
+			hour: z.name || `Zone ${idx + 1}`,
+			expected: z.visitors || 0,
+		}));
+	}, [zones]);
 
 	useEffect(() => {
 		setMounted(true);
 	}, []);
 
 	useEffect(() => {
-		const t = setTimeout(() => setLoading(false), 800);
-		return () => clearTimeout(t);
-	}, []);
+		const paramSite = searchParams.get("siteId");
+		const storedSite =
+			typeof window !== "undefined"
+				? window.localStorage.getItem("epocheye_site_id")
+				: null;
+		if (paramSite) {
+			setSiteId(paramSite);
+			if (typeof window !== "undefined") {
+				window.localStorage.setItem("epocheye_site_id", paramSite);
+			}
+		} else if (storedSite) {
+			setSiteId(storedSite);
+		} else {
+			setLoadError(
+				"No site selected. Add ?siteId= in the URL or store a site in localStorage."
+			);
+		}
+	}, [searchParams]);
 
 	useEffect(() => {
-		setSocketStatus("connecting");
-		const open = setTimeout(() => setSocketStatus("connected"), 600);
-		const pulse = setInterval(() => {
-			setMetrics((prev) => {
-				const jitter = (val, spread, min, max) =>
-					Math.min(max, Math.max(min, val + (Math.random() - 0.5) * spread));
-				const cv = Math.round(jitter(prev.currentVisitors, 70, 900, 2600));
-				const stay = Number(jitter(prev.avgStay, 4, 40, 95).toFixed(1));
-				const foreign = Number(jitter(prev.foreignPct, 2, 18, 60).toFixed(1));
-				const util = Number(jitter(prev.staffUtil, 4, 55, 98).toFixed(0));
-				const trends = {
-					currentVisitors: {
-						dir: cv >= prev.currentVisitors ? "up" : "down",
-						change: Number(
-							(
-								((cv - prev.currentVisitors) / prev.currentVisitors) *
-								100
-							).toFixed(1)
-						),
-					},
-					avgStay: {
-						dir: stay >= prev.avgStay ? "up" : "down",
-						change: Number((stay - prev.avgStay).toFixed(1)),
-					},
-					foreignPct: {
-						dir: foreign >= prev.foreignPct ? "up" : "down",
-						change: Number((foreign - prev.foreignPct).toFixed(1)),
-					},
-					staffUtil: {
-						dir: util >= prev.staffUtil ? "up" : "down",
-						change: Number((util - prev.staffUtil).toFixed(1)),
-					},
+		if (!siteId) return;
+		const controller = new AbortController();
+
+		async function loadData() {
+			setLoading(true);
+			setLoadError("");
+			try {
+				const token =
+					typeof window !== "undefined"
+						? window.localStorage.getItem("epocheye_token")
+						: null;
+				if (!token) {
+					throw new Error("Not signed in. Please log in again.");
+				}
+
+				const headers = {
+					Authorization: `Bearer ${token}`,
 				};
-				return {
-					currentVisitors: cv,
-					avgStay: stay,
-					foreignPct: foreign,
-					staffUtil: util,
-					trends,
+				const today = new Date().toISOString().slice(0, 10);
+				const startRange = new Date();
+				startRange.setDate(startRange.getDate() - 6);
+				setDateRange({
+					start: startRange.toISOString().slice(0, 10),
+					end: today,
+				});
+
+				const [statsRes, trendsRes, demoRes, zonesRes] = await Promise.all([
+					fetch(`/api/dashboard/stats?siteId=${siteId}`, {
+						headers,
+						signal: controller.signal,
+					}),
+					fetch(`/api/dashboard/trends?siteId=${siteId}&days=7`, {
+						headers,
+						signal: controller.signal,
+					}),
+					fetch(`/api/analytics/demographics?siteId=${siteId}&date=${today}`, {
+						headers,
+						signal: controller.signal,
+					}),
+					fetch(`/api/monitor/zones?siteId=${siteId}`, {
+						headers,
+						signal: controller.signal,
+					}),
+				]);
+
+				const [stats, trends, demo, zonesResp] = await Promise.all([
+					statsRes.json(),
+					trendsRes.json(),
+					demoRes.json(),
+					zonesRes.json(),
+				]);
+
+				if (!statsRes.ok || !stats?.success) {
+					throw new Error(stats?.message || "Failed to load stats");
+				}
+				if (!trendsRes.ok || !trends?.success) {
+					throw new Error(trends?.message || "Failed to load trends");
+				}
+				if (!demoRes.ok || !demo?.success) {
+					throw new Error(demo?.message || "Failed to load demographics");
+				}
+				if (!zonesRes.ok || !zonesResp?.success) {
+					throw new Error(zonesResp?.message || "Failed to load zones");
+				}
+
+				const statData = stats.data || {};
+				setMetrics({
+					currentVisitors: statData.current_visitors || 0,
+					avgStay: statData.avg_stay_minutes || 0,
+					foreignPct: statData.foreign_percentage || 0,
+					staffUtil: statData.staff_utilization || 0,
+					trends: {
+						currentVisitors: { dir: "up", change: 0 },
+						avgStay: { dir: "up", change: 0 },
+						foreignPct: { dir: "up", change: 0 },
+						staffUtil: { dir: "up", change: 0 },
+					},
 					lastUpdated: Date.now(),
-				};
-			});
-		}, 5000);
-		const refresh = setInterval(
-			() => setMetrics((p) => ({ ...p, lastUpdated: Date.now() })),
-			30000
-		);
-		return () => {
-			clearTimeout(open);
-			clearInterval(pulse);
-			clearInterval(refresh);
-			setSocketStatus("fallback");
-		};
-	}, []);
+				});
 
-	useEffect(() => {
-		const t = setInterval(() => {
-			setTrend((prev) => {
-				const next = prev
-					.slice(1)
-					.concat({ day: "Live", visitors: metrics.currentVisitors });
-				return next;
-			});
-			setZones((prev) =>
-				prev.map((z) => {
-					const visitors = Math.max(40, z.visitors + (Math.random() - 0.5) * 30);
-					const capacity = Math.min(
-						100,
-						Math.max(20, z.capacity + (Math.random() - 0.5) * 6)
-					);
+				const trendData = (trends.data || []).map((row) => {
+					const d = new Date(row.date);
+					const label = d.toLocaleDateString(undefined, {
+						month: "short",
+						day: "numeric",
+					});
+					return { day: label, visitors: row.total || 0 };
+				});
+				setTrend(trendData);
+
+				const demoData = demo?.data || {};
+				const demoItems = [
+					{
+						name: "Domestic",
+						value: demoData.domestic_vs_foreign?.domestic || 0,
+						color: neon.primary,
+					},
+					{
+						name: "Foreign",
+						value: demoData.domestic_vs_foreign?.foreign || 0,
+						color: neon.teal,
+					},
+					{
+						name: "School groups",
+						value: demoData.group_types?.school || 0,
+						color: "#fbbf24",
+					},
+					{
+						name: "Family",
+						value: demoData.group_types?.family || 0,
+						color: "#a78bfa",
+					},
+					{ name: "Solo", value: demoData.group_types?.solo || 0, color: "#f97316" },
+					{
+						name: "Tour groups",
+						value: demoData.group_types?.tour || 0,
+						color: "#38bdf8",
+					},
+				];
+				setDemographics(demoItems);
+
+				const zoneData = (zonesResp.data || []).map((z) => ({
+					id: String(z.zone_id),
+					name: z.zone_name,
+					visitors: z.current_count || 0,
+					capacity: Math.round(z.density_percentage || 0),
+					staff: z.current_staff || 0,
+					rec: z.recommended_staff || 0,
+					peak: "--",
+				}));
+				setZones(zoneData);
+
+				const totals = trendData.map((t) => t.visitors);
+				const avg = totals.length
+					? totals.reduce((a, b) => a + b, 0) / totals.length
+					: 0;
+				const start = new Date();
+				const fmt = new Intl.DateTimeFormat("en-US", {
+					month: "short",
+					day: "numeric",
+					timeZone: "UTC",
+				});
+				const fc = Array.from({ length: 30 }, (_, i) => {
+					const d = new Date(start);
+					d.setDate(d.getDate() + i);
+					const predicted = Math.max(0, Math.round(avg));
 					return {
-						...z,
-						visitors: Math.round(visitors),
-						capacity: Math.round(capacity),
+						date: fmt.format(d),
+						predicted,
+						lower: Math.max(0, Math.round(predicted * 0.85)),
+						upper: Math.round(predicted * 1.15),
+						historical: i < totals.length ? totals[i] : null,
 					};
-				})
-			);
-			setForecast((prev) =>
-				prev.map((f, i) =>
-					i < 7 ? f : { ...f, predicted: f.predicted + Math.sin(i / 2.5) * 30 }
-				)
-			);
-		}, 12000);
-		return () => clearInterval(t);
-	}, [metrics.currentVisitors]);
+				});
+				setForecast(fc);
+
+				setSocketStatus("connected");
+				setLoading(false);
+			} catch (err) {
+				if (!controller.signal.aborted) {
+					setLoadError(err?.message || "Failed to load dashboard data");
+					setSocketStatus("fallback");
+					setLoading(false);
+				}
+			}
+		}
+
+		loadData();
+		return () => controller.abort();
+	}, [siteId]);
 
 	const forecastCsv = useMemo(() => {
 		const header = "date,predicted,lower,upper,historical";
@@ -488,6 +489,12 @@ export default function AnalyticsPage() {
 					</div>
 				</header>
 
+				{loadError && (
+					<div className="rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm text-red-100">
+						{loadError}
+					</div>
+				)}
+
 				{/* KPI cards */}
 				<div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
 					{kpis.map((k) => {
@@ -582,7 +589,7 @@ export default function AnalyticsPage() {
 						<Button
 							variant="outline"
 							className="border-white/10 bg-white/5 text-white hover:bg-white/10"
-							onClick={() => setTrend(baseTrend)}>
+							onClick={() => setTrend([])}>
 							Reset
 						</Button>
 					}>
