@@ -73,7 +73,7 @@ const LaunchDestinations = () => {
 					{destinations.map((spot) => (
 						<div
 							key={spot.name}
-							className="group relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/10 via-white/5 to-white/0 p-5 shadow-[0_20px_60px_rgba(0,0,0,0.35)] backdrop-blur-sm transition-all hover:border-white/20 hover:from-white/15 hover:via-white/8">
+							className="group relative overflow-hidden rounded-2xl border border-white/10 bg-linear-to-br from-white/10 via-white/5 to-white/0 p-5 shadow-[0_20px_60px_rgba(0,0,0,0.35)] backdrop-blur-sm transition-all hover:border-white/20 hover:from-white/15 hover:via-white/8">
 							<span className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/10 transition-all group-hover:ring-white/15" />
 							<span className="pointer-events-none absolute -top-24 -right-24 h-48 w-48 rounded-full bg-white/10 blur-3xl opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
