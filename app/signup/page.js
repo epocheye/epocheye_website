@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowRight, Landmark, Mail, ShieldPlus, UserPlus, KeyRound, Sparkles } from "lucide-react";
 
 export default function SignupPage() {
@@ -12,24 +12,111 @@ export default function SignupPage() {
   const [form, setForm] = useState({
     email: "",
     password: "",
-    org_name: "",
-    site_name: "",
     annual_visitors: "",
   });
+  const [orgs, setOrgs] = useState([]);
+  const [orgsLoading, setOrgsLoading] = useState(true);
+  const [orgsError, setOrgsError] = useState("");
+  const [selectedOrgId, setSelectedOrgId] = useState("");
+  const [orgNameOther, setOrgNameOther] = useState("");
+  const [siteSelection, setSiteSelection] = useState("");
+  const [siteNameNew, setSiteNameNew] = useState("");
+
+  const selectedOrg =
+    selectedOrgId && selectedOrgId !== "other"
+      ? orgs.find((org) => String(org.id) === String(selectedOrgId))
+      : null;
+  const availableSites = selectedOrg?.sites || [];
+  const orgsEmpty = !orgsLoading && (!orgs || orgs.length === 0);
+  const siteSelectDisabled = !selectedOrg || !availableSites.length;
+  const showSiteNameField = siteSelectDisabled || siteSelection === "new";
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadOrganizations() {
+      setOrgsLoading(true);
+      setOrgsError("");
+      try {
+        const res = await fetch("/api/organizations");
+        const data = await res.json();
+
+        if (!res.ok || !data?.success) {
+          throw new Error(data?.message || "Unable to load organizations");
+        }
+        if (!active) return;
+        setOrgs(data.data || []);
+      } catch (err) {
+        if (!active) return;
+        setOrgsError(err.message || "Failed to load organizations");
+      } finally {
+        if (active) {
+          setOrgsLoading(false);
+        }
+      }
+    }
+
+    loadOrganizations();
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    setSiteSelection("");
+    setSiteNameNew("");
+  }, [selectedOrgId]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    const trimmedOrg = orgNameOther.trim();
+    const trimmedSite = siteNameNew.trim();
+    const isNewOrg = !selectedOrgId || selectedOrgId === "other";
+    const isNewSite = showSiteNameField;
+
+    if (!form.email || !form.password) {
+      setError("Email and password are required");
+      return;
+    }
+    if (isNewOrg && !trimmedOrg) {
+      setError("Add an organization name or pick one from the list.");
+      return;
+    }
+    if (!isNewOrg && !selectedOrgId) {
+      setError("Select an organization.");
+      return;
+    }
+    if (isNewSite && !trimmedSite) {
+      setError("Add a site name for this organization.");
+      return;
+    }
+    if (!isNewSite && !siteSelection) {
+      setError("Select a site for this organization.");
+      return;
+    }
+
     setLoading(true);
 
     try {
       const body = {
         email: form.email,
         password: form.password,
-        org_name: form.org_name,
-        site_name: form.site_name,
-        annual_visitors: form.annual_visitors ? Number(form.annual_visitors) : undefined,
       };
+
+      if (form.annual_visitors) {
+        body.annual_visitors = Number(form.annual_visitors);
+      }
+      if (isNewOrg) {
+        body.org_name = trimmedOrg;
+      } else {
+        body.org_id = Number(selectedOrgId);
+      }
+      if (isNewSite) {
+        body.site_name = trimmedSite;
+      } else {
+        body.site_id = Number(siteSelection);
+      }
 
       const res = await fetch("/api/auth/signup", {
         method: "POST",
@@ -44,7 +131,15 @@ export default function SignupPage() {
 
       localStorage.setItem("epocheye_token", data.token);
       localStorage.setItem("epocheye_user", JSON.stringify(data.user));
-      router.push("/dashboard/analytics");
+      if (data?.user?.org_id) {
+        localStorage.setItem("epocheye_org_id", String(data.user.org_id));
+      }
+      if (data?.site?.id) {
+        localStorage.setItem("epocheye_site_id", String(data.site.id));
+      }
+
+      const nextPath = data?.site?.id ? `/dashboard/analytics?siteId=${data.site.id}` : "/dashboard/analytics";
+      router.push(nextPath);
     } catch (err) {
       setError(err.message || "Signup failed");
     } finally {
@@ -106,34 +201,93 @@ export default function SignupPage() {
               </label>
 
               <label className="block space-y-2 text-sm">
-                <span className="text-zinc-300">Organization / Site</span>
-                <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/40 px-4 py-3 focus-within:border-emerald-400/60">
-                  <ShieldPlus className="size-5 text-emerald-300" />
-                  <input
-                    type="text"
-                    name="org"
-                    value={form.org_name}
-                    onChange={(e) => setForm((prev) => ({ ...prev, org_name: e.target.value }))}
-                    className="w-full bg-transparent text-white outline-none placeholder:text-zinc-500"
-                    placeholder="Humayun's Tomb Command, Delhi"
-                    required
-                  />
+                <span className="text-zinc-300">Organization</span>
+                <div className="rounded-xl border border-white/10 bg-black/40 p-3">
+                  <div className="flex items-center gap-3 rounded-lg border border-white/5 bg-black/20 px-4 py-3 focus-within:border-emerald-400/60">
+                    <ShieldPlus className="size-5 text-emerald-300" />
+                    <select
+                      value={selectedOrgId}
+                      onChange={(e) => {
+                        setSelectedOrgId(e.target.value);
+                        if (e.target.value !== "other") {
+                          setOrgNameOther("");
+                        }
+                      }}
+                      className="w-full bg-transparent text-white outline-none placeholder:text-zinc-500"
+                    >
+                      <option value="" disabled className="bg-black text-white">Select organization from database</option>
+                      {orgs.map((org) => (
+                        <option key={org.id} value={org.id} className="bg-black text-white">
+                          {org.name}
+                        </option>
+                      ))}
+                      <option value="other" className="bg-black text-white">Other (add manually)</option>
+                    </select>
+                  </div>
+                  {orgsLoading && (
+                    <p className="px-1 pt-2 text-xs text-zinc-400">Loading organizations...</p>
+                  )}
+                  {orgsError && (
+                    <p className="px-1 pt-2 text-xs text-red-300">{orgsError}</p>
+                  )}
+                  {orgsEmpty && !orgsError && !orgsLoading && (
+                    <p className="px-1 pt-2 text-xs text-zinc-400">No organizations in the database yet. Add yours below.</p>
+                  )}
+                  {(selectedOrgId === "other" || !selectedOrgId || orgsEmpty) && (
+                    <div className="mt-3 flex items-center gap-3 rounded-lg border border-white/10 bg-black/40 px-4 py-3 focus-within:border-emerald-400/60">
+                      <ShieldPlus className="size-5 text-emerald-300" />
+                      <input
+                        type="text"
+                        name="org_name"
+                        value={orgNameOther}
+                        onChange={(e) => setOrgNameOther(e.target.value)}
+                        className="w-full bg-transparent text-white outline-none placeholder:text-zinc-500"
+                        placeholder="Type a new organization name"
+                      />
+                    </div>
+                  )}
                 </div>
               </label>
 
               <label className="block space-y-2 text-sm">
-                <span className="text-zinc-300">Primary site name</span>
-                <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/40 px-4 py-3 focus-within:border-emerald-400/60">
-                  <ShieldPlus className="size-5 text-emerald-300" />
-                  <input
-                    type="text"
-                    name="site"
-                    value={form.site_name}
-                    onChange={(e) => setForm((prev) => ({ ...prev, site_name: e.target.value }))}
-                    className="w-full bg-transparent text-white outline-none placeholder:text-zinc-500"
-                    placeholder="Red Fort"
-                    required
-                  />
+                <span className="text-zinc-300">Site</span>
+                <div className="rounded-xl border border-white/10 bg-black/40 p-3">
+                  <div className="flex items-center gap-3 rounded-lg border border-white/5 bg-black/20 px-4 py-3 focus-within:border-emerald-400/60">
+                    <ShieldPlus className="size-5 text-emerald-300" />
+                    <select
+                      value={siteSelectDisabled ? "" : siteSelection}
+                      onChange={(e) => setSiteSelection(e.target.value)}
+                      disabled={siteSelectDisabled}
+                      className="w-full bg-transparent text-white outline-none placeholder:text-zinc-500 disabled:text-zinc-600"
+                    >
+                      <option value="" disabled className="bg-black text-white">Select a site</option>
+                      {availableSites.map((site) => (
+                        <option key={site.id} value={site.id} className="bg-black text-white">
+                          {site.name}
+                        </option>
+                      ))}
+                      <option value="new" className="bg-black text-white">Create a new site</option>
+                    </select>
+                  </div>
+                  {selectedOrg && siteSelectDisabled && (
+                    <p className="px-1 pt-2 text-xs text-zinc-400">No sites found for this organization. Add one below.</p>
+                  )}
+                  {!selectedOrg && !orgsLoading && (
+                    <p className="px-1 pt-2 text-xs text-zinc-400">Select an organization to see its sites.</p>
+                  )}
+                  {showSiteNameField && (
+                    <div className="mt-3 flex items-center gap-3 rounded-lg border border-white/10 bg-black/40 px-4 py-3 focus-within:border-emerald-400/60">
+                      <ShieldPlus className="size-5 text-emerald-300" />
+                      <input
+                        type="text"
+                        name="site_name"
+                        value={siteNameNew}
+                        onChange={(e) => setSiteNameNew(e.target.value)}
+                        className="w-full bg-transparent text-white outline-none placeholder:text-zinc-500"
+                        placeholder="Add a new site for this organization"
+                      />
+                    </div>
+                  )}
                 </div>
               </label>
 

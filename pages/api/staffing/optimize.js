@@ -55,7 +55,7 @@ export default async function handler(req, res) {
   try {
     const { data: history, error: historyError } = await supabaseAdmin
       .from('visitor_analytics')
-      .select('date, domestic, foreign')
+      .select('date, domestic, foreign_visitors')
       .eq('site_id', siteId)
       .gte('date', from)
       .lte('date', date);
@@ -63,7 +63,7 @@ export default async function handler(req, res) {
     if (historyError) throw historyError;
 
     const filtered = (history || []).filter((row) => new Date(row.date).getDay() === dayOfWeek);
-    const totals = filtered.map((row) => (row.domestic || 0) + (row.foreign || 0));
+    const totals = filtered.map((row) => (row.domestic || 0) + (row.foreign_visitors || 0));
     const dailyAverage = totals.length ? totals.reduce((s, v) => s + v, 0) / totals.length : 0;
     const perHourBase = dailyAverage / HOURS.length;
 
