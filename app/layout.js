@@ -1,6 +1,16 @@
 import { Geist, Geist_Mono, Montserrat_Alternates } from "next/font/google";
 import "./globals.css";
 
+const getMetadataBase = () => {
+  const raw = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_APP_URL;
+  if (!raw) return new URL("http://localhost:3000");
+  try {
+    return new URL(raw);
+  } catch {
+    return new URL(`https://${raw}`);
+  }
+};
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -26,6 +36,7 @@ const montserratAlternates = Montserrat_Alternates({
 });
 
 export const metadata = {
+  metadataBase: getMetadataBase(),
   title: "Epocheye - Turn Your Phone Into an AR Time Machine | Heritage Tourism Reimagined",
   description:
     "Experience India's UNESCO World Heritage Sites through AR time travel. Point your phone and watch history unfold. 10 destinations launching March 2026. Join 5,000+ early adopters.",

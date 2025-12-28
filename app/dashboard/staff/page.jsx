@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import {
 	AlertCircle,
@@ -14,6 +14,7 @@ import {
 	UserRound,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
 	Table,
 	TableBody,
@@ -34,6 +35,20 @@ const emptyForm = {
 };
 
 export default function StaffAdminPage() {
+	return (
+		<Suspense
+			fallback={
+				<div className="p-6">
+					<Skeleton className="mb-4 h-10 w-56" />
+					<Skeleton className="h-72 w-full" />
+				</div>
+			}>
+			<StaffAdminPageContent />
+		</Suspense>
+	);
+}
+
+function StaffAdminPageContent() {
 	const searchParams = useSearchParams();
 	const [siteId, setSiteId] = useState("");
 	const [loading, setLoading] = useState(true);

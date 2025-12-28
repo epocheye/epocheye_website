@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import {
 	Activity,
@@ -139,6 +139,20 @@ function Section({
 }
 
 export default function AnalyticsPage() {
+	return (
+		<Suspense
+			fallback={
+				<div className="p-6">
+					<Skeleton className="mb-4 h-10 w-64" />
+					<Skeleton className="h-72 w-full" />
+				</div>
+			}>
+			<AnalyticsPageContent />
+		</Suspense>
+	);
+}
+
+function AnalyticsPageContent() {
 	const searchParams = useSearchParams();
 	const [loading, setLoading] = useState(true);
 	const [mounted, setMounted] = useState(false);
