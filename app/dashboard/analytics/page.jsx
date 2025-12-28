@@ -163,7 +163,11 @@ export default function AnalyticsPage() {
 	const [selectedZone, setSelectedZone] = useState(null);
 	const [forecast, setForecast] = useState([]);
 	const [staffRows, setStaffRows] = useState([]);
-	const [staffSummary, setStaffSummary] = useState({ monthlySavings: 0, hoursReduced: 0, optimizationPct: 0 });
+	const [staffSummary, setStaffSummary] = useState({
+		monthlySavings: 0,
+		hoursReduced: 0,
+		optimizationPct: 0,
+	});
 	const [staffError, setStaffError] = useState("");
 	const [reportType, setReportType] = useState("Weekly");
 	const [dateRange, setDateRange] = useState({ start: "", end: "" });
@@ -181,14 +185,19 @@ export default function AnalyticsPage() {
 	}, [zones]);
 
 	const recalcStaffRow = (row) => {
-		const status = row.current === row.rec ? "optimal" : row.current > row.rec ? "over" : "under";
+		const status =
+			row.current === row.rec ? "optimal" : row.current > row.rec ? "over" : "under";
 		const save = (row.current - row.rec) * 500;
 		return { ...row, status, save };
 	};
 
 	const fmtCurrency = (value) => {
 		const n = Number(value) || 0;
-		return n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
+		return n.toLocaleString("en-US", {
+			style: "currency",
+			currency: "USD",
+			maximumFractionDigits: 0,
+		});
 	};
 
 	const fmtNumber = (value) => (Number(value) || 0).toLocaleString("en-US");
@@ -278,22 +287,30 @@ export default function AnalyticsPage() {
 
 				if (!statsRes.ok || !stats?.success) {
 					throw new Error(
-						`${stats?.message || "Failed to load stats"}${stats?.error ? `: ${stats.error}` : ""}`
+						`${stats?.message || "Failed to load stats"}${
+							stats?.error ? `: ${stats.error}` : ""
+						}`
 					);
 				}
 				if (!trendsRes.ok || !trends?.success) {
 					throw new Error(
-						`${trends?.message || "Failed to load trends"}${trends?.error ? `: ${trends.error}` : ""}`
+						`${trends?.message || "Failed to load trends"}${
+							trends?.error ? `: ${trends.error}` : ""
+						}`
 					);
 				}
 				if (!demoRes.ok || !demo?.success) {
 					throw new Error(
-						`${demo?.message || "Failed to load demographics"}${demo?.error ? `: ${demo.error}` : ""}`
+						`${demo?.message || "Failed to load demographics"}${
+							demo?.error ? `: ${demo.error}` : ""
+						}`
 					);
 				}
 				if (!zonesRes.ok || !zonesResp?.success) {
 					throw new Error(
-						`${zonesResp?.message || "Failed to load zones"}${zonesResp?.error ? `: ${zonesResp.error}` : ""}`
+						`${zonesResp?.message || "Failed to load zones"}${
+							zonesResp?.error ? `: ${zonesResp.error}` : ""
+						}`
 					);
 				}
 
@@ -366,9 +383,15 @@ export default function AnalyticsPage() {
 
 				if (!staffRes.ok || !staffResp?.success) {
 					setStaffError(
-						`${staffResp?.message || "Failed to load staff"}${staffResp?.error ? `: ${staffResp.error}` : ""}`
+						`${staffResp?.message || "Failed to load staff"}${
+							staffResp?.error ? `: ${staffResp.error}` : ""
+						}`
 					);
-					setStaffSummary({ monthlySavings: 0, hoursReduced: 0, optimizationPct: 0 });
+					setStaffSummary({
+						monthlySavings: 0,
+						hoursReduced: 0,
+						optimizationPct: 0,
+					});
 					setStaffRows([]);
 				} else {
 					const staffData = staffResp?.data || {};
@@ -376,7 +399,9 @@ export default function AnalyticsPage() {
 					setStaffSummary({
 						monthlySavings: Math.round(staffSummaryData.monthly_savings || 0),
 						hoursReduced: Math.max(0, staffSummaryData.total_hours_reduced || 0),
-						optimizationPct: Number((staffSummaryData.optimization_percentage || 0).toFixed(1)),
+						optimizationPct: Number(
+							(staffSummaryData.optimization_percentage || 0).toFixed(1)
+						),
 					});
 
 					const staffRowsData = (staffData.hourly || []).map((row) =>
@@ -386,7 +411,11 @@ export default function AnalyticsPage() {
 							current: row.current_staff || 0,
 							rec: row.recommended_staff || 0,
 							status:
-								row.status === "overstaffed" ? "over" : row.status === "understaffed" ? "under" : "optimal",
+								row.status === "overstaffed"
+									? "over"
+									: row.status === "understaffed"
+									? "under"
+									: "optimal",
 							save: row.hourly_savings || 0,
 						})
 					);
@@ -1068,9 +1097,7 @@ export default function AnalyticsPage() {
 							<Button
 								variant="outline"
 								className="border-white/10 bg-white/5 text-white hover:bg-white/10"
-								onClick={() =>
-									downloadCsv(staffCsv, "staff-export.csv")
-								}>
+								onClick={() => downloadCsv(staffCsv, "staff-export.csv")}>
 								<CloudDownload className="size-4" /> CSV
 							</Button>
 							<Button
@@ -1096,7 +1123,9 @@ export default function AnalyticsPage() {
 						</Card>
 						<Card className="border-white/5 bg-white/5 p-4 text-left text-sm text-zinc-200">
 							<p className="text-xs text-zinc-400">Avg Optimization</p>
-							<p className="text-2xl font-semibold text-emerald-300">{(Number(staffSummary.optimizationPct) || 0).toFixed(1)}%</p>
+							<p className="text-2xl font-semibold text-emerald-300">
+								{(Number(staffSummary.optimizationPct) || 0).toFixed(1)}%
+							</p>
 						</Card>
 					</div>
 					{staffError && (
@@ -1119,7 +1148,9 @@ export default function AnalyticsPage() {
 							<TableBody>
 								{staffRows.length === 0 ? (
 									<TableRow>
-										<TableCell colSpan={6} className="text-center text-sm text-zinc-400">
+										<TableCell
+											colSpan={6}
+											className="text-center text-sm text-zinc-400">
 											{staffError ? "" : "No staff data yet."}
 										</TableCell>
 									</TableRow>
@@ -1136,8 +1167,17 @@ export default function AnalyticsPage() {
 														setStaffRows((prev) =>
 															prev.map((r) =>
 																r.slot === row.slot
-																? recalcStaffRow({ ...r, current: Number(e.target.value) })
-																: r
+																	? recalcStaffRow(
+																			{
+																				...r,
+																				current: Number(
+																					e
+																						.target
+																						.value
+																				),
+																			}
+																	  )
+																	: r
 															)
 														)
 													}
@@ -1166,7 +1206,9 @@ export default function AnalyticsPage() {
 							<Button
 								onClick={() =>
 									setStaffRows((rows) =>
-										rows.map((r) => recalcStaffRow({ ...r, current: r.rec }))
+										rows.map((r) =>
+											recalcStaffRow({ ...r, current: r.rec })
+										)
 									)
 								}
 								className="bg-emerald-500 text-black hover:bg-emerald-400">
