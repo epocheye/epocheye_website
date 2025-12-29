@@ -44,3 +44,5 @@ next-env.d.ts
 .env.sentry-build-plugin
 
 *.csv
+
+crowd_model.pkl
