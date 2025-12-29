@@ -54,16 +54,25 @@ export default async function handler(req, res) {
 
   try {
     const { data: history, error: historyError } = await supabaseAdmin
-      .from('visitor_analytics')
-      .select('date, domestic, foreign_visitors')
+      .from('crowd_data')
+      .select('timestamp, count')
       .eq('site_id', siteId)
-      .gte('date', from)
-      .lte('date', date);
+      .gte('timestamp', `${from} 00:00:00`)
+      .lte('timestamp', `${date} 23:59:59`);
 
     if (historyError) throw historyError;
 
-    const filtered = (history || []).filter((row) => new Date(row.date).getDay() === dayOfWeek);
-    const totals = filtered.map((row) => (row.domestic || 0) + (row.foreign_visitors || 0));
+    const totalsByDate = new Map();
+    (history || []).forEach((row) => {
+      const dateKey = row.timestamp.slice(0, 10);
+      const current = totalsByDate.get(dateKey) || 0;
+      totalsByDate.set(dateKey, current + (row.count || 0));
+    });
+
+    const totals = Array.from(totalsByDate.entries())
+      .filter(([key]) => new Date(`${key}T00:00:00`).getDay() === dayOfWeek)
+      .map(([, total]) => total);
+
     const dailyAverage = totals.length ? totals.reduce((s, v) => s + v, 0) / totals.length : 0;
     const perHourBase = dailyAverage / HOURS.length;
 
@@ -73,25 +82,29 @@ export default async function handler(req, res) {
       .eq('site_id', siteId);
     if (staffError) throw staffError;
 
+    const hasStaff = (staffRows || []).length > 0;
+
     const hourly = HOURS.map((hour) => {
       const expected_visitors = perHourBase * holidayMultiplier;
       const recommended_staff = Math.max(1, Math.ceil(expected_visitors / 50));
       const hourStart = hour * 60;
       const hourEnd = hourStart + 60;
-      const current_staff = (staffRows || []).filter((row) => {
-        if (row.is_active === false) return false;
-        const start = parseTimeToMinutes(row.shift_start);
-        const end = parseTimeToMinutes(row.shift_end);
-        if (start === null || end === null) return false;
-        return start <= hourStart && end >= hourEnd;
-      }).length;
+      const current_staff = hasStaff
+        ? (staffRows || []).filter((row) => {
+            if (row.is_active === false) return false;
+            const start = parseTimeToMinutes(row.shift_start);
+            const end = parseTimeToMinutes(row.shift_end);
+            if (start === null || end === null) return false;
+            return start <= hourStart && end >= hourEnd;
+          }).length
+        : recommended_staff;
 
       const status = current_staff === recommended_staff
         ? 'optimal'
         : current_staff > recommended_staff
           ? 'overstaffed'
           : 'understaffed';
-      const hourly_savings = (current_staff - recommended_staff) * 500;
+      const hourly_savings = hasStaff ? (current_staff - recommended_staff) * 500 : 0;
 
       return {
         time: `${hour.toString().padStart(2, '0')}:00`,

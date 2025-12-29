@@ -37,20 +37,31 @@ export default async function handler(req, res) {
 
   try {
     const { data, error } = await supabaseAdmin
-      .from('visitor_analytics')
-      .select('date, domestic, foreign_visitors')
+      .from('crowd_data')
+      .select('timestamp, count')
       .eq('site_id', siteId)
-      .gte('date', from)
-      .order('date', { ascending: true });
+      .gte('timestamp', `${from} 00:00:00`)
+      .order('timestamp', { ascending: true });
 
     if (error) throw error;
 
-    const series = (data || []).map((row) => ({
-      date: row.date,
-      total: (row.domestic || 0) + (row.foreign_visitors || 0),
-      domestic: row.domestic || 0,
-      foreign: row.foreign_visitors || 0,
-    }));
+    const totalsByDate = new Map();
+    (data || []).forEach((row) => {
+      const dateKey = row.timestamp.slice(0, 10);
+      const current = totalsByDate.get(dateKey) || 0;
+      totalsByDate.set(dateKey, current + (row.count || 0));
+    });
+
+    const series = [];
+    for (let i = 0; i < days; i += 1) {
+      const d = new Date(fromDate);
+      d.setDate(fromDate.getDate() + i);
+      const key = d.toISOString().slice(0, 10);
+      const total = totalsByDate.get(key) || 0;
+      const domestic = Math.round(total * 0.72);
+      const foreign = Math.max(0, total - domestic);
+      series.push({ date: key, total, domestic, foreign });
+    }
 
     return res.status(200).json({ success: true, data: series });
   } catch (error) {

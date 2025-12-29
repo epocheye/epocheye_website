@@ -1,8 +1,6 @@
 import { supabaseAdmin } from '../../../lib/supabaseClient';
 import verifyToken from '../../../middleware/verifyToken';
 
-const FIVE_MINUTES_AGO = () => new Date(Date.now() - 5 * 60 * 1000).toISOString();
-
 function runMiddleware(req, res, fn) {
   return new Promise((resolve, reject) => {
     fn(req, res, (result) => {
@@ -46,28 +44,33 @@ export default async function handler(req, res) {
 
     if (zoneError) throw zoneError;
 
+    const { data: latestRow, error: latestError } = await supabaseAdmin
+      .from('crowd_data')
+      .select('timestamp')
+      .eq('site_id', siteId)
+      .order('timestamp', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (latestError) throw latestError;
+    if (!latestRow) {
+      return res.status(200).json({ success: true, data: [] });
+    }
+
     const { data: crowd, error: crowdError } = await supabaseAdmin
       .from('crowd_data')
-      .select('zone_id, count, timestamp')
+      .select('zone_id, count, density, timestamp')
       .eq('site_id', siteId)
-      .gte('timestamp', FIVE_MINUTES_AGO());
+      .eq('timestamp', latestRow.timestamp);
 
     if (crowdError) throw crowdError;
 
-    const latestByZone = new Map();
-    (crowd || []).forEach((row) => {
-      const existing = latestByZone.get(row.zone_id);
-      if (!existing || new Date(row.timestamp) > new Date(existing.timestamp)) {
-        latestByZone.set(row.zone_id, row);
-      }
-    });
-
     const payload = (zones || []).map((zone) => {
-      const latest = latestByZone.get(zone.id);
+      const latest = (crowd || []).find((row) => row.zone_id === zone.id);
       const current_count = latest?.count || 0;
       const density_percentage = zone.max_capacity
         ? (current_count / zone.max_capacity) * 100
-        : 0;
+        : (latest?.density || 0) * 100;
       return {
         zone_id: zone.id,
         zone_name: zone.name,
@@ -75,6 +78,7 @@ export default async function handler(req, res) {
         max_capacity: zone.max_capacity,
         density_percentage,
         status: statusFor(density_percentage),
+        last_updated: latestRow.timestamp,
       };
     });
 

@@ -44,18 +44,24 @@ export default async function handler(req, res) {
 
   try {
     const { data, error } = await supabaseAdmin
-      .from('visitor_analytics')
-      .select('date, domestic, foreign')
+      .from('crowd_data')
+      .select('timestamp, count')
       .eq('site_id', siteId)
-      .gte('date', from)
-      .order('date', { ascending: false });
+      .gte('timestamp', `${from} 00:00:00`)
+      .order('timestamp', { ascending: false });
 
     if (error) throw error;
 
-    const byDay = new Map();
+    const totalsByDate = new Map();
     (data || []).forEach((row) => {
-      const total = (row.domestic || 0) + (row.foreign || 0);
-      const dow = new Date(row.date).getDay();
+      const dateKey = row.timestamp.slice(0, 10);
+      const current = totalsByDate.get(dateKey) || 0;
+      totalsByDate.set(dateKey, current + (row.count || 0));
+    });
+
+    const byDay = new Map();
+    totalsByDate.forEach((total, dateStr) => {
+      const dow = new Date(`${dateStr}T00:00:00`).getDay();
       const list = byDay.get(dow) || [];
       list.push(total);
       byDay.set(dow, list);
