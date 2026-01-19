@@ -1,53 +1,6 @@
-"use client";
-
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { ArrowRight, Landmark, Mail, ShieldPlus, UserPlus, KeyRound, Sparkles } from "lucide-react";
-
 export default function SignupPage() {
-  const router = useRouter();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [form, setForm] = useState({
-    email: "",
-    password: "",
-    annual_visitors: "",
-  });
-  const [orgs, setOrgs] = useState([]);
-  const [orgsLoading, setOrgsLoading] = useState(true);
-  const [orgsError, setOrgsError] = useState("");
-  const [selectedOrgId, setSelectedOrgId] = useState("");
-  const [orgNameOther, setOrgNameOther] = useState("");
-  const [siteSelection, setSiteSelection] = useState("");
-  const [siteNameNew, setSiteNameNew] = useState("");
-
-  const selectedOrg =
-    selectedOrgId && selectedOrgId !== "other"
-      ? orgs.find((org) => String(org.id) === String(selectedOrgId))
-      : null;
-  const availableSites = selectedOrg?.sites || [];
-  const orgsEmpty = !orgsLoading && (!orgs || orgs.length === 0);
-  const siteSelectDisabled = !selectedOrg || !availableSites.length;
-  const showSiteNameField = siteSelectDisabled || siteSelection === "new";
-
-  useEffect(() => {
-    let active = true;
-
-    async function loadOrganizations() {
-      setOrgsLoading(true);
-      setOrgsError("");
-      try {
-        const res = await fetch("/api/organizations");
-        const data = await res.json();
-
-        if (!res.ok || !data?.success) {
-          throw new Error(data?.message || "Unable to load organizations");
-        }
-        if (!active) return;
-        setOrgs(data.data || []);
-      } catch (err) {
-        if (!active) return;
+  return <div></div>;
+}
         setOrgsError(err.message || "Failed to load organizations");
       } finally {
         if (active) {

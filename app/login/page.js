@@ -1,53 +1,6 @@
-"use client";
-
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { ArrowRight, Landmark, Lock, Mail, ShieldCheck, Sparkles } from "lucide-react";
-
 export default function LoginPage() {
-  const router = useRouter();
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [form, setForm] = useState({ email: "", password: "", remember: true });
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
-
-    try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: form.email, password: form.password }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok || !data?.success) {
-        throw new Error(data?.message || "Unable to sign in");
-      }
-
-      if (form.remember) {
-        localStorage.setItem("epocheye_token", data.token);
-        localStorage.setItem("epocheye_user", JSON.stringify(data.user));
-      }
-
-      router.push("/dashboard/analytics");
-    } catch (err) {
-      setError(err.message || "Invalid credentials");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <div className="relative min-h-screen bg-linear-to-br from-black via-neutral-950 to-black text-white">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(196,247,60,0.06),transparent_30%),radial-gradient(circle_at_80%_10%,rgba(120,119,198,0.08),transparent_30%)]" />
-      <div className="absolute inset-0 bg-[linear-gradient(120deg,rgba(255,255,255,0.06),transparent_30%),linear-gradient(240deg,rgba(255,255,255,0.05),transparent_35%)]" />
-
-      <div className="relative z-10 mx-auto flex min-h-screen max-w-5xl items-center justify-center px-4 py-12">
+  return <div></div>;
+}
         <div className="grid w-full gap-8 lg:grid-cols-[1.05fr_0.95fr]">
           <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-linear-to-b from-white/10 via-white/5 to-black/40 p-10 shadow-[0_30px_120px_rgba(0,0,0,0.45)] backdrop-blur-xl">
             <div className="pointer-events-none absolute -left-32 -top-32 size-64 rounded-full bg-emerald-500/15 blur-3xl" />
