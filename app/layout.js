@@ -63,6 +63,12 @@ export const metadata = {
       "See historical monuments in their original glory through your smartphone. Launching March 2026 with 10 UNESCO sites in India.",
     images: ["/1.png"],
   },
+  icons: {
+    icon: [
+      { url: "/logo-black.png", media: "(prefers-color-scheme: light)" },
+      { url: "/logo-white.png", media: "(prefers-color-scheme: dark)" },
+    ],
+  },
 };
 
 import Script from "next/script";
