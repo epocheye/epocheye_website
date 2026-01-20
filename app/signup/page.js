@@ -1,7 +1,58 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { Mail, KeyRound, ShieldPlus, UserPlus, ArrowRight, Sparkles, Landmark } from "lucide-react";
+
 export default function SignupPage() {
-  return <div></div>;
-}
-        setOrgsError(err.message || "Failed to load organizations");
+  const router = useRouter();
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+    annual_visitors: "",
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  
+  const [orgs, setOrgs] = useState([]);
+  const [orgsLoading, setOrgsLoading] = useState(false);
+  const [orgsError, setOrgsError] = useState("");
+  const [orgsEmpty, setOrgsEmpty] = useState(false);
+  
+  const [selectedOrgId, setSelectedOrgId] = useState("");
+  const [orgNameOther, setOrgNameOther] = useState("");
+  
+  const [siteSelection, setSiteSelection] = useState("");
+  const [siteNameNew, setSiteNameNew] = useState("");
+
+  const selectedOrg = orgs.find((o) => o.id === Number(selectedOrgId));
+  const availableSites = selectedOrg?.sites || [];
+  const siteSelectDisabled = !selectedOrg || availableSites.length === 0;
+  const showSiteNameField = siteSelection === "new" || siteSelectDisabled;
+
+  useEffect(() => {
+    let active = true;
+    setOrgsLoading(true);
+
+    async function loadOrganizations() {
+      try {
+        const res = await fetch("/api/organizations");
+        if (!res.ok) throw new Error("Failed to fetch organizations");
+        const data = await res.json();
+        if (active) {
+          if (data.success && data.organizations) {
+            setOrgs(data.organizations);
+            setOrgsEmpty(data.organizations.length === 0);
+          } else {
+            setOrgs([]);
+            setOrgsEmpty(true);
+          }
+        }
+      } catch (err) {
+        if (active) {
+          setOrgsError(err.message || "Failed to load organizations");
+        }
       } finally {
         if (active) {
           setOrgsLoading(false);
