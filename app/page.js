@@ -58,7 +58,7 @@ const Home = () => {
 		<section className="flex-1 overflow-x-hidden bg-black" style={{ scrollSnapType: "y mandatory" }}>
 			<Hero />
 			{/* <SocialProof /> */}
-			<Suspense fallback={<div className="min-h-screen bg-white" />}>
+			{/* <Suspense fallback={<div className="min-h-screen bg-white" />}>
 				<Problem />
 			</Suspense>
 			<Suspense fallback={<div className="min-h-screen bg-black" />}>
@@ -72,19 +72,19 @@ const Home = () => {
 			</Suspense>
 			<Suspense fallback={<div className="min-h-screen bg-black" />}>
 				<LaunchDestinations />
-			</Suspense>
+			</Suspense> */}
 			{/* <Suspense fallback={<div className="min-h-screen bg-white" />}>
 				<Waitlist />
 			</Suspense> */}
-			<Suspense fallback={<div className="min-h-screen bg-black" />}>
+			{/* <Suspense fallback={<div className="min-h-screen bg-black" />}>
 				<FAQ />
-			</Suspense>
+			</Suspense> */}
 			{/* <Suspense fallback={<div className="min-h-screen bg-black" />}>
 				<Testimonials />
 			</Suspense> */}
-			<Suspense fallback={<div className="min-h-[50vh] bg-black" />}>
+			{/* <Suspense fallback={<div className="min-h-[50vh] bg-black" />}>
 				<Footer />
-			</Suspense>
+			</Suspense> */}
 		</section>
 	);
 };
