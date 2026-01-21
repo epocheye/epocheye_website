@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 import ShinyText from "../ShinyText";
 import Navbar from "./Navbar";
 import { Download } from "lucide-react";
+import LightPillar from "../LightPillar";
 
 // Lazy load LiquidEther with lower priority
 const LiquidEther = dynamic(() => import("../LiquidEther"), {
@@ -38,7 +39,7 @@ const Hero = () => {
 		<div className="relative flex justify-center items-center m-auto bg-black h-screen overflow-hidden">
 			{/* Background LiquidEther - Optimized with lower resolution */}
 			<div className="absolute inset-0 w-full h-full pointer-events-auto">
-				<LiquidEther
+				{/* <LiquidEther
 					colors={["#fff", "#fff", "#fff"]}
 					mouseForce={15}
 					cursorSize={50}
@@ -54,6 +55,20 @@ const Hero = () => {
 					takeoverDuration={0.2}
 					autoResumeDelay={3000}
 					autoRampDuration={0.5}
+				/> */}
+				<LightPillar
+					topColor="#3d0fe6"
+					bottomColor="#f8f7f8"
+					intensity={1}
+					rotationSpeed={0.5}
+					glowAmount={0.001}
+					pillarWidth={3}
+					pillarHeight={0.4}
+					noiseIntensity={0.5}
+					pillarRotation={70}
+					interactive={false}
+					mixBlendMode="screen"
+					quality="high"
 				/>
 			</div>
 
@@ -77,7 +92,7 @@ const Hero = () => {
 
 				<button
 					title="Get 1 month free + exclusive beta perks"
-					className="my-6 sm:my-8 px-6 sm:px-8 py-3 border border-white/80 text-white text-sm sm:text-base rounded-full hover:bg-white hover:text-black transition duration-300 pointer-events-auto flex items-center gap-3 cursor-pointer shadow-lg shadow-white/10"
+					className="my-6 sm:my-8 px-6 sm:px-8 py-3 font-semibold bg-white/20 backdrop-blur-3xl text-sm sm:text-base rounded-full transition duration-300 pointer-events-auto flex items-center gap-3 cursor-pointer shadow-lg shadow-white/10"
 					data-tally-open="mVR7OJ"
 					data-tally-layout="modal"
 					data-tally-width="600"
