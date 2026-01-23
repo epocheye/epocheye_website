@@ -1,4 +1,10 @@
-import { Geist, Geist_Mono, Montserrat_Alternates } from "next/font/google";
+import {
+  Geist,
+  Geist_Mono,
+  Montserrat_Alternates,
+  Instrument_Sans,
+  Instrument_Serif,
+} from "next/font/google";
 import "./globals.css";
 
 const getMetadataBase = () => {
@@ -32,6 +38,22 @@ const montserratAlternates = Montserrat_Alternates({
   subsets: ["latin"],
   variable: "--font-montserrat-alternates",
   display: "swap",
+  preload: true,
+});
+
+const instrumentSans = Instrument_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+  variable: "--font-instrument-sans",
+  preload: true,
+});
+
+const instrumentSerif = Instrument_Serif({
+  subsets: ["latin"],
+  weight: ["400"],
+  display: "swap",
+  variable: "--font-instrument-serif",
   preload: true,
 });
 
@@ -82,7 +104,7 @@ export default function RootLayout({ children }) {
         <link rel="dns-prefetch" href="https://tally.so" />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${montserratAlternates.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${montserratAlternates.variable} ${instrumentSans.variable} ${instrumentSerif.variable} antialiased`}
       >
         {children}
         {/* Load Tally script with strategy for better performance */}
