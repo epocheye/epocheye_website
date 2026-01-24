@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "motion/react";
 import Navbar from "./Navbar";
 import ShinyText from "../ShinyText";
+import { ArrowRight } from "lucide-react";
 
 const Hero = () => {
 	const [showScrollIndicator, setShowScrollIndicator] = useState(false);
@@ -69,6 +70,8 @@ const Hero = () => {
 					muted
 					playsInline
 				/>
+				{/* Permanent dark overlay for text visibility */}
+				<div className="absolute inset-0 bg-black/30" />
 			</div>
 
 			{/* Navbar at the top - full height within Hero */}
@@ -130,7 +133,7 @@ const Hero = () => {
 
 						{/* Tagline - Fades out during transition */}
 						<motion.p
-							className="text-white/70 text-lg mt-4 font-light tracking-wide font-montserrat"
+							className="text-white/70 text-lg mt-4 font-medium tracking-wide font-montserrat"
 							initial={{ opacity: 0, y: 20 }}
 							animate={{
 								opacity: introPhase === "intro" ? 1 : 0,
@@ -147,29 +150,63 @@ const Hero = () => {
 				)}
 			</AnimatePresence>
 
-			{/* Content Layer */}
-			<div className="relative z-10 text-center px-4 sm:px-6 max-w-4xl mx-auto font-montserrat flex flex-col items-center justify-center h-full gap-4"></div>
+			{/* Content Layer - Minimalist Design */}
+			<motion.div
+				className="relative z-10 text-center px-6 max-w-3xl mx-auto font-montserrat flex flex-col items-center justify-center h-full"
+				initial={{ opacity: 0 }}
+				animate={{ opacity: introPhase === "complete" ? 1 : 0 }}
+				transition={{ duration: 1.2, delay: 0.2 }}>
+				{/* Single Headline */}
+				<motion.h1
+					initial={{ opacity: 0, y: 20 }}
+					animate={{
+						opacity: introPhase === "complete" ? 1 : 0,
+						y: introPhase === "complete" ? 0 : 20,
+					}}
+					transition={{ duration: 1, delay: 0.4 }}
+					className="text-4xl sm:text-5xl md:text-6xl font-light text-white leading-[1.15] tracking-tight">
+					Rediscover heritage.
+					<br />
+					<span className="font-semibold">Reimagine travel.</span>
+				</motion.h1>
 
-			{/* Scroll Indicator - Bottom Center */}
-			{/* <div
-				className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-50 pointer-events-none transition-all duration-500 ease-out ${
-					showScrollIndicator ? "opacity-100 scale-100" : "opacity-0 scale-50"
-				}`}>
-				<div className="relative flex items-center justify-center w-16 h-16 bg-white/20 backdrop-blur-md rounded-full border-2 border-white/40 shadow-2xl">
-					<svg
-						className="w-6 h-6 text-white animate-bounce"
-						fill="none"
-						stroke="currentColor"
-						viewBox="0 0 24 24">
-						<path
-							strokeLinecap="round"
-							strokeLinejoin="round"
-							strokeWidth={2}
-							d="M19 14l-7 7m0 0l-7-7m7 7V3"
-						/>
-					</svg>
-				</div>
-			</div> */}
+				{/* Minimal Subtext */}
+				<motion.p
+					initial={{ opacity: 0 }}
+					animate={{
+						opacity: introPhase === "complete" ? 0.6 : 0,
+					}}
+					transition={{ duration: 1, delay: 0.7 }}
+					className="text-white text-xl sm:text-lg font-medium mt-8">
+					Historical intelligence for the physical world
+				</motion.p>
+
+				{/* Single CTA */}
+				<motion.button
+					initial={{ opacity: 0 }}
+					animate={{
+						opacity: introPhase === "complete" ? 1 : 0,
+					}}
+					transition={{ duration: 1, delay: 1 }}
+					className="group mt-12 px-8 py-4 border border-white/30 text-white rounded-full text-sm font-light tracking-wider uppercase hover:bg-white hover:text-black transition-all duration-500 pointer-events-auto flex items-center gap-3"
+					data-tally-open="mVR7OJ"
+					data-tally-layout="modal"
+					data-tally-width="600"
+					data-tally-auto-close="1000"
+					data-tally-form-events-forwarding="1">
+					Join Waitlist
+					<ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+				</motion.button>
+			</motion.div>
+
+			{/* Minimal Scroll Indicator */}
+			<motion.div
+				initial={{ opacity: 0 }}
+				animate={{ opacity: introPhase === "complete" ? 0.5 : 0 }}
+				transition={{ duration: 1, delay: 1.5 }}
+				className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20">
+				<div className="w-px h-12 bg-linear-to-b from-transparent via-white to-transparent" />
+			</motion.div>
 		</div>
 	);
 };

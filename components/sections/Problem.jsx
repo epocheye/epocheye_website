@@ -2,13 +2,13 @@
 import React, { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import LiquidEther from "../LiquidEther";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const Problem = () => {
 	const sectionRef = useRef(null);
 	const textsRef = useRef([]);
+	const wordsRef = useRef([]);
 
 	const texts = [
 		"You stand before a 1,000-year-old monument, but all you see is stone. Audio guides are boring. Plaques tell you dates, not stories.",
@@ -25,64 +25,162 @@ const Problem = () => {
 		if (!section) return;
 
 		const ctx = gsap.context(() => {
-			// Set initial state - hide all texts
-			textElements.forEach((text) => {
-				gsap.set(text, { opacity: 0, y: 30 });
+			// Set initial state - hide all text containers and blur all words
+			textElements.forEach((textEl, textIndex) => {
+				if (!textEl) return;
+
+				// Hide all text containers except the first one
+				gsap.set(textEl, {
+					opacity: textIndex === 0 ? 1 : 0,
+					display: textIndex === 0 ? "flex" : "none",
+				});
+
+				// Get all words in this text and set initial blur state
+				const words = wordsRef.current[textIndex];
+				if (words) {
+					words.forEach((word) => {
+						if (word) {
+							gsap.set(word, {
+								filter: "blur(10px)",
+								opacity: 0.3,
+							});
+						}
+					});
+				}
 			});
 
-			// Create main timeline with ScrollTrigger - optimized with shorter duration
+			// Calculate total scroll duration based on all words
+			const totalWords = texts.reduce((acc, text) => acc + text.split(" ").length, 0);
+			const scrollPerWord = 30; // pixels of scroll per word
+			const scrollPerTransition = 150; // pixels for transition between sentences
+			const totalScroll = totalWords * scrollPerWord + texts.length * scrollPerTransition;
+
+			// Create main timeline with ScrollTrigger
 			const mainTl = gsap.timeline({
 				scrollTrigger: {
 					trigger: section,
 					start: "top top",
-					end: `+=${window.innerHeight * texts.length * 0.4}`, // Reduced for better performance
+					end: `+=${totalScroll}`,
 					pin: true,
-					scrub: 0.5,
-					snap: {
-						snapTo: 1 / (texts.length - 1),
-						duration: 0.2,
-						ease: "power1.inOut",
-					},
+					scrub: 0.8, // Smooth scrubbing
 					markers: false,
 				},
 			});
 
-			// Add animations for each text with optimized timing
-			textElements.forEach((text, index) => {
-				if (!text) return;
+			let timelinePosition = 0;
 
-				const startTime = index * 1.0; // Faster transitions
+			// Animate each text block
+			textElements.forEach((textEl, textIndex) => {
+				if (!textEl) return;
 
-				// Fade in - simplified
-				mainTl.to(
-					text,
-					{
-						opacity: 1,
-						y: 0,
-						duration: 0.4,
-						ease: "power1.out",
-					},
-					startTime
-				);
+				const words = wordsRef.current[textIndex];
+				if (!words) return;
 
-				// Fade out (except last one) - simplified
-				if (index < texts.length - 1) {
+				const wordCount = words.length;
+				const wordDuration = 0.15; // Duration for each word reveal
+				const sentenceDuration = wordCount * wordDuration;
+
+				// If not the first text, fade in the container
+				if (textIndex > 0) {
 					mainTl.to(
-						text,
+						textEl,
+						{
+							opacity: 1,
+							display: "flex",
+							duration: 0.3,
+							ease: "power2.out",
+						},
+						timelinePosition,
+					);
+					timelinePosition += 0.2;
+				}
+
+				// Animate each word - reveal from blur
+				words.forEach((word, wordIndex) => {
+					if (!word) return;
+
+					mainTl.to(
+						word,
+						{
+							filter: "blur(0px)",
+							opacity: 1,
+							duration: wordDuration,
+							ease: "power2.out",
+						},
+						timelinePosition + wordIndex * wordDuration * 0.7,
+					);
+				});
+
+				timelinePosition += sentenceDuration + 0.3; // Add pause after sentence
+
+				// Fade out current text (except the last one)
+				if (textIndex < texts.length - 1) {
+					// First blur words back out
+					words.forEach((word, wordIndex) => {
+						if (!word) return;
+						mainTl.to(
+							word,
+							{
+								filter: "blur(8px)",
+								opacity: 0.2,
+								duration: 0.2,
+								ease: "power2.in",
+							},
+							timelinePosition + wordIndex * 0.02,
+						);
+					});
+
+					timelinePosition += 0.25;
+
+					// Then fade out the container
+					mainTl.to(
+						textEl,
 						{
 							opacity: 0,
-							y: -30,
-							duration: 0.4,
-							ease: "power1.in",
+							duration: 0.3,
+							ease: "power2.in",
+							onComplete: () => {
+								gsap.set(textEl, { display: "none" });
+							},
 						},
-						startTime + 0.6
+						timelinePosition,
 					);
+
+					timelinePosition += 0.4;
 				}
 			});
 		}, section);
 
 		return () => ctx.revert();
 	}, [texts.length]);
+
+	// Split text into words and create refs
+	const renderTextWithWords = (text, textIndex) => {
+		const words = text.split(" ");
+
+		// Initialize the words ref array for this text if not exists
+		if (!wordsRef.current[textIndex]) {
+			wordsRef.current[textIndex] = [];
+		}
+
+		return words.map((word, wordIndex) => (
+			<span
+				key={wordIndex}
+				ref={(el) => {
+					if (!wordsRef.current[textIndex]) {
+						wordsRef.current[textIndex] = [];
+					}
+					wordsRef.current[textIndex][wordIndex] = el;
+				}}
+				className="inline-block mr-[0.3em] will-change-[filter,opacity]"
+				style={{
+					filter: "blur(10px)",
+					opacity: 0.3,
+				}}>
+				{word}
+			</span>
+		));
+	};
 
 	return (
 		<div
@@ -92,9 +190,10 @@ const Problem = () => {
 				<div
 					key={index}
 					ref={(el) => (textsRef.current[index] = el)}
-					className="absolute inset-0 flex items-center justify-center px-2 sm:px-6 md:px-10">
-					<h2 className="text-3xl sm:text-2xl md:text-4xl lg:text-5xl font-medium text-black text-center font-montserrat">
-						{text}
+					className="absolute inset-0 flex items-center justify-center px-4 sm:px-8 md:px-16 lg:px-24"
+					style={{ display: index === 0 ? "flex" : "none" }}>
+					<h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-medium text-black text-center font-montserrat leading-relaxed max-w-5xl flex flex-wrap justify-center">
+						{renderTextWithWords(text, index)}
 					</h2>
 				</div>
 			))}
