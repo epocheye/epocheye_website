@@ -9,6 +9,8 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-montserrat: var(--font-montserrat-alternates);
+  --font-instrument-sans: var(--font-instrument-sans);
+  --font-instrument-serif: var(--font-instrument-serif);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -120,6 +122,14 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.font-instrument-sans {
+  font-family: var(--font-instrument-sans), system-ui, -apple-system, sans-serif;
+}
+
+.font-instrument-serif {
+  font-family: var(--font-instrument-serif), Georgia, "Times New Roman", serif;
 }
 
 /* Hide scrollbar for all browsers */
@@ -289,4 +299,215 @@ body::-webkit-scrollbar {
 .animate-gradient-x {
   background-size: 200% 200%;
   animation: gradient-x 15s ease infinite;
+}
+
+/* ============================================
+   YODEZEEN DESIGN SYSTEM TOKENS
+   Ultra-premium minimalist aesthetic
+   ============================================ */
+
+:root {
+  /* Yodezeen Color Palette */
+  --yz-black: #0A0A0A;
+  --yz-charcoal: #1A1A1A;
+  --yz-dark-gray: #2A2A2A;
+  --yz-gray: #B0B0B0;
+  --yz-light-gray: #E0E0E0;
+  --yz-off-white: #F8F8F8;
+  --yz-white: #FFFFFF;
+  --yz-gold: #D4AF37;
+  
+  /* Typography Scale - Desktop */
+  --yz-text-hero: 120px;
+  --yz-text-headline: 96px;
+  --yz-text-title: 70px;
+  --yz-text-subtitle: 60px;
+  --yz-text-large: 36px;
+  --yz-text-medium: 28px;
+  --yz-text-body: 20px;
+  --yz-text-small: 16px;
+  --yz-text-xs: 14px;
+  
+  /* Letter Spacing */
+  --yz-tracking-hero: 10px;
+  --yz-tracking-headline: 8px;
+  --yz-tracking-title: 6px;
+  --yz-tracking-subtitle: 4px;
+  --yz-tracking-body: 2px;
+  
+  /* Section Spacing */
+  --yz-section-padding: 120px;
+  --yz-section-padding-tablet: 80px;
+  --yz-section-padding-mobile: 60px;
+  --yz-content-gap: 80px;
+  --yz-element-gap: 40px;
+}
+
+/* Yodezeen Section Base */
+.yz-section {
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.yz-section-dark {
+  background-color: var(--yz-black);
+  color: var(--yz-white);
+}
+
+.yz-section-light {
+  background-color: var(--yz-off-white);
+  color: var(--yz-black);
+}
+
+/* Yodezeen Typography */
+.yz-headline {
+  font-size: var(--yz-text-hero);
+  font-weight: 700;
+  letter-spacing: var(--yz-tracking-hero);
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.yz-title {
+  font-size: var(--yz-text-title);
+  font-weight: 700;
+  letter-spacing: var(--yz-tracking-title);
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.yz-subtitle {
+  font-size: var(--yz-text-subtitle);
+  font-weight: 700;
+  letter-spacing: var(--yz-tracking-subtitle);
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.yz-body {
+  font-size: var(--yz-text-body);
+  font-weight: 300;
+  letter-spacing: var(--yz-tracking-body);
+  line-height: 1.7;
+}
+
+/* Yodezeen Animations */
+@keyframes yz-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes yz-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes yz-marker-drop {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  60% {
+    transform: translateY(5px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.yz-animate-fade-up {
+  animation: yz-fade-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.yz-animate-scale-in {
+  animation: yz-scale-in 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Yodezeen Button Styles */
+.yz-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 48px;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  border: 2px solid var(--yz-gold);
+  background: transparent;
+  color: var(--yz-gold);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.yz-button:hover {
+  background: var(--yz-gold);
+  color: var(--yz-black);
+  transform: scale(1.05);
+}
+
+/* Horizontal Scroll Container */
+.yz-horizontal-scroll {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.yz-horizontal-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.yz-scroll-card {
+  flex-shrink: 0;
+  scroll-snap-align: start;
+}
+
+/* Video Background Overlay */
+.yz-video-overlay {
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.7));
+}
+
+/* Gold Accent Link */
+.yz-gold-link {
+  color: var(--yz-gold);
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-decoration: none;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.yz-gold-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--yz-gold);
+  transition: width 0.3s ease;
+}
+
+.yz-gold-link:hover::after {
+  width: 100%;
 }

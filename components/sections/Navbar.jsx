@@ -1,38 +1,38 @@
-import React from "react";
-import StaggeredMenu from "../StaggeredMenu";
+import Image from "next/image";
+import React, { useEffect, useState } from "react";
+import logoWhite from "../../public/logo-white.png";
+import { ArrowRight, Download } from "lucide-react";
+import ShinyText from "../ShinyText";
 
-const Navbar = () => {
-	const menuItems = [
-		{ label: "Home", ariaLabel: "Go to home page", link: "/" },
-		{ label: "About", ariaLabel: "Learn about us", link: "/about" },
-		// { label: "Services", ariaLabel: "View our services", link: "/services" },
-		{ label: "Contact", ariaLabel: "Get in touch", link: "/contact" },
-	];
-
-	const socialItems = [
-		{ label: "Twitter", link: "https://x.com/sambitsingha01" },
-		{ label: "GitHub", link: "https://github.com/epocheye" },
-		{ label: "LinkedIn", link: "https://www.linkedin.com/company/epocheye" },
-	];
-
+const Navbar = ({ showLogo = true }) => {
 	return (
-		<>
-			<div className="w-full h-full">
-				<StaggeredMenu
-					position="right"
-					items={menuItems}
-					socialItems={socialItems}
-					displaySocials={true}
-					displayItemNumbering={true}
-					menuButtonColor="#fff"
-					openMenuButtonColor="#fff"
-					changeMenuColorOnOpen={true}
-					colors={["#B19EEF", "#5227FF"]}
-					logoUrl="/logo-white.png"
-					accentColor="#ff6b6b"
+		<nav className="w-full flex items-center justify-between px-8 py-4 font-montserrat relative">
+			<Image src={logoWhite} alt="EpochEye Logo" width={60} height={60} />
+
+			<div
+				className={`absolute left-1/2 transform -translate-x-1/2 transition-opacity duration-300 ${
+					showLogo ? "opacity-100" : "opacity-0"
+				}`}>
+				<ShinyText
+					text="Epocheye"
+					disabled={false}
+					speed={2}
+					className="text-3xl font-medium text-white leading-tight"
 				/>
 			</div>
-		</>
+
+			<button
+				title="Get 1 month free + exclusive beta perks"
+				className="p-3  text-white text-sm sm:text-base bg-black/20 back rounded-3xl pointer-events-auto flex items-center gap-3 cursor-pointer "
+				data-tally-open="mVR7OJ"
+				data-tally-layout="modal"
+				data-tally-width="600"
+				data-tally-auto-close="1000"
+				data-tally-form-events-forwarding="1">
+				Join the waitlist
+				<ArrowRight />
+			</button>
+		</nav>
 	);
 };
 

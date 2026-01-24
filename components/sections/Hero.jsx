@@ -1,18 +1,39 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
-import ShinyText from "../ShinyText";
+import { motion, AnimatePresence } from "motion/react";
 import Navbar from "./Navbar";
-import { Download } from "lucide-react";
-import LightPillar from "../LightPillar";
-
-// Lazy load LiquidEther with lower priority
-const LiquidEther = dynamic(() => import("../LiquidEther"), {
-	loading: () => <div className="absolute inset-0 w-full h-full bg-black" />,
-	ssr: false,
-});
+import ShinyText from "../ShinyText";
+import { ArrowRight } from "lucide-react";
 
 const Hero = () => {
 	const [showScrollIndicator, setShowScrollIndicator] = useState(false);
+	const [introPhase, setIntroPhase] = useState("intro"); // "intro" | "transition" | "complete"
+	const [navbarPosition, setNavbarPosition] = useState({ top: 28 }); // Target position in navbar
+
+	// Start intro sequence after mount
+	useEffect(() => {
+		// Initial delay before starting transition
+		const introTimer = setTimeout(() => {
+			setIntroPhase("transition");
+		}, 3000); // Show centered text for 2 seconds
+
+		return () => clearTimeout(introTimer);
+	}, []);
+
+	// Handle transition completion
+	const handleTransitionComplete = () => {
+		if (introPhase === "transition") {
+			setIntroPhase("complete");
+		}
+	};
+
+	// Skip intro on click
+	const handleSkipIntro = () => {
+		if (introPhase !== "complete") {
+			setIntroPhase("complete");
+		}
+	};
+
 	// Use throttled mouse move handler for better performance
 	useEffect(() => {
 		let timeoutId;
@@ -36,129 +57,156 @@ const Hero = () => {
 	}, []);
 
 	return (
-		<div className="relative flex justify-center items-center m-auto bg-black h-screen overflow-hidden">
+		<div
+			className="relative flex justify-center items-center m-auto bg-black h-screen overflow-hidden"
+			onClick={handleSkipIntro}>
 			{/* Background LiquidEther - Optimized with lower resolution */}
 			<div className="absolute inset-0 w-full h-full pointer-events-auto">
-				{/* <LiquidEther
-					colors={["#fff", "#fff", "#fff"]}
-					mouseForce={15}
-					cursorSize={50}
-					isViscous={false}
-					viscous={30}
-					iterationsViscous={16}
-					iterationsPoisson={16}
-					resolution={0.3}
-					isBounce={false}
-					autoDemo={true}
-					autoSpeed={0.4}
-					autoIntensity={1.8}
-					takeoverDuration={0.2}
-					autoResumeDelay={3000}
-					autoRampDuration={0.5}
-				/> */}
-				<LightPillar
-					topColor="#3d0fe6"
-					bottomColor="#f8f7f8"
-					intensity={1}
-					rotationSpeed={0.5}
-					glowAmount={0.001}
-					pillarWidth={3}
-					pillarHeight={0.4}
-					noiseIntensity={0.5}
-					pillarRotation={70}
-					interactive={false}
-					mixBlendMode="screen"
-					quality="high"
+				<video
+					className="absolute inset-0 w-full h-full object-cover"
+					src="/bg_vid.mp4"
+					autoPlay
+					loop
+					muted
+					playsInline
 				/>
+				{/* Permanent dark overlay for text visibility */}
+				<div className="absolute inset-0 bg-black/30" />
 			</div>
 
 			{/* Navbar at the top - full height within Hero */}
 			<div className="absolute inset-0 z-50 pointer-events-none">
-				<Navbar />
+				<Navbar showLogo={introPhase === "complete"} />
 			</div>
 
-			{/* Content Layer */}
-			<div className="relative z-10 text-center px-4 sm:px-6 max-w-4xl mx-auto font-montserrat flex flex-col items-center justify-center h-full gap-4">
-				<p className="text-xs sm:text-sm md:text-lg text-gray-400 font-sans font-light">
-					Turn Your Smartphone Into a Time Machine
-				</p>
+			{/* Dark Overlay - Visible during intro phase */}
+			<AnimatePresence>
+				{introPhase === "intro" && (
+					<motion.div
+						className="absolute inset-0 z-30 bg-black/60 pointer-events-none"
+						initial={{ opacity: 0 }}
+						animate={{ opacity: 1 }}
+						exit={{ opacity: 0 }}
+						transition={{ duration: 0.8, ease: "easeOut" }}
+					/>
+				)}
+			</AnimatePresence>
 
-				<ShinyText
-					text="Epocheye"
-					disabled={false}
-					speed={2}
-					className="text-5xl sm:text-6xl md:text-8xl font-semibold text-white mb-2 leading-tight"
-				/>
+			{/* Animated Intro Text */}
+			<AnimatePresence>
+				{introPhase !== "complete" && (
+					<motion.div
+						className="absolute z-40 flex flex-col items-center justify-center pointer-events-none font-montserrat"
+						initial={{ opacity: 0 }}
+						animate={{
+							opacity: 1,
+							top: introPhase === "intro" ? "50%" : navbarPosition.top,
+							y: introPhase === "intro" ? "-50%" : 0,
+						}}
+						exit={{ opacity: 0 }}
+						transition={{
+							top: { duration: 1.2, ease: [0.22, 1, 0.36, 1] },
+							y: { duration: 1.2, ease: [0.22, 1, 0.36, 1] },
+							opacity: { duration: 0.3 },
+						}}
+						onAnimationComplete={handleTransitionComplete}
+						style={{
+							left: "50%",
+							x: "-50%",
+						}}>
+						{/* Epocheye Title */}
+						<motion.div
+							animate={{
+								scale: introPhase === "intro" ? 1.5 : 1,
+							}}
+							transition={{
+								duration: 1.2,
+								ease: [0.22, 1, 0.36, 1],
+							}}>
+							<ShinyText
+								text="Epocheye"
+								disabled={false}
+								speed={2}
+								className="text-3xl font-bold text-white leading-tight font-montserrat"
+							/>
+						</motion.div>
 
-				<button
-					title="Get 1 month free + exclusive beta perks"
-					className="my-6 sm:my-8 px-6 sm:px-8 py-3 font-semibold bg-white/20 backdrop-blur-3xl text-sm sm:text-base rounded-full transition duration-300 pointer-events-auto flex items-center gap-3 cursor-pointer shadow-lg shadow-white/10"
+						{/* Tagline - Fades out during transition */}
+						<motion.p
+							className="text-white/70 text-lg mt-4 font-medium tracking-wide font-montserrat"
+							initial={{ opacity: 0, y: 20 }}
+							animate={{
+								opacity: introPhase === "intro" ? 1 : 0,
+								y: introPhase === "intro" ? 0 : -20,
+							}}
+							transition={{
+								duration: 0.8,
+								delay: introPhase === "intro" ? 0.5 : 0,
+								ease: "easeOut",
+							}}>
+							Experience Heritage through Tech
+						</motion.p>
+					</motion.div>
+				)}
+			</AnimatePresence>
+
+			{/* Content Layer - Minimalist Design */}
+			<motion.div
+				className="relative z-10 text-center px-6 max-w-3xl mx-auto font-montserrat flex flex-col items-center justify-center h-full"
+				initial={{ opacity: 0 }}
+				animate={{ opacity: introPhase === "complete" ? 1 : 0 }}
+				transition={{ duration: 1.2, delay: 0.2 }}>
+				{/* Single Headline */}
+				<motion.h1
+					initial={{ opacity: 0, y: 20 }}
+					animate={{
+						opacity: introPhase === "complete" ? 1 : 0,
+						y: introPhase === "complete" ? 0 : 20,
+					}}
+					transition={{ duration: 1, delay: 0.4 }}
+					className="text-4xl sm:text-5xl md:text-6xl font-light text-white leading-[1.15] tracking-tight">
+					Rediscover heritage.
+					<br />
+					<span className="font-semibold">Reimagine travel.</span>
+				</motion.h1>
+
+				{/* Minimal Subtext */}
+				<motion.p
+					initial={{ opacity: 0 }}
+					animate={{
+						opacity: introPhase === "complete" ? 0.6 : 0,
+					}}
+					transition={{ duration: 1, delay: 0.7 }}
+					className="text-white text-xl sm:text-lg font-medium mt-8">
+					Historical intelligence for the physical world
+				</motion.p>
+
+				{/* Single CTA */}
+				<motion.button
+					initial={{ opacity: 0 }}
+					animate={{
+						opacity: introPhase === "complete" ? 1 : 0,
+					}}
+					transition={{ duration: 1, delay: 1 }}
+					className="group mt-12 px-8 py-4 border border-white/30 text-white rounded-full text-sm font-semibold cursor-pointer tracking-wider uppercase hover:bg-white hover:text-black transition-all duration-500 pointer-events-auto flex items-center gap-3"
 					data-tally-open="mVR7OJ"
 					data-tally-layout="modal"
 					data-tally-width="600"
 					data-tally-auto-close="1000"
 					data-tally-form-events-forwarding="1">
-					<Download
-						size={36}
-						className="bg-white text-black rounded-full p-2 -ml-2"
-					/>
-					Reserve Your Early Access - Get 1 Month Free
-				</button>
+					Join Waitlist
+					<ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+				</motion.button>
+			</motion.div>
 
-				<div className="flex items-center gap-3 text-xs sm:text-sm text-gray-200 font-sans">
-					<div className="flex -space-x-2">
-						<span
-							className="w-8 h-8 rounded-full bg-white/80 border border-black/10"
-							aria-hidden="true"
-						/>
-						<span
-							className="w-8 h-8 rounded-full bg-white/60 border border-black/10"
-							aria-hidden="true"
-						/>
-						<span
-							className="w-8 h-8 rounded-full bg-white/40 border border-black/10"
-							aria-hidden="true"
-						/>
-					</div>
-					<span className="font-light">
-						Join 5,000+ history enthusiasts already signed up
-					</span>
-				</div>
-
-				<a
-					href="#how-it-works"
-					className="mt-3 text-sm text-gray-300 underline decoration-dotted decoration-gray-500 hover:text-white">
-					See How It Works
-				</a>
-
-				{/* Countdown Timer */}
-				<div className="pointer-events-none mt-6 sm:mt-7 bg-white/5 px-4 py-3 rounded-full border border-white/10 backdrop-blur">
-					<p className="text-gray-300 text-xs sm:text-sm md:text-base font-medium tracking-wide">
-						Launch in Early 2026
-					</p>
-				</div>
-			</div>
-
-			{/* Scroll Indicator - Bottom Center */}
-			<div
-				className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-50 pointer-events-none transition-all duration-500 ease-out ${
-					showScrollIndicator ? "opacity-100 scale-100" : "opacity-0 scale-50"
-				}`}>
-				<div className="relative flex items-center justify-center w-16 h-16 bg-white/20 backdrop-blur-md rounded-full border-2 border-white/40 shadow-2xl">
-					<svg
-						className="w-6 h-6 text-white animate-bounce"
-						fill="none"
-						stroke="currentColor"
-						viewBox="0 0 24 24">
-						<path
-							strokeLinecap="round"
-							strokeLinejoin="round"
-							strokeWidth={2}
-							d="M19 14l-7 7m0 0l-7-7m7 7V3"
-						/>
-					</svg>
-				</div>
-			</div>
+			{/* Minimal Scroll Indicator */}
+			<motion.div
+				initial={{ opacity: 0 }}
+				animate={{ opacity: introPhase === "complete" ? 0.5 : 0 }}
+				transition={{ duration: 1, delay: 1.5 }}
+				className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20">
+				<div className="w-px h-12 bg-linear-to-b from-transparent via-white to-transparent" />
+			</motion.div>
 		</div>
 	);
 };
