@@ -13,6 +13,53 @@ const Problem = dynamic(() => import("@/components/sections/Problem"), {
 	ssr: true,
 });
 
+// New Yodezeen-style premium sections
+const SolutionSplit = dynamic(() => import("@/components/sections/SolutionSplit"), {
+	loading: () => <div className="min-h-screen bg-[#0A0A0A]" />,
+	ssr: true,
+});
+
+const PowerStatement = dynamic(() => import("@/components/sections/PowerStatement"), {
+	loading: () => <div className="min-h-screen bg-[#F8F8F8]" />,
+	ssr: true,
+});
+
+const VideoFeature = dynamic(() => import("@/components/sections/VideoFeature"), {
+	loading: () => <div className="min-h-screen bg-[#0A0A0A]" />,
+	ssr: true,
+});
+
+const MonumentsGallery = dynamic(() => import("@/components/sections/MonumentsGallery"), {
+	loading: () => <div className="min-h-screen bg-[#0A0A0A]" />,
+	ssr: true,
+});
+
+const WeCover = dynamic(() => import("@/components/sections/WeCover"), {
+	loading: () => <div className="min-h-screen bg-[#0A0A0A]" />,
+	ssr: true,
+});
+
+const GlobalReach = dynamic(() => import("@/components/sections/GlobalReach"), {
+	loading: () => <div className="min-h-screen bg-[#0A0A0A]" />,
+	ssr: true,
+});
+
+const CredibilityStatement = dynamic(() => import("@/components/sections/CredibilityStatement"), {
+	loading: () => <div className="min-h-screen bg-[#0A0A0A]" />,
+	ssr: true,
+});
+
+const FinalCTA = dynamic(() => import("@/components/sections/FinalCTA"), {
+	loading: () => <div className="min-h-screen bg-[#0A0A0A]" />,
+	ssr: true,
+});
+
+const PremiumFooter = dynamic(() => import("@/components/sections/PremiumFooter"), {
+	loading: () => <div className="min-h-[50vh] bg-[#0A0A0A]" />,
+	ssr: true,
+});
+
+// Legacy sections (can be re-enabled as needed)
 const HowItWorks = dynamic(() => import("@/components/sections/HowItWorks"), {
 	loading: () => <div className="min-h-screen bg-black" />,
 	ssr: true,
@@ -61,18 +108,51 @@ const Home = () => {
 			<Suspense fallback={<div className="min-h-screen bg-white" />}>
 				<Problem />
 			</Suspense>
-			<Suspense fallback={<div className="min-h-screen bg-black" />}>
+			
+			{/* New Yodezeen-style Premium Sections */}
+			<Suspense fallback={<div className="min-h-screen bg-[#0A0A0A]" />}>
+				<SolutionSplit />
+			</Suspense>
+			<Suspense fallback={<div className="min-h-screen bg-[#F8F8F8]" />}>
+				<PowerStatement />
+			</Suspense>
+			<Suspense fallback={<div className="min-h-screen bg-[#0A0A0A]" />}>
+				<VideoFeature />
+			</Suspense>
+			{/* <Suspense fallback={<div className="min-h-screen bg-[#0A0A0A]" />}>
+				<MonumentsGallery />
+			</Suspense> */}
+			<Suspense fallback={<div className="min-h-screen bg-[#0A0A0A]" />}>
+				<WeCover />
+			</Suspense>
+			<Suspense fallback={<div className="min-h-screen bg-[#0A0A0A]" />}>
+				<GlobalReach />
+			</Suspense>
+			<Suspense fallback={<div className="min-h-screen bg-[#0A0A0A]" />}>
+				<CredibilityStatement />
+			</Suspense>
+			{/* <Suspense fallback={<div className="min-h-screen bg-[#0A0A0A]" />}>
+				<FinalCTA />
+			</Suspense> */}
+			
+			{/* Premium Footer */}
+			<Suspense fallback={<div className="min-h-[50vh] bg-[#0A0A0A]" />}>
+				<PremiumFooter />
+			</Suspense>
+
+			{/* Legacy sections - commented out but available */}
+			{/* <Suspense fallback={<div className="min-h-screen bg-black" />}>
 				<Solution />
-			</Suspense>
-			<Suspense fallback={<div className="min-h-screen bg-black" />}>
+			</Suspense> */}
+			{/* <Suspense fallback={<div className="min-h-screen bg-black" />}>
 				<Features />
-			</Suspense>
-			<Suspense fallback={<div className="min-h-screen bg-black" />}>
+			</Suspense> */}
+			{/* <Suspense fallback={<div className="min-h-screen bg-black" />}>
 				<HowItWorks />
-			</Suspense>
-			<Suspense fallback={<div className="min-h-screen bg-black" />}>
+			</Suspense> */}
+			{/* <Suspense fallback={<div className="min-h-screen bg-black" />}>
 				<LaunchDestinations />
-			</Suspense>
+			</Suspense> */}
 			{/* <Suspense fallback={<div className="min-h-screen bg-white" />}>
 				<Waitlist />
 			</Suspense> */}
