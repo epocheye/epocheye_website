@@ -188,7 +188,7 @@ const Hero = () => {
 						opacity: introPhase === "complete" ? 1 : 0,
 					}}
 					transition={{ duration: 1, delay: 1 }}
-					className="group mt-12 px-8 py-4 border border-white/30 text-white rounded-full text-sm font-light tracking-wider uppercase hover:bg-white hover:text-black transition-all duration-500 pointer-events-auto flex items-center gap-3"
+					className="group mt-12 px-8 py-4 border border-white/30 text-white rounded-full text-sm font-semibold cursor-pointer tracking-wider uppercase hover:bg-white hover:text-black transition-all duration-500 pointer-events-auto flex items-center gap-3"
 					data-tally-open="mVR7OJ"
 					data-tally-layout="modal"
 					data-tally-width="600"

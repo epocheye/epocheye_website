@@ -11,11 +11,12 @@ const Problem = () => {
 	const wordsRef = useRef([]);
 
 	const texts = [
-		"You stand before a 1,000-year-old monument, but all you see is stone. Audio guides are boring. Plaques tell you dates, not stories.",
-		"90% of tourists cite lack of context as their #1 frustration",
-		"Heritage tourists spend over $50 billion annually on unsatisfactory experiences",
-		"Traditional guides can't show you what these sites looked like in their glory days",
-		"Until now.",
+		"YOU TRAVELED 5,000 MILES\nTO STARE AT BROKEN STONES.",
+		"STANDING WHERE HISTORY HAPPENED.\nFEELING NOTHING.",
+		"YOU SEE RUINS.\nYOU IMAGINE NOTHING.",
+		"BILLIONS VISIT.\nFEW UNDERSTAND.\nFEW REMEMBER.",
+		"YOU'RE HERE.\n\nBUT YOU'RE NOT REALLY SEEING IT.",
+		"Until now....",
 	];
 
 	useEffect(() => {
@@ -51,7 +52,7 @@ const Problem = () => {
 
 			// Calculate total scroll duration based on all words
 			const totalWords = texts.reduce((acc, text) => acc + text.split(" ").length, 0);
-			const scrollPerWord = 30; // pixels of scroll per word
+			const scrollPerWord = 50; // pixels of scroll per word
 			const scrollPerTransition = 150; // pixels for transition between sentences
 			const totalScroll = totalWords * scrollPerWord + texts.length * scrollPerTransition;
 
@@ -77,7 +78,7 @@ const Problem = () => {
 				if (!words) return;
 
 				const wordCount = words.length;
-				const wordDuration = 0.15; // Duration for each word reveal
+				const wordDuration = 1; // Duration for each word reveal
 				const sentenceDuration = wordCount * wordDuration;
 
 				// If not the first text, fade in the container
@@ -87,7 +88,7 @@ const Problem = () => {
 						{
 							opacity: 1,
 							display: "flex",
-							duration: 0.3,
+							duration: 2,
 							ease: "power2.out",
 						},
 						timelinePosition,
@@ -192,7 +193,7 @@ const Problem = () => {
 					ref={(el) => (textsRef.current[index] = el)}
 					className="absolute inset-0 flex items-center justify-center px-4 sm:px-8 md:px-16 lg:px-24"
 					style={{ display: index === 0 ? "flex" : "none" }}>
-					<h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-medium text-black text-center font-montserrat leading-relaxed max-w-5xl flex flex-wrap justify-center">
+					<h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-medium text-black text-center font-serif leading-relaxed max-w-5xl flex flex-wrap justify-center">
 						{renderTextWithWords(text, index)}
 					</h2>
 				</div>

@@ -61,7 +61,7 @@ const Home = () => {
 			<Suspense fallback={<div className="min-h-screen bg-white" />}>
 				<Problem />
 			</Suspense>
-			{/* <Suspense fallback={<div className="min-h-screen bg-black" />}>
+			<Suspense fallback={<div className="min-h-screen bg-black" />}>
 				<Solution />
 			</Suspense>
 			<Suspense fallback={<div className="min-h-screen bg-black" />}>
@@ -72,7 +72,7 @@ const Home = () => {
 			</Suspense>
 			<Suspense fallback={<div className="min-h-screen bg-black" />}>
 				<LaunchDestinations />
-			</Suspense> */}
+			</Suspense>
 			{/* <Suspense fallback={<div className="min-h-screen bg-white" />}>
 				<Waitlist />
 			</Suspense> */}
