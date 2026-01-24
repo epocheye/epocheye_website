@@ -106,9 +106,13 @@ const PremiumFooter = () => {
 	];
 
 	const socialLinks = [
-		{ label: "Twitter", href: "https://twitter.com", icon: "𝕏" },
+		{ label: "Twitter", href: "https://x.com/sambitsingha01", icon: "𝕏" },
 		{ label: "Instagram", href: "https://instagram.com", icon: "◎" },
-		{ label: "LinkedIn", href: "https://linkedin.com", icon: "in" },
+		{
+			label: "LinkedIn",
+			href: "https://www.linkedin.com/company/epocheye/",
+			icon: "in",
+		},
 	];
 
 	return (
@@ -130,6 +134,7 @@ const PremiumFooter = () => {
 				ref={contentRef}
 				className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-20 py-20 sm:py-28 lg:py-32">
 				{/* Logo & Main CTA Section */}
+
 				<div className="text-center mb-16 sm:mb-20 lg:mb-24">
 					{/* Logo */}
 					<div ref={logoRef} className="mb-10 sm:mb-14">

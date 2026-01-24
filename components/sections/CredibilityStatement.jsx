@@ -71,7 +71,7 @@ const CredibilityStatement = () => {
 			ref={sectionRef}
 			className="yz-section yz-section-dark relative flex items-center justify-center overflow-hidden
 				px-5 sm:px-10 lg:px-20 py-20 sm:py-24 lg:py-[120px]"
-			style={{ backgroundColor: "#0A0A0A" }}>
+			style={{ backgroundColor: "#0A0000" }}>
 			{/* Video Background */}
 			<video
 				ref={videoRef}
@@ -81,15 +81,15 @@ const CredibilityStatement = () => {
 				loop
 				muted
 				playsInline
-				style={{ opacity: 0.4 }}
+				style={{ opacity: 1 }}
 			/>
 
 			{/* Dark Overlay for readability */}
 			<div
-				className="absolute inset-0 z-[1]"
+				className="absolute inset-0 z-1"
 				style={{
 					background:
-						"linear-gradient(to bottom, rgba(10, 10, 10, 0.7) 0%, rgba(10, 10, 10, 0.8) 50%, rgba(10, 10, 10, 0.9) 100%)",
+						"linear-gradient(to bottom, rgba(10, 10, 10, 0.3) 0%, rgba(10, 10, 10, 0.4) 50%, rgba(10, 10, 10, 0.5) 100%)",
 				}}
 			/>
 
@@ -98,7 +98,7 @@ const CredibilityStatement = () => {
 				className="absolute inset-0 z-[2] pointer-events-none"
 				style={{
 					background:
-						"radial-gradient(ellipse at center, transparent 30%, rgba(10, 10, 10, 0.6) 100%)",
+						"radial-gradient(ellipse at center, transparent 30%, rgba(10, 10, 10, 0.3) 100%)",
 				}}
 			/>
 

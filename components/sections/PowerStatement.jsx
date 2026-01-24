@@ -2,7 +2,6 @@
 import React, { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Image from "next/image";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -116,11 +115,10 @@ const PowerStatement = () => {
 								filter: "grayscale(100%) contrast(1.1)",
 								mixBlendMode: "multiply",
 							}}>
-							<Image
+							<img
 								src={stripe.src}
 								alt=""
-								fill
-								className="object-cover"
+								className="w-full h-full object-cover"
 								style={{
 									objectPosition: "center",
 								}}

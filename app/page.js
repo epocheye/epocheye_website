@@ -125,9 +125,9 @@ const Home = () => {
 			<Suspense fallback={<div className="min-h-screen bg-[#0A0A0A]" />}>
 				<WeCover />
 			</Suspense>
-			<Suspense fallback={<div className="min-h-screen bg-[#0A0A0A]" />}>
+			{/* <Suspense fallback={<div className="min-h-screen bg-[#0A0A0A]" />}>
 				<GlobalReach />
-			</Suspense>
+			</Suspense> */}
 			<Suspense fallback={<div className="min-h-screen bg-[#0A0A0A]" />}>
 				<CredibilityStatement />
 			</Suspense>
