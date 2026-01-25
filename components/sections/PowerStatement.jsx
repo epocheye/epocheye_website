@@ -96,7 +96,7 @@ const PowerStatement = () => {
 	return (
 		<section
 			ref={sectionRef}
-			className="yz-section yz-section-light relative flex items-center justify-center overflow-hidden px-5 sm:px-10 lg:px-20 py-20 sm:py-20 lg:py-[120px]"
+			className="yz-section yz-section-light relative flex items-center justify-center overflow-hidden min-h-[60vh] lg:min-h-[80vh]"
 			style={{ backgroundColor: "#F8F8F8" }}>
 			{/* Image Stripes Background - Horizontal on mobile, Vertical columns on lg */}
 			<div
@@ -105,11 +105,7 @@ const PowerStatement = () => {
 				{stripes.map((stripe, index) => (
 					<div
 						key={index}
-						className="image-stripe relative flex-1 w-full lg:w-auto lg:h-full"
-						style={{
-							borderRight:
-								index < 5 ? "1px solid rgba(200, 200, 200, 0.3)" : "none",
-						}}>
+						className="image-stripe relative flex-1 w-full lg:w-auto lg:h-full overflow-hidden">
 						<div
 							className="relative w-full h-full overflow-hidden"
 							style={{
@@ -156,9 +152,19 @@ const PowerStatement = () => {
 			{/* Text Content */}
 			<div ref={textRef} className="relative z-10 text-center">
 				<h2
-					className="font-montserrat font-bold uppercase leading-[1.2] sm:leading-[1.2]
-						text-4xl sm:text-5xl lg:text-6xl
-						tracking-[3px] sm:tracking-[5px] lg:tracking-[8px]"
+					className={[
+						"font-montserrat",
+						"font-bold",
+						"uppercase",
+						"leading-[1.2]",
+						"sm:leading-[1.2]",
+						"text-4xl",
+						"sm:text-5xl",
+						"lg:text-6xl",
+						"tracking-[3px]",
+						"sm:tracking-[5px]",
+						"lg:tracking-[8px]",
+					].join(" ")}
 					style={{
 						color: "#0A0A0A",
 						textShadow: "0 2px 20px rgba(248, 248, 248, 0.8)",
@@ -166,10 +172,21 @@ const PowerStatement = () => {
 					POINT YOUR PHONE.
 				</h2>
 				<h2
-					className="font-montserrat font-semibold uppercase leading-[1.2] sm:leading-[1.2]
-						text-[36px] sm:text-[64px] lg:text-8xl
-						tracking-[3px] sm:tracking-[5px] lg:tracking-[8px]
-						mt-2 sm:mt-4"
+					className={[
+						"font-montserrat",
+						"font-semibold",
+						"uppercase",
+						"leading-[1.2]",
+						"sm:leading-[1.2]",
+						"text-[36px]",
+						"sm:text-[64px]",
+						"lg:text-8xl",
+						"tracking-[3px]",
+						"sm:tracking-[5px]",
+						"lg:tracking-[8px]",
+						"mt-2",
+						"sm:mt-4",
+					].join(" ")}
 					style={{
 						color: "#0A0A0A",
 						textShadow: "0 2px 20px rgba(248, 248, 248, 0.8)",
