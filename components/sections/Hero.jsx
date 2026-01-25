@@ -71,8 +71,7 @@ const Hero = () => {
 					loop
 					muted
 					playsInline
-					preload="metadata"
-					poster="/img1.webp"
+					preload="auto"
 					aria-hidden="true"
 				/>
 				{/* Permanent dark overlay for text visibility */}
