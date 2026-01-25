@@ -248,19 +248,19 @@ const PremiumFooter = () => {
 						Join The Vision
 					</h3>
 
-					<Link
-						href="/signup"
-						className="inline-flex items-center justify-center gap-3
-							px-8 sm:px-12 py-3.5 sm:py-4
-							font-montserrat font-semibold uppercase
-							text-[12px] sm:text-[14px]
-							tracking-[2px] sm:tracking-[3px]
-							transition-all duration-500 group"
+					<button
+						type="button"
+						className="inline-flex items-center justify-center gap-3 px-8 sm:px-12 py-3.5 sm:py-4 font-montserrat font-semibold uppercase text-[12px] sm:text-[14px] tracking-[2px] sm:tracking-[3px] transition-all duration-500 group cursor-pointer"
 						style={{
 							backgroundColor: "#D4AF37",
 							color: "#0A0A0A",
 							boxShadow: "0 0 40px rgba(212, 175, 55, 0.25)",
 						}}
+						data-tally-open="mVR7OJ"
+						data-tally-layout="modal"
+						data-tally-width="600"
+						data-tally-auto-close="1000"
+						data-tally-transparent-background="1"
 						onMouseEnter={(e) => {
 							e.currentTarget.style.backgroundColor = "#E8C547";
 							e.currentTarget.style.boxShadow =
@@ -277,7 +277,7 @@ const PremiumFooter = () => {
 						<span className="transform transition-transform duration-300 group-hover:translate-x-1">
 							→
 						</span>
-					</Link>
+					</button>
 				</div>
 
 				{/* Decorative divider */}
