@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useRef } from "react";
+import Image from "next/image";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -12,12 +13,12 @@ const PowerStatement = () => {
 
 	// Image stripes configuration - 6 vertical columns
 	const stripes = [
-		{ src: "/img1.webp", delay: 0 },
-		{ src: "/img2.webp", delay: 0.1 },
-		{ src: "/img3.webp", delay: 0.2 },
-		{ src: "/img4.webp", delay: 0.3 },
-		{ src: "/img5.webp", delay: 0.4 },
-		{ src: "/img6.webp", delay: 0.5 },
+		{ src: "/img1.webp" },
+		{ src: "/img2.webp" },
+		{ src: "/img3.webp" },
+		{ src: "/img4.webp" },
+		{ src: "/img5.webp" },
+		{ src: "/img6.webp" },
 	];
 
 	useEffect(() => {
@@ -97,14 +98,14 @@ const PowerStatement = () => {
 			ref={sectionRef}
 			className="yz-section yz-section-light relative flex items-center justify-center overflow-hidden px-5 sm:px-10 lg:px-20 py-20 sm:py-20 lg:py-[120px]"
 			style={{ backgroundColor: "#F8F8F8" }}>
-			{/* Image Stripes Background - 6 Vertical Columns */}
+			{/* Image Stripes Background - Horizontal on mobile, Vertical columns on lg */}
 			<div
 				ref={stripesRef}
-				className="absolute inset-0 z-0 w-full h-full pointer-events-none overflow-hidden flex">
+				className="absolute inset-0 z-0 w-full h-full pointer-events-none overflow-hidden flex flex-col lg:flex-row">
 				{stripes.map((stripe, index) => (
 					<div
 						key={index}
-						className="image-stripe relative h-full flex-1"
+						className="image-stripe relative flex-1 w-full lg:w-auto lg:h-full"
 						style={{
 							borderRight:
 								index < 5 ? "1px solid rgba(200, 200, 200, 0.3)" : "none",
@@ -115,13 +116,16 @@ const PowerStatement = () => {
 								filter: "none",
 								mixBlendMode: "normal",
 							}}>
-							<img
+							<Image
 								src={stripe.src}
 								alt=""
-								loading={index < 3 ? "eager" : "lazy"}
-								decoding="async"
-								fetchPriority={index < 2 ? "high" : "auto"}
-								className="w-full h-full object-cover"
+								fill
+								sizes="(max-width: 1024px) 100vw, 50vw"
+								priority={index < 2}
+								// loading={index < 2 ? "eager" : "lazy"}
+								// unoptimized={false}
+								quality={100}
+								className="object-cover"
 								style={{
 									objectPosition: "center",
 								}}
