@@ -18,12 +18,12 @@ const PremiumFooter = () => {
 
 	// Heritage images for the grid
 	const heritageImages = [
-		{ src: "/img1.webp", alt: "Heritage Site 1" },
-		{ src: "/img2.webp", alt: "Heritage Site 2" },
-		{ src: "/img3.webp", alt: "Heritage Site 3" },
-		{ src: "/img4.webp", alt: "Heritage Site 4" },
-		{ src: "/img5.webp", alt: "Heritage Site 5" },
-		{ src: "/img6.webp", alt: "Heritage Site 6" },
+		{ src: "/img1.webp" },
+		{ src: "/img2.webp" },
+		{ src: "/img3.webp" },
+		{ src: "/img4.webp" },
+		{ src: "/img5.webp" },
+		{ src: "/img6.webp" },
 	];
 
 	useEffect(() => {
