@@ -1,36 +1,53 @@
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import logoWhite from "../../public/logo-white.png";
-import { ArrowRight, Download } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import ShinyText from "../ShinyText";
 
 const Navbar = ({ showLogo = true }) => {
 	return (
-		<nav className="w-full flex items-center justify-between px-8 py-4 font-montserrat relative">
-			<Image src={logoWhite} alt="EpochEye Logo" width={60} height={60} />
+		<nav
+			className="w-full flex items-center justify-between px-4 sm:px-6 md:px-8 py-4 font-montserrat relative"
+			role="navigation"
+			aria-label="Main navigation">
+			<a href="/" aria-label="EpochEye Home">
+				<Image
+					src={logoWhite}
+					alt="EpochEye Logo"
+					width={40}
+					height={40}
+					className="sm:w-[50px] sm:h-[50px] md:w-[60px] md:h-[60px]"
+					priority
+				/>
+			</a>
 
 			<div
-				className={`absolute left-1/2 transform -translate-x-1/2 transition-opacity duration-300 ${
+				className={`absolute left-1/2 transform -translate-x-1/2 transition-opacity duration-300 hidden sm:block ${
 					showLogo ? "opacity-100" : "opacity-0"
-				}`}>
+				}`}
+				aria-hidden={!showLogo}>
 				<ShinyText
 					text="Epocheye"
 					disabled={false}
 					speed={2}
-					className="text-3xl font-medium text-white leading-tight"
+					className="text-xl sm:text-2xl md:text-3xl font-medium text-white leading-tight"
 				/>
 			</div>
 
 			<button
-				title="Get 1 month free + exclusive beta perks"
-				className="p-3  text-white text-sm sm:text-base bg-black/20 back rounded-3xl pointer-events-auto flex items-center gap-3 cursor-pointer "
-				data-tally-open="mVR7OJ"
+				type="button"
+				title="Join Us in making the Heritage Tourism an Experience"
+				aria-label="Join Us in making the Heritage Tourism an Experience"
+				className="px-3 py-2 sm:px-4 sm:py-3 text-white text-xs sm:text-sm md:text-base bg-black/20 backdrop-blur-sm rounded-2xl sm:rounded-3xl pointer-events-auto flex items-center gap-2 sm:gap-3 cursor-pointer hover:bg-black/30 transition-colors whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-transparent"
+				data-tally-open="mZ4Aa0"
 				data-tally-layout="modal"
 				data-tally-width="600"
 				data-tally-auto-close="1000"
+				data-tally-transparent-background="1"
 				data-tally-form-events-forwarding="1">
-				Join the waitlist
-				<ArrowRight />
+				<span className="hidden sm:inline">Join us</span>
+				<span className="sm:hidden">Join us</span>
+				<ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" aria-hidden="true" />
 			</button>
 		</nav>
 	);

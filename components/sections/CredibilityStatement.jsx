@@ -81,6 +81,8 @@ const CredibilityStatement = () => {
 				loop
 				muted
 				playsInline
+				preload="metadata"
+				aria-hidden="true"
 				style={{ opacity: 1 }}
 			/>
 
@@ -95,14 +97,14 @@ const CredibilityStatement = () => {
 
 			{/* Vignette effect */}
 			<div
-				className="absolute inset-0 z-[2] pointer-events-none"
+				className="absolute inset-0 z-2 pointer-events-none"
 				style={{
 					background:
 						"radial-gradient(ellipse at center, transparent 30%, rgba(10, 10, 10, 0.3) 100%)",
 				}}
 			/>
 
-			<div className="relative z-[3] max-w-[900px] text-center">
+			<div className="relative z-3 max-w-[900px] text-center">
 				{/* Main Headline */}
 				<h2
 					ref={headlineRef}

@@ -157,58 +157,58 @@ export default function SignupPage() {
       <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.06),transparent_32%),linear-gradient(225deg,rgba(255,255,255,0.05),transparent_38%)]" />
 
       <div className="relative z-10 mx-auto flex min-h-screen max-w-5xl items-center justify-center px-4 py-12">
-        <div className="grid w-full gap-8 lg:grid-cols-[1.05fr_0.95fr]">
-          <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-linear-to-b from-white/10 via-white/5 to-black/40 p-10 shadow-[0_30px_120px_rgba(0,0,0,0.45)] backdrop-blur-xl">
+        <div className="grid w-full gap-6 lg:gap-8 lg:grid-cols-[1.05fr_0.95fr]">
+          <div className="relative overflow-hidden rounded-2xl lg:rounded-3xl border border-white/10 bg-linear-to-b from-white/10 via-white/5 to-black/40 p-6 sm:p-8 lg:p-10 shadow-[0_30px_120px_rgba(0,0,0,0.45)] backdrop-blur-xl">
             <div className="pointer-events-none absolute -left-32 -top-32 size-64 rounded-full bg-emerald-500/15 blur-3xl" />
             <div className="pointer-events-none absolute -right-24 -bottom-24 size-64 rounded-full bg-indigo-400/15 blur-3xl" />
             <div className="pointer-events-none absolute inset-x-6 top-6 h-12 rounded-2xl border border-white/10" />
 
-            <div className="flex items-center gap-3 text-sm text-emerald-200">
-              <Landmark className="size-5" /> Create ASI / Tourism Operator Account
+            <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-emerald-200">
+              <Landmark className="size-4 sm:size-5 shrink-0" /> <span className="hidden sm:inline">Create ASI / Tourism Operator Account</span><span className="sm:hidden">ASI Account</span>
             </div>
-            <h1 className="mt-4 text-3xl font-semibold text-white">Join the secure portal</h1>
-            <p className="mt-2 text-sm text-zinc-400">
+            <h1 className="mt-4 text-2xl sm:text-3xl font-semibold text-white">Join the secure portal</h1>
+            <p className="mt-2 text-xs sm:text-sm text-zinc-400">
               Provision access for site managers, command center staff, and heritage partners.
             </p>
 
-            <form onSubmit={handleSubmit} className="mt-8 space-y-5">
-              <label className="block space-y-2 text-sm">
+            <form onSubmit={handleSubmit} className="mt-6 sm:mt-8 space-y-4 sm:space-y-5">
+              <label className="block space-y-2 text-xs sm:text-sm">
                 <span className="text-zinc-300">Work email</span>
-                <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/40 px-4 py-3 focus-within:border-emerald-400/60">
-                  <Mail className="size-5 text-emerald-300" />
+                <div className="flex items-center gap-2 sm:gap-3 rounded-xl border border-white/10 bg-black/40 px-3 sm:px-4 py-2.5 sm:py-3 focus-within:border-emerald-400/60">
+                  <Mail className="size-4 sm:size-5 text-emerald-300 shrink-0" />
                   <input
                     type="email"
                     name="email"
                     value={form.email}
                     onChange={(e) => setForm((prev) => ({ ...prev, email: e.target.value }))}
-                    className="w-full bg-transparent text-white outline-none placeholder:text-zinc-500"
+                    className="w-full bg-transparent text-white text-sm outline-none placeholder:text-zinc-500"
                     placeholder="name@asi.gov.in"
                     required
                   />
                 </div>
               </label>
 
-              <label className="block space-y-2 text-sm">
+              <label className="block space-y-2 text-xs sm:text-sm">
                 <span className="text-zinc-300">Create password</span>
-                <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/40 px-4 py-3 focus-within:border-emerald-400/60">
-                  <KeyRound className="size-5 text-emerald-300" />
+                <div className="flex items-center gap-2 sm:gap-3 rounded-xl border border-white/10 bg-black/40 px-3 sm:px-4 py-2.5 sm:py-3 focus-within:border-emerald-400/60">
+                  <KeyRound className="size-4 sm:size-5 text-emerald-300 shrink-0" />
                   <input
                     type="password"
                     name="password"
                     value={form.password}
                     onChange={(e) => setForm((prev) => ({ ...prev, password: e.target.value }))}
-                    className="w-full bg-transparent text-white outline-none placeholder:text-zinc-500"
+                    className="w-full bg-transparent text-white text-sm outline-none placeholder:text-zinc-500"
                     placeholder="••••••"
                     required
                   />
                 </div>
               </label>
 
-              <label className="block space-y-2 text-sm">
+              <label className="block space-y-2 text-xs sm:text-sm">
                 <span className="text-zinc-300">Organization</span>
                 <div className="rounded-xl border border-white/10 bg-black/40 p-3">
-                  <div className="flex items-center gap-3 rounded-lg border border-white/5 bg-black/20 px-4 py-3 focus-within:border-emerald-400/60">
-                    <ShieldPlus className="size-5 text-emerald-300" />
+                  <div className="flex items-center gap-2 sm:gap-3 rounded-lg border border-white/5 bg-black/20 px-3 sm:px-4 py-2.5 sm:py-3 focus-within:border-emerald-400/60">
+                    <ShieldPlus className="size-4 sm:size-5 text-emerald-300 shrink-0" />
                     <select
                       value={selectedOrgId}
                       onChange={(e) => {
@@ -217,7 +217,7 @@ export default function SignupPage() {
                           setOrgNameOther("");
                         }
                       }}
-                      className="w-full bg-transparent text-white outline-none placeholder:text-zinc-500"
+                      className="w-full bg-transparent text-white text-sm outline-none placeholder:text-zinc-500"
                     >
                       <option value="" disabled className="bg-black text-white">Select organization from database</option>
                       {orgs.map((org) => (
@@ -238,14 +238,14 @@ export default function SignupPage() {
                     <p className="px-1 pt-2 text-xs text-zinc-400">No organizations in the database yet. Add yours below.</p>
                   )}
                   {(selectedOrgId === "other" || !selectedOrgId || orgsEmpty) && (
-                    <div className="mt-3 flex items-center gap-3 rounded-lg border border-white/10 bg-black/40 px-4 py-3 focus-within:border-emerald-400/60">
-                      <ShieldPlus className="size-5 text-emerald-300" />
+                    <div className="mt-3 flex items-center gap-2 sm:gap-3 rounded-lg border border-white/10 bg-black/40 px-3 sm:px-4 py-2.5 sm:py-3 focus-within:border-emerald-400/60">
+                      <ShieldPlus className="size-4 sm:size-5 text-emerald-300 shrink-0" />
                       <input
                         type="text"
                         name="org_name"
                         value={orgNameOther}
                         onChange={(e) => setOrgNameOther(e.target.value)}
-                        className="w-full bg-transparent text-white outline-none placeholder:text-zinc-500"
+                        className="w-full bg-transparent text-white text-sm outline-none placeholder:text-zinc-500"
                         placeholder="Type a new organization name"
                       />
                     </div>

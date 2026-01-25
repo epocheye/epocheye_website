@@ -139,7 +139,7 @@ const WeCover = () => {
 			ref={sectionRef}
 			id="we-cover"
 			className="yz-section yz-section-dark flex flex-col lg:flex-row items-center justify-center relative
-				px-6 sm:px-10 lg:px-20 py-20 lg:py-20"
+				px-6 sm:px-10 lg:px-20 py-20 lg:py-40"
 			style={{ backgroundColor: "#0A0A0A" }}>
 			{/* Subtle background pattern */}
 			<div

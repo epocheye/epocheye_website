@@ -511,3 +511,102 @@ body::-webkit-scrollbar {
 .yz-gold-link:hover::after {
   width: 100%;
 }
+/* Mobile Optimizations */
+@media (max-width: 768px) {
+  /* Prevent horizontal scroll on mobile */
+  body {
+    overflow-x: hidden;
+  }
+  
+  /* Improve touch targets */
+  button, a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Better text readability on mobile */
+  .yz-section {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Smooth scrolling behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* GPU acceleration for animations */
+.will-change-transform {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Section transition utilities */
+.section-transition-dark {
+  position: relative;
+}
+
+.section-transition-dark::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 120px;
+  background: linear-gradient(to bottom, #0A0A0A, transparent);
+  pointer-events: none;
+  z-index: 5;
+}
+
+.section-transition-dark::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 120px;
+  background: linear-gradient(to top, #0A0A0A, transparent);
+  pointer-events: none;
+  z-index: 5;
+}
+
+.section-transition-light::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100px;
+  background: linear-gradient(to bottom, #F8F8F8, transparent);
+  pointer-events: none;
+  z-index: 5;
+}
+
+.section-transition-light::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100px;
+  background: linear-gradient(to top, #F8F8F8, transparent);
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* Optimized animation classes */
+.animate-gpu {
+  transform: translateZ(0);
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  -webkit-font-smoothing: subpixel-antialiased;
+}
+
+/* Better video performance on mobile */
+@media (max-width: 768px) {
+  video {
+    will-change: auto;
+  }
+}

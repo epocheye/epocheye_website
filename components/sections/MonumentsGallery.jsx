@@ -129,7 +129,7 @@ const MonumentsGallery = () => {
 							transition-transform duration-300 hover:scale-[1.02]">
 						{/* Background with gradient overlay */}
 						<div
-							className={`absolute inset-0 bg-gradient-to-t ${monument.gradient}`}
+							className={`absolute inset-0 bg-linear-to-t ${monument.gradient}`}
 							style={{ backgroundColor: "#1A1A1A" }}
 						/>
 
