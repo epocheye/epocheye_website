@@ -61,7 +61,9 @@ const Hero = () => {
 			className="relative flex justify-center items-center m-auto bg-black h-screen overflow-hidden"
 			onClick={handleSkipIntro}>
 			{/* Background LiquidEther - Optimized with lower resolution */}
-			<div className="absolute inset-0 w-full h-full pointer-events-auto">
+			<div
+				className="absolute inset-0 w-full h-full pointer-events-auto"
+				aria-hidden="true">
 				<video
 					className="absolute inset-0 w-full h-full object-cover"
 					src="/bg_vid.mp4"
@@ -69,6 +71,8 @@ const Hero = () => {
 					loop
 					muted
 					playsInline
+					preload="auto"
+					aria-hidden="true"
 				/>
 				{/* Permanent dark overlay for text visibility */}
 				<div className="absolute inset-0 bg-black/30" />
@@ -117,7 +121,7 @@ const Hero = () => {
 						{/* Epocheye Title */}
 						<motion.div
 							animate={{
-								scale: introPhase === "intro" ? 1.5 : 1,
+								scale: introPhase === "intro" ? 1.2 : 1,
 							}}
 							transition={{
 								duration: 1.2,
@@ -127,13 +131,13 @@ const Hero = () => {
 								text="Epocheye"
 								disabled={false}
 								speed={2}
-								className="text-3xl font-bold text-white leading-tight font-montserrat"
+								className="text-2xl sm:text-3xl md:text-4xl font-bold text-white leading-tight font-montserrat"
 							/>
 						</motion.div>
 
 						{/* Tagline - Fades out during transition */}
 						<motion.p
-							className="text-white/70 text-lg mt-4 font-medium tracking-wide font-montserrat"
+							className="text-white/70 text-sm sm:text-base md:text-lg mt-3 sm:mt-4 font-medium tracking-wide font-montserrat"
 							initial={{ opacity: 0, y: 20 }}
 							animate={{
 								opacity: introPhase === "intro" ? 1 : 0,
@@ -152,7 +156,7 @@ const Hero = () => {
 
 			{/* Content Layer - Minimalist Design */}
 			<motion.div
-				className="relative z-10 text-center px-6 max-w-3xl mx-auto font-montserrat flex flex-col items-center justify-center h-full"
+				className="relative z-10 text-center px-4 sm:px-6 md:px-8 max-w-xs sm:max-w-2xl md:max-w-3xl mx-auto font-montserrat flex flex-col items-center justify-center h-full"
 				initial={{ opacity: 0 }}
 				animate={{ opacity: introPhase === "complete" ? 1 : 0 }}
 				transition={{ duration: 1.2, delay: 0.2 }}>
@@ -164,7 +168,7 @@ const Hero = () => {
 						y: introPhase === "complete" ? 0 : 20,
 					}}
 					transition={{ duration: 1, delay: 0.4 }}
-					className="text-4xl sm:text-5xl md:text-6xl font-light text-white leading-[1.15] tracking-tight">
+					className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light text-white leading-[1.15] tracking-tight">
 					Rediscover heritage.
 					<br />
 					<span className="font-semibold">Reimagine travel.</span>
@@ -177,7 +181,7 @@ const Hero = () => {
 						opacity: introPhase === "complete" ? 0.6 : 0,
 					}}
 					transition={{ duration: 1, delay: 0.7 }}
-					className="text-white text-xl sm:text-lg font-medium mt-8">
+					className="text-white text-base sm:text-lg md:text-xl font-medium mt-6 sm:mt-8">
 					Historical intelligence for the physical world
 				</motion.p>
 
@@ -188,14 +192,19 @@ const Hero = () => {
 						opacity: introPhase === "complete" ? 1 : 0,
 					}}
 					transition={{ duration: 1, delay: 1 }}
-					className="group mt-12 px-8 py-4 border border-white/30 text-white rounded-full text-sm font-semibold cursor-pointer tracking-wider uppercase hover:bg-white hover:text-black transition-all duration-500 pointer-events-auto flex items-center gap-3"
+					type="button"
+					aria-label="Join the waitlist for early access"
+					className="group mt-8 sm:mt-12 px-6 py-3 sm:px-8 sm:py-4 border border-white/30 text-white rounded-full text-xs sm:text-sm font-semibold cursor-pointer tracking-wider uppercase hover:bg-white hover:text-black transition-all duration-500 pointer-events-auto flex items-center gap-2 sm:gap-3 focus:outline-none focus:ring-2 focus:ring-white/50"
 					data-tally-open="mVR7OJ"
 					data-tally-layout="modal"
 					data-tally-width="600"
 					data-tally-auto-close="1000"
 					data-tally-form-events-forwarding="1">
 					Join Waitlist
-					<ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+					<ArrowRight
+						className="w-3 h-3 sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform duration-300"
+						aria-hidden="true"
+					/>
 				</motion.button>
 			</motion.div>
 

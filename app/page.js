@@ -102,12 +102,22 @@ const Footer = dynamic(() => import("@/components/sections/Footer"), {
 
 const Home = () => {
 	return (
-		<section className="flex-1 overflow-x-hidden bg-black" style={{ scrollSnapType: "y mandatory" }}>
+		<main className="flex-1 overflow-x-hidden bg-black" style={{ scrollSnapType: "y mandatory" }}>
+			{/* Skip to main content for accessibility */}
+			<a 
+				href="#main-content" 
+				className="sr-only focus:not-sr-only focus:absolute focus:z-100 focus:top-4 focus:left-4 focus:px-4 focus:py-2 focus:bg-white focus:text-black focus:rounded-md focus:font-medium"
+			>
+				Skip to main content
+			</a>
+			
 			<Hero />
 			{/* <SocialProof /> */}
-			<Suspense fallback={<div className="min-h-screen bg-white" />}>
-				<Problem />
-			</Suspense>
+			<div id="main-content">
+				<Suspense fallback={<div className="min-h-screen bg-white" />}>
+					<Problem />
+				</Suspense>
+			</div>
 			
 			{/* New Yodezeen-style Premium Sections */}
 			<Suspense fallback={<div className="min-h-screen bg-[#0A0A0A]" />}>
@@ -165,7 +175,7 @@ const Home = () => {
 			{/* <Suspense fallback={<div className="min-h-[50vh] bg-black" />}>
 				<Footer />
 			</Suspense> */}
-		</section>
+		</main>
 	);
 };
 

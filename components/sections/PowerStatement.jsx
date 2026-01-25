@@ -12,12 +12,12 @@ const PowerStatement = () => {
 
 	// Image stripes configuration - 6 vertical columns
 	const stripes = [
-		{ src: "/img1.jpg", delay: 0 },
-		{ src: "/img2.jpg", delay: 0.1 },
-		{ src: "/img3.jpg", delay: 0.2 },
-		{ src: "/img4.jpg", delay: 0.3 },
-		{ src: "/img5.jpg", delay: 0.4 },
-		{ src: "/img6.jpg", delay: 0.5 },
+		{ src: "/img1.webp", delay: 0 },
+		{ src: "/img2.webp", delay: 0.1 },
+		{ src: "/img3.webp", delay: 0.2 },
+		{ src: "/img4.webp", delay: 0.3 },
+		{ src: "/img5.webp", delay: 0.4 },
+		{ src: "/img6.webp", delay: 0.5 },
 	];
 
 	useEffect(() => {
@@ -59,7 +59,7 @@ const PowerStatement = () => {
 				});
 
 				gsap.to(stripeElements, {
-					opacity: 0.15,
+					opacity: 1,
 					y: 0,
 					scale: 1,
 					duration: 1.2,
@@ -100,7 +100,7 @@ const PowerStatement = () => {
 			{/* Image Stripes Background - 6 Vertical Columns */}
 			<div
 				ref={stripesRef}
-				className="absolute inset-0 w-full h-full pointer-events-none overflow-hidden flex">
+				className="absolute inset-0 z-0 w-full h-full pointer-events-none overflow-hidden flex">
 				{stripes.map((stripe, index) => (
 					<div
 						key={index}
@@ -112,12 +112,15 @@ const PowerStatement = () => {
 						<div
 							className="relative w-full h-full overflow-hidden"
 							style={{
-								filter: "grayscale(100%) contrast(1.1)",
-								mixBlendMode: "multiply",
+								filter: "none",
+								mixBlendMode: "normal",
 							}}>
 							<img
 								src={stripe.src}
 								alt=""
+								loading={index < 3 ? "eager" : "lazy"}
+								decoding="async"
+								fetchPriority={index < 2 ? "high" : "auto"}
 								className="w-full h-full object-cover"
 								style={{
 									objectPosition: "center",
@@ -130,17 +133,19 @@ const PowerStatement = () => {
 
 			{/* Gradient overlays for text readability */}
 			<div
-				className="absolute inset-0 pointer-events-none"
+				className="absolute inset-0 z-5 pointer-events-none"
 				style={{
+					opacity: 0,
 					background:
-						"linear-gradient(to right, rgba(248, 248, 248, 0.95) 0%, rgba(248, 248, 248, 0.7) 50%, rgba(248, 248, 248, 0.95) 100%)",
+						"linear-gradient(to right, rgba(248, 248, 248, 0.2) 0%, rgba(248, 248, 248, 0.1) 50%, rgba(248, 248, 248, 0.2) 100%)",
 				}}
 			/>
 			<div
-				className="absolute inset-0 pointer-events-none"
+				className="absolute inset-0 z-5 pointer-events-none"
 				style={{
+					opacity: 0,
 					background:
-						"radial-gradient(ellipse at center, rgba(248, 248, 248, 0.9) 0%, transparent 70%)",
+						"radial-gradient(ellipse at center, rgba(248, 248, 248, 0.2) 0%, transparent 70%)",
 				}}
 			/>
 

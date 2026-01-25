@@ -57,6 +57,17 @@ const instrumentSerif = Instrument_Serif({
   preload: true,
 });
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#0A0A0A' }
+  ],
+}
+
 export const metadata = {
   metadataBase: getMetadataBase(),
   title: "Epocheye - Turn Your Phone Into an AR Time Machine | Heritage Tourism Reimagined",
@@ -102,6 +113,9 @@ export default function RootLayout({ children }) {
         {/* Preconnect to external domains for faster loading */}
         <link rel="preconnect" href="https://tally.so" />
         <link rel="dns-prefetch" href="https://tally.so" />
+        {/* Preload critical heritage images for PowerStatement section */}
+        <link rel="preload" href="/img1.webp" as="image" type="image/webp" />
+        <link rel="preload" href="/img2.webp" as="image" type="image/webp" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${montserratAlternates.variable} ${instrumentSans.variable} ${instrumentSerif.variable} antialiased`}

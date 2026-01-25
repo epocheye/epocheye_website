@@ -72,9 +72,9 @@ const VideoFeature = () => {
 	return (
 		<section
 			ref={sectionRef}
-			className="yz-section relative flex items-center overflow-hidden">
+			className="yz-section relative flex items-center overflow-hidden py-20">
 			{/* Video Background */}
-			<div className="absolute inset-0 w-full h-full">
+			<div className="absolute inset-0 w-full h-full" aria-hidden="true">
 				{isInView ? (
 					<video
 						src="/shot2.mp4"
@@ -83,6 +83,7 @@ const VideoFeature = () => {
 						muted
 						playsInline
 						preload="metadata"
+						aria-hidden="true"
 						className="w-full h-full object-cover"
 					/>
 				) : (

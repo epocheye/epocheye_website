@@ -3,20 +3,32 @@ import React, { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
+import Image from "next/image";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const PremiumFooter = () => {
 	const footerRef = useRef(null);
+	const imageGridRef = useRef(null);
 	const contentRef = useRef(null);
 	const logoRef = useRef(null);
 	const linksRef = useRef(null);
 	const ctaRef = useRef(null);
 	const bottomRef = useRef(null);
 
+	// Heritage images for the grid
+	const heritageImages = [
+		{ src: "/img1.jpg", alt: "Heritage Site 1" },
+		{ src: "/img2.jpg", alt: "Heritage Site 2" },
+		{ src: "/img3.jpg", alt: "Heritage Site 3" },
+		{ src: "/img4.jpg", alt: "Heritage Site 4" },
+		{ src: "/img5.jpg", alt: "Heritage Site 5" },
+		{ src: "/img6.jpg", alt: "Heritage Site 6" },
+	];
+
 	useEffect(() => {
 		const footer = footerRef.current;
-		const content = contentRef.current;
+		const imageGrid = imageGridRef.current;
 		const logo = logoRef.current;
 		const links = linksRef.current;
 		const cta = ctaRef.current;
@@ -25,14 +37,37 @@ const PremiumFooter = () => {
 		if (!footer) return;
 
 		const ctx = gsap.context(() => {
+			// Image grid reveal with stagger
+			if (imageGrid) {
+				const images = imageGrid.querySelectorAll(".heritage-image");
+				gsap.set(images, {
+					opacity: 0,
+					scale: 1.1,
+					y: 30,
+				});
+				gsap.to(images, {
+					opacity: 1,
+					scale: 1,
+					y: 0,
+					duration: 1,
+					stagger: 0.1,
+					ease: "power3.out",
+					scrollTrigger: {
+						trigger: footer,
+						start: "top 85%",
+						toggleActions: "play none none reverse",
+					},
+				});
+			}
+
 			// Logo reveal
 			if (logo) {
-				gsap.set(logo, { opacity: 0, y: 40, scale: 0.95 });
+				gsap.set(logo, { opacity: 0, y: 40 });
 				gsap.to(logo, {
 					opacity: 1,
 					y: 0,
-					scale: 1,
 					duration: 1,
+					delay: 0.3,
 					ease: "power3.out",
 					scrollTrigger: {
 						trigger: footer,
@@ -49,7 +84,7 @@ const PremiumFooter = () => {
 					opacity: 1,
 					y: 0,
 					duration: 0.8,
-					delay: 0.2,
+					delay: 0.5,
 					ease: "power2.out",
 					scrollTrigger: {
 						trigger: footer,
@@ -67,8 +102,8 @@ const PremiumFooter = () => {
 					opacity: 1,
 					y: 0,
 					duration: 0.6,
-					stagger: 0.1,
-					delay: 0.4,
+					stagger: 0.08,
+					delay: 0.6,
 					ease: "power2.out",
 					scrollTrigger: {
 						trigger: footer,
@@ -84,7 +119,7 @@ const PremiumFooter = () => {
 				gsap.to(bottom, {
 					opacity: 1,
 					duration: 0.8,
-					delay: 0.6,
+					delay: 0.8,
 					ease: "power2.out",
 					scrollTrigger: {
 						trigger: footer,
@@ -120,193 +155,247 @@ const PremiumFooter = () => {
 			ref={footerRef}
 			className="relative overflow-hidden"
 			style={{ backgroundColor: "#0A0A0A" }}>
-			{/* Subtle top gradient */}
+			{/* Heritage Image Grid - Top Section */}
 			<div
-				className="absolute top-0 left-0 right-0 h-px"
+				ref={imageGridRef}
+				className="relative w-full h-[200px] sm:h-[280px] lg:h-[350px] overflow-hidden">
+				{/* Image Grid */}
+				<div className="absolute inset-0 grid grid-cols-6 gap-0">
+					{heritageImages.map((image, index) => (
+						<div
+							key={index}
+							className="heritage-image relative h-full overflow-hidden group"
+							style={{
+								borderRight:
+									index < 5
+										? "1px solid rgba(212, 175, 55, 0.15)"
+										: "none",
+							}}>
+							<Image
+								src={image.src}
+								alt={image.alt}
+								fill
+								sizes="17vw"
+								quality={70}
+								className="object-cover transition-transform duration-700 group-hover:scale-110"
+								style={{
+									filter: "grayscale(40%) contrast(1.1)",
+								}}
+							/>
+							{/* Subtle gold overlay on hover */}
+							<div className="absolute inset-0 bg-[#D4AF37] opacity-0 group-hover:opacity-20 transition-opacity duration-500" />
+						</div>
+					))}
+				</div>
+
+				{/* Gradient overlay from images to content */}
+				<div
+					className="absolute inset-0 pointer-events-none"
+					style={{
+						background:
+							"linear-gradient(to bottom, transparent 0%, transparent 40%, #0A0A0A 100%)",
+					}}
+				/>
+
+				{/* Side vignettes */}
+				<div
+					className="absolute inset-0 pointer-events-none"
+					style={{
+						background:
+							"linear-gradient(to right, #0A0A0A 0%, transparent 15%, transparent 85%, #0A0A0A 100%)",
+					}}
+				/>
+			</div>
+
+			{/* Gold accent line */}
+			<div
+				className="relative h-px w-full"
 				style={{
 					background:
-						"linear-gradient(90deg, transparent 0%, rgba(212, 175, 55, 0.4) 50%, transparent 100%)",
+						"linear-gradient(90deg, transparent 0%, rgba(212, 175, 55, 0.5) 20%, rgba(212, 175, 55, 0.5) 80%, transparent 100%)",
 				}}
 			/>
 
 			{/* Main Footer Content */}
 			<div
 				ref={contentRef}
-				className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-20 py-20 sm:py-28 lg:py-32">
-				{/* Logo & Main CTA Section */}
+				className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-20 py-16 sm:py-20 lg:py-24">
+				{/* Logo & Tagline */}
+				<div ref={logoRef} className="text-center mb-12 sm:mb-16">
+					<h2
+						className="font-montserrat font-bold uppercase 
+							text-3xl sm:text-5xl lg:text-6xl
+							tracking-[5px] sm:tracking-[8px] lg:tracking-[12px]"
+						style={{ color: "#FFFFFF" }}>
+						EPOCH<span style={{ color: "#D4AF37" }}>EYE</span>
+					</h2>
+					<p
+						className="mt-3 sm:mt-4 font-light uppercase
+							text-[11px] sm:text-[13px]
+							tracking-[2px] sm:tracking-[4px]"
+						style={{ color: "#666666" }}>
+						See The Past. Live.
+					</p>
+				</div>
 
-				<div className="text-center mb-16 sm:mb-20 lg:mb-24">
-					{/* Logo */}
-					<div ref={logoRef} className="mb-10 sm:mb-14">
-						<h2
-							className="font-montserrat font-bold uppercase 
-								text-4xl sm:text-6xl lg:text-7xl
-								tracking-[6px] sm:tracking-[10px] lg:tracking-[15px]"
-							style={{ color: "#FFFFFF" }}>
-							EPOCH<span style={{ color: "#D4AF37" }}>EYE</span>
-						</h2>
-						<p
-							className="mt-4 sm:mt-6 font-light uppercase
-								text-[12px] sm:text-[14px]
-								tracking-[3px] sm:tracking-[5px]"
-							style={{ color: "#666666" }}>
-							See The Past. Live.
-						</p>
-					</div>
+				{/* CTA Section */}
+				<div ref={ctaRef} className="text-center mb-14 sm:mb-18">
+					<h3
+						className="font-montserrat font-medium uppercase mb-6 sm:mb-8
+							text-lg sm:text-xl lg:text-2xl
+							tracking-[2px] sm:tracking-[3px]"
+						style={{ color: "#FFFFFF" }}>
+						Join The Vision
+					</h3>
 
-					{/* CTA */}
-					<div ref={ctaRef}>
-						<h3
-							className="font-montserrat font-semibold uppercase mb-8 sm:mb-10
-								text-xl sm:text-2xl lg:text-3xl
-								tracking-[2px] sm:tracking-[4px]"
-							style={{ color: "#FFFFFF" }}>
-							Join The Vision
-						</h3>
-
-						<Link
-							href="/signup"
-							className="inline-flex items-center justify-center gap-3
-								px-10 sm:px-14 py-4 sm:py-5
-								font-montserrat font-semibold uppercase
-								text-[13px] sm:text-[15px]
-								tracking-[2px] sm:tracking-[3px]
-								transition-all duration-500 group"
-							style={{
-								backgroundColor: "#D4AF37",
-								color: "#0A0A0A",
-								boxShadow: "0 0 40px rgba(212, 175, 55, 0.3)",
-							}}
-							onMouseEnter={(e) => {
-								e.currentTarget.style.backgroundColor = "#E8C547";
-								e.currentTarget.style.boxShadow =
-									"0 0 60px rgba(212, 175, 55, 0.5)";
-								e.currentTarget.style.transform = "translateY(-2px)";
-							}}
-							onMouseLeave={(e) => {
-								e.currentTarget.style.backgroundColor = "#D4AF37";
-								e.currentTarget.style.boxShadow =
-									"0 0 40px rgba(212, 175, 55, 0.3)";
-								e.currentTarget.style.transform = "translateY(0)";
-							}}>
-							<span>Early Access</span>
-							<span className="transform transition-transform duration-300 group-hover:translate-x-1">
-								→
-							</span>
-						</Link>
-					</div>
+					<Link
+						href="/signup"
+						className="inline-flex items-center justify-center gap-3
+							px-8 sm:px-12 py-3.5 sm:py-4
+							font-montserrat font-semibold uppercase
+							text-[12px] sm:text-[14px]
+							tracking-[2px] sm:tracking-[3px]
+							transition-all duration-500 group"
+						style={{
+							backgroundColor: "#D4AF37",
+							color: "#0A0A0A",
+							boxShadow: "0 0 40px rgba(212, 175, 55, 0.25)",
+						}}
+						onMouseEnter={(e) => {
+							e.currentTarget.style.backgroundColor = "#E8C547";
+							e.currentTarget.style.boxShadow =
+								"0 0 60px rgba(212, 175, 55, 0.4)";
+							e.currentTarget.style.transform = "translateY(-2px)";
+						}}
+						onMouseLeave={(e) => {
+							e.currentTarget.style.backgroundColor = "#D4AF37";
+							e.currentTarget.style.boxShadow =
+								"0 0 40px rgba(212, 175, 55, 0.25)";
+							e.currentTarget.style.transform = "translateY(0)";
+						}}>
+						<span>Get Early Access</span>
+						<span className="transform transition-transform duration-300 group-hover:translate-x-1">
+							→
+						</span>
+					</Link>
 				</div>
 
 				{/* Decorative divider */}
 				<div
-					className="max-w-[200px] mx-auto h-px mb-16 sm:mb-20"
+					className="max-w-[120px] mx-auto h-px mb-12 sm:mb-14"
 					style={{
 						background:
-							"linear-gradient(90deg, transparent 0%, rgba(212, 175, 55, 0.3) 50%, transparent 100%)",
+							"linear-gradient(90deg, transparent 0%, rgba(212, 175, 55, 0.4) 50%, transparent 100%)",
 					}}
 				/>
 
-				{/* Navigation Links */}
-				<div
-					ref={linksRef}
-					className="flex flex-wrap justify-center gap-8 sm:gap-12 lg:gap-16 mb-16 sm:mb-20">
-					{footerLinks.map((link, index) => (
-						<Link
-							key={index}
-							href={link.href}
-							className="footer-link font-montserrat uppercase
-								text-[12px] sm:text-[13px]
-								tracking-[2px] sm:tracking-[3px]
-								transition-all duration-300"
-							style={{ color: "#888888" }}
-							onMouseEnter={(e) => {
-								e.currentTarget.style.color = "#D4AF37";
-							}}
-							onMouseLeave={(e) => {
-								e.currentTarget.style.color = "#888888";
-							}}>
-							{link.label}
-						</Link>
-					))}
-				</div>
+				{/* Navigation & Social Links Row */}
+				<div className="flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-0">
+					{/* Navigation Links - Left */}
+					<div
+						ref={linksRef}
+						className="flex flex-wrap justify-center lg:justify-start gap-6 sm:gap-10">
+						{footerLinks.map((link, index) => (
+							<Link
+								key={index}
+								href={link.href}
+								className="footer-link font-montserrat uppercase
+									text-[11px] sm:text-[12px]
+									tracking-[2px] sm:tracking-[2.5px]
+									transition-all duration-300 hover:tracking-[3px]"
+								style={{ color: "#777777" }}
+								onMouseEnter={(e) => {
+									e.currentTarget.style.color = "#D4AF37";
+								}}
+								onMouseLeave={(e) => {
+									e.currentTarget.style.color = "#777777";
+								}}>
+								{link.label}
+							</Link>
+						))}
+					</div>
 
-				{/* Social Links */}
-				<div className="flex justify-center gap-6 sm:gap-8 mb-16 sm:mb-20">
-					{socialLinks.map((social, index) => (
-						<a
-							key={index}
-							href={social.href}
-							target="_blank"
-							rel="noopener noreferrer"
-							className="footer-link flex items-center justify-center 
-								w-12 h-12 sm:w-14 sm:h-14
-								rounded-full border transition-all duration-300
-								font-montserrat text-sm sm:text-base"
-							style={{
-								borderColor: "rgba(255, 255, 255, 0.2)",
-								color: "#888888",
-							}}
-							onMouseEnter={(e) => {
-								e.currentTarget.style.borderColor = "#D4AF37";
-								e.currentTarget.style.color = "#D4AF37";
-								e.currentTarget.style.transform = "translateY(-3px)";
-							}}
-							onMouseLeave={(e) => {
-								e.currentTarget.style.borderColor =
-									"rgba(255, 255, 255, 0.2)";
-								e.currentTarget.style.color = "#888888";
-								e.currentTarget.style.transform = "translateY(0)";
-							}}
-							aria-label={social.label}>
-							{social.icon}
-						</a>
-					))}
+					{/* Social Links - Right */}
+					<div className="flex justify-center gap-5 sm:gap-6">
+						{socialLinks.map((social, index) => (
+							<a
+								key={index}
+								href={social.href}
+								target="_blank"
+								rel="noopener noreferrer"
+								className="footer-link flex items-center justify-center 
+									w-11 h-11 sm:w-12 sm:h-12
+									rounded-full border transition-all duration-300
+									font-montserrat text-sm"
+								style={{
+									borderColor: "rgba(255, 255, 255, 0.15)",
+									color: "#777777",
+								}}
+								onMouseEnter={(e) => {
+									e.currentTarget.style.borderColor = "#D4AF37";
+									e.currentTarget.style.color = "#D4AF37";
+									e.currentTarget.style.transform = "translateY(-3px)";
+									e.currentTarget.style.boxShadow =
+										"0 4px 20px rgba(212, 175, 55, 0.2)";
+								}}
+								onMouseLeave={(e) => {
+									e.currentTarget.style.borderColor =
+										"rgba(255, 255, 255, 0.15)";
+									e.currentTarget.style.color = "#777777";
+									e.currentTarget.style.transform = "translateY(0)";
+									e.currentTarget.style.boxShadow = "none";
+								}}
+								aria-label={social.label}>
+								{social.icon}
+							</a>
+						))}
+					</div>
 				</div>
 			</div>
 
 			{/* Bottom Bar */}
 			<div
 				ref={bottomRef}
-				className="border-t px-6 sm:px-10 lg:px-20 py-6 sm:py-8"
-				style={{ borderColor: "rgba(255, 255, 255, 0.1)" }}>
-				<div className="max-w-[1400px] mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+				className="border-t px-6 sm:px-10 lg:px-20 py-5 sm:py-6"
+				style={{ borderColor: "rgba(255, 255, 255, 0.08)" }}>
+				<div className="max-w-[1400px] mx-auto flex flex-col sm:flex-row justify-between items-center gap-3">
 					<p
-						className="font-light text-[11px] sm:text-[12px] tracking-[1px]"
-						style={{ color: "#555555" }}>
+						className="font-light text-[10px] sm:text-[11px] tracking-[1px]"
+						style={{ color: "#444444" }}>
 						© {new Date().getFullYear()} EpochEye. All rights reserved.
 					</p>
 
-					<div className="flex gap-6 sm:gap-8">
+					<div className="flex gap-5 sm:gap-6">
 						<Link
 							href="/privacy"
-							className="font-light text-[11px] sm:text-[12px] tracking-[1px] transition-colors duration-300"
-							style={{ color: "#555555" }}
+							className="font-light text-[10px] sm:text-[11px] tracking-[1px] transition-colors duration-300"
+							style={{ color: "#444444" }}
 							onMouseEnter={(e) => (e.currentTarget.style.color = "#D4AF37")}
-							onMouseLeave={(e) => (e.currentTarget.style.color = "#555555")}>
+							onMouseLeave={(e) => (e.currentTarget.style.color = "#444444")}>
 							Privacy
 						</Link>
 						<Link
 							href="/terms"
-							className="font-light text-[11px] sm:text-[12px] tracking-[1px] transition-colors duration-300"
-							style={{ color: "#555555" }}
+							className="font-light text-[10px] sm:text-[11px] tracking-[1px] transition-colors duration-300"
+							style={{ color: "#444444" }}
 							onMouseEnter={(e) => (e.currentTarget.style.color = "#D4AF37")}
-							onMouseLeave={(e) => (e.currentTarget.style.color = "#555555")}>
+							onMouseLeave={(e) => (e.currentTarget.style.color = "#444444")}>
 							Terms
 						</Link>
 					</div>
 				</div>
 			</div>
 
-			{/* Decorative corner elements */}
+			{/* Subtle decorative corners */}
 			<div
-				className="absolute bottom-20 left-10 w-20 h-20 opacity-10 pointer-events-none hidden lg:block"
+				className="absolute bottom-16 left-8 w-16 h-16 opacity-[0.08] pointer-events-none hidden lg:block"
 				style={{
 					borderLeft: "1px solid #D4AF37",
 					borderBottom: "1px solid #D4AF37",
 				}}
 			/>
 			<div
-				className="absolute bottom-20 right-10 w-20 h-20 opacity-10 pointer-events-none hidden lg:block"
+				className="absolute bottom-16 right-8 w-16 h-16 opacity-[0.08] pointer-events-none hidden lg:block"
 				style={{
 					borderRight: "1px solid #D4AF37",
 					borderBottom: "1px solid #D4AF37",

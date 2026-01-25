@@ -103,7 +103,8 @@ const SolutionSplit = () => {
 			<div className="w-full lg:w-1/2 flex items-center justify-center px-6 sm:px-10 lg:px-0 py-10 lg:py-0 min-h-[50vh] lg:min-h-screen lg:sticky lg:top-0">
 				<div
 					ref={videoRef}
-					className="w-full max-w-[320px] sm:max-w-[400px] lg:max-w-[600px] aspect-3/4">
+					className="w-full max-w-[320px] sm:max-w-[400px] lg:max-w-[600px] aspect-3/4"
+					aria-hidden="true">
 					{isInView ? (
 						<video
 							ref={videoElementRef}
@@ -113,6 +114,7 @@ const SolutionSplit = () => {
 							muted
 							playsInline
 							preload="metadata"
+							aria-hidden="true"
 							className="w-full h-full object-cover"
 						/>
 					) : (
