@@ -89,10 +89,7 @@ const SolutionSplit = () => {
 					{headlineLines.map((line, index) => (
 						<h2
 							key={index}
-							className="headline-line text-white font-montserrat font-bold  leading-[1.1]
-								text-4xl sm:text-5xl lg:text-6xl
-								tracking-[2px] sm:tracking-[4px] lg:tracking-[6px]
-								mb-2 sm:mb-3 lg:mb-4">
+							className="headline-line text-white font-montserrat font-bold leading-[1.1] text-4xl sm:text-5xl lg:text-6xl tracking-[2px] sm:tracking-[4px] lg:tracking-[6px] mb-2 sm:mb-3 lg:mb-4">
 							{line}
 						</h2>
 					))}
