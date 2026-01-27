@@ -1,8 +1,10 @@
 import Image from "next/image";
 import React from "react";
+import Link from "next/link";
 import logoWhite from "../../public/logo-white.png";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, User } from "lucide-react";
 import ShinyText from "../ShinyText";
+import { NotificationBell } from "../notifications";
 
 const Navbar = ({ showLogo = true }) => {
 	return (
@@ -34,21 +36,37 @@ const Navbar = ({ showLogo = true }) => {
 				/>
 			</div>
 
-			<button
-				type="button"
-				title="Join Us in making the Heritage Tourism an Experience"
-				aria-label="Join Us in making the Heritage Tourism an Experience"
-				className="px-3 py-2 sm:px-4 sm:py-3 text-white text-xs sm:text-sm md:text-base bg-black/20 backdrop-blur-sm rounded-2xl sm:rounded-3xl pointer-events-auto flex items-center gap-2 sm:gap-3 cursor-pointer hover:bg-black/30 transition-colors whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-transparent"
-				data-tally-open="mZ4Aa0"
-				data-tally-layout="modal"
-				data-tally-width="600"
-				data-tally-auto-close="1000"
-				data-tally-transparent-background="1"
-				data-tally-form-events-forwarding="1">
-				<span className="hidden sm:inline">Join us</span>
-				<span className="sm:hidden">Join us</span>
-				<ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" aria-hidden="true" />
-			</button>
+			{/* Right side: Login + Notification Bell + Join Us */}
+			<div className="flex items-center gap-2 sm:gap-3 pointer-events-auto">
+				{/* Login Button */}
+				<Link
+					href="/login"
+					className="px-3 py-2 sm:px-4 sm:py-2.5 text-white text-xs sm:text-sm font-medium bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full flex items-center gap-2 transition-all border border-white/20 hover:border-white/30"
+				>
+					<User className="w-4 h-4" aria-hidden="true" />
+					<span className="hidden sm:inline">Login</span>
+				</Link>
+
+				{/* Notification Bell */}
+				<NotificationBell />
+
+				{/* Join Us Button */}
+				<button
+					type="button"
+					title="Join Us in making the Heritage Tourism an Experience"
+					aria-label="Join Us in making the Heritage Tourism an Experience"
+					className="px-3 py-2 sm:px-4 sm:py-3 text-white text-xs sm:text-sm md:text-base bg-black/20 backdrop-blur-sm rounded-2xl sm:rounded-3xl flex items-center gap-2 sm:gap-3 cursor-pointer hover:bg-black/30 transition-colors whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-transparent"
+					data-tally-open="mZ4Aa0"
+					data-tally-layout="modal"
+					data-tally-width="600"
+					data-tally-auto-close="1000"
+					data-tally-transparent-background="1"
+					data-tally-form-events-forwarding="1">
+					<span className="hidden sm:inline">Join us</span>
+					<span className="sm:hidden">Join us</span>
+					<ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" aria-hidden="true" />
+				</button>
+			</div>
 		</nav>
 	);
 };
