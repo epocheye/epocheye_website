@@ -70,36 +70,36 @@ export const viewport = {
 
 export const metadata = {
   metadataBase: getMetadataBase(),
-  title: "Epocheye - Turn Your Phone Into an AR Time Machine | Heritage Tourism Reimagined",
+  title: "Epocheye - Historical Intelligence for the Physical World",
   description:
-    "Experience India's UNESCO World Heritage Sites through AR time travel. Point your phone and watch history unfold. 10 destinations launching March 2026. Join 5,000+ early adopters.",
+    "See historical monuments in their original glory through your smartphone using Augmented Reality",
   keywords:
-    "AR heritage tourism, historical site AR app, UNESCO World Heritage AR, India heritage tourism, time travel app, historical reconstruction AR, smart tourism India",
+    "Historical Intelligence for the Physical World, AR heritage tourism, historical site AR app, UNESCO World Heritage AR, India heritage tourism, historical reconstruction AR, augmented reality monuments, cultural heritage AR experience, virtual heritage tours, historical landmarks AR",
   openGraph: {
-    title: "Epocheye - AR Time Travel for Heritage Sites",
+    title: "Epocheye - Bringing the Experience to Heritage Tourism",
     description:
-      "See historical monuments in their original glory through your smartphone. Launching March 2026 with 10 UNESCO sites in India.",
+      "See historical monuments in their original glory through your smartphone using Augmented Reality",
     type: "website",
     images: [
       {
         url: "/1.png",
         width: 1200,
         height: 630,
-        alt: "Epocheye AR time travel demo",
+        alt: "Epocheye heritage tourism experience",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Epocheye - AR Time Travel for Heritage Sites",
+    title: "Epocheye - Bringing the Experience to Heritage Tourism",
     description:
-      "See historical monuments in their original glory through your smartphone. Launching March 2026 with 10 UNESCO sites in India.",
+      "See historical monuments in their original glory through your smartphone using Augmented Reality",
     images: ["/1.png"],
   },
   icons: {
     icon: [
       { url: "/logo-black.png", media: "(prefers-color-scheme: light)" },
-      { url: "/logo-white.png", media: "(prefers-color-scheme: dark)" },
+      // { url: "/logo-white.png", media: "(prefers-color-scheme: dark)" },
     ],
   },
 };
