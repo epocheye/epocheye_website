@@ -80,21 +80,14 @@ export const metadata = {
     description:
       "See historical monuments in their original glory through your smartphone using Augmented Reality",
     type: "website",
-    images: [
-      {
-        url: "/1.png",
-        width: 1200,
-        height: 630,
-        alt: "Epocheye heritage tourism experience",
-      },
-    ],
+    
   },
   twitter: {
     card: "summary_large_image",
     title: "Epocheye - Bringing the Experience to Heritage Tourism",
     description:
       "See historical monuments in their original glory through your smartphone using Augmented Reality",
-    images: ["/1.png"],
+   
   },
   icons: {
     icon: [

@@ -208,18 +208,18 @@ const WeCover = () => {
 			</div>
 
 			{/* Bottom Right CTA */}
-			<a
+			{/* <a
 				ref={ctaRef}
 				href="#global-reach"
 				className="absolute bottom-10 sm:bottom-14 lg:bottom-16 right-6 sm:right-10 lg:right-20
 					yz-gold-link hidden sm:block z-10">
 				VIEW ALL MONUMENTS
-			</a>
+			</a> */}
 
 			{/* Mobile CTA */}
-			<a href="#global-reach" className="sm:hidden mt-12 yz-gold-link relative z-10">
+			{/* <a href="#global-reach" className="sm:hidden mt-12 yz-gold-link relative z-10">
 				VIEW ALL MONUMENTS
-			</a>
+			</a> */}
 
 			{/* Bottom transition gradient - leads into next section */}
 			<div

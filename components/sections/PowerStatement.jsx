@@ -10,6 +10,7 @@ const PowerStatement = () => {
 	const sectionRef = useRef(null);
 	const textRef = useRef(null);
 	const stripesRef = useRef(null);
+	const overlayRef = useRef(null);
 
 	// Image stripes configuration - 6 vertical columns
 	const stripes = [
@@ -25,6 +26,7 @@ const PowerStatement = () => {
 		const section = sectionRef.current;
 		const text = textRef.current;
 		const stripesContainer = stripesRef.current;
+		const overlay = overlayRef.current;
 
 		if (!section || !text) return;
 
@@ -32,15 +34,15 @@ const PowerStatement = () => {
 			// Set initial state for text
 			gsap.set(text, {
 				opacity: 0,
-				scale: 0.95,
+				y: 40,
 			});
 
-			// Scale and fade animation for text
+			// Fade in text
 			gsap.to(text, {
 				opacity: 1,
-				scale: 1,
-				duration: 1,
-				ease: "power2.out",
+				y: 0,
+				duration: 1.2,
+				ease: "power3.out",
 				scrollTrigger: {
 					trigger: section,
 					start: "top 60%",
@@ -55,27 +57,27 @@ const PowerStatement = () => {
 
 				gsap.set(stripeElements, {
 					opacity: 0,
-					y: 100,
-					scale: 1.1,
+					y: 80,
+					scale: 1.15,
 				});
 
 				gsap.to(stripeElements, {
 					opacity: 1,
 					y: 0,
 					scale: 1,
-					duration: 1.2,
-					stagger: 0.1,
+					duration: 1.4,
+					stagger: 0.08,
 					ease: "power3.out",
 					scrollTrigger: {
 						trigger: section,
-						start: "top 70%",
+						start: "top 75%",
 						toggleActions: "play none none reverse",
 					},
 				});
 
-				// Parallax effect on scroll
+				// Parallax effect on scroll - alternating directions
 				stripeElements.forEach((stripe, index) => {
-					const direction = index % 2 === 0 ? -30 : 30;
+					const direction = index % 2 === 0 ? -25 : 25;
 					gsap.to(stripe, {
 						y: direction,
 						ease: "none",
@@ -83,9 +85,24 @@ const PowerStatement = () => {
 							trigger: section,
 							start: "top bottom",
 							end: "bottom top",
-							scrub: 1,
+							scrub: 1.5,
 						},
 					});
+				});
+			}
+
+			// Animate overlay for dramatic effect
+			if (overlay) {
+				gsap.to(overlay, {
+					opacity: 0.15,
+					duration: 1.5,
+					ease: "power2.inOut",
+					scrollTrigger: {
+						trigger: section,
+						start: "top 50%",
+						end: "bottom 50%",
+						scrub: true,
+					},
 				});
 			}
 		}, section);
@@ -96,103 +113,99 @@ const PowerStatement = () => {
 	return (
 		<section
 			ref={sectionRef}
-			className="yz-section yz-section-light relative flex items-center justify-center overflow-hidden min-h-[60vh] lg:min-h-[80vh]"
+			className="yz-section yz-section-light relative flex items-center justify-center overflow-hidden min-h-[70vh] sm:min-h-[80vh] lg:min-h-screen"
 			style={{ backgroundColor: "#F8F8F8" }}>
-			{/* Image Stripes Background - Horizontal on mobile, Vertical columns on lg */}
+			{/* Image Stripes Background - Horizontal rows on mobile, vertical columns on lg+ */}
 			<div
 				ref={stripesRef}
-				className="absolute inset-0 z-0 w-full h-full pointer-events-none overflow-hidden flex flex-col lg:flex-row">
+				className="absolute inset-0 z-0 w-full h-full pointer-events-none overflow-hidden flex flex-col lg:flex-row items-stretch">
 				{stripes.map((stripe, index) => (
 					<div
 						key={index}
-						className="image-stripe relative flex-1 w-full lg:w-auto lg:h-full overflow-hidden">
-						<div
-							className="relative w-full h-full overflow-hidden"
-							style={{
-								filter: "none",
-								mixBlendMode: "normal",
-							}}>
+						className="image-stripe relative flex-1 overflow-hidden"
+						style={{
+							margin: "1px 0",
+							minHeight: "16.666%",
+						}}>
+						<div className="absolute inset-0 overflow-hidden">
 							<Image
 								src={stripe.src}
 								alt=""
 								fill
-								sizes="(max-width: 1024px) 100vw, 50vw"
-								priority={index < 2}
-								// loading={index < 2 ? "eager" : "lazy"}
-								// unoptimized={false}
-								quality={100}
-								className="object-cover"
+								sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+								priority={index < 3}
+								quality={90}
+								className="object-cover transition-transform duration-700"
 								style={{
 									objectPosition: "center",
 								}}
 							/>
+							{/* Individual stripe overlay for depth */}
+							<div className="absolute inset-0 bg-linear-to-b from-[#F8F8F8]/10 via-transparent to-[#F8F8F8]/20" />
 						</div>
 					</div>
 				))}
 			</div>
 
-			{/* Gradient overlays for text readability */}
+			{/* Main Overlay for Text Readability */}
 			<div
+				ref={overlayRef}
 				className="absolute inset-0 z-5 pointer-events-none"
 				style={{
-					opacity: 0,
-					background:
-						"linear-gradient(to right, rgba(248, 248, 248, 0.2) 0%, rgba(248, 248, 248, 0.1) 50%, rgba(248, 248, 248, 0.2) 100%)",
+					background: `
+						radial-gradient(ellipse 80% 60% at 50% 50%, rgba(248, 248, 248, 0.85) 0%, rgba(248, 248, 248, 0.4) 50%, transparent 80%)
+					`,
 				}}
 			/>
+
+			{/* Vignette Effect */}
 			<div
 				className="absolute inset-0 z-5 pointer-events-none"
 				style={{
-					opacity: 0,
-					background:
-						"radial-gradient(ellipse at center, rgba(248, 248, 248, 0.2) 0%, transparent 70%)",
+					background: `
+						linear-gradient(to right, rgba(248, 248, 248, 0.9) 0%, transparent 15%, transparent 85%, rgba(248, 248, 248, 0.9) 100%),
+						linear-gradient(to bottom, rgba(248, 248, 248, 0.8) 0%, transparent 20%, transparent 80%, rgba(248, 248, 248, 0.8) 100%)
+					`,
 				}}
 			/>
 
 			{/* Text Content */}
-			<div ref={textRef} className="relative z-10 text-center">
+			<div
+				ref={textRef}
+				className="relative z-10 text-center px-4 sm:px-6 md:px-8 max-w-[95vw] sm:max-w-[90vw] lg:max-w-[1200px]">
+				{/* Decorative Line Above */}
+				<div className="flex items-center justify-center gap-3 sm:gap-4 mb-6 sm:mb-8">
+					<div className="w-8 sm:w-12 md:w-16 h-px bg-[#0A0A0A]/20" />
+					<div className="w-2 h-2 rounded-full bg-[#0A0A0A]/30" />
+					<div className="w-8 sm:w-12 md:w-16 h-px bg-[#0A0A0A]/20" />
+				</div>
+
+				{/* Main Headline */}
 				<h2
-					className={[
-						"font-montserrat",
-						"font-bold",
-						"uppercase",
-						"leading-[1.2]",
-						"sm:leading-[1.2]",
-						"text-4xl",
-						"sm:text-5xl",
-						"lg:text-6xl",
-						"tracking-[3px]",
-						"sm:tracking-[5px]",
-						"lg:tracking-[8px]",
-					].join(" ")}
+					className="font-montserrat font-bold uppercase leading-[1.15] text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl tracking-[0.08em] sm:tracking-widest md:tracking-[0.12em]"
 					style={{
 						color: "#0A0A0A",
-						textShadow: "0 2px 20px rgba(248, 248, 248, 0.8)",
+						textShadow: "0 2px 30px rgba(248, 248, 248, 0.9)",
 					}}>
-					POINT YOUR PHONE.
+					Point Your Phone.
 				</h2>
+
+				{/* Secondary Headline */}
 				<h2
-					className={[
-						"font-montserrat",
-						"font-semibold",
-						"uppercase",
-						"leading-[1.2]",
-						"sm:leading-[1.2]",
-						"text-[36px]",
-						"sm:text-[64px]",
-						"lg:text-8xl",
-						"tracking-[3px]",
-						"sm:tracking-[5px]",
-						"lg:tracking-[8px]",
-						"mt-2",
-						"sm:mt-4",
-					].join(" ")}
+					className="font-montserrat font-semibold uppercase leading-[1.15] text-[28px] sm:text-4xl md:text-5xl lg:text-6xl xl:text-[5.5rem] tracking-[0.08em] sm:tracking-widest md:tracking-[0.12em] mt-2 sm:mt-3 md:mt-4"
 					style={{
 						color: "#0A0A0A",
-						textShadow: "0 2px 20px rgba(248, 248, 248, 0.8)",
+						textShadow: "0 2px 30px rgba(248, 248, 248, 0.9)",
 					}}>
-					WATCH CENTURIES UNFOLD.
+					Watch Centuries Unfold.
 				</h2>
+
+				{/* Decorative Line Below */}
+				<div className="flex items-center justify-center gap-3 sm:gap-4 mt-6 sm:mt-8">
+					<div className="w-8 sm:w-12 md:w-16 h-px bg-[#0A0A0A]/20" />
+					<div className="w-2 h-2 rounded-full bg-[#0A0A0A]/30" />
+					<div className="w-8 sm:w-12 md:w-16 h-px bg-[#0A0A0A]/20" />
+				</div>
 			</div>
 		</section>
 	);
