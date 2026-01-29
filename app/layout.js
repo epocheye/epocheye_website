@@ -105,6 +105,7 @@ export const metadata = {
 };
 
 import Script from "next/script";
+import { NotificationProvider, NotificationToast } from "@/components/notifications";
 
 export default function RootLayout({ children }) {
   return (
@@ -120,7 +121,10 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${montserratAlternates.variable} ${instrumentSans.variable} ${instrumentSerif.variable} antialiased`}
       >
-        {children}
+        <NotificationProvider>
+          {children}
+          <NotificationToast />
+        </NotificationProvider>
         {/* Load Tally script with strategy for better performance */}
         <Script 
           src="https://tally.so/widgets/embed.js" 
