@@ -5,6 +5,7 @@ import {
   Instrument_Sans,
   Instrument_Serif,
 } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next"
 import "./globals.css";
 
 const getMetadataBase = () => {
