@@ -137,7 +137,7 @@ const Hero = () => {
 
 						{/* Tagline - Fades out during transition */}
 						<motion.p
-							className="text-white/70 text-sm sm:text-base md:text-lg mt-3 sm:mt-4 font-medium tracking-wide font-montserrat"
+							className="text-white/70 text-sm sm:text-base md:text-lg mt-3 sm:mt-4 font-medium tracking-wide font-montserrat text-center"
 							initial={{ opacity: 0, y: 20 }}
 							animate={{
 								opacity: introPhase === "intro" ? 1 : 0,
