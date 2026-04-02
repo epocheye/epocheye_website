@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, startTransition } from "react";
 import Link from "next/link";
 import LiquidEther from "@/components/LiquidEther";
 import ShinyText from "@/components/ShinyText";
@@ -21,7 +21,7 @@ export default function NotFound() {
 			animationDuration: 2 + Math.random() * 3,
 			opacity: Math.random() * 0.5,
 		}));
-		setStars(generatedStars);
+		startTransition(() => setStars(generatedStars));
 	}, []);
 
 	useEffect(() => {
@@ -108,8 +108,8 @@ export default function NotFound() {
 					/>
 					
 					<p className="text-base sm:text-lg text-gray-500 montserrat-alternates-regular max-w-2xl mx-auto leading-relaxed">
-						The page you're looking for hasn't been written into existence. 
-						Perhaps it's waiting in another timeline, or maybe it never existed at all.
+						The page you&apos;re looking for hasn&apos;t been written into existence.
+						Perhaps it&apos;s waiting in another timeline, or maybe it never existed at all.
 					</p>
 				</div>
 

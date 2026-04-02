@@ -159,11 +159,6 @@ const Problem = () => {
 	const renderTextWithWords = (text, textIndex) => {
 		const words = text.split(" ");
 
-		// Initialize the words ref array for this text if not exists
-		if (!wordsRef.current[textIndex]) {
-			wordsRef.current[textIndex] = [];
-		}
-
 		return words.map((word, wordIndex) => (
 			<span
 				key={wordIndex}

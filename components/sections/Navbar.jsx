@@ -12,7 +12,7 @@ const Navbar = ({ showLogo = true }) => {
 			className="w-full flex items-center justify-between px-4 sm:px-6 md:px-8 py-4 font-montserrat relative"
 			role="navigation"
 			aria-label="Main navigation">
-			<a href="/" aria-label="EpochEye Home">
+			<Link href="/" aria-label="EpochEye Home">
 				<Image
 					src={logoWhite}
 					alt="EpochEye Logo"
@@ -21,7 +21,7 @@ const Navbar = ({ showLogo = true }) => {
 					className="sm:w-[50px] sm:h-[50px] md:w-[60px] md:h-[60px]"
 					priority
 				/>
-			</a>
+			</Link>
 
 			<div
 				className={`absolute left-1/2 transform -translate-x-1/2 transition-opacity duration-300 hidden sm:block ${

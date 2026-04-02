@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, useRef, startTransition } from 'react';
 import { getNotifications, getUnreadCount, markAsRead, markAllAsRead } from '@/lib/notificationService';
 
 const NotificationContext = createContext(null);
@@ -25,6 +25,7 @@ export function NotificationProvider({ children }) {
   const reconnectTimeoutRef = useRef(null);
   const reconnectAttempts = useRef(0);
   const maxReconnectAttempts = 5;
+  const connectWSRef = useRef(null);
 
   // Get token from localStorage
   const getToken = useCallback(() => {
@@ -72,7 +73,7 @@ export function NotificationProvider({ children }) {
       wsRef.current.close();
     }
 
-    setConnectionStatus(WS_STATES.CONNECTING);
+    startTransition(() => setConnectionStatus(WS_STATES.CONNECTING));
 
     try {
       const wsUrl = `${WS_BASE_URL}/api/notifications/ws?token=${encodeURIComponent(token)}`;
@@ -126,7 +127,7 @@ export function NotificationProvider({ children }) {
           
           reconnectTimeoutRef.current = setTimeout(() => {
             reconnectAttempts.current++;
-            connectWebSocket();
+            connectWSRef.current?.();
           }, delay);
         }
       };
@@ -140,6 +141,10 @@ export function NotificationProvider({ children }) {
       setConnectionStatus(WS_STATES.DISCONNECTED);
     }
   }, [getToken, fetchNotifications]);
+
+  useEffect(() => {
+    connectWSRef.current = connectWebSocket;
+  }, [connectWebSocket]);
 
   // Disconnect WebSocket
   const disconnectWebSocket = useCallback(() => {
@@ -207,7 +212,7 @@ export function NotificationProvider({ children }) {
   useEffect(() => {
     const token = getToken();
     if (token) {
-      connectWebSocket();
+      startTransition(() => connectWebSocket());
       requestNotificationPermission();
     }
 
