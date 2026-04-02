@@ -95,10 +95,10 @@ export default function CreatorSignupPage() {
 					playsInline
 					preload="auto"
 				/>
-				<div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/80" />
+				<div className="absolute inset-0 bg-linear-to-b from-black/70 via-black/50 to-black/80" />
 			</div>
 			<div className="absolute inset-0 overflow-hidden pointer-events-none">
-				<div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-white/[0.015] rounded-full blur-[120px]" />
+				<div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-white/1.5 rounded-full blur-[120px]" />
 			</div>
 
 			{/* Nav */}
@@ -151,8 +151,8 @@ export default function CreatorSignupPage() {
 
 					{/* Card */}
 					<div className="relative">
-						<div className="absolute -inset-px bg-gradient-to-b from-white/8 to-transparent rounded-2xl blur-sm" />
-						<div className="relative bg-white/[0.03] backdrop-blur-2xl border border-white/10 rounded-2xl p-8 md:p-10">
+						<div className="absolute -inset-px bg-linear-to-b from-white/8 to-transparent rounded-2xl blur-sm" />
+						<div className="relative bg-white/3 backdrop-blur-2xl border border-white/10 rounded-2xl p-8 md:p-10">
 							<AnimatePresence>
 								{error && (
 									<motion.div
@@ -349,7 +349,7 @@ export default function CreatorSignupPage() {
 												disabled={isLoading}
 												whileHover={{ scale: 1.02 }}
 												whileTap={{ scale: 0.98 }}
-												className="group flex-[2] bg-white text-black font-semibold py-3.5 px-6 rounded-xl flex items-center justify-center gap-2 transition-all duration-300 disabled:opacity-50 hover:bg-white/90 text-sm">
+												className="group flex-2 bg-white text-black font-semibold py-3.5 px-6 rounded-xl flex items-center justify-center gap-2 transition-all duration-300 disabled:opacity-50 hover:bg-white/90 text-sm">
 												{isLoading ? (
 													<Loader2 className="w-4 h-4 animate-spin" />
 												) : (

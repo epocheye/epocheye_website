@@ -95,7 +95,7 @@ const SolutionSplit = () => {
 			/>
 
 			{/* Ambient glow */}
-			<div className="absolute top-1/3 -left-1/4 w-[500px] h-[500px] bg-white/[0.02] rounded-full blur-[120px] pointer-events-none" />
+			<div className="absolute top-1/3 -left-1/4 w-[500px] h-[500px] bg-white/2 rounded-full blur-[120px] pointer-events-none" />
 
 			<div className="relative z-10 flex flex-col lg:flex-row min-h-screen">
 				{/* Left Column */}
@@ -119,7 +119,8 @@ const SolutionSplit = () => {
 
 						{/* Subtext */}
 						<p className="headline-line mt-8 text-white/40 text-base sm:text-lg font-light leading-relaxed max-w-[420px]">
-							Bridging centuries of history with augmented reality and expert-verified content.
+							Bridging centuries of history with augmented reality and
+							expert-verified content.
 						</p>
 
 						{/* CTA */}

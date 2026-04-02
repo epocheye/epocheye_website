@@ -48,7 +48,7 @@ function SidebarContent({ pathname, onNavClick, creator, initials, onLogout }) {
 			{/* Creator profile + logout */}
 			<div className="px-3 pb-5 border-t border-white/5 pt-4 space-y-1">
 				<div className="flex items-center gap-3 px-3 py-2.5 rounded-lg">
-					<div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-xs font-bold text-white flex-shrink-0">
+					<div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-xs font-bold text-white shrink-0">
 						{initials}
 					</div>
 					<div className="min-w-0">
@@ -102,7 +102,7 @@ export default function DashboardSidebar() {
 	return (
 		<>
 			{/* Desktop sidebar */}
-			<aside className="hidden md:flex w-56 flex-shrink-0 border-r border-white/5 bg-[#080808] flex-col">
+			<aside className="hidden md:flex w-56 shrink-0 border-r border-white/5 bg-[#080808] flex-col">
 				<SidebarContent {...sharedProps} />
 			</aside>
 

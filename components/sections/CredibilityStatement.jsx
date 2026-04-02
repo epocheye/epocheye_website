@@ -7,14 +7,12 @@ gsap.registerPlugin(ScrollTrigger);
 
 const testimonials = [
 	{
-		quote:
-			"Finally an app that makes me feel like I'm actually there, not just taking a selfie in front of a ruin.",
+		quote: "Finally an app that makes me feel like I'm actually there, not just taking a selfie in front of a ruin.",
 		author: "Travel Content Creator",
 		meta: "180k followers",
 	},
 	{
-		quote:
-			"The historical accuracy is impressive. We've been waiting for something like this for years.",
+		quote: "The historical accuracy is impressive. We've been waiting for something like this for years.",
 		author: "Heritage Tourism Board",
 		meta: "Representative",
 	},
@@ -103,7 +101,9 @@ const CredibilityStatement = () => {
 								&ldquo;{t.quote}&rdquo;
 							</p>
 							<div>
-								<p className="text-white text-sm font-medium">— {t.author}</p>
+								<p className="text-white text-sm font-medium">
+									— {t.author}
+								</p>
 								<p className="text-white/40 text-xs mt-0.5">{t.meta}</p>
 							</div>
 						</div>
@@ -112,11 +112,12 @@ const CredibilityStatement = () => {
 
 				{/* Credibility strip */}
 				<div className="flex items-center justify-center gap-4 sm:gap-8">
-					<div className="h-px flex-1 max-w-[80px] bg-white/8" />
+					<div className="h-px flex-1 max-w-20 bg-white/8" />
 					<p className="text-white/30 text-xs tracking-widest uppercase text-center font-light leading-relaxed">
-						Verified by expert historians&nbsp;&nbsp;·&nbsp;&nbsp;100% accurate sources&nbsp;&nbsp;·&nbsp;&nbsp;Expert-curated content
+						Verified by expert historians&nbsp;&nbsp;·&nbsp;&nbsp;100% accurate
+						sources&nbsp;&nbsp;·&nbsp;&nbsp;Expert-curated content
 					</p>
-					<div className="h-px flex-1 max-w-[80px] bg-white/8" />
+					<div className="h-px flex-1 max-w-20 bg-white/8" />
 				</div>
 			</div>
 		</section>

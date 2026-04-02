@@ -63,10 +63,12 @@ const WeCover = () => {
 									<h3 className="font-montserrat font-semibold text-white text-sm sm:text-base leading-snug mb-1">
 										{civ.name}
 									</h3>
-									<p className="text-white/30 text-xs leading-relaxed">{civ.region}</p>
+									<p className="text-white/30 text-xs leading-relaxed">
+										{civ.region}
+									</p>
 								</div>
 								<ArrowRight
-									className="w-4 h-4 text-white/20 group-hover:text-white/50 group-hover:translate-x-0.5 transition-all duration-300 flex-shrink-0 mt-0.5"
+									className="w-4 h-4 text-white/20 group-hover:text-white/50 group-hover:translate-x-0.5 transition-all duration-300 shrink-0 mt-0.5"
 									aria-hidden="true"
 								/>
 							</div>
@@ -83,7 +85,8 @@ const WeCover = () => {
 					className="flex items-center justify-center gap-4 sm:gap-8">
 					<div className="h-px flex-1 max-w-[120px] bg-white/8" />
 					<p className="text-white/30 text-xs sm:text-sm tracking-widest uppercase font-light text-center">
-						8 monuments&nbsp;&nbsp;·&nbsp;&nbsp;5 continents&nbsp;&nbsp;·&nbsp;&nbsp;launching 2026
+						8 monuments&nbsp;&nbsp;·&nbsp;&nbsp;5
+						continents&nbsp;&nbsp;·&nbsp;&nbsp;launching 2026
 					</p>
 					<div className="h-px flex-1 max-w-[120px] bg-white/8" />
 				</motion.div>

@@ -82,14 +82,19 @@ const PowerStatement = () => {
 							transition={{ duration: 0.6, delay: 0.1 * i }}
 							viewport={{ once: true }}
 							className="bg-[#0d0d0d] border border-white/8 rounded-2xl p-8 flex flex-col gap-5 hover:border-white/15 transition-colors duration-300">
-							<div className="w-11 h-11 bg-white/5 rounded-xl flex items-center justify-center flex-shrink-0">
-								<Icon className="w-5 h-5 text-white/60" aria-hidden="true" />
+							<div className="w-11 h-11 bg-white/5 rounded-xl flex items-center justify-center shrink-0">
+								<Icon
+									className="w-5 h-5 text-white/60"
+									aria-hidden="true"
+								/>
 							</div>
 							<div>
 								<h3 className="font-montserrat font-semibold text-white text-lg mb-2">
 									{title}
 								</h3>
-								<p className="text-white/40 text-sm leading-relaxed">{description}</p>
+								<p className="text-white/40 text-sm leading-relaxed">
+									{description}
+								</p>
 							</div>
 						</motion.div>
 					))}

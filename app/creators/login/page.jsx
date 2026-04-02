@@ -48,12 +48,12 @@ export default function CreatorLoginPage() {
 					playsInline
 					preload="auto"
 				/>
-				<div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/80" />
+				<div className="absolute inset-0 bg-linear-to-b from-black/70 via-black/50 to-black/80" />
 			</div>
 
 			<div className="absolute inset-0 overflow-hidden pointer-events-none">
-				<div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-white/[0.015] rounded-full blur-[120px]" />
-				<div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-white/[0.01] rounded-full blur-[100px]" />
+				<div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-white/1.5 rounded-full blur-[120px]" />
+				<div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-white/1 rounded-full blur-[100px]" />
 			</div>
 
 			{/* Nav */}
@@ -106,8 +106,8 @@ export default function CreatorLoginPage() {
 						animate={{ opacity: 1, y: 0 }}
 						transition={{ duration: 0.6, delay: 0.4 }}
 						className="relative">
-						<div className="absolute -inset-px bg-gradient-to-b from-white/8 to-transparent rounded-2xl blur-sm" />
-						<div className="relative bg-white/[0.03] backdrop-blur-2xl border border-white/10 rounded-2xl p-8 md:p-10">
+						<div className="absolute -inset-px bg-linear-to-b from-white/8 to-transparent rounded-2xl blur-sm" />
+						<div className="relative bg-white/3 backdrop-blur-2xl border border-white/10 rounded-2xl p-8 md:p-10">
 							<form onSubmit={handleSubmit} className="space-y-5">
 								<AnimatePresence>
 									{error && (
@@ -143,7 +143,7 @@ export default function CreatorLoginPage() {
 											onChange={(e) => setEmail(e.target.value)}
 											placeholder="you@example.com"
 											required
-											className="w-full bg-white/[0.03] border border-white/10 rounded-xl py-3.5 pl-11 pr-4 text-white text-sm placeholder:text-white/20 focus:outline-none focus:border-white/25 focus:bg-white/[0.05] transition-all duration-300"
+											className="w-full bg-white/3 border border-white/10 rounded-xl py-3.5 pl-11 pr-4 text-white text-sm placeholder:text-white/20 focus:outline-none focus:border-white/25 focus:bg-white/5 transition-all duration-300"
 										/>
 									</div>
 								</div>
@@ -164,7 +164,7 @@ export default function CreatorLoginPage() {
 											onChange={(e) => setPassword(e.target.value)}
 											placeholder="••••••••"
 											required
-											className="w-full bg-white/[0.03] border border-white/10 rounded-xl py-3.5 pl-11 pr-11 text-white text-sm placeholder:text-white/20 focus:outline-none focus:border-white/25 focus:bg-white/[0.05] transition-all duration-300"
+											className="w-full bg-white/3 border border-white/10 rounded-xl py-3.5 pl-11 pr-11 text-white text-sm placeholder:text-white/20 focus:outline-none focus:border-white/25 focus:bg-white/5 transition-all duration-300"
 										/>
 										<button
 											type="button"
