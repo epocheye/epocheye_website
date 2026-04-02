@@ -343,3 +343,5 @@ When writing placeholder copy or micro-copy:
 - **Minimal punctuation** in headlines — fragments are fine
 - **All caps for impact sections**, title case for body, sentence case for fine print
 - Never use startup-speak: no "seamless", "powerful", "robust", "next-gen"
+- When designing anything from a UI library, always web-search and read it's documentation to understand how it works and is intended to be used before implementing it.
+- Use the latest Tailwind CSS best practices for styling. Avoid inline styles and prefer utility classes or styled components as per the existing codebase conventions.
