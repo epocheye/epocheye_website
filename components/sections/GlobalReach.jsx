@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef, useState, memo } from "react";
+import React, { useEffect, useRef, useState, memo, startTransition } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ComposableMap, Geographies, Geography, Marker, Graticule } from "react-simple-maps";
@@ -114,6 +114,11 @@ const GlobalReach = () => {
 	const headerRef = useRef(null);
 	const mapContainerRef = useRef(null);
 	const [hoveredLocation, setHoveredLocation] = useState(null);
+	const [isMapMounted, setIsMapMounted] = useState(false);
+
+	useEffect(() => {
+		startTransition(() => setIsMapMounted(true));
+	}, []);
 
 	useEffect(() => {
 		const section = sectionRef.current;
@@ -185,32 +190,17 @@ const GlobalReach = () => {
 		<section
 			ref={sectionRef}
 			id="global-reach"
-			className="relative flex flex-col items-center justify-start
-				px-6 sm:px-10 lg:px-20 py-16 sm:py-20 lg:py-24"
+			className="relative flex flex-col items-center justify-start px-6 sm:px-10 lg:px-20 py-16 sm:py-20 lg:py-24"
 			style={{ backgroundColor: "#0A0A0A" }}>
-			{/* Subtle gradient overlay */}
-			<div
-				className="absolute inset-0 pointer-events-none"
-				style={{
-					background:
-						"radial-gradient(ellipse at 50% 30%, rgba(212, 175, 55, 0.03) 0%, transparent 60%)",
-				}}
-			/>
-
 			{/* Section Header */}
 			<div ref={headerRef} className="relative z-10 text-center mb-10 sm:mb-14 lg:mb-16">
-				<h2
-					className="header-line font-montserrat font-bold text-white
-					text-4xl sm:text-6xl lg:text-7xl
-					tracking-[4px] sm:tracking-[6px] lg:tracking-[8px]
-					leading-[1.1]">
+				<span className="header-line inline-block px-3 py-1 text-xs font-medium tracking-widest text-white/40 border border-white/10 rounded-full uppercase mb-6">
+					Global Coverage
+				</span>
+				<h2 className="header-line font-montserrat font-light text-white text-4xl sm:text-5xl lg:text-6xl leading-tight">
 					Heritage
 				</h2>
-				<h2
-					className="header-line font-montserrat font-bold uppercase text-white
-					text-[32px] sm:text-[50px] lg:text-[70px]
-					tracking-[4px] sm:tracking-[6px] lg:tracking-[8px]
-					leading-[1.1]">
+				<h2 className="header-line font-montserrat font-semibold text-white text-4xl sm:text-5xl lg:text-6xl leading-tight">
 					Around The World
 				</h2>
 			</div>
@@ -218,36 +208,30 @@ const GlobalReach = () => {
 			{/* World Map Container */}
 			<div
 				ref={mapContainerRef}
-				className="relative w-full max-w-[1400px] aspect-2/1 rounded-xl overflow-hidden"
-				style={{
-					backgroundColor: "#0A0A0A",
-					boxShadow: "0 0 100px rgba(212, 175, 55, 0.05)",
-				}}>
-				{/* Decorative border */}
+				className="relative w-full max-w-[1400px] aspect-2/1 rounded-2xl overflow-hidden border border-white/8"
+				style={{ backgroundColor: "#0d0d0d" }}>
+				{/* Inner shadow for depth */}
 				<div
-					className="absolute inset-0 rounded-xl pointer-events-none z-10"
-					style={{
-						border: "1px solid rgba(212, 175, 55, 0.15)",
-						boxShadow: "inset 0 0 60px rgba(0, 0, 0, 0.5)",
-					}}
+					className="absolute inset-0 rounded-2xl pointer-events-none z-10"
+					style={{ boxShadow: "inset 0 0 60px rgba(0,0,0,0.4)" }}
 				/>
 
 				{/* Map */}
 				<div className="absolute inset-0">
-					<MapChart
-						hoveredLocation={hoveredLocation}
-						setHoveredLocation={setHoveredLocation}
-					/>
+					{isMapMounted ? (
+						<MapChart
+							hoveredLocation={hoveredLocation}
+							setHoveredLocation={setHoveredLocation}
+						/>
+					) : (
+						<div className="w-full h-full" aria-hidden="true" />
+					)}
 				</div>
 
 				{/* Floating Tooltip */}
-				{hoveredLocation !== null && (
+				{isMapMounted && hoveredLocation !== null && (
 					<div
-						className="absolute z-20 px-4 py-3 pointer-events-none
-							font-montserrat text-white backdrop-blur-sm
-							text-[12px] sm:text-[14px]
-							tracking-[1px] sm:tracking-[2px]
-							rounded-lg transition-all duration-300 animate-fadeIn"
+						className="absolute z-20 px-4 py-3 pointer-events-none font-montserrat text-white backdrop-blur-sm text-[12px] sm:text-[14px] tracking-[1px] sm:tracking-[2px] rounded-lg transition-all duration-300 animate-fadeIn"
 						style={{
 							left: "50%",
 							top: "10%",
@@ -264,31 +248,11 @@ const GlobalReach = () => {
 						</div>
 					</div>
 				)}
-
-				{/* Decorative corner accents */}
-				<div
-					className="absolute top-4 left-4 w-8 h-8 border-l-2 border-t-2 opacity-30 z-10"
-					style={{ borderColor: "#D4AF37" }}
-				/>
-				<div
-					className="absolute top-4 right-4 w-8 h-8 border-r-2 border-t-2 opacity-30 z-10"
-					style={{ borderColor: "#D4AF37" }}
-				/>
-				<div
-					className="absolute bottom-4 left-4 w-8 h-8 border-l-2 border-b-2 opacity-30 z-10"
-					style={{ borderColor: "#D4AF37" }}
-				/>
-				<div
-					className="absolute bottom-4 right-4 w-8 h-8 border-r-2 border-b-2 opacity-30 z-10"
-					style={{ borderColor: "#D4AF37" }}
-				/>
 			</div>
 
 			{/* Location Count */}
 			<p
-				className="relative z-10 mt-8 sm:mt-10 lg:mt-12 font-light text-center
-					text-[14px] sm:text-[16px] lg:text-[18px]
-					tracking-[2px]"
+				className="relative z-10 mt-8 sm:mt-10 lg:mt-12 font-light text-center text-[14px] sm:text-[16px] lg:text-[18px] tracking-[2px]"
 				style={{ color: "#B0B0B0" }}>
 				8 MONUMENTS • 5 CONTINENTS • LAUNCHING 2026
 			</p>

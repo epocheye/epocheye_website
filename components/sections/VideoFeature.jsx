@@ -5,6 +5,24 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
+const steps = [
+	{
+		number: "01",
+		title: "Point",
+		description: "Aim your phone at any heritage monument",
+	},
+	{
+		number: "02",
+		title: "Explore",
+		description: "Scrub through centuries on the timeline",
+	},
+	{
+		number: "03",
+		title: "Discover",
+		description: "Unlock stories verified by historians",
+	},
+];
+
 const VideoFeature = () => {
 	const sectionRef = useRef(null);
 	const contentRef = useRef(null);
@@ -16,7 +34,6 @@ const VideoFeature = () => {
 
 		if (!section || !content) return;
 
-		// Intersection Observer for lazy loading video
 		const observer = new IntersectionObserver(
 			(entries) => {
 				entries.forEach((entry) => {
@@ -31,13 +48,7 @@ const VideoFeature = () => {
 		observer.observe(section);
 
 		const ctx = gsap.context(() => {
-			// Set initial state for content
-			gsap.set(content, {
-				opacity: 0,
-				y: 50,
-			});
-
-			// Fade in content
+			gsap.set(content, { opacity: 0, y: 50 });
 			gsap.to(content, {
 				opacity: 1,
 				y: 0,
@@ -45,20 +56,8 @@ const VideoFeature = () => {
 				ease: "power2.out",
 				scrollTrigger: {
 					trigger: section,
-					start: "top 50%",
+					start: "top 55%",
 					toggleActions: "play none none reverse",
-				},
-			});
-
-			// Parallax effect for text content - moves at 60% speed
-			gsap.to(content, {
-				yPercent: -15,
-				ease: "none",
-				scrollTrigger: {
-					trigger: section,
-					start: "top bottom",
-					end: "bottom top",
-					scrub: 0.6,
 				},
 			});
 		}, section);
@@ -72,7 +71,7 @@ const VideoFeature = () => {
 	return (
 		<section
 			ref={sectionRef}
-			className="yz-section relative flex items-center overflow-hidden py-20">
+			className="relative flex items-center justify-center overflow-hidden min-h-screen">
 			{/* Video Background */}
 			<div className="absolute inset-0 w-full h-full" aria-hidden="true">
 				{isInView ? (
@@ -87,51 +86,45 @@ const VideoFeature = () => {
 						className="w-full h-full object-cover"
 					/>
 				) : (
-					<div className="w-full h-full bg-[#0A0A0A]" />
+					<div className="w-full h-full bg-[#080808]" />
 				)}
-				{/* Gradient Overlay */}
-				<div className="absolute inset-0 bg-linear-to-b from-black/40 to-black/70" />
+				<div className="absolute inset-0 bg-black/65" />
 			</div>
 
-			{/* Text Content */}
+			{/* Content */}
 			<div
 				ref={contentRef}
-				className="relative z-10 w-full px-5 sm:px-10 lg:px-20 py-20 lg:py-0
-					flex flex-col items-center lg:items-start justify-center min-h-screen
-					lg:pl-[10%]">
-				<div className="max-w-[800px] text-center lg:text-left">
-					{/* Main Headline */}
-					<h2
-						className="font-montserrat font-bold uppercase leading-[1.1]
-							text-5xl sm:text-7xl lg:text-8xl
-							tracking-[4px] sm:tracking-[6px] lg:tracking-[10px]
-							text-white"
-						style={{
-							textShadow: "0 4px 20px rgba(0, 0, 0, 0.5)",
-						}}>
-						SEE TIME.
-					</h2>
-					<h2
-						className="font-montserrat font-bold uppercase leading-[1.1]
-							text-5xl sm:text-7xl lg:text-8xl
-							tracking-[4px] sm:tracking-[6px] lg:tracking-[10px]
-							text-white mt-2"
-						style={{
-							textShadow: "0 4px 20px rgba(0, 0, 0, 0.5)",
-						}}>
-						NOT JUST SPACE.
-					</h2>
+				className="relative z-10 w-full max-w-5xl mx-auto px-6 sm:px-10 py-24 flex flex-col items-center">
+				{/* Label */}
+				<span className="inline-block px-3 py-1 text-xs font-medium tracking-widest text-white/40 border border-white/10 rounded-full uppercase mb-8">
+					How It Works
+				</span>
 
-					{/* Subtext */}
-					<p
-						className="mt-8 sm:mt-10 lg:mt-10  mx-auto lg:mx-0
-							text-base sm:text-lg lg:text-xl
-							font-medium leading-[1.6]
-							tracking-[1px] sm:tracking-[1.5px] lg:tracking-[2px]"
-						style={{ color: "#E0E0E0" }}>
-						Scrub through centuries with a timeline slider. From original
-						construction to present decay.
-					</p>
+				<h2 className="font-montserrat font-light text-white text-3xl sm:text-4xl lg:text-5xl text-center mb-4 leading-tight">
+					Three steps to
+					<br />
+					<span className="font-semibold">see through time</span>
+				</h2>
+
+				<p className="text-white/40 text-base sm:text-lg text-center mb-16 font-light max-w-md">
+					No setup. No guides. Just point and experience.
+				</p>
+
+				{/* Step Cards */}
+				<div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full">
+					{steps.map((step, i) => (
+						<div
+							key={i}
+							className="bg-black/50 backdrop-blur-md border border-white/10 rounded-2xl p-6 sm:p-8 text-center">
+							<div className="text-white/20 text-xs font-mono tracking-widest uppercase mb-4">
+								{step.number}
+							</div>
+							<h3 className="font-montserrat font-semibold text-white text-xl mb-3">
+								{step.title}
+							</h3>
+							<p className="text-white/50 text-sm leading-relaxed">{step.description}</p>
+						</div>
+					))}
 				</div>
 			</div>
 		</section>
