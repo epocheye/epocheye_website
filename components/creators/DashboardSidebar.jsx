@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
+import { useClerk, useUser, UserButton } from "@clerk/nextjs";
 import { LayoutDashboard, FileText, Wallet, Settings, LogOut, Menu, X } from "lucide-react";
-import { creatorLogout, getCreatorData } from "@/lib/creatorAuthService";
 import CreatorBrandLink from "@/components/creators/CreatorBrandLink";
 
 const NAV = [
@@ -14,7 +14,7 @@ const NAV = [
 	{ href: "/creators/dashboard/settings", label: "Settings", icon: Settings },
 ];
 
-function SidebarContent({ pathname, onNavClick, creator, initials, onLogout }) {
+function SidebarContent({ pathname, onNavClick, creator, onLogout }) {
 	return (
 		<div className="flex flex-col h-full">
 			{/* Logo */}
@@ -48,8 +48,8 @@ function SidebarContent({ pathname, onNavClick, creator, initials, onLogout }) {
 			{/* Creator profile + logout */}
 			<div className="px-3 pb-5 border-t border-white/5 pt-4 space-y-1">
 				<div className="flex items-center gap-3 px-3 py-2.5 rounded-lg">
-					<div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-xs font-bold text-white shrink-0">
-						{initials}
+					<div className="shrink-0">
+						<UserButton afterSignOutUrl="/creators/login" />
 					</div>
 					<div className="min-w-0">
 						<p className="text-sm font-medium text-white truncate">
@@ -73,29 +73,22 @@ function SidebarContent({ pathname, onNavClick, creator, initials, onLogout }) {
 
 export default function DashboardSidebar() {
 	const pathname = usePathname();
-	const router = useRouter();
-	const creator = getCreatorData();
+	const { signOut } = useClerk();
+	const { user } = useUser();
+	const creator = {
+		name: user?.fullName || user?.firstName || "Creator",
+		email: user?.primaryEmailAddress?.emailAddress || "",
+	};
 	const [mobileOpen, setMobileOpen] = useState(false);
 
-	const handleLogout = () => {
-		creatorLogout();
-		router.push("/creators/login");
+	const handleLogout = async () => {
+		await signOut({ redirectUrl: "/creators/login" });
 	};
-
-	const initials = creator?.name
-		? creator.name
-				.split(" ")
-				.map((w) => w[0])
-				.join("")
-				.toUpperCase()
-				.slice(0, 2)
-		: "CR";
 
 	const sharedProps = {
 		pathname,
 		onNavClick: () => setMobileOpen(false),
 		creator,
-		initials,
 		onLogout: handleLogout,
 	};
 

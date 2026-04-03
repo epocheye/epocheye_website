@@ -3,6 +3,7 @@
 import { motion } from "motion/react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
+import { Show, SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
 import { ArrowRight, BarChart3, Check, Link2, ShieldCheck, Wallet } from "lucide-react";
 import CreatorBrandLink from "@/components/creators/CreatorBrandLink";
 
@@ -139,16 +140,28 @@ export default function CreatorsLandingPage() {
 							</a>
 						</div>
 						<div className="flex items-center gap-3">
-							<Link
-								href="/creators/login"
-								className="px-3 py-2 text-sm text-white/60 transition-colors hover:text-white">
-								Sign in
-							</Link>
-							<Link
-								href="/creators/signup"
-								className="rounded-full border border-white/30 px-5 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-white transition-all duration-300 hover:bg-white hover:text-black">
-								Join Program
-							</Link>
+							<Show when="signed-out">
+								<SignInButton mode="modal">
+									<button className="px-3 py-2 text-sm text-white/60 transition-colors hover:text-white">
+										Sign in
+									</button>
+								</SignInButton>
+								<SignUpButton mode="modal">
+									<button className="rounded-full border border-white/30 px-5 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-white transition-all duration-300 hover:bg-white hover:text-black">
+										Join Program
+									</button>
+								</SignUpButton>
+							</Show>
+							<Show when="signed-in">
+								<div className="flex items-center gap-3">
+									<Link
+										href="/creators/dashboard"
+										className="rounded-full border border-white/25 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-white/85 transition-all duration-300 hover:border-white/45 hover:text-white">
+										Dashboard
+									</Link>
+									<UserButton afterSignOutUrl="/creators" />
+								</div>
+							</Show>
 						</div>
 					</div>
 				</nav>

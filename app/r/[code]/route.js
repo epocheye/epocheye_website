@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server";
 
-const CREATOR_API = process.env.NEXT_PUBLIC_CREATOR_API_URL || "http://localhost:3001";
-
 export async function GET(request, { params }) {
   const { code } = await params;
   const ip =
@@ -9,9 +7,10 @@ export async function GET(request, { params }) {
     request.headers.get("x-real-ip") ||
     "unknown";
   const userAgent = request.headers.get("user-agent") || "";
+  const clickEndpoint = new URL("/api/creator/promo/click", request.url);
 
   // Fire-and-forget click recording — don't block the redirect
-  fetch(`${CREATOR_API}/api/creator/promo/click`, {
+  fetch(clickEndpoint, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ code, ip_address: ip, user_agent: userAgent }),

@@ -3,7 +3,6 @@ import cors from "cors";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 
-import authRoutes from "./routes/auth";
 import profileRoutes from "./routes/profile";
 import statsRoutes from "./routes/stats";
 import promoRoutes from "./routes/promo";
@@ -28,13 +27,11 @@ app.use(
 
 // Rate limiting — stricter on auth routes
 const globalLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 200 });
-const authLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 20 });
 
 app.use(globalLimiter);
 app.use(express.json({ limit: "100kb" }));
 
 // ─── Routes ────────────────────────────────────────────────────────────────────
-app.use("/api/creator/auth", authLimiter, authRoutes);
 app.use("/api/creator", profileRoutes);
 app.use("/api/creator/stats", statsRoutes);
 app.use("/api/creator/promo", promoRoutes);

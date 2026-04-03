@@ -1,0 +1,1 @@
+{"version":3,"file":"statsService.d.ts","sourceRoot":"","sources":["../../src/services/statsService.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,aAAa,EAAE,aAAa,EAAE,MAAM,UAAU,CAAC;AAExD,wBAAsB,gBAAgB,CAAC,SAAS,EAAE,MAAM,GAAG,OAAO,CAAC,aAAa,CAAC,CAyFhF;AAED,wBAAsB,gBAAgB,CACpC,SAAS,EAAE,MAAM,EACjB,IAAI,GAAE,MAAW,GAChB,OAAO,CAAC,aAAa,EAAE,CAAC,CA6C1B"}

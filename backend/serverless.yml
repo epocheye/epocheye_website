@@ -3,57 +3,55 @@ service: epocheye-creator-backend
 frameworkVersion: "3"
 
 provider:
-  name: aws
-  runtime: nodejs20.x
-  stage: ${opt:stage, 'dev'}
-  region: ${opt:region, 'ap-south-1'}
-  memorySize: 256
-  timeout: 29
-  environment:
-    NODE_ENV: ${self:provider.stage}
-    SUPABASE_URL: ${env:SUPABASE_URL}
-    SUPABASE_SERVICE_KEY: ${env:SUPABASE_SERVICE_KEY}
-    CREATOR_JWT_SECRET: ${env:CREATOR_JWT_SECRET}
-    CREATOR_JWT_REFRESH_SECRET: ${env:CREATOR_JWT_REFRESH_SECRET}
-    RAZORPAY_KEY_ID: ${env:RAZORPAY_KEY_ID}
-    RAZORPAY_KEY_SECRET: ${env:RAZORPAY_KEY_SECRET}
-    WEBHOOK_SECRET: ${env:WEBHOOK_SECRET}
-    ADMIN_API_KEY: ${env:ADMIN_API_KEY}
-    CORS_ORIGIN: ${env:CORS_ORIGIN, 'https://epocheye.app'}
-  httpApi:
-    cors:
-      allowedOrigins:
-        - https://epocheye.app
-        - http://localhost:3000
-      allowedHeaders:
-        - Content-Type
-        - Authorization
-        - X-Admin-Key
-        - X-Webhook-Secret
-      allowedMethods:
-        - GET
-        - POST
-        - PUT
-        - DELETE
-        - OPTIONS
-      allowCredentials: false
+     name: aws
+     runtime: nodejs20.x
+     stage: ${opt:stage, 'dev'}
+     region: ${opt:region, 'ap-south-1'}
+     memorySize: 256
+     timeout: 29
+     environment:
+          NODE_ENV: ${self:provider.stage}
+          SUPABASE_URL: ${env:SUPABASE_URL}
+          SUPABASE_SERVICE_KEY: ${env:SUPABASE_SERVICE_KEY}
+          RAZORPAY_KEY_ID: ${env:RAZORPAY_KEY_ID}
+          RAZORPAY_KEY_SECRET: ${env:RAZORPAY_KEY_SECRET}
+          WEBHOOK_SECRET: ${env:WEBHOOK_SECRET}
+          ADMIN_API_KEY: ${env:ADMIN_API_KEY}
+          CORS_ORIGIN: ${env:CORS_ORIGIN, 'https://epocheye.app'}
+     httpApi:
+          cors:
+               allowedOrigins:
+                    - https://epocheye.app
+                    - http://localhost:3000
+               allowedHeaders:
+                    - Content-Type
+                    - Authorization
+                    - X-Admin-Key
+                    - X-Webhook-Secret
+               allowedMethods:
+                    - GET
+                    - POST
+                    - PUT
+                    - DELETE
+                    - OPTIONS
+               allowCredentials: false
 
 plugins:
-  - serverless-plugin-typescript
-  - serverless-offline
+     - serverless-plugin-typescript
+     - serverless-offline
 
 functions:
-  api:
-    handler: src/handler.handler
-    events:
-      - httpApi:
-          path: /api/{proxy+}
-          method: any
-      - httpApi:
-          path: /api
-          method: any
+     api:
+          handler: src/handler.handler
+          events:
+               - httpApi:
+                      path: /api/{proxy+}
+                      method: any
+               - httpApi:
+                      path: /api
+                      method: any
 
 custom:
-  serverless-offline:
-    httpPort: 3001
-    host: localhost
+     serverless-offline:
+          httpPort: 3001
+          host: localhost

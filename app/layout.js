@@ -5,6 +5,7 @@ import {
   Instrument_Sans,
   Instrument_Serif,
 } from "next/font/google";
+import { ClerkProvider } from "@clerk/nextjs";
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css";
 
@@ -115,10 +116,12 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${montserratAlternates.variable} ${instrumentSans.variable} ${instrumentSerif.variable} antialiased`}
       >
-        <NotificationProvider>
-          {children}
-          <NotificationToast />
-        </NotificationProvider>
+        <ClerkProvider>
+          <NotificationProvider>
+            {children}
+            <NotificationToast />
+          </NotificationProvider>
+        </ClerkProvider>
         {/* Load Tally script with strategy for better performance */}
         <Script 
           src="https://tally.so/widgets/embed.js" 
