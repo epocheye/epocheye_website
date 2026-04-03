@@ -1,0 +1,15 @@
+{
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/creators",
+      "permanent": false,
+      "has": [
+        {
+          "type": "host",
+          "value": "creators.epocheye.app"
+        }
+      ]
+    }
+  ]
+}
