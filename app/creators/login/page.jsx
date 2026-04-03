@@ -25,44 +25,48 @@ export default function CreatorLoginPage() {
 				<div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-white/1 rounded-full blur-[100px]" />
 			</div>
 
-			<nav className="relative z-50 w-full flex items-center justify-between px-6 md:px-12 py-6">
+			<nav className="relative z-50 w-full flex items-center justify-between px-4 sm:px-6 md:px-12 py-4 sm:py-6">
 				<CreatorBrandLink href="/creators" size="md" showBadge priority />
 				<Link
 					href="/creators"
-					className="text-white/50 hover:text-white text-sm font-medium transition-colors flex items-center gap-2">
+					className="text-white/50 hover:text-white text-xs sm:text-sm font-medium transition-colors flex items-center gap-2">
 					<ArrowRight className="w-4 h-4 rotate-180" />
 					Back
 				</Link>
 			</nav>
 
-			<main className="relative z-10 flex min-h-[calc(100vh-96px)] items-center justify-center px-4 pb-10">
-				<div className="w-full max-w-[430px]">
+			<main className="relative z-10 flex min-h-[calc(100vh-88px)] sm:min-h-[calc(100vh-96px)] items-start sm:items-center justify-center px-3 sm:px-4 pt-2 sm:pt-0 pb-8 sm:pb-10">
+				<div className="w-full max-w-[390px] sm:max-w-[430px]">
 					<Show when="signed-out">
-						<div className="rounded-2xl border border-white/10 bg-white/3 backdrop-blur-2xl p-4 sm:p-5">
+						<div className="rounded-xl sm:rounded-2xl border border-white/10 bg-white/3 backdrop-blur-2xl p-3.5 sm:p-5">
 							<SignIn
-								path="/creators/login"
-								routing="path"
+								routing="hash"
 								signUpUrl="/creators/signup"
 								forceRedirectUrl="/creators/dashboard"
 								appearance={{
 									elements: {
-										rootBox: "w-full",
+										rootBox: "w-full text-sm sm:text-base",
 										cardBox: "w-full",
-										card: "bg-transparent shadow-none border-none",
-										headerTitle: "text-white",
-										headerSubtitle: "text-white/50",
-										formFieldLabel: "text-white/70",
+										card: "bg-transparent shadow-none border-none p-0",
+										headerTitle: "text-white text-lg sm:text-xl",
+										headerSubtitle:
+											"text-white/50 text-xs sm:text-sm",
+										formFieldLabel:
+											"text-white/70 text-[11px] sm:text-xs",
 										formFieldInput:
-											"bg-white/5 border-white/15 text-white placeholder:text-white/30",
+											"h-10 sm:h-11 bg-white/5 border-white/15 text-sm sm:text-base text-white placeholder:text-white/30",
 										socialButtonsBlockButton:
-											"bg-white/5 border-white/15 text-white hover:bg-white/10",
+											"h-10 sm:h-11 bg-white/5 border-white/15 text-xs sm:text-sm text-white hover:bg-white/10",
 										formButtonPrimary:
-											"bg-white text-black hover:bg-white/90",
-										footerActionText: "text-white/50",
+											"h-10 sm:h-11 bg-white text-black text-xs sm:text-sm hover:bg-white/90",
+										footerActionText:
+											"text-white/50 text-xs sm:text-sm",
 										footerActionLink:
-											"text-white hover:text-white/80",
-										identityPreviewText: "text-white/70",
-										identityPreviewEditButton: "text-white/70",
+											"text-white text-xs sm:text-sm hover:text-white/80",
+										identityPreviewText:
+											"text-white/70 text-xs sm:text-sm",
+										identityPreviewEditButton:
+											"text-white/70 text-xs sm:text-sm",
 									},
 								}}
 							/>
@@ -70,30 +74,30 @@ export default function CreatorLoginPage() {
 					</Show>
 
 					<Show when="signed-in">
-						<div className="rounded-2xl border border-white/10 bg-white/3 backdrop-blur-2xl p-8 text-center space-y-4">
+						<div className="rounded-xl sm:rounded-2xl border border-white/10 bg-white/3 backdrop-blur-2xl p-6 sm:p-8 text-center space-y-3 sm:space-y-4">
 							<div className="flex justify-center">
 								<UserButton afterSignOutUrl="/creators/login" />
 							</div>
-							<h1 className="text-2xl font-semibold text-white">
+							<h1 className="text-xl sm:text-2xl font-semibold text-white">
 								You are signed in
 							</h1>
-							<p className="text-white/50 text-sm">
+							<p className="text-white/50 text-xs sm:text-sm">
 								Open your dashboard to manage content, referrals, and
 								payouts.
 							</p>
 							<Link
 								href="/creators/dashboard"
-								className="inline-flex items-center gap-2 rounded-full border border-white/25 px-5 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-white hover:border-white/50 transition-all">
+								className="inline-flex items-center gap-2 rounded-full border border-white/25 px-4 sm:px-5 py-2 text-[11px] sm:text-xs font-semibold uppercase tracking-[0.14em] text-white hover:border-white/50 transition-all">
 								Go to Dashboard
 							</Link>
 						</div>
 					</Show>
 
 					<Show when="signed-out">
-						<p className="text-white/40 text-sm text-center mt-5">
+						<p className="text-white/40 text-xs sm:text-sm text-center mt-4 sm:mt-5">
 							New creator?{" "}
 							<SignUpButton mode="modal">
-								<button className="text-white font-medium hover:text-white/80 transition-colors">
+								<button className="text-white text-sm sm:text-base font-medium hover:text-white/80 transition-colors">
 									Create an account
 								</button>
 							</SignUpButton>
