@@ -28,3 +28,5 @@
 - Environment setup is split across `.env.example` (frontend) and `backend/.env.example` (backend).
 - `NEXT_PUBLIC_API_URL` and `NEXT_PUBLIC_WS_URL` must point to compatible backend hosts or notification features will fail.
 - Backend health endpoint is `/api/health`; auth routes are intentionally rate-limited more strictly than general routes.
+
+# Remember that your work will be reviewd by Claude Code Reviewer, so please ensure that you follow these guidelines closely to maintain code quality and consistency across the project. If you have any questions about the guidelines or need clarification on any point, feel free to ask for assistance.
