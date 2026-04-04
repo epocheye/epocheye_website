@@ -15,9 +15,9 @@ const DitherBackground = dynamic(() => import("@/components/Dither"), {
 });
 
 const KEY_METRICS = [
-	{ value: "3 min", label: "to launch your creator code" },
+	{ value: "3 min", label: "to go live with your creator code" },
 	{ value: "5-20%", label: "commission on each paid referral" },
-	{ value: "Live", label: "tracking for clicks, conversions, earnings" },
+	{ value: "Live", label: "clicks, conversions, and earnings in real time" },
 ];
 
 const CHANNELS = [
@@ -32,23 +32,23 @@ const CHANNELS = [
 const PROCESS_STEPS = [
 	{
 		number: "01",
-		title: "Create your creator account",
-		body: "Sign up, set your profile, and activate your dashboard in one short flow.",
+		title: "Open your creator account",
+		body: "Set up your profile and launch your dashboard in one short flow.",
 	},
 	{
 		number: "02",
-		title: "Get your unique promo code",
-		body: "Your code is tied to your account so every qualifying referral is automatically tracked.",
+		title: "Get one code that follows you everywhere",
+		body: "Every qualifying referral through your code maps back to your account automatically.",
 	},
 	{
 		number: "03",
-		title: "Publish content where you already grow",
-		body: "Post tutorials, travel explainers, reels, shorts, or reviews. We do not lock you to one format.",
+		title: "Publish where your audience already watches",
+		body: "Post monument explainers, reels, shorts, reviews, or travel walkthroughs. Use the format that already works for you.",
 	},
 	{
 		number: "04",
-		title: "Monitor and request payouts",
-		body: "View performance in real time and request payouts directly from the creator dashboard.",
+		title: "Review results and request payouts",
+		body: "Track performance live and request withdrawals directly from the creator dashboard.",
 	},
 ];
 
@@ -62,42 +62,42 @@ const EARNING_SCENARIOS = [
 const BENEFITS = [
 	{
 		icon: Link2,
-		title: "Code-level attribution",
-		body: "One creator code. Accurate referral mapping. No spreadsheet tracking.",
+		title: "One code, clean attribution",
+		body: "Use a single creator code across channels. Qualified referrals map correctly without spreadsheet cleanup.",
 	},
 	{
 		icon: BarChart3,
-		title: "Signal-rich analytics",
-		body: "Track clicks, conversion trends, and payout eligibility in one view.",
+		title: "Metrics you can act on",
+		body: "See clicks, conversion movement, and payout eligibility in one view so you know what to fix next.",
 	},
 	{
 		icon: Wallet,
-		title: "Fast payout flow",
-		body: "Request withdrawals as your balance grows, with a clear history trail.",
+		title: "Payouts without back-and-forth",
+		body: "Request withdrawals as your balance grows, and keep a clear history of every payout.",
 	},
 	{
 		icon: ShieldCheck,
-		title: "Built for consistency",
-		body: "Creator auth and dashboard permissions are isolated and production-safe.",
+		title: "Stable by design",
+		body: "Creator auth and dashboard permissions stay isolated and production-safe as usage grows.",
 	},
 ];
 
 const FAQ_ITEMS = [
 	{
 		question: "Do I need a minimum follower count?",
-		answer: "No. The program rewards conversions, not vanity metrics. If your audience converts, you earn.",
+		answer: "No minimum. We care about paid conversions, not vanity metrics. If your audience trusts you, you can do well.",
 	},
 	{
 		question: "Can I promote Epocheye on multiple platforms?",
-		answer: "Yes. Your code works across any channel, including social platforms, articles, and community groups.",
+		answer: "Yes. The same code works across Instagram, YouTube, TikTok, blogs, newsletters, and community groups.",
 	},
 	{
 		question: "How is commission calculated?",
-		answer: "Commission is a percentage of paid subscriptions driven through your creator code. Tiers range from 5% to 20%.",
+		answer: "You earn a percentage of paid subscriptions attributed to your creator code. Tiers range from 5% to 20%.",
 	},
 	{
 		question: "Where do I track performance?",
-		answer: "Inside the creators dashboard, where you can review clicks, conversions, earnings, and payout requests.",
+		answer: "Inside the creators dashboard. You can review clicks, conversions, earnings, and payout requests in one place.",
 	},
 ];
 
@@ -122,8 +122,8 @@ export default function CreatorsLandingPage() {
 			</div>
 
 			<div className="relative z-10">
-				<nav className="fixed left-0 right-0 top-0 z-50 border-b border-white/10 bg-black/75 px-6 py-5 backdrop-blur-xl md:px-12">
-					<div className="mx-auto flex w-full max-w-6xl items-center justify-between">
+				<nav className="fixed left-0 right-0 top-0 z-50 border-b border-white/10 bg-black/75 px-4 py-3 backdrop-blur-xl sm:px-6 md:px-8">
+					<div className="mx-auto flex w-full max-w-7xl items-center justify-between">
 						<CreatorBrandLink href="/" size="md" showBadge priority />
 						<div className="hidden items-center gap-8 text-xs font-semibold uppercase tracking-[0.16em] text-white/45 lg:flex">
 							<a
@@ -167,51 +167,51 @@ export default function CreatorsLandingPage() {
 					</div>
 				</nav>
 
-				<section className="px-6 pb-16 pt-36 md:px-12 md:pt-40">
+				<section className="px-4 pb-8 pt-24 sm:px-6 md:px-8 md:pt-28">
 					<motion.div
 						initial={{ opacity: 0, y: 28 }}
 						animate={{ opacity: 1, y: 0 }}
 						transition={{ duration: 0.9, ease: MOTION_EASE }}
-						className={`${SECTION_CLASS} mx-auto max-w-6xl p-8 md:p-12`}>
+						className={`${SECTION_CLASS} mx-auto max-w-7xl p-5 md:p-6`}>
 						<p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/40">
 							Creator Partner Program
 						</p>
-						<h1 className="mt-6 text-5xl leading-[1.04] tracking-tight sm:text-6xl md:text-7xl lg:text-8xl">
-							<span className="font-light text-white/92">
-								Turn influence into
+						<h1 className="my-5 text-2xl leading-8 tracking-tight sm:text-3xl md:text-4xl lg:text-5xl flex flex-col justify-center items-start">
+							<span className="font-extralight text-white/92">
+								Your audience already visits monuments.
 							</span>
 							<br />
-							<span className="font-bold text-white">
-								recurring monthly income.
+							<span className="font-semibold text-white">
+								Get paid when they choose Epocheye.
 							</span>
 						</h1>
-						<p className="mt-8 max-w-2xl text-base leading-relaxed text-white/62 md:text-lg">
-							Built for creators who care about outcomes. Share Epocheye with
-							your audience, track every conversion, and scale earnings from
-							one focused dashboard.
+						<p className="mt-6 max-w-2xl text-sm leading-relaxed text-white/62 md:text-base">
+							History and travel creators already have the right audience.
+							Share one code when people plan a monument visit, then track paid
+							conversions and payouts from one focused dashboard.
 						</p>
 
-						<div className="mt-10 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+						<div className="mt-8 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
 							<Link
 								href={CREATOR_ROUTES.signup}
 								className="group inline-flex items-center gap-3 rounded-full border border-white/30 px-7 py-3 text-sm font-semibold uppercase tracking-[0.12em] text-white transition-all duration-300 hover:bg-white hover:text-black">
-								Start Earning
+								Get My Creator Code
 								<ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
 							</Link>
 							<Link
 								href={CREATOR_ROUTES.login}
 								className="text-sm text-white/45 transition-colors hover:text-white/80">
-								Already in the program? Open dashboard
+								Already in? Open dashboard
 							</Link>
 						</div>
 
-						<div className="mt-12 overflow-hidden rounded-2xl border border-white/10 bg-white/5">
+						<div className="mt-7 overflow-hidden rounded-2xl border border-white/10 bg-white/5">
 							<div className="grid gap-px bg-white/10 md:grid-cols-3">
 								{KEY_METRICS.map((metric) => (
 									<div
 										key={metric.label}
-										className="bg-black/70 px-6 py-6 md:px-7">
-										<p className="text-3xl font-semibold text-white">
+										className="bg-black/70 px-5 py-5 md:px-6">
+										<p className="text-2xl font-semibold text-white md:text-3xl">
 											{metric.value}
 										</p>
 										<p className="mt-1 text-xs uppercase tracking-[0.14em] text-white/38">
@@ -224,17 +224,17 @@ export default function CreatorsLandingPage() {
 					</motion.div>
 				</section>
 
-				<section className="px-6 pb-20 md:px-12">
+				<section className="px-4 pb-10 sm:px-6 md:px-8">
 					<motion.div
 						initial={{ opacity: 0, y: 22 }}
 						whileInView={{ opacity: 1, y: 0 }}
 						viewport={{ once: true, margin: "-80px" }}
 						transition={{ duration: 0.8, ease: MOTION_EASE }}
-						className={`${SECTION_CLASS} mx-auto max-w-6xl p-8 md:p-10`}>
+						className={`${SECTION_CLASS} mx-auto max-w-7xl p-5 md:p-6`}>
 						<p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/35">
-							Where creators distribute
+							Channels creators already own
 						</p>
-						<div className="mt-6 flex flex-wrap gap-3">
+						<div className="mt-5 flex flex-wrap gap-2.5">
 							{CHANNELS.map((channel) => (
 								<span
 									key={channel}
@@ -248,32 +248,32 @@ export default function CreatorsLandingPage() {
 
 				<section
 					id="how-it-works"
-					className="border-t border-white/10 px-6 py-24 md:px-12">
-					<div className="mx-auto grid max-w-6xl gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+					className="border-t border-white/10 px-4 py-12 sm:px-6 md:px-8">
+					<div className="mx-auto grid max-w-7xl gap-3 lg:grid-cols-[0.9fr_1.1fr]">
 						<motion.div
 							initial={{ opacity: 0, y: 26 }}
 							whileInView={{ opacity: 1, y: 0 }}
 							viewport={{ once: true, margin: "-90px" }}
 							transition={{ duration: 0.8, ease: MOTION_EASE }}
-							className={`${SECTION_CLASS} p-8 md:p-10`}>
+							className={`${SECTION_CLASS} p-5 md:p-6`}>
 							<p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/35">
 								How It Works
 							</p>
-							<h2 className="mt-4 text-4xl font-light leading-tight md:text-5xl">
-								A direct path from
+							<h2 className="mt-4 text-3xl font-light leading-tight md:text-4xl">
+								From post to payout
 								<br />
 								<span className="font-bold text-white">
-									content to commission.
+									in four clear steps.
 								</span>
 							</h2>
-							<p className="mt-6 max-w-md text-white/58">
-								No complex setup, no custom links per platform, no manual
-								payout tracking. The system is designed to keep your growth
-								loop simple.
+							<p className="mt-5 max-w-md text-sm text-white/58 md:text-base">
+								Most affiliate programs break when tracking gets messy. This
+								one keeps it tight: one code, one dashboard, no manual
+								reconciliation.
 							</p>
 						</motion.div>
 
-						<div className="space-y-4">
+						<div className="space-y-2.5">
 							{PROCESS_STEPS.map((step, index) => (
 								<motion.div
 									key={step.number}
@@ -285,13 +285,13 @@ export default function CreatorsLandingPage() {
 										delay: index * 0.08,
 										ease: MOTION_EASE,
 									}}
-									className={`${PANEL_CLASS} p-6 md:p-7`}>
+									className={`${PANEL_CLASS} p-4 md:p-5`}>
 									<div className="flex items-start gap-4">
-										<span className="pt-1 text-3xl font-bold leading-none text-white/18">
+										<span className="pt-1 text-2xl font-bold leading-none text-white/18 md:text-3xl">
 											{step.number}
 										</span>
 										<div>
-											<h3 className="text-lg font-semibold text-white">
+											<h3 className="text-base font-semibold text-white md:text-lg">
 												{step.title}
 											</h3>
 											<p className="mt-2 text-sm leading-relaxed text-white/56">
@@ -305,30 +305,32 @@ export default function CreatorsLandingPage() {
 					</div>
 				</section>
 
-				<section id="payouts" className="border-t border-white/10 px-6 py-24 md:px-12">
+				<section
+					id="payouts"
+					className="border-t border-white/10 px-4 py-12 sm:px-6 md:px-8">
 					<motion.div
 						initial={{ opacity: 0, y: 24 }}
 						whileInView={{ opacity: 1, y: 0 }}
 						viewport={{ once: true, margin: "-90px" }}
 						transition={{ duration: 0.8, ease: MOTION_EASE }}
-						className={`${SECTION_CLASS} mx-auto max-w-6xl p-8 md:p-10`}>
+						className={`${SECTION_CLASS} mx-auto max-w-7xl p-5 md:p-6`}>
 						<p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/35">
 							Payout Model
 						</p>
-						<h2 className="mt-4 text-4xl font-light leading-tight md:text-5xl">
-							Predictable upside with
+						<h2 className="mt-4 text-3xl font-light leading-tight md:text-4xl">
+							Clear conversion math.
 							<br />
 							<span className="font-bold text-white">
-								clear conversion math.
+								Predictable monthly upside.
 							</span>
 						</h2>
 						<p className="mt-5 max-w-2xl text-sm leading-relaxed text-white/56 md:text-base">
-							Epocheye subscriptions are priced between $2 and $4 per month.
-							Your commission tier determines payout per conversion. As your
-							volume grows, payout tiers can scale too.
+							Epocheye is priced between $2 and $4 per order. <br /> Your
+							commission tier sets payout per paid conversion. As volume
+							improves, payout tiers can scale too.
 						</p>
 
-						<div className="mt-10 grid grid-cols-2 gap-3 xl:grid-cols-4">
+						<div className="mt-6 grid grid-cols-2 gap-2.5 md:gap-3 xl:grid-cols-4">
 							{EARNING_SCENARIOS.map((scenario, index) => (
 								<motion.div
 									key={scenario.signups}
@@ -340,14 +342,14 @@ export default function CreatorsLandingPage() {
 										delay: index * 0.06,
 										ease: MOTION_EASE,
 									}}
-									className={`${PANEL_CLASS} p-6`}>
-									<p className="text-3xl font-bold text-white">
+									className={`${PANEL_CLASS} p-4 md:p-5`}>
+									<p className="text-2xl font-bold text-white md:text-3xl">
 										{scenario.signups}
 									</p>
 									<p className="mt-1 text-[11px] uppercase tracking-[0.14em] text-white/35">
-										monthly signups
+										signups
 									</p>
-									<p className="mt-4 text-lg font-semibold text-white/88">
+									<p className="mt-4 text-base font-semibold text-white/88 md:text-lg">
 										{scenario.low} - {scenario.high}
 									</p>
 									<p className="text-xs text-white/35">
@@ -359,25 +361,23 @@ export default function CreatorsLandingPage() {
 					</motion.div>
 				</section>
 
-				<section className="border-t border-white/10 px-6 py-24 md:px-12">
+				<section className="border-t border-white/10 px-4 py-12 sm:px-6 md:px-8">
 					<motion.div
 						initial={{ opacity: 0, y: 22 }}
 						whileInView={{ opacity: 1, y: 0 }}
 						viewport={{ once: true, margin: "-90px" }}
 						transition={{ duration: 0.8, ease: MOTION_EASE }}
-						className={`${SECTION_CLASS} mx-auto max-w-6xl p-8 md:p-10`}>
+						className={`${SECTION_CLASS} mx-auto max-w-7xl p-5 md:p-6`}>
 						<p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/35">
 							What You Get
 						</p>
-						<h2 className="mt-4 text-4xl font-light leading-tight md:text-5xl">
-							Everything needed to run
+						<h2 className="mt-4 text-3xl font-light leading-tight md:text-4xl">
+							The operating stack for
 							<br />
-							<span className="font-bold">
-								a high-discipline creator funnel.
-							</span>
+							<span className="font-bold">repeatable creator revenue.</span>
 						</h2>
 
-						<div className="mt-10 grid gap-4 md:grid-cols-2">
+						<div className="mt-8 grid gap-4 md:grid-cols-2">
 							{BENEFITS.map(({ icon: Icon, title, body }, index) => (
 								<motion.div
 									key={title}
@@ -389,13 +389,13 @@ export default function CreatorsLandingPage() {
 										delay: index * 0.08,
 										ease: MOTION_EASE,
 									}}
-									className={`${PANEL_CLASS} p-6`}>
+									className={`${PANEL_CLASS} p-5`}>
 									<div className="flex items-start gap-4">
 										<div className="rounded-full border border-white/20 p-2 text-white/80">
 											<Icon className="h-4 w-4" />
 										</div>
 										<div>
-											<h3 className="text-lg font-semibold text-white">
+											<h3 className="text-base font-semibold text-white md:text-lg">
 												{title}
 											</h3>
 											<p className="mt-2 text-sm leading-relaxed text-white/55">
@@ -409,33 +409,33 @@ export default function CreatorsLandingPage() {
 					</motion.div>
 				</section>
 
-				<section className="border-t border-white/10 px-6 py-24 md:px-12">
-					<div className="mx-auto grid max-w-6xl gap-6 lg:grid-cols-[0.92fr_1.08fr]">
+				<section className="border-t border-white/10 px-4 py-12 sm:px-6 md:px-8">
+					<div className="mx-auto grid max-w-7xl gap-3 lg:grid-cols-[0.92fr_1.08fr]">
 						<motion.div
 							initial={{ opacity: 0, y: 24 }}
 							whileInView={{ opacity: 1, y: 0 }}
 							viewport={{ once: true, margin: "-80px" }}
 							transition={{ duration: 0.8, ease: MOTION_EASE }}
-							className={`${SECTION_CLASS} p-8 md:p-10`}>
+							className={`${SECTION_CLASS} p-5 md:p-6`}>
 							<p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/35">
 								Dashboard Preview
 							</p>
-							<h2 className="mt-4 text-4xl font-light leading-tight md:text-5xl">
+							<h2 className="mt-4 text-3xl font-light leading-tight md:text-4xl">
 								See your growth loop
 								<br />
-								<span className="font-bold">without guesswork.</span>
+								<span className="font-bold">week by week.</span>
 							</h2>
 							<p className="mt-6 text-sm leading-relaxed text-white/58 md:text-base">
-								Every creator gets referral-level visibility: clicks,
+								Every creator gets referral-level visibility into clicks,
 								conversions, estimated commission, and payout status.
 							</p>
-							<div className="mt-8 rounded-2xl border border-white/10 bg-black/65 p-5">
+							<div className="mt-6 rounded-2xl border border-white/10 bg-black/65 p-4">
 								<div className="flex items-start gap-3">
 									<Check className="mt-0.5 h-4 w-4 text-white/70" />
 									<p className="text-sm text-white/62">
 										Creators who review this dashboard weekly usually
 										improve conversion quality faster than creators
-										tracking only top-line reach.
+										who only track top-line reach.
 									</p>
 								</div>
 							</div>
@@ -447,7 +447,7 @@ export default function CreatorsLandingPage() {
 							viewport={{ once: true, margin: "-80px" }}
 							transition={{ duration: 0.9, ease: MOTION_EASE }}
 							className={`${PANEL_CLASS} overflow-hidden`}>
-							<div className="flex items-center justify-between border-b border-white/10 px-6 py-4">
+							<div className="flex items-center justify-between border-b border-white/10 px-5 py-3">
 								<p className="text-xs uppercase tracking-[0.14em] text-white/40">
 									epocheye.app{CREATOR_ROUTES.dashboard}
 								</p>
@@ -467,29 +467,29 @@ export default function CreatorsLandingPage() {
 								].map((item) => (
 									<div
 										key={item.label}
-										className="bg-black/78 px-5 py-6">
+										className="bg-black/78 px-4 py-5">
 										<p className="text-[11px] uppercase tracking-[0.13em] text-white/35">
 											{item.label}
 										</p>
-										<p className="mt-2 text-2xl font-semibold text-white">
+										<p className="mt-2 text-xl font-semibold text-white md:text-2xl">
 											{item.value}
 										</p>
 									</div>
 								))}
 							</div>
 
-							<div className="border-t border-white/10 px-6 py-6">
+							<div className="border-t border-white/10 px-5 py-5">
 								<p className="text-[11px] uppercase tracking-[0.13em] text-white/35">
 									Your promo code
 								</p>
 								<div className="mt-2 flex flex-wrap items-center justify-between gap-4">
-									<p className="font-mono text-2xl font-bold tracking-[0.18em] text-white">
+									<p className="font-mono text-xl font-bold tracking-[0.18em] text-white md:text-2xl">
 										EPCH7412
 									</p>
 									<button
 										type="button"
 										className="rounded-full border border-white/20 px-4 py-2 text-xs uppercase tracking-widest text-white/68 transition-colors hover:text-white">
-										Copy code
+										Copy promo code
 									</button>
 								</div>
 							</div>
@@ -497,24 +497,26 @@ export default function CreatorsLandingPage() {
 					</div>
 				</section>
 
-				<section id="faq" className="border-t border-white/10 px-6 py-24 md:px-12">
+				<section
+					id="faq"
+					className="border-t border-white/10 px-4 py-12 sm:px-6 md:px-8">
 					<motion.div
 						initial={{ opacity: 0, y: 20 }}
 						whileInView={{ opacity: 1, y: 0 }}
 						viewport={{ once: true, margin: "-90px" }}
 						transition={{ duration: 0.8, ease: MOTION_EASE }}
-						className={`${SECTION_CLASS} mx-auto max-w-4xl p-8 md:p-10`}>
+						className={`${SECTION_CLASS} mx-auto max-w-5xl p-5 md:p-6`}>
 						<p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/35">
 							FAQ
 						</p>
-						<h2 className="mt-4 text-4xl font-light md:text-5xl">
-							Questions before you start?
+						<h2 className="mt-4 text-3xl font-light md:text-4xl">
+							Questions before you apply?
 						</h2>
-						<div className="mt-8 space-y-3">
+						<div className="mt-5 space-y-2.5">
 							{FAQ_ITEMS.map((item) => (
 								<details
 									key={item.question}
-									className={`${PANEL_CLASS} group p-5`}>
+									className={`${PANEL_CLASS} group p-3 md:p-4`}>
 									<summary className="cursor-pointer list-none text-sm font-semibold uppercase tracking-[0.08em] text-white/85">
 										{item.question}
 									</summary>
@@ -527,33 +529,33 @@ export default function CreatorsLandingPage() {
 					</motion.div>
 				</section>
 
-				<section className="border-t border-white/10 px-6 py-28 text-center md:px-12">
+				<section className="border-t border-white/10 px-4 py-14 text-center sm:px-6 md:px-8">
 					<motion.div
 						initial={{ opacity: 0, y: 22 }}
 						whileInView={{ opacity: 1, y: 0 }}
 						viewport={{ once: true, margin: "-90px" }}
 						transition={{ duration: 0.85, ease: MOTION_EASE }}
-						className={`${SECTION_CLASS} mx-auto max-w-3xl p-8 md:p-10`}>
-						<h2 className="text-4xl font-light leading-tight md:text-6xl">
-							Ready to convert reach
+						className={`${SECTION_CLASS} mx-auto max-w-4xl p-5 md:p-6`}>
+						<h2 className="text-3xl font-light leading-tight md:text-5xl">
+							Your audience already cares.
 							<br />
-							<span className="font-bold">into monthly payouts?</span>
+							<span className="font-bold">Now give them a code.</span>
 						</h2>
-						<p className="mx-auto mt-6 max-w-xl text-sm leading-relaxed text-white/54 md:text-base">
-							Join the program in minutes. Get your code, launch your first
-							campaign, and track outcomes from day one.
+						<p className="mx-auto mt-5 max-w-xl text-sm leading-relaxed text-white/54 md:text-base">
+							Join in minutes, get your code, launch your first campaign, and
+							track outcomes from day one.
 						</p>
 						<Link
 							href={CREATOR_ROUTES.signup}
-							className="group mt-10 inline-flex items-center gap-3 rounded-full border border-white/30 px-8 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-white transition-all duration-300 hover:bg-white hover:text-black">
+							className="group mt-8 inline-flex items-center gap-3 rounded-full border border-white/30 px-8 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-white transition-all duration-300 hover:bg-white hover:text-black">
 							Join Creator Program
 							<ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
 						</Link>
 					</motion.div>
 				</section>
 
-				<footer className="border-t border-white/10 bg-black/55 px-6 py-10 backdrop-blur-md md:px-12">
-					<div className="mx-auto flex w-full max-w-6xl flex-col items-center justify-between gap-4 sm:flex-row">
+				<footer className="border-t border-white/10 bg-black/55 px-4 py-6 backdrop-blur-md sm:px-6 md:px-8">
+					<div className="mx-auto flex w-full max-w-7xl flex-col items-center justify-between gap-3 sm:flex-row">
 						<div className="flex items-center gap-3">
 							<CreatorBrandLink href="/" size="sm" showBadge={false} />
 							<Link
