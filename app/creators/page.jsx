@@ -3,9 +3,10 @@
 import { motion } from "motion/react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { Show, SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
+import { Show, UserButton } from "@clerk/nextjs";
 import { ArrowRight, BarChart3, Check, Link2, ShieldCheck, Wallet } from "lucide-react";
 import CreatorBrandLink from "@/components/creators/CreatorBrandLink";
+import { CREATOR_ROUTES } from "@/lib/creatorRoutes";
 
 const DITHER_WAVE_COLOR = [0.78, 0.78, 0.78];
 
@@ -141,25 +142,25 @@ export default function CreatorsLandingPage() {
 						</div>
 						<div className="flex items-center gap-3">
 							<Show when="signed-out">
-								<SignInButton mode="modal">
-									<button className="px-3 py-2 text-sm text-white/60 transition-colors hover:text-white">
-										Sign in
-									</button>
-								</SignInButton>
-								<SignUpButton mode="modal">
-									<button className="rounded-full border border-white/30 px-5 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-white transition-all duration-300 hover:bg-white hover:text-black">
-										Join Program
-									</button>
-								</SignUpButton>
+								<Link
+									href={CREATOR_ROUTES.login}
+									className="px-3 py-2 text-sm text-white/60 transition-colors hover:text-white">
+									Sign in
+								</Link>
+								<Link
+									href={CREATOR_ROUTES.signup}
+									className="rounded-full border border-white/30 px-5 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-white transition-all duration-300 hover:bg-white hover:text-black">
+									Join Program
+								</Link>
 							</Show>
 							<Show when="signed-in">
 								<div className="flex items-center gap-3">
 									<Link
-										href="/creators/dashboard"
+										href={CREATOR_ROUTES.dashboard}
 										className="rounded-full border border-white/25 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-white/85 transition-all duration-300 hover:border-white/45 hover:text-white">
 										Dashboard
 									</Link>
-									<UserButton afterSignOutUrl="/creators" />
+									<UserButton afterSignOutUrl={CREATOR_ROUTES.home} />
 								</div>
 							</Show>
 						</div>
@@ -192,13 +193,13 @@ export default function CreatorsLandingPage() {
 
 						<div className="mt-10 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
 							<Link
-								href="/creators/signup"
+								href={CREATOR_ROUTES.signup}
 								className="group inline-flex items-center gap-3 rounded-full border border-white/30 px-7 py-3 text-sm font-semibold uppercase tracking-[0.12em] text-white transition-all duration-300 hover:bg-white hover:text-black">
 								Start Earning
 								<ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
 							</Link>
 							<Link
-								href="/creators/login"
+								href={CREATOR_ROUTES.login}
 								className="text-sm text-white/45 transition-colors hover:text-white/80">
 								Already in the program? Open dashboard
 							</Link>
@@ -448,7 +449,7 @@ export default function CreatorsLandingPage() {
 							className={`${PANEL_CLASS} overflow-hidden`}>
 							<div className="flex items-center justify-between border-b border-white/10 px-6 py-4">
 								<p className="text-xs uppercase tracking-[0.14em] text-white/40">
-									epocheye.app/creators/dashboard
+									epocheye.app{CREATOR_ROUTES.dashboard}
 								</p>
 								<div className="flex items-center gap-2">
 									<div className="h-2 w-2 rounded-full bg-white/20" />
@@ -543,7 +544,7 @@ export default function CreatorsLandingPage() {
 							campaign, and track outcomes from day one.
 						</p>
 						<Link
-							href="/creators/signup"
+							href={CREATOR_ROUTES.signup}
 							className="group mt-10 inline-flex items-center gap-3 rounded-full border border-white/30 px-8 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-white transition-all duration-300 hover:bg-white hover:text-black">
 							Join Creator Program
 							<ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
@@ -566,12 +567,12 @@ export default function CreatorsLandingPage() {
 						</p>
 						<div className="flex items-center gap-6 text-xs uppercase tracking-widest text-white/35">
 							<Link
-								href="/creators/login"
+								href={CREATOR_ROUTES.login}
 								className="hover:text-white/70 transition-colors">
 								Creator Login
 							</Link>
 							<Link
-								href="/creators/signup"
+								href={CREATOR_ROUTES.signup}
 								className="hover:text-white/70 transition-colors">
 								Sign Up
 							</Link>

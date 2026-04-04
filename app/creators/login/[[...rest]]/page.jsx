@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { Show, SignIn, SignUpButton, UserButton } from "@clerk/nextjs";
+import { Show, SignIn, UserButton } from "@clerk/nextjs";
 
 import CreatorBrandLink from "@/components/creators/CreatorBrandLink";
+import { CREATOR_ROUTES } from "@/lib/creatorRoutes";
 
 export default function CreatorLoginPage() {
 	return (
@@ -26,9 +27,9 @@ export default function CreatorLoginPage() {
 			</div>
 
 			<nav className="relative z-50 w-full flex items-center justify-between px-4 sm:px-6 md:px-12 py-4 sm:py-6">
-				<CreatorBrandLink href="/creators" size="md" showBadge priority />
+				<CreatorBrandLink href={CREATOR_ROUTES.home} size="md" showBadge priority />
 				<Link
-					href="/creators"
+					href={CREATOR_ROUTES.home}
 					className="text-white/50 hover:text-white text-xs sm:text-sm font-medium transition-colors flex items-center gap-2">
 					<ArrowRight className="w-4 h-4 rotate-180" />
 					Back
@@ -41,9 +42,9 @@ export default function CreatorLoginPage() {
 						<div className="rounded-xl sm:rounded-2xl border border-white/10 bg-white/3 backdrop-blur-2xl p-3.5 sm:p-5">
 							<SignIn
 								routing="path"
-								path="/creators/login"
-								signUpUrl="/creators/signup"
-								forceRedirectUrl="/creators/dashboard"
+								path={CREATOR_ROUTES.login}
+								signUpUrl={CREATOR_ROUTES.signup}
+								forceRedirectUrl={CREATOR_ROUTES.dashboard}
 								appearance={{
 									elements: {
 										rootBox: "w-full text-sm sm:text-base",
@@ -77,7 +78,7 @@ export default function CreatorLoginPage() {
 					<Show when="signed-in">
 						<div className="rounded-xl sm:rounded-2xl border border-white/10 bg-white/3 backdrop-blur-2xl p-6 sm:p-8 text-center space-y-3 sm:space-y-4">
 							<div className="flex justify-center">
-								<UserButton afterSignOutUrl="/creators/login" />
+								<UserButton afterSignOutUrl={CREATOR_ROUTES.login} />
 							</div>
 							<h1 className="text-xl sm:text-2xl font-semibold text-white">
 								You are signed in
@@ -87,7 +88,7 @@ export default function CreatorLoginPage() {
 								payouts.
 							</p>
 							<Link
-								href="/creators/dashboard"
+								href={CREATOR_ROUTES.dashboard}
 								className="inline-flex items-center gap-2 rounded-full border border-white/25 px-4 sm:px-5 py-2 text-[11px] sm:text-xs font-semibold uppercase tracking-[0.14em] text-white hover:border-white/50 transition-all">
 								Go to Dashboard
 							</Link>
@@ -97,11 +98,11 @@ export default function CreatorLoginPage() {
 					<Show when="signed-out">
 						<p className="text-white/40 text-xs sm:text-sm text-center mt-4 sm:mt-5">
 							New creator?{" "}
-							<SignUpButton mode="modal">
-								<button className="text-white text-sm sm:text-base font-medium hover:text-white/80 transition-colors">
-									Create an account
-								</button>
-							</SignUpButton>
+							<Link
+								href={CREATOR_ROUTES.signup}
+								className="text-white text-sm sm:text-base font-medium hover:text-white/80 transition-colors">
+								Create an account
+							</Link>
 						</p>
 					</Show>
 				</div>

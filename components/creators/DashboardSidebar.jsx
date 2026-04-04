@@ -6,12 +6,13 @@ import { usePathname } from "next/navigation";
 import { useClerk, useUser, UserButton } from "@clerk/nextjs";
 import { LayoutDashboard, FileText, Wallet, Settings, LogOut, Menu, X } from "lucide-react";
 import CreatorBrandLink from "@/components/creators/CreatorBrandLink";
+import { CREATOR_DASHBOARD_ROUTES, CREATOR_ROUTES } from "@/lib/creatorRoutes";
 
 const NAV = [
-	{ href: "/creators/dashboard", label: "Overview", icon: LayoutDashboard },
-	{ href: "/creators/dashboard/content", label: "My Content", icon: FileText },
-	{ href: "/creators/dashboard/payouts", label: "Payouts", icon: Wallet },
-	{ href: "/creators/dashboard/settings", label: "Settings", icon: Settings },
+	{ href: CREATOR_DASHBOARD_ROUTES.overview, label: "Overview", icon: LayoutDashboard },
+	{ href: CREATOR_DASHBOARD_ROUTES.content, label: "My Content", icon: FileText },
+	{ href: CREATOR_DASHBOARD_ROUTES.payouts, label: "Payouts", icon: Wallet },
+	{ href: CREATOR_DASHBOARD_ROUTES.settings, label: "Settings", icon: Settings },
 ];
 
 function SidebarContent({ pathname, onNavClick, creator, onLogout }) {
@@ -19,7 +20,7 @@ function SidebarContent({ pathname, onNavClick, creator, onLogout }) {
 		<div className="flex flex-col h-full">
 			{/* Logo */}
 			<div className="px-6 py-6 border-b border-white/5">
-				<CreatorBrandLink href="/creators" size="sm" showBadge />
+				<CreatorBrandLink href={CREATOR_ROUTES.home} size="sm" showBadge />
 			</div>
 
 			{/* Nav */}
@@ -49,7 +50,7 @@ function SidebarContent({ pathname, onNavClick, creator, onLogout }) {
 			<div className="px-3 pb-5 border-t border-white/5 pt-4 space-y-1">
 				<div className="flex items-center gap-3 px-3 py-2.5 rounded-lg">
 					<div className="shrink-0">
-						<UserButton afterSignOutUrl="/creators/login" />
+						<UserButton afterSignOutUrl={CREATOR_ROUTES.login} />
 					</div>
 					<div className="min-w-0">
 						<p className="text-sm font-medium text-white truncate">
@@ -82,7 +83,7 @@ export default function DashboardSidebar() {
 	const [mobileOpen, setMobileOpen] = useState(false);
 
 	const handleLogout = async () => {
-		await signOut({ redirectUrl: "/creators/login" });
+		await signOut({ redirectUrl: CREATOR_ROUTES.login });
 	};
 
 	const sharedProps = {
@@ -101,7 +102,7 @@ export default function DashboardSidebar() {
 
 			{/* Mobile top bar */}
 			<div className="md:hidden fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 py-3 border-b border-white/5 bg-[#080808]/95 backdrop-blur-md">
-				<CreatorBrandLink href="/creators" size="sm" showBadge />
+				<CreatorBrandLink href={CREATOR_ROUTES.home} size="sm" showBadge />
 				<button
 					onClick={() => setMobileOpen(!mobileOpen)}
 					className="p-2 text-white/50 hover:text-white transition-colors"

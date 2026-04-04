@@ -4,6 +4,7 @@ import { useEffect, useState, startTransition } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@clerk/nextjs";
 import DashboardSidebar from "@/components/creators/DashboardSidebar";
+import { CREATOR_ROUTES } from "@/lib/creatorRoutes";
 
 export default function DashboardLayout({ children }) {
 	const router = useRouter();
@@ -14,7 +15,7 @@ export default function DashboardLayout({ children }) {
 		if (!isLoaded) return;
 
 		if (!userId) {
-			router.replace("/creators/login");
+			router.replace(CREATOR_ROUTES.login);
 			return;
 		}
 

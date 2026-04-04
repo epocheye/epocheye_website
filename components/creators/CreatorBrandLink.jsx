@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import logoWhite from "@/public/logo-white.png";
+import { CREATOR_ROUTES } from "@/lib/creatorRoutes";
 
 const SIZE_CLASS = {
 	sm: "w-8 h-8",
@@ -9,7 +10,7 @@ const SIZE_CLASS = {
 };
 
 export default function CreatorBrandLink({
-	href = "/creators",
+	href = CREATOR_ROUTES.home,
 	className = "",
 	size = "md",
 	showBadge = true,

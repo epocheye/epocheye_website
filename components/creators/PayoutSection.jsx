@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Loader2, AlertCircle } from "lucide-react";
 import { creatorFetch } from "@/lib/creatorApi";
+import { CREATOR_DASHBOARD_ROUTES } from "@/lib/creatorRoutes";
 
 const STATUS_STYLES = {
 	pending: "text-yellow-400",
@@ -69,11 +71,11 @@ export default function PayoutSection({ available, payouts, upiId, onPayoutReque
 				{!upiId && (
 					<p className="text-xs text-white/30 mt-3">
 						Go to{" "}
-						<a
-							href="/creators/dashboard/settings"
+						<Link
+							href={CREATOR_DASHBOARD_ROUTES.settings}
 							className="underline hover:text-white/60">
 							Settings
-						</a>{" "}
+						</Link>{" "}
 						to add your UPI ID first.
 					</p>
 				)}
