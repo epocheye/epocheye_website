@@ -39,7 +39,8 @@ export default function CreatorSignupPage() {
 					<Show when="signed-out">
 						<div className="rounded-xl sm:rounded-2xl border border-white/10 bg-white/3 backdrop-blur-2xl p-3.5 sm:p-5">
 							<SignUp
-								routing="hash"
+								routing="path"
+								path="/creators/signup"
 								signInUrl="/creators/login"
 								forceRedirectUrl="/creators/dashboard"
 								appearance={{

@@ -102,6 +102,10 @@ export const metadata = {
 import Script from "next/script";
 import { NotificationProvider, NotificationToast } from "@/components/notifications";
 
+const clerkPublishableKey =
+  process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY ||
+  process.env.CLERK_PUBLISHABLE_KEY;
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
@@ -116,7 +120,7 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${montserratAlternates.variable} ${instrumentSans.variable} ${instrumentSerif.variable} antialiased`}
       >
-        <ClerkProvider>
+        <ClerkProvider publishableKey={clerkPublishableKey}>
           <NotificationProvider>
             {children}
             <NotificationToast />
