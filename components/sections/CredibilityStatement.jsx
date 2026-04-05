@@ -1,7 +1,10 @@
 "use client";
 import React, { useEffect, useRef } from "react";
+import Image from "next/image";
+import Link from "next/link";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import DarkBeamsBackground from "@/components/ui/DarkBeamsBackground";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -20,6 +23,27 @@ const testimonials = [
 		quote: "This is what AR was always supposed to be used for. Genuinely transformative.",
 		author: "Independent Heritage Researcher",
 		meta: "Published author",
+	},
+];
+
+const creatorsNews = [
+	{
+		title: "Creators Program Applications Are Open",
+		description:
+			"History and travel creators can now join the partner program, get a referral code, and start tracking live performance.",
+		href: "/creators/signup",
+		linkLabel: "Apply as a Creator",
+		image: "/img9.webp",
+		alt: "Creator filming a heritage monument",
+	},
+	{
+		title: "Live Dashboard + Payout Tracking Enabled",
+		description:
+			"Early creators are now viewing clicks, conversions, and payout requests from one focused dashboard.",
+		href: "/creators",
+		linkLabel: "Explore the Program",
+		image: "/img10.webp",
+		alt: "Ancient architecture featured in creator content",
 	},
 ];
 
@@ -75,13 +99,19 @@ const CredibilityStatement = () => {
 				aria-hidden="true"
 			/>
 
+			<DarkBeamsBackground
+				opacity={0.2}
+				scrimOpacity={0.34}
+				beamProps={{ beamWidth: 1.6, beamNumber: 8, speed: 0.5, rotation: 10 }}
+			/>
+
 			{/* Dark overlay */}
-			<div className="absolute inset-0 bg-black/75" />
+			<div className="absolute inset-0 bg-black/62" />
 
 			<div ref={contentRef} className="relative z-10 max-w-6xl mx-auto w-full">
 				{/* Header */}
 				<div className="text-center mb-16">
-					<span className="inline-block px-3 py-1 text-xs font-medium tracking-widest text-white/40 border border-white/10 rounded-full uppercase mb-6">
+					<span className="inline-block px-3 py-1 text-xs font-medium tracking-widest text-white/60 border border-white/20 rounded-full uppercase mb-6">
 						What People Are Saying
 					</span>
 					<h2 className="font-montserrat font-light text-white text-3xl sm:text-4xl lg:text-5xl leading-tight">
@@ -91,20 +121,56 @@ const CredibilityStatement = () => {
 					</h2>
 				</div>
 
+				{/* Creators program news */}
+				<div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-16">
+					{creatorsNews.map((news, i) => (
+						<article
+							key={i}
+							className="relative overflow-hidden rounded-2xl border border-white/15 bg-black/45 backdrop-blur-sm">
+							<div className="relative h-40 sm:h-44 w-full overflow-hidden">
+								<Image
+									src={news.image}
+									alt={news.alt}
+									fill
+									sizes="(max-width: 768px) 100vw, 50vw"
+									className="object-cover"
+								/>
+								<div className="absolute inset-0 bg-linear-to-t from-black/85 via-black/35 to-transparent" />
+							</div>
+							<div className="p-6">
+								<p className="text-white/50 text-[11px] font-semibold tracking-[0.18em] uppercase mb-2">
+									Creators Program News
+								</p>
+								<h3 className="font-montserrat font-semibold text-white text-lg leading-tight mb-3">
+									{news.title}
+								</h3>
+								<p className="text-white/62 text-sm leading-relaxed mb-5">
+									{news.description}
+								</p>
+								<Link
+									href={news.href}
+									className="inline-flex items-center rounded-full border border-white/35 px-4 py-2 text-[11px] font-semibold tracking-[0.16em] uppercase text-white transition-colors duration-300 hover:bg-white hover:text-black">
+									{news.linkLabel}
+								</Link>
+							</div>
+						</article>
+					))}
+				</div>
+
 				{/* Testimonial Cards */}
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-16">
 					{testimonials.map((t, i) => (
 						<div
 							key={i}
 							className="bg-black/40 backdrop-blur-sm border border-white/10 rounded-2xl p-6 sm:p-7 flex flex-col gap-4">
-							<p className="text-white/70 text-sm sm:text-base leading-relaxed italic flex-1">
+							<p className="text-white/80 text-sm sm:text-base leading-relaxed italic flex-1">
 								&ldquo;{t.quote}&rdquo;
 							</p>
 							<div>
 								<p className="text-white text-sm font-medium">
 									— {t.author}
 								</p>
-								<p className="text-white/40 text-xs mt-0.5">{t.meta}</p>
+								<p className="text-white/55 text-xs mt-0.5">{t.meta}</p>
 							</div>
 						</div>
 					))}
@@ -112,12 +178,12 @@ const CredibilityStatement = () => {
 
 				{/* Credibility strip */}
 				<div className="flex items-center justify-center gap-4 sm:gap-8">
-					<div className="h-px flex-1 max-w-20 bg-white/8" />
-					<p className="text-white/30 text-xs tracking-widest uppercase text-center font-light leading-relaxed">
+					<div className="h-px flex-1 max-w-20 bg-white/15" />
+					<p className="text-white/55 text-xs tracking-widest uppercase text-center font-light leading-relaxed">
 						Verified by expert historians&nbsp;&nbsp;·&nbsp;&nbsp;100% accurate
 						sources&nbsp;&nbsp;·&nbsp;&nbsp;Expert-curated content
 					</p>
-					<div className="h-px flex-1 max-w-20 bg-white/8" />
+					<div className="h-px flex-1 max-w-20 bg-white/15" />
 				</div>
 			</div>
 		</section>

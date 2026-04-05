@@ -2,6 +2,7 @@
 import React from "react";
 import { Camera, MessageSquare, WifiOff } from "lucide-react";
 import { motion } from "motion/react";
+import DarkBeamsBackground from "@/components/ui/DarkBeamsBackground";
 
 const features = [
 	{
@@ -29,6 +30,12 @@ const PowerStatement = () => {
 		<section
 			className="relative py-24 sm:py-32 lg:py-40 px-6 sm:px-10 lg:px-20 overflow-hidden"
 			style={{ backgroundColor: "#080808" }}>
+			<DarkBeamsBackground
+				opacity={0.24}
+				scrimOpacity={0.54}
+				beamProps={{ beamNumber: 9, speed: 0.58, rotation: -8 }}
+			/>
+
 			{/* Subtle dot grid */}
 			<div
 				className="absolute inset-0 pointer-events-none opacity-[0.025]"
@@ -68,7 +75,7 @@ const PowerStatement = () => {
 					whileInView={{ opacity: 1 }}
 					transition={{ duration: 0.7, delay: 0.2 }}
 					viewport={{ once: true }}
-					className="text-center text-white/40 text-base sm:text-lg mb-16 sm:mb-20 font-light">
+					className="text-center text-white/58 text-base sm:text-lg mb-16 sm:mb-20 font-light">
 					Three capabilities that change the way you see the world.
 				</motion.p>
 
@@ -92,7 +99,7 @@ const PowerStatement = () => {
 								<h3 className="font-montserrat font-semibold text-white text-lg mb-2">
 									{title}
 								</h3>
-								<p className="text-white/40 text-sm leading-relaxed">
+								<p className="text-white/58 text-sm leading-relaxed">
 									{description}
 								</p>
 							</div>

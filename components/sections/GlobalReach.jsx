@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState, memo, startTransition } from "react
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ComposableMap, Geographies, Geography, Marker, Graticule } from "react-simple-maps";
+import DarkBeamsBackground from "@/components/ui/DarkBeamsBackground";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -192,9 +193,15 @@ const GlobalReach = () => {
 			id="global-reach"
 			className="relative flex flex-col items-center justify-start px-6 sm:px-10 lg:px-20 py-16 sm:py-20 lg:py-24"
 			style={{ backgroundColor: "#0A0A0A" }}>
+			<DarkBeamsBackground
+				opacity={0.22}
+				scrimOpacity={0.44}
+				beamProps={{ beamNumber: 8, speed: 0.45, rotation: -6 }}
+			/>
+
 			{/* Section Header */}
 			<div ref={headerRef} className="relative z-10 text-center mb-10 sm:mb-14 lg:mb-16">
-				<span className="header-line inline-block px-3 py-1 text-xs font-medium tracking-widest text-white/40 border border-white/10 rounded-full uppercase mb-6">
+				<span className="header-line inline-block px-3 py-1 text-xs font-medium tracking-widest text-white/60 border border-white/20 rounded-full uppercase mb-6">
 					Global Coverage
 				</span>
 				<h2 className="header-line font-montserrat font-light text-white text-4xl sm:text-5xl lg:text-6xl leading-tight">
@@ -253,7 +260,7 @@ const GlobalReach = () => {
 			{/* Location Count */}
 			<p
 				className="relative z-10 mt-8 sm:mt-10 lg:mt-12 font-light text-center text-[14px] sm:text-[16px] lg:text-[18px] tracking-[2px]"
-				style={{ color: "#B0B0B0" }}>
+				style={{ color: "#D0D0D0" }}>
 				8 MONUMENTS • 5 CONTINENTS • LAUNCHING 2026
 			</p>
 		</section>

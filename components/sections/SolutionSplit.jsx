@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowRight } from "lucide-react";
+import DarkBeamsBackground from "@/components/ui/DarkBeamsBackground";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -85,6 +86,12 @@ const SolutionSplit = () => {
 			ref={sectionRef}
 			className="relative min-h-screen overflow-hidden"
 			style={{ backgroundColor: "#080808" }}>
+			<DarkBeamsBackground
+				opacity={0.24}
+				scrimOpacity={0.52}
+				beamProps={{ beamNumber: 9, speed: 0.55, rotation: -12 }}
+			/>
+
 			{/* Dot grid background */}
 			<div
 				className="absolute inset-0 pointer-events-none opacity-[0.025]"
@@ -118,7 +125,7 @@ const SolutionSplit = () => {
 						</h2>
 
 						{/* Subtext */}
-						<p className="headline-line mt-8 text-white/40 text-base sm:text-lg font-light leading-relaxed max-w-[420px]">
+						<p className="headline-line mt-8 text-white/58 text-base sm:text-lg font-light leading-relaxed max-w-[420px]">
 							Bridging centuries of history with augmented reality and
 							expert-verified content.
 						</p>

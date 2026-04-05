@@ -2,6 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import DarkBeamsBackground from "@/components/ui/DarkBeamsBackground";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -91,12 +92,18 @@ const VideoFeature = () => {
 				<div className="absolute inset-0 bg-black/65" />
 			</div>
 
+			<DarkBeamsBackground
+				opacity={0.14}
+				scrimOpacity={0.1}
+				beamProps={{ beamNumber: 7, speed: 0.45, rotation: -4 }}
+			/>
+
 			{/* Content */}
 			<div
 				ref={contentRef}
 				className="relative z-10 w-full max-w-5xl mx-auto px-6 sm:px-10 py-24 flex flex-col items-center">
 				{/* Label */}
-				<span className="inline-block px-3 py-1 text-xs font-medium tracking-widest text-white/40 border border-white/10 rounded-full uppercase mb-8">
+				<span className="inline-block px-3 py-1 text-xs font-medium tracking-widest text-white/60 border border-white/20 rounded-full uppercase mb-8">
 					How It Works
 				</span>
 
@@ -106,7 +113,7 @@ const VideoFeature = () => {
 					<span className="font-semibold">see through time</span>
 				</h2>
 
-				<p className="text-white/40 text-base sm:text-lg text-center mb-16 font-light max-w-md">
+				<p className="text-white/60 text-base sm:text-lg text-center mb-16 font-light max-w-md">
 					No setup. No guides. Just point and experience.
 				</p>
 
@@ -122,7 +129,9 @@ const VideoFeature = () => {
 							<h3 className="font-montserrat font-semibold text-white text-xl mb-3">
 								{step.title}
 							</h3>
-							<p className="text-white/50 text-sm leading-relaxed">{step.description}</p>
+							<p className="text-white/65 text-sm leading-relaxed">
+								{step.description}
+							</p>
 						</div>
 					))}
 				</div>

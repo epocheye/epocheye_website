@@ -14,7 +14,7 @@
     "@gsap/react": "^2.1.2",
     "@neondatabase/serverless": "^1.0.2",
     "@radix-ui/react-slot": "^1.2.3",
-    "@react-three/drei": "^10.7.6",
+    "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.5.0",
     "@react-three/postprocessing": "^3.0.4",
     "@sentry/nextjs": "^10.32.1",
