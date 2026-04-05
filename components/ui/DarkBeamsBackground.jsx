@@ -11,21 +11,31 @@ const DarkBeamsBackground = ({ opacity = 0.26, scrimOpacity = 0.52, beamProps = 
 	const [shouldRenderBeams, setShouldRenderBeams] = useState(false);
 
 	useEffect(() => {
-		const prefersReducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+		const prefersReducedMotion =
+			window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 		if (prefersReducedMotion) return;
 
-		const saveData = navigator.connection?.saveData;
+		const saveData = navigator.connection?.saveData === true;
 		if (saveData) return;
 
-		const enable = () => setShouldRenderBeams(true);
+		let isEnabled = false;
+		const enable = () => {
+			if (isEnabled) return;
+			isEnabled = true;
+			setShouldRenderBeams(true);
+		};
+
 		const idleId = window.requestIdleCallback?.(enable, { timeout: 1200 });
-		const fallbackTimer = window.setTimeout(enable, 1200);
+		const fallbackTimer =
+			idleId === undefined ? window.setTimeout(enable, 1200) : undefined;
 
 		return () => {
-			if (idleId && window.cancelIdleCallback) {
+			if (idleId !== undefined && window.cancelIdleCallback) {
 				window.cancelIdleCallback(idleId);
 			}
-			window.clearTimeout(fallbackTimer);
+			if (fallbackTimer !== undefined) {
+				window.clearTimeout(fallbackTimer);
+			}
 		};
 	}, []);
 

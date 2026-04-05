@@ -24,10 +24,7 @@ const SolutionSplit = () => {
 			(entries) => {
 				entries.forEach((entry) => {
 					if (entry.isIntersecting) {
-						setIsInView((prev) => {
-							if (prev) return prev;
-							return true;
-						});
+						setIsInView(true);
 						observer.unobserve(section);
 					}
 				});
