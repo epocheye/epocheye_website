@@ -31,7 +31,7 @@ const creatorsNews = [
 		title: "Creators Program Applications Are Open",
 		description:
 			"History and travel creators can now join the partner program, get a referral code, and start tracking live performance.",
-		href: "/creators/signup",
+		href: "https://creators.epocheye.app/creators/signup",
 		linkLabel: "Apply as a Creator",
 		image: "/img9.webp",
 		alt: "Creator filming a heritage monument",
