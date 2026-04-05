@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 
-const Beams = dynamic(() => import("@/components/Beams"), {
+const Beams = dynamic(() => import("@/components/BeamsShiny"), {
 	ssr: false,
 });
 
@@ -17,9 +17,10 @@ const DarkBeamsBackground = ({ opacity = 0.26, scrimOpacity = 0.52, beamProps = 
 					beamWidth={1.8}
 					beamHeight={18}
 					beamNumber={10}
-					lightColor="#ffffff"
+					lightColor="#f5fbff"
 					speed={0.6}
-					noiseIntensity={0.85}
+					noiseIntensity={0.62}
+					shine={1.08}
 					scale={0.24}
 					rotation={-12}
 					{...beamProps}
