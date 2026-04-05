@@ -10,7 +10,7 @@ gsap.registerPlugin(ScrollTrigger);
 const geoUrl = "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
 
 const locations = [
-	{ name: "Colosseum", city: "Rome, Italy", coordinates: [12.4924, 41.8902] },
+	{ name: "Pantheon", city: "Rome, Italy", coordinates: [12.4924, 41.8902] },
 	{ name: "Parthenon", city: "Athens, Greece", coordinates: [23.7275, 37.9715] },
 	{ name: "Machu Picchu", city: "Cusco, Peru", coordinates: [-72.545, -13.1631] },
 	{ name: "Angkor Wat", city: "Siem Reap, Cambodia", coordinates: [103.867, 13.4125] },
