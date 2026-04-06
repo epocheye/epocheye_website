@@ -6,7 +6,6 @@ import {
   Instrument_Serif,
 } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
-import { Analytics } from "@vercel/analytics/next"
 import "./globals.css";
 
 const getMetadataBase = () => {
@@ -109,14 +108,6 @@ const clerkPublishableKey =
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <head>
-        {/* Preconnect to external domains for faster loading */}
-        <link rel="preconnect" href="https://tally.so" />
-        <link rel="dns-prefetch" href="https://tally.so" />
-        {/* Preload critical heritage images for PowerStatement section */}
-        <link rel="preload" href="/img1.webp" as="image" type="image/webp" />
-        <link rel="preload" href="/img2.webp" as="image" type="image/webp" />
-      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${montserratAlternates.variable} ${instrumentSans.variable} ${instrumentSerif.variable} antialiased`}
       >
@@ -126,7 +117,6 @@ export default function RootLayout({ children }) {
             <NotificationToast />
           </NotificationProvider>
         </ClerkProvider>
-        {/* Load Tally script with strategy for better performance */}
         <Script 
           src="https://tally.so/widgets/embed.js" 
           strategy="lazyOnload"

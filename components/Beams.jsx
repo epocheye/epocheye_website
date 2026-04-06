@@ -49,7 +49,7 @@ function extendMaterial(BaseMaterial, cfg) {
 }
 
 const CanvasWrapper = ({ children }) => (
-  <Canvas dpr={[1, 2]} frameloop="always" className="w-full h-full relative">
+  <Canvas dpr={[1, 1.5]} frameloop="always" className="w-full h-full relative">
     {children}
   </Canvas>
 );
