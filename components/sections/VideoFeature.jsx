@@ -38,12 +38,13 @@ const VideoFeature = () => {
 		const observer = new IntersectionObserver(
 			(entries) => {
 				entries.forEach((entry) => {
-					if (entry.isIntersecting && !isInView) {
+					if (entry.isIntersecting) {
 						setIsInView(true);
+						observer.unobserve(section);
 					}
 				});
 			},
-			{ threshold: 0.1, rootMargin: "200px" },
+			{ threshold: 0.1, rootMargin: "0px" },
 		);
 
 		observer.observe(section);
@@ -67,7 +68,7 @@ const VideoFeature = () => {
 			ctx.revert();
 			observer.disconnect();
 		};
-	}, [isInView]);
+	}, []);
 
 	return (
 		<section
