@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 
-import { validateAdminKey } from "@/lib/server/creatorAuth";
+import { verifyAdminJWTFromRequest } from "@/lib/server/adminAuth";
 import { listAllPayouts } from "@/lib/server/creatorRepository";
 
 export const runtime = "nodejs";
 
 export async function GET(request) {
-  const adminCheck = validateAdminKey(request);
+  const adminCheck = verifyAdminJWTFromRequest(request);
   if (!adminCheck.ok) {
     return NextResponse.json(
       { success: false, error: adminCheck.message },

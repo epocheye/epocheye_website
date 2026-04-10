@@ -65,6 +65,8 @@ Dashboard pages in `app/creators/dashboard/` are protected by an `<AuthGuard>` i
 
 ### Creator Campaign Backend
 
+Backend source layout under `backend/src/`: `routes/` (one file per resource), `middleware/` (auth, error), `services/` (business logic), `lib/` (Supabase client, Razorpay), `db/schema.sql`.
+
 All routes mounted under `/api/creator/*` and `/api/admin/*`:
 - `auth.ts` — POST signup/login/refresh (signup generates promo code: `NAME6 + 4 digits`)
 - `profile.ts` — GET/PUT `/me`, PUT `/me/payment` (UPI), PUT `/me/password`
