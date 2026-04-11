@@ -2,21 +2,47 @@ import { supabase } from "../lib/supabase";
 import { createUpiPayout } from "../lib/razorpay";
 import { PayoutRequest } from "../types";
 
-const MIN_PAYOUT_USD = 10;
-// Approximate USD to INR conversion — in production, fetch live rate
-const USD_TO_INR = 83;
+interface AdminSettings {
+  min_payout_inr: number;
+  default_commission_rate: number;
+  razorpay_payouts_enabled: boolean;
+  conversion_confirm_days: number;
+}
+
+export async function getAdminSettings(): Promise<AdminSettings> {
+  const { data } = await supabase
+    .from("admin_settings")
+    .select("*")
+    .eq("id", 1)
+    .single();
+
+  return {
+    min_payout_inr: Number(data?.min_payout_inr ?? 500),
+    default_commission_rate: Number(data?.default_commission_rate ?? 10),
+    razorpay_payouts_enabled: data?.razorpay_payouts_enabled !== false,
+    conversion_confirm_days: Number(data?.conversion_confirm_days ?? 7),
+  };
+}
 
 export async function getAvailableBalance(creatorId: string): Promise<number> {
+  const settings = await getAdminSettings();
+  const cutoff = new Date(
+    Date.now() - settings.conversion_confirm_days * 24 * 60 * 60 * 1000
+  ).toISOString();
+
   const { data: confirmedData } = await supabase
     .from("referral_conversions")
-    .select("commission_amount")
-    .eq("creator_id", creatorId)
-    .eq("status", "confirmed");
+    .select("commission_amount, status, converted_at")
+    .eq("creator_id", creatorId);
 
-  const confirmed = (confirmedData ?? []).reduce(
-    (sum, r) => sum + Number(r.commission_amount),
-    0
-  );
+  const confirmed = (confirmedData ?? []).reduce((sum, r) => {
+    const isConfirmed = r.status === "confirmed";
+    const isAutoConfirmed = r.status === "pending" && r.converted_at <= cutoff;
+    if (isConfirmed || isAutoConfirmed) {
+      return sum + Number(r.commission_amount);
+    }
+    return sum;
+  }, 0);
 
   const { data: payoutData } = await supabase
     .from("payout_requests")
@@ -34,22 +60,24 @@ export async function requestPayout(params: {
   upiId: string;
   creatorName: string;
 }): Promise<PayoutRequest> {
+  const settings = await getAdminSettings();
   const available = await getAvailableBalance(params.creatorId);
 
-  if (available < MIN_PAYOUT_USD) {
+  if (available < settings.min_payout_inr) {
     throw new Error(
-      `Minimum payout is $${MIN_PAYOUT_USD}. Your available balance is $${available.toFixed(2)}.`
+      `Minimum payout is ₹${settings.min_payout_inr}. Your available balance is ₹${available.toFixed(2)}.`
     );
   }
 
-  // Insert payout request first
+  const status = settings.razorpay_payouts_enabled ? "processing" : "pending";
+
   const { data: pr, error: prError } = await supabase
     .from("payout_requests")
     .insert({
       creator_id: params.creatorId,
       amount: available,
-      currency: "USD",
-      status: "processing",
+      currency: "INR",
+      status,
       upi_id: params.upiId,
     })
     .select()
@@ -59,18 +87,21 @@ export async function requestPayout(params: {
     throw new Error(prError?.message ?? "Failed to create payout request");
   }
 
-  // Initiate Razorpay payout (INR conversion)
+  if (!settings.razorpay_payouts_enabled) {
+    return pr as PayoutRequest;
+  }
+
+  // Initiate Razorpay payout — amount is already in INR, convert to paise
   try {
-    const amountInr = Math.round(available * USD_TO_INR * 100); // paise
+    const amountPaise = Math.round(available * 100);
     const rzpPayout = await createUpiPayout({
       upiId: params.upiId,
-      amountPaise: amountInr,
+      amountPaise,
       creatorName: params.creatorName,
       referenceId: pr.id,
       notes: { creator_id: params.creatorId, payout_request_id: pr.id },
     });
 
-    // Update with Razorpay ID
     await supabase
       .from("payout_requests")
       .update({ razorpay_payout_id: rzpPayout.id })
@@ -78,7 +109,6 @@ export async function requestPayout(params: {
 
     return { ...pr, razorpay_payout_id: rzpPayout.id } as PayoutRequest;
   } catch (err) {
-    // If Razorpay fails, mark payout as failed
     await supabase
       .from("payout_requests")
       .update({ status: "failed" })

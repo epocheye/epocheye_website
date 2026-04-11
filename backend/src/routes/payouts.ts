@@ -2,6 +2,7 @@ import { Router, Response } from "express";
 import { requireAuth } from "../middleware/auth";
 import { findCreatorById } from "../services/creatorService";
 import {
+  getAdminSettings,
   getAvailableBalance,
   requestPayout,
   listPayouts,
@@ -12,17 +13,24 @@ const router = Router();
 
 // GET /api/creator/payouts
 router.get("/", requireAuth, async (req: AuthRequest, res: Response) => {
-  const [payouts, balance] = await Promise.all([
+  const [payouts, balance, settings] = await Promise.all([
     listPayouts(req.creator!.sub),
     getAvailableBalance(req.creator!.sub),
+    getAdminSettings(),
   ]);
-  res.json({ success: true, data: { payouts, available_balance: balance } });
+  res.json({
+    success: true,
+    data: { payouts, available_balance: balance, min_payout_inr: settings.min_payout_inr },
+  });
 });
 
 // GET /api/creator/payouts/balance
 router.get("/balance", requireAuth, async (req: AuthRequest, res: Response) => {
-  const balance = await getAvailableBalance(req.creator!.sub);
-  res.json({ success: true, data: { available_balance: balance } });
+  const [balance, settings] = await Promise.all([
+    getAvailableBalance(req.creator!.sub),
+    getAdminSettings(),
+  ]);
+  res.json({ success: true, data: { available_balance: balance, min_payout_inr: settings.min_payout_inr } });
 });
 
 // POST /api/creator/payouts/request

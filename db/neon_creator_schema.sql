@@ -91,3 +91,11 @@ CREATE INDEX IF NOT EXISTS idx_content_creator ON content_submissions(creator_id
 CREATE INDEX IF NOT EXISTS idx_content_status ON content_submissions(status);
 CREATE INDEX IF NOT EXISTS idx_payouts_creator ON payout_requests(creator_id);
 CREATE INDEX IF NOT EXISTS idx_payouts_status ON payout_requests(status);
+
+-- Admin users (website admin portal auth — separate from app users)
+CREATE TABLE IF NOT EXISTS admin_users (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  email TEXT UNIQUE NOT NULL,
+  password_hash TEXT NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);

@@ -37,7 +37,7 @@ export default function PayoutsPage() {
 			<div className="mb-8">
 				<h1 className="text-xl font-semibold text-white">Payouts</h1>
 				<p className="text-white/35 text-sm mt-1">
-					Withdraw your earnings via UPI. Minimum payout is $10.
+					Withdraw your earnings via UPI.
 				</p>
 			</div>
 
@@ -51,6 +51,7 @@ export default function PayoutsPage() {
 					available={data?.available_balance}
 					payouts={data?.payouts}
 					upiId={profile?.upi_id}
+					minPayout={data?.min_payout_inr}
 					onPayoutRequested={load}
 				/>
 			)}

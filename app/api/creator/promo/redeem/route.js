@@ -62,43 +62,25 @@ async function handleBackendOrderWebhook(body) {
     return NextResponse.json({ success: false, error: "Creator not found" }, { status: 404 });
   }
 
-  // Amounts from backend are in paise — convert to base units for storage.
-  // Since creators can have different currencies, store in their preferred currency.
-  const currency = creator.currency || "INR";
-  let planAmountInCurrency;
-  let discountAmountInCurrency;
-
-  if (currency === "INR") {
-    // Paise → rupees
-    planAmountInCurrency = Number((finalAmount / 100).toFixed(2));
-    discountAmountInCurrency = Number((discountAmount / 100).toFixed(2));
-  } else {
-    // Convert paise → USD (approximate; use INR_TO_USD rate)
-    const INR_TO_USD = 1 / 83;
-    planAmountInCurrency = Number(((finalAmount / 100) * INR_TO_USD).toFixed(2));
-    discountAmountInCurrency = Number(((discountAmount / 100) * INR_TO_USD).toFixed(2));
-  }
+  // Amounts from backend are in paise — convert to rupees (INR)
+  const planAmountInr = Number((finalAmount / 100).toFixed(2));
 
   const commissionAmount = Number(
-    ((planAmountInCurrency * Number(creator.commission_rate)) / 100).toFixed(2)
+    ((planAmountInr * Number(creator.commission_rate)) / 100).toFixed(2)
   );
 
   await recordConversion({
     code: couponCode,
     creatorId: creator.id,
     customerId: customerUserId,
-    planAmount: planAmountInCurrency,
+    planAmount: planAmountInr,
     commissionRate: Number(creator.commission_rate),
     customerDiscountRate: Number(creator.customer_discount),
-    currency,
   });
 
   return NextResponse.json({
     success: true,
-    data: {
-      commission_amount: commissionAmount,
-      currency,
-    },
+    data: { commission_amount: commissionAmount },
   });
 }
 
@@ -110,7 +92,6 @@ async function handleLegacyWebhook(body) {
   const code = String(body?.code || "").trim().toUpperCase();
   const customerId = String(body?.customer_id || "").trim();
   const planAmount = Number(body?.plan_amount);
-  const currency = body?.currency ? String(body.currency).toUpperCase() : "USD";
 
   if (!code || !customerId || !Number.isFinite(planAmount) || planAmount <= 0) {
     return NextResponse.json(
@@ -136,7 +117,6 @@ async function handleLegacyWebhook(body) {
     planAmount,
     commissionRate: Number(creator.commission_rate),
     customerDiscountRate: Number(creator.customer_discount),
-    currency,
   });
 
   const discountAmount = Number(
@@ -145,6 +125,6 @@ async function handleLegacyWebhook(body) {
 
   return NextResponse.json({
     success: true,
-    data: { discount_amount: discountAmount, currency },
+    data: { discount_amount: discountAmount },
   });
 }

@@ -13,18 +13,17 @@ const STATUS_STYLES = {
 	failed: "text-red-400",
 };
 
-export default function PayoutSection({ available, payouts, upiId, onPayoutRequested }) {
+export default function PayoutSection({ available, payouts, upiId, minPayout = 500, onPayoutRequested }) {
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState("");
-	const MIN = 10;
 
 	const handleRequest = async () => {
 		if (!upiId) {
 			setError("Add your UPI ID in Settings before requesting a payout.");
 			return;
 		}
-		if (available < MIN) {
-			setError(`Minimum payout is $${MIN}. You have $${available?.toFixed(2)} available.`);
+		if (available < minPayout) {
+			setError(`Minimum payout is ₹${minPayout}. You have ₹${available?.toFixed(2)} available.`);
 			return;
 		}
 		setIsLoading(true);
@@ -49,7 +48,7 @@ export default function PayoutSection({ available, payouts, upiId, onPayoutReque
 					Available Balance
 				</p>
 				<p className="text-4xl font-semibold text-white mb-1">
-					${available?.toFixed(2) ?? "0.00"}
+					₹{available?.toFixed(2) ?? "0.00"}
 				</p>
 				<p className="text-xs text-white/30 mb-6">Ready to withdraw</p>
 
@@ -62,7 +61,7 @@ export default function PayoutSection({ available, payouts, upiId, onPayoutReque
 
 				<button
 					onClick={handleRequest}
-					disabled={isLoading || !available || available < MIN}
+					disabled={isLoading || !available || available < minPayout}
 					className="flex items-center gap-2 px-5 py-2.5 bg-white text-black text-sm font-semibold rounded-full hover:bg-white/90 transition-all disabled:opacity-40 disabled:cursor-not-allowed">
 					{isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
 					{isLoading ? "Requesting…" : "Request Payout"}
@@ -109,7 +108,7 @@ export default function PayoutSection({ available, payouts, upiId, onPayoutReque
 										key={p.id}
 										className="hover:bg-white/1.5 transition-colors">
 										<td className="py-3.5 px-2 text-white font-medium">
-											${Number(p.amount).toFixed(2)}
+											₹{Number(p.amount).toFixed(2)}
 										</td>
 										<td className="py-3.5 px-2">
 											<span
