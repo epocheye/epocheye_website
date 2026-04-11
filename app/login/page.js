@@ -6,7 +6,6 @@ import { Eye, EyeOff, Mail, Lock, ArrowRight, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { login } from '@/lib/authService';
 import ShinyText from '@/components/ShinyText';
 import logoWhite from '@/public/logo-white.png';
 
@@ -29,10 +28,22 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      await login(email, password);
-      router.push('/');
-    } catch (err) {
-      setError(err.message || 'Invalid email or password');
+      const res = await fetch('/api/admin/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        setError(data.error || 'Invalid credentials');
+        return;
+      }
+
+      router.push('/admin');
+      router.refresh();
+    } catch {
+      setError('Network error — please try again');
     } finally {
       setIsLoading(false);
     }
@@ -77,7 +88,7 @@ export default function LoginPage() {
             priority
           />
         </Link>
-        
+
         <Link
           href="/"
           className="text-white/50 hover:text-white text-xs sm:text-sm font-medium transition-colors flex items-center gap-2"
@@ -116,7 +127,7 @@ export default function LoginPage() {
               transition={{ duration: 0.6, delay: 0.5 }}
               className="text-white/40 mt-3 sm:mt-4 text-sm sm:text-base font-medium tracking-wide"
             >
-              Access your heritage journey
+              Admin access
             </motion.p>
           </div>
 
@@ -129,7 +140,7 @@ export default function LoginPage() {
           >
             {/* Card Glow */}
             <div className="absolute -inset-px bg-gradient-to-b from-white/10 to-transparent rounded-2xl sm:rounded-3xl blur-sm" />
-            
+
             {/* Card */}
             <div className="relative bg-white/[0.03] backdrop-blur-2xl border border-white/10 rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10">
               <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
@@ -161,7 +172,7 @@ export default function LoginPage() {
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      placeholder="you@example.com"
+                      placeholder="you@epocheye.app"
                       required
                       className="w-full bg-white/[0.03] border border-white/10 rounded-xl py-3 sm:py-4 pl-10 sm:pl-12 pr-4 text-white text-sm sm:text-base placeholder:text-white/20 focus:outline-none focus:border-white/30 focus:bg-white/[0.05] transition-all duration-300"
                     />
@@ -195,16 +206,6 @@ export default function LoginPage() {
                   </div>
                 </div>
 
-                {/* Forgot Password */}
-                <div className="flex justify-end">
-                  <Link 
-                    href="/forgot-password" 
-                    className="text-xs sm:text-sm text-white/40 hover:text-white/70 transition-colors font-medium"
-                  >
-                    Forgot password?
-                  </Link>
-                </div>
-
                 {/* Submit Button */}
                 <motion.button
                   type="submit"
@@ -223,35 +224,6 @@ export default function LoginPage() {
                   )}
                 </motion.button>
               </form>
-
-              {/* Divider */}
-              <div className="relative my-6 sm:my-8">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-white/10" />
-                </div>
-                <div className="relative flex justify-center">
-                  <span className="px-4 bg-transparent text-white/30 text-xs sm:text-sm uppercase tracking-wider">
-                    or
-                  </span>
-                </div>
-              </div>
-
-              {/* Alternative Actions */}
-              <div className="text-center">
-                <p className="text-white/40 text-xs sm:text-sm">
-                  New to Epocheye?{' '}
-                  <button
-                    type="button"
-                    className="text-white font-medium hover:text-white/80 transition-colors cursor-pointer"
-                    data-tally-open="mVR7OJ"
-                    data-tally-layout="modal"
-                    data-tally-width="600"
-                    data-tally-auto-close="1000"
-                  >
-                    Join the waitlist
-                  </button>
-                </p>
-              </div>
             </div>
           </motion.div>
 
