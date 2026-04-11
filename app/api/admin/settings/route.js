@@ -58,6 +58,38 @@ export async function PUT(request) {
     updates.conversion_confirm_days = v;
   }
 
+  if ("product_name" in body) {
+    const v = String(body.product_name ?? "").trim();
+    if (!v) {
+      return NextResponse.json({ success: false, error: "product_name cannot be empty" }, { status: 400 });
+    }
+    updates.product_name = v;
+  }
+
+  if ("product_description" in body) {
+    updates.product_description = String(body.product_description ?? "").trim();
+  }
+
+  if ("product_price_inr" in body) {
+    const v = Number(body.product_price_inr);
+    if (!Number.isFinite(v) || v < 0) {
+      return NextResponse.json({ success: false, error: "product_price_inr must be a non-negative number" }, { status: 400 });
+    }
+    updates.product_price_inr = v;
+  }
+
+  if ("product_validity_days" in body) {
+    const v = Number(body.product_validity_days);
+    if (!Number.isFinite(v) || v < 1 || !Number.isInteger(v)) {
+      return NextResponse.json({ success: false, error: "product_validity_days must be a positive integer" }, { status: 400 });
+    }
+    updates.product_validity_days = v;
+  }
+
+  if ("product_enabled" in body) {
+    updates.product_enabled = !!body.product_enabled;
+  }
+
   await updateAdminSettings(updates);
   const settings = await getAdminSettings();
   return NextResponse.json({ success: true, data: settings });

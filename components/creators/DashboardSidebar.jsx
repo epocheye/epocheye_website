@@ -4,13 +4,14 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useClerk, useUser, UserButton } from "@clerk/nextjs";
-import { LayoutDashboard, FileText, Wallet, Settings, LogOut, Menu, X } from "lucide-react";
+import { LayoutDashboard, FileText, TrendingUp, Wallet, Settings, LogOut, Menu, X } from "lucide-react";
 import CreatorBrandLink from "@/components/creators/CreatorBrandLink";
 import { CREATOR_DASHBOARD_ROUTES, CREATOR_ROUTES } from "@/lib/creatorRoutes";
 
 const NAV = [
 	{ href: CREATOR_DASHBOARD_ROUTES.overview, label: "Overview", icon: LayoutDashboard },
 	{ href: CREATOR_DASHBOARD_ROUTES.content, label: "My Content", icon: FileText },
+	{ href: CREATOR_DASHBOARD_ROUTES.earnings, label: "Earnings", icon: TrendingUp },
 	{ href: CREATOR_DASHBOARD_ROUTES.payouts, label: "Payouts", icon: Wallet },
 	{ href: CREATOR_DASHBOARD_ROUTES.settings, label: "Settings", icon: Settings },
 ];
