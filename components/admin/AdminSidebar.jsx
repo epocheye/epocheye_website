@@ -7,6 +7,7 @@ import {
   Users,
   Wallet,
   FileText,
+  Bell,
   LogOut,
 } from "lucide-react";
 
@@ -15,6 +16,7 @@ const NAV = [
   { href: "/admin/creators", label: "Creators", icon: Users },
   { href: "/admin/payouts", label: "Payouts", icon: Wallet },
   { href: "/admin/content", label: "Content", icon: FileText },
+  { href: "/admin/notifications", label: "Notifications", icon: Bell },
 ];
 
 export default function AdminSidebar() {
