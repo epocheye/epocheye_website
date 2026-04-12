@@ -1,10 +1,11 @@
 "use client";
 
-import { motion } from "motion/react";
+import { useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { Show, UserButton } from "@clerk/nextjs";
-import { ArrowRight, BarChart3, Check, Link2, ShieldCheck, Wallet } from "lucide-react";
+import { ArrowRight, BarChart3, Check, Link2, Menu, ShieldCheck, Wallet, X } from "lucide-react";
 import CreatorBrandLink from "@/components/creators/CreatorBrandLink";
 import { CREATOR_ROUTES } from "@/lib/creatorRoutes";
 
@@ -105,7 +106,15 @@ const MOTION_EASE = [0.16, 1, 0.3, 1];
 const PANEL_CLASS = "rounded-2xl border border-white/10 bg-black/65";
 const SECTION_CLASS = "rounded-3xl border border-white/10 bg-black/45 backdrop-blur-md";
 
+const NAV_LINKS = [
+	{ href: "#how-it-works", label: "How It Works" },
+	{ href: "#payouts", label: "Payouts" },
+	{ href: "#faq", label: "FAQ" },
+];
+
 export default function CreatorsLandingPage() {
+	const [mobileNavOpen, setMobileNavOpen] = useState(false);
+
 	return (
 		<main className="relative min-h-screen overflow-x-hidden bg-black font-montserrat text-white">
 			<div className="pointer-events-none fixed inset-0 z-0" aria-hidden="true">
@@ -122,49 +131,98 @@ export default function CreatorsLandingPage() {
 			</div>
 
 			<div className="relative z-10">
-				<nav className="fixed left-0 right-0 top-0 z-50 border-b border-white/10 bg-black/75 px-4 py-3 backdrop-blur-xl sm:px-6 md:px-8">
-					<div className="mx-auto flex w-full max-w-7xl items-center justify-between">
+				<nav className="fixed left-0 right-0 top-0 z-50 border-b border-white/10 bg-black/75 backdrop-blur-xl">
+					<div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-3 sm:px-6 md:px-8">
 						<CreatorBrandLink href="/" size="md" showBadge priority />
+
+						{/* Desktop nav links */}
 						<div className="hidden items-center gap-8 text-xs font-semibold uppercase tracking-[0.16em] text-white/45 lg:flex">
-							<a
-								href="#how-it-works"
-								className="hover:text-white/80 transition-colors">
-								How It Works
-							</a>
-							<a
-								href="#payouts"
-								className="hover:text-white/80 transition-colors">
-								Payouts
-							</a>
-							<a href="#faq" className="hover:text-white/80 transition-colors">
-								FAQ
-							</a>
+							{NAV_LINKS.map(({ href, label }) => (
+								<a key={href} href={href} className="hover:text-white/80 transition-colors">
+									{label}
+								</a>
+							))}
 						</div>
-						<div className="flex items-center gap-3">
+
+						{/* Right side: auth + hamburger */}
+						<div className="flex items-center gap-2 sm:gap-3">
 							<Show when="signed-out">
 								<Link
 									href={CREATOR_ROUTES.login}
-									className="px-3 py-2 text-sm text-white/60 transition-colors hover:text-white">
+									className="hidden sm:block px-3 py-2 text-sm text-white/60 transition-colors hover:text-white">
 									Sign in
 								</Link>
 								<Link
 									href={CREATOR_ROUTES.signup}
-									className="rounded-full border border-white/30 px-5 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-white transition-all duration-300 hover:bg-white hover:text-black">
+									className="rounded-full border border-white/30 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-white transition-all duration-300 hover:bg-white hover:text-black sm:px-5">
 									Join Program
 								</Link>
 							</Show>
 							<Show when="signed-in">
-								<div className="flex items-center gap-3">
+								<div className="flex items-center gap-2 sm:gap-3">
 									<Link
 										href={CREATOR_ROUTES.dashboard}
-										className="rounded-full border border-white/25 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-white/85 transition-all duration-300 hover:border-white/45 hover:text-white">
+										className="hidden sm:block rounded-full border border-white/25 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-white/85 transition-all duration-300 hover:border-white/45 hover:text-white">
 										Dashboard
 									</Link>
 									<UserButton afterSignOutUrl={CREATOR_ROUTES.home} />
 								</div>
 							</Show>
+
+							{/* Hamburger — mobile only */}
+							<button
+								onClick={() => setMobileNavOpen((o) => !o)}
+								className="lg:hidden p-2 text-white/50 hover:text-white transition-colors"
+								aria-label="Toggle navigation">
+								{mobileNavOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+							</button>
 						</div>
 					</div>
+
+					{/* Mobile dropdown */}
+					<AnimatePresence>
+						{mobileNavOpen && (
+							<motion.div
+								key="mobile-nav"
+								initial={{ opacity: 0, height: 0 }}
+								animate={{ opacity: 1, height: "auto" }}
+								exit={{ opacity: 0, height: 0 }}
+								transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+								className="overflow-hidden border-t border-white/10 bg-black/90 backdrop-blur-xl lg:hidden">
+								<div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 space-y-1">
+									{NAV_LINKS.map(({ href, label }) => (
+										<a
+											key={href}
+											href={href}
+											onClick={() => setMobileNavOpen(false)}
+											className="flex items-center px-3 py-2.5 text-sm font-semibold uppercase tracking-[0.14em] text-white/50 hover:text-white transition-colors rounded-lg hover:bg-white/5">
+											{label}
+										</a>
+									))}
+									<Show when="signed-out">
+										<div className="pt-2 border-t border-white/10 mt-2">
+											<Link
+												href={CREATOR_ROUTES.login}
+												onClick={() => setMobileNavOpen(false)}
+												className="flex items-center px-3 py-2.5 text-sm font-semibold uppercase tracking-[0.14em] text-white/50 hover:text-white transition-colors rounded-lg hover:bg-white/5">
+												Sign in
+											</Link>
+										</div>
+									</Show>
+									<Show when="signed-in">
+										<div className="pt-2 border-t border-white/10 mt-2">
+											<Link
+												href={CREATOR_ROUTES.dashboard}
+												onClick={() => setMobileNavOpen(false)}
+												className="flex items-center px-3 py-2.5 text-sm font-semibold uppercase tracking-[0.14em] text-white/50 hover:text-white transition-colors rounded-lg hover:bg-white/5">
+												Dashboard
+											</Link>
+										</div>
+									</Show>
+								</div>
+							</motion.div>
+						)}
+					</AnimatePresence>
 				</nav>
 
 				<section className="px-4 pb-8 pt-24 sm:px-6 md:px-8 md:pt-28">

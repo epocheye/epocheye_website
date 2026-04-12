@@ -5,7 +5,8 @@
       "Bash(npm install:*)",
       "Bash(npm run:*)",
       "Bash(node -e \"require\\('typescript'\\)\")",
-      "Bash(find /e/epocheye_website/tailwind* -o -name \"tailwind.config.*\")"
+      "Bash(find /e/epocheye_website/tailwind* -o -name \"tailwind.config.*\")",
+      "Bash(npx eslint:*)"
     ]
   }
 }
