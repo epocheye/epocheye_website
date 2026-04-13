@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
@@ -115,6 +115,28 @@ const NAV_LINKS = [
 export default function CreatorsLandingPage() {
 	const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
+	useEffect(() => {
+		if (!mobileNavOpen) return undefined;
+
+		const originalOverflow = document.body.style.overflow;
+		document.body.style.overflow = "hidden";
+
+		return () => {
+			document.body.style.overflow = originalOverflow;
+		};
+	}, [mobileNavOpen]);
+
+	useEffect(() => {
+		const handleResize = () => {
+			if (window.innerWidth >= 1024) {
+				setMobileNavOpen(false);
+			}
+		};
+
+		window.addEventListener("resize", handleResize);
+		return () => window.removeEventListener("resize", handleResize);
+	}, []);
+
 	return (
 		<main className="relative min-h-screen overflow-x-hidden bg-black font-montserrat text-white">
 			<div className="pointer-events-none fixed inset-0 z-0" aria-hidden="true">
@@ -138,14 +160,17 @@ export default function CreatorsLandingPage() {
 						{/* Desktop nav links */}
 						<div className="hidden items-center gap-8 text-xs font-semibold uppercase tracking-[0.16em] text-white/45 lg:flex">
 							{NAV_LINKS.map(({ href, label }) => (
-								<a key={href} href={href} className="hover:text-white/80 transition-colors">
+								<a
+									key={href}
+									href={href}
+									className="hover:text-white/80 transition-colors">
 									{label}
 								</a>
 							))}
 						</div>
 
 						{/* Right side: auth + hamburger */}
-						<div className="flex items-center gap-2 sm:gap-3">
+						<div className="flex shrink-0 items-center gap-2 sm:gap-3">
 							<Show when="signed-out">
 								<Link
 									href={CREATOR_ROUTES.login}
@@ -154,8 +179,13 @@ export default function CreatorsLandingPage() {
 								</Link>
 								<Link
 									href={CREATOR_ROUTES.signup}
-									className="rounded-full border border-white/30 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-white transition-all duration-300 hover:bg-white hover:text-black sm:px-5">
+									className="hidden sm:inline-flex rounded-full border border-white/30 px-5 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-white transition-all duration-300 hover:bg-white hover:text-black">
 									Join Program
+								</Link>
+								<Link
+									href={CREATOR_ROUTES.signup}
+									className="inline-flex sm:hidden rounded-full border border-white/30 px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-white transition-all duration-300 hover:bg-white hover:text-black">
+									Join
 								</Link>
 							</Show>
 							<Show when="signed-in">
@@ -172,9 +202,15 @@ export default function CreatorsLandingPage() {
 							{/* Hamburger — mobile only */}
 							<button
 								onClick={() => setMobileNavOpen((o) => !o)}
+								type="button"
 								className="lg:hidden p-2 text-white/50 hover:text-white transition-colors"
-								aria-label="Toggle navigation">
-								{mobileNavOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+								aria-label="Toggle navigation"
+								aria-expanded={mobileNavOpen}>
+								{mobileNavOpen ? (
+									<X className="w-5 h-5" />
+								) : (
+									<Menu className="w-5 h-5" />
+								)}
 							</button>
 						</div>
 					</div>
@@ -201,6 +237,12 @@ export default function CreatorsLandingPage() {
 									))}
 									<Show when="signed-out">
 										<div className="pt-2 border-t border-white/10 mt-2">
+											<Link
+												href={CREATOR_ROUTES.signup}
+												onClick={() => setMobileNavOpen(false)}
+												className="flex items-center px-3 py-2.5 text-sm font-semibold uppercase tracking-[0.14em] text-white/50 hover:text-white transition-colors rounded-lg hover:bg-white/5">
+												Join Program
+											</Link>
 											<Link
 												href={CREATOR_ROUTES.login}
 												onClick={() => setMobileNavOpen(false)}

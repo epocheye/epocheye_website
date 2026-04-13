@@ -1,10 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useClerk, useUser, UserButton } from "@clerk/nextjs";
-import { LayoutDashboard, FileText, TrendingUp, Wallet, Settings, LogOut, Menu, X } from "lucide-react";
+import {
+	LayoutDashboard,
+	FileText,
+	TrendingUp,
+	Wallet,
+	Settings,
+	LogOut,
+	Menu,
+	X,
+} from "lucide-react";
 import CreatorBrandLink from "@/components/creators/CreatorBrandLink";
 import { CREATOR_DASHBOARD_ROUTES, CREATOR_ROUTES } from "@/lib/creatorRoutes";
 
@@ -83,6 +92,21 @@ export default function DashboardSidebar() {
 	};
 	const [mobileOpen, setMobileOpen] = useState(false);
 
+	useEffect(() => {
+		setMobileOpen(false);
+	}, [pathname]);
+
+	useEffect(() => {
+		if (!mobileOpen) return undefined;
+
+		const originalOverflow = document.body.style.overflow;
+		document.body.style.overflow = "hidden";
+
+		return () => {
+			document.body.style.overflow = originalOverflow;
+		};
+	}, [mobileOpen]);
+
 	const handleLogout = async () => {
 		await signOut({ redirectUrl: CREATOR_ROUTES.login });
 	};
@@ -106,8 +130,10 @@ export default function DashboardSidebar() {
 				<CreatorBrandLink href={CREATOR_ROUTES.home} size="sm" showBadge />
 				<button
 					onClick={() => setMobileOpen(!mobileOpen)}
+					type="button"
 					className="p-2 text-white/50 hover:text-white transition-colors"
-					aria-label="Toggle menu">
+					aria-label="Toggle menu"
+					aria-expanded={mobileOpen}>
 					{mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
 				</button>
 			</div>
@@ -119,7 +145,7 @@ export default function DashboardSidebar() {
 						className="absolute inset-0 bg-black/60 backdrop-blur-sm"
 						onClick={() => setMobileOpen(false)}
 					/>
-					<aside className="relative w-64 bg-[#080808] border-r border-white/5 flex flex-col pt-16">
+					<aside className="relative h-screen w-64 max-w-[85vw] overflow-y-auto bg-[#080808] border-r border-white/5 flex flex-col pt-16">
 						<SidebarContent {...sharedProps} />
 					</aside>
 				</div>
