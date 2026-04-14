@@ -31,7 +31,7 @@ const creatorsNews = [
 		title: "Creators Program Applications Are Open",
 		description:
 			"History and travel creators can now join the partner program, get a referral code, and start tracking live performance.",
-		href: "https://creators.epocheye.app/creators/signup",
+		href: "https://creators.epocheye.com/signup",
 		linkLabel: "Apply as a Creator",
 		image: "/img9.webp",
 		alt: "Creator filming a heritage monument",
@@ -40,7 +40,7 @@ const creatorsNews = [
 		title: "Live Dashboard + Payout Tracking Enabled",
 		description:
 			"Early creators are now viewing clicks, conversions, and payout requests from one focused dashboard.",
-		href: "https://creators.epocheye.app",
+		href: "https://creators.epocheye.com",
 		linkLabel: "Explore the Program",
 		image: "/img10.webp",
 		alt: "Ancient architecture featured in creator content",

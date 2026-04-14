@@ -1,3 +1,15 @@
 {
-  "redirects": []
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "epocheye.app"
+        }
+      ],
+      "destination": "https://epocheye.com/:path*",
+      "statusCode": 308
+    }
+  ]
 }

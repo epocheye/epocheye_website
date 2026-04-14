@@ -61,7 +61,7 @@ export default function AdminPayoutsPage() {
       {/* Manual payout instructions */}
       <p className="text-xs text-white/30 mb-6">
         Payouts are processed manually. Click <span className="text-white/50">Approve</span> to
-        mark a request as in-progress, send the amount to the creator's UPI ID, then click{" "}
+        mark a request as in-progress, send the amount to the creator&apos;s UPI ID, then click{" "}
         <span className="text-white/50">Mark paid</span> once the transfer is done.
       </p>
 

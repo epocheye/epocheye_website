@@ -5,6 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ### Frontend (root)
+
 ```bash
 npm run dev        # Start Next.js dev server (port 3000)
 npm run build      # Production build
@@ -13,6 +14,7 @@ npm run seed:crowd # Seed crowd data from CSV
 ```
 
 ### Backend (`/backend`)
+
 ```bash
 cd backend
 npm run dev        # Local Express server (port 3001, ts-node-dev with hot reload)
@@ -23,11 +25,13 @@ npm run deploy:prod  # Deploy to prod stage
 ```
 
 ### Full local dev
+
 Run both concurrently: `npm run dev` (root) + `cd backend && npm run dev`.
 
 ## Tech Stack
 
 **Frontend:**
+
 - **Next.js 16** (App Router, React 19) — JSX only, not TSX
 - **Tailwind CSS v4** — configured via `@theme` in `app/globals.css`; no `tailwind.config.js`
 - **shadcn/ui** (new-york style) — components in `components/ui/`
@@ -37,6 +41,7 @@ Run both concurrently: `npm run dev` (root) + `cd backend && npm run dev`.
 - **Path alias:** `@/*` maps to project root
 
 **Backend (`/backend`):**
+
 - **TypeScript Express.js** wrapped with `serverless-http` for AWS Lambda
 - **Serverless Framework v3** — `serverless.yml` deploys to Lambda + API Gateway (ap-south-1)
 - **Zod** — request validation; **bcryptjs** — password hashing
@@ -49,6 +54,7 @@ Run both concurrently: `npm run dev` (root) + `cd backend && npm run dev`.
 `app/page.js` is a `"use client"` marketing landing page that lazy-loads all sections below the hero via `dynamic()` + `Suspense`.
 
 **Routes:**
+
 - `/` — Marketing landing page (sections in `components/sections/`)
 - `/login` — Main app auth
 - `/creators` — Creator campaign landing + auth (`/creators/login`, `/creators/signup`)
@@ -68,6 +74,7 @@ Dashboard pages in `app/creators/dashboard/` are protected by an `<AuthGuard>` i
 Backend source layout under `backend/src/`: `routes/` (one file per resource), `middleware/` (auth, error), `services/` (business logic), `lib/` (Supabase client, Razorpay), `db/schema.sql`.
 
 All routes mounted under `/api/creator/*` and `/api/admin/*`:
+
 - `auth.ts` — POST signup/login/refresh (signup generates promo code: `NAME6 + 4 digits`)
 - `profile.ts` — GET/PUT `/me`, PUT `/me/payment` (UPI), PUT `/me/password`
 - `stats.ts` — GET overview + 30-day timeline (for `ReferralChart`)
@@ -104,6 +111,7 @@ The UI follows a dark, cinematic, editorial aesthetic. Full spec in `.github/age
 ## Environment Variables
 
 **Frontend (`.env.local`):**
+
 ```
 NEXT_PUBLIC_API_URL          # Main app backend (Render)
 NEXT_PUBLIC_WS_URL           # WebSocket server
@@ -115,6 +123,7 @@ SUPABASE_SERVICE_KEY
 ```
 
 **Backend (`backend/.env`):**
+
 ```
 SUPABASE_URL
 SUPABASE_SERVICE_KEY

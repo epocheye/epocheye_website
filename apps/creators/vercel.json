@@ -1,0 +1,15 @@
+{
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "creators.epocheye.app"
+        }
+      ],
+      "destination": "https://creators.epocheye.com/:path*",
+      "statusCode": 308
+    }
+  ]
+}

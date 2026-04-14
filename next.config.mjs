@@ -19,6 +19,22 @@ const nextConfig = {
     optimizePackageImports: ['gsap', 'lucide-react', 'framer-motion', 'motion'],
   },
 
+  // Legacy route redirects after creators app split
+  async redirects() {
+    return [
+      {
+        source: '/creators',
+        destination: 'https://creators.epocheye.com',
+        permanent: true,
+      },
+      {
+        source: '/creators/:path*',
+        destination: 'https://creators.epocheye.com/:path*',
+        permanent: true,
+      },
+    ];
+  },
+
   // Headers for caching and security
   async headers() {
     return [
