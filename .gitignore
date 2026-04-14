@@ -47,3 +47,6 @@ next-env.d.ts
 *.csv
 
 crowd_model.pkl
+
+# creators subdomain — has its own git repo
+/apps/creators/
