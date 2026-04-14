@@ -8,6 +8,7 @@ import {
   Wallet,
   FileText,
   Bell,
+  BookOpen,
   Settings,
   LogOut,
 } from "lucide-react";
@@ -18,6 +19,7 @@ const NAV = [
   { href: "/admin/payouts", label: "Payouts", icon: Wallet },
   { href: "/admin/content", label: "Content", icon: FileText },
   { href: "/admin/notifications", label: "Notifications", icon: Bell },
+  { href: "/admin/knowledge", label: "Knowledge", icon: BookOpen },
   { href: "/admin/settings", label: "Settings", icon: Settings },
 ];
 
