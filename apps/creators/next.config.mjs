@@ -6,7 +6,7 @@ const MAIN_SITE_ORIGIN = (
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactCompiler: true,
+  reactCompiler: false,
   images: {
     formats: ["image/avif", "image/webp"],
     deviceSizes: [320, 420, 768, 1024, 1200, 1920],
