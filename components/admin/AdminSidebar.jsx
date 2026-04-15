@@ -5,10 +5,15 @@ import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   Users,
+  UserCircle,
   Wallet,
   FileText,
   Bell,
   BookOpen,
+  Box,
+  Activity,
+  MessageSquare,
+  Sparkles,
   Settings,
   LogOut,
 } from "lucide-react";
@@ -16,10 +21,15 @@ import {
 const NAV = [
   { href: "/admin", label: "Overview", icon: LayoutDashboard },
   { href: "/admin/creators", label: "Creators", icon: Users },
+  { href: "/admin/users", label: "Users", icon: UserCircle },
   { href: "/admin/payouts", label: "Payouts", icon: Wallet },
   { href: "/admin/content", label: "Content", icon: FileText },
   { href: "/admin/notifications", label: "Notifications", icon: Bell },
   { href: "/admin/knowledge", label: "Knowledge", icon: BookOpen },
+  { href: "/admin/ar", label: "AR", icon: Box },
+  { href: "/admin/engagement", label: "Engagement", icon: Activity },
+  { href: "/admin/chat", label: "Chat", icon: MessageSquare },
+  { href: "/admin/recommendations", label: "Recommendations", icon: Sparkles },
   { href: "/admin/settings", label: "Settings", icon: Settings },
 ];
 
