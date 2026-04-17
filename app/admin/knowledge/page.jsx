@@ -3,12 +3,28 @@
 import { useEffect, useState, useCallback, startTransition } from "react";
 import Link from "next/link";
 
+const EMPTY_EMBED = {
+  text: "",
+  source_name: "",
+  source_url: "",
+  document_title: "",
+  monument_tags: "",
+  auto_verify: false,
+};
+
 export default function AdminKnowledgePage() {
   const [chunks, setChunks] = useState([]);
   const [stats, setStats] = useState(null);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
+
+  // Seed form state
+  const [seedOpen, setSeedOpen] = useState(false);
+  const [embedForm, setEmbedForm] = useState(EMPTY_EMBED);
+  const [embedLoading, setEmbedLoading] = useState(false);
+  const [embedResult, setEmbedResult] = useState(null);
+  const [embedError, setEmbedError] = useState(null);
 
   // Filters
   const [verified, setVerified] = useState("");
@@ -51,6 +67,42 @@ export default function AdminKnowledgePage() {
     loadChunks();
   }, [page, verified, sourceName, monumentTag, search]);
 
+  async function handleEmbed(e) {
+    e.preventDefault();
+    setEmbedLoading(true);
+    setEmbedResult(null);
+    setEmbedError(null);
+
+    const tags = embedForm.monument_tags
+      .split(",")
+      .map((t) => t.trim().toLowerCase().replace(/\s+/g, "_"))
+      .filter(Boolean);
+
+    const res = await fetch("/api/admin/knowledge/embed", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        text: embedForm.text,
+        source_name: embedForm.source_name,
+        source_url: embedForm.source_url,
+        document_title: embedForm.document_title,
+        monument_tags: tags,
+        auto_verify: embedForm.auto_verify,
+      }),
+    });
+
+    const json = await res.json();
+    if (json.success) {
+      setEmbedResult(json.data);
+      setEmbedForm(EMPTY_EMBED);
+      // Reload stats + chunks
+      startTransition(() => setPage(1));
+    } else {
+      setEmbedError(json.error || "Unknown error");
+    }
+    setEmbedLoading(false);
+  }
+
   const perPage = 50;
   const totalPages = Math.ceil(total / perPage);
 
@@ -58,8 +110,108 @@ export default function AdminKnowledgePage() {
     <div className="p-8">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-lg font-semibold text-white">Heritage Knowledge</h1>
-        <p className="text-sm text-white/30">{total} chunks</p>
+        <div className="flex items-center gap-3">
+          <p className="text-sm text-white/30">{total} chunks</p>
+          <button
+            onClick={() => { setSeedOpen((v) => !v); setEmbedResult(null); setEmbedError(null); }}
+            className="text-xs text-white/40 hover:text-white border border-white/10 hover:border-white/30 px-3 py-1.5 rounded-md transition-colors">
+            {seedOpen ? "Close" : "+ Seed Document"}
+          </button>
+        </div>
       </div>
+
+      {/* Seed document form */}
+      {seedOpen && (
+        <div className="bg-[#0d0d0d] border border-white/10 rounded-xl p-5 mb-6">
+          <h2 className="text-sm font-medium text-white/70 mb-4">Seed New Heritage Document</h2>
+          <form onSubmit={handleEmbed} className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-xs text-white/30 block mb-1.5">Source Name *</label>
+                <input
+                  value={embedForm.source_name}
+                  onChange={(e) => setEmbedForm((f) => ({ ...f, source_name: e.target.value }))}
+                  placeholder="e.g. ASI Konark Guide"
+                  required
+                  className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white/70 placeholder:text-white/20 focus:outline-none focus:border-white/20"
+                />
+              </div>
+              <div>
+                <label className="text-xs text-white/30 block mb-1.5">Source URL * (unique ID)</label>
+                <input
+                  value={embedForm.source_url}
+                  onChange={(e) => setEmbedForm((f) => ({ ...f, source_url: e.target.value }))}
+                  placeholder="https://asi.nic.in/konark-sun-temple"
+                  required
+                  className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white/70 placeholder:text-white/20 focus:outline-none focus:border-white/20"
+                />
+              </div>
+              <div>
+                <label className="text-xs text-white/30 block mb-1.5">Document Title</label>
+                <input
+                  value={embedForm.document_title}
+                  onChange={(e) => setEmbedForm((f) => ({ ...f, document_title: e.target.value }))}
+                  placeholder="Konark Sun Temple — Official Guide"
+                  className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white/70 placeholder:text-white/20 focus:outline-none focus:border-white/20"
+                />
+              </div>
+              <div>
+                <label className="text-xs text-white/30 block mb-1.5">Monument Tags (comma-separated)</label>
+                <input
+                  value={embedForm.monument_tags}
+                  onChange={(e) => setEmbedForm((f) => ({ ...f, monument_tags: e.target.value }))}
+                  placeholder="konark, sun_temple, odisha"
+                  className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white/70 placeholder:text-white/20 focus:outline-none focus:border-white/20"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="text-xs text-white/30 block mb-1.5">Document Text *</label>
+              <textarea
+                value={embedForm.text}
+                onChange={(e) => setEmbedForm((f) => ({ ...f, text: e.target.value }))}
+                rows={8}
+                required
+                placeholder="Paste the full heritage document text here. It will be automatically split into ~200-word chunks and embedded via Gemini text-embedding-004."
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white/70 placeholder:text-white/20 focus:outline-none focus:border-white/20 resize-none font-mono"
+              />
+            </div>
+
+            <div className="flex items-center justify-between">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={embedForm.auto_verify}
+                  onChange={(e) => setEmbedForm((f) => ({ ...f, auto_verify: e.target.checked }))}
+                  className="w-3.5 h-3.5 rounded border border-white/20 bg-white/5 accent-emerald-500"
+                />
+                <span className="text-xs text-white/50">Auto-verify all chunks (trusted source)</span>
+              </label>
+
+              <button
+                type="submit"
+                disabled={embedLoading}
+                className="text-xs bg-white/5 text-white/70 hover:bg-white/10 border border-white/10 hover:border-white/20 px-4 py-2 rounded-lg transition-colors disabled:opacity-40">
+                {embedLoading ? "Embedding…" : "Embed Document"}
+              </button>
+            </div>
+
+            {embedResult && (
+              <div className="bg-emerald-500/5 border border-emerald-500/20 rounded-lg px-4 py-3 text-xs text-emerald-400">
+                ✓ Embedded {embedResult.chunks_embedded} of {embedResult.chunks_created} chunks
+                {embedResult.auto_verified && " (auto-verified)"}
+                . Source ID: <span className="font-mono">{embedResult.source_id}</span>
+              </div>
+            )}
+            {embedError && (
+              <div className="bg-red-500/5 border border-red-500/20 rounded-lg px-4 py-3 text-xs text-red-400">
+                Error: {embedError}
+              </div>
+            )}
+          </form>
+        </div>
+      )}
 
       {/* Stats strip */}
       {stats && (
