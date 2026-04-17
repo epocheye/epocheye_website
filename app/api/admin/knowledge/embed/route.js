@@ -66,17 +66,23 @@ async function embedChunk(text, apiKey) {
 
 async function embedAll(chunks, apiKey) {
   const embeddings = new Array(chunks.length).fill(null);
+  const errors = [];
   for (let i = 0; i < chunks.length; i += EMBED_CONCURRENCY) {
     const slice = chunks.slice(i, i + EMBED_CONCURRENCY);
     const settled = await Promise.allSettled(
       slice.map((c) => embedChunk(c, apiKey))
     );
     settled.forEach((r, j) => {
-      if (r.status === "fulfilled") embeddings[i + j] = r.value;
-      else console.error(`embed chunk ${i + j} failed:`, r.reason?.message);
+      if (r.status === "fulfilled") {
+        embeddings[i + j] = r.value;
+      } else {
+        const msg = r.reason?.message || String(r.reason);
+        errors.push(`chunk ${i + j}: ${msg}`);
+        console.error(`embed chunk ${i + j} failed:`, msg);
+      }
     });
   }
-  return embeddings;
+  return { embeddings, errors };
 }
 
 function toVectorLiteral(vec) {
@@ -140,20 +146,14 @@ export async function POST(request) {
     );
   }
 
-  let embeddings;
-  try {
-    embeddings = await embedAll(chunks, apiKey);
-  } catch (err) {
-    return NextResponse.json(
-      { success: false, error: `Embedding failed: ${err.message}` },
-      { status: 502 }
-    );
-  }
-
+  const { embeddings, errors: embedErrors } = await embedAll(chunks, apiKey);
   const embeddedCount = embeddings.filter(Boolean).length;
   if (embeddedCount === 0) {
     return NextResponse.json(
-      { success: false, error: "All chunks failed to embed" },
+      {
+        success: false,
+        error: `All chunks failed to embed. First error: ${embedErrors[0] || "unknown"}`,
+      },
       { status: 502 }
     );
   }
