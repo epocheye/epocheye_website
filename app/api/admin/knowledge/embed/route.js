@@ -6,8 +6,9 @@ import { getHeritageSql } from "@/lib/server/heritageDb";
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
-const GEMINI_EMBED_URL =
-  "https://generativelanguage.googleapis.com/v1beta/models/text-embedding-004:embedContent";
+const GEMINI_EMBED_MODEL = "gemini-embedding-001";
+const GEMINI_EMBED_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_EMBED_MODEL}:embedContent`;
+const EMBED_DIMENSIONS = 768;
 const TARGET_WORDS_PER_CHUNK = 200;
 const EMBED_CONCURRENCY = 5;
 
@@ -45,8 +46,10 @@ async function embedChunk(text, apiKey) {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      model: "models/text-embedding-004",
+      model: `models/${GEMINI_EMBED_MODEL}`,
       content: { parts: [{ text }] },
+      outputDimensionality: EMBED_DIMENSIONS,
+      taskType: "RETRIEVAL_DOCUMENT",
     }),
     signal: AbortSignal.timeout(20000),
   });
