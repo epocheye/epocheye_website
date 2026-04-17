@@ -135,3 +135,5 @@ WEBHOOK_SECRET               # Mobile app uses X-Webhook-Secret header on /promo
 ADMIN_API_KEY                # X-Admin-Key header for /api/admin/* routes
 CORS_ORIGIN                  # https://epocheye.app
 ```
+
+# REMEMBER CODEX WILL REVIEW YOUR OUTPUT AFTER YOU FINISH EVERY TIME.
