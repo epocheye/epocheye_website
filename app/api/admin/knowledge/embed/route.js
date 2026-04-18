@@ -169,13 +169,16 @@ export async function POST(request) {
   try {
     const sourceRows = await sql`
       INSERT INTO heritage_knowledge_sources
-        (source_name, source_url, document_title, is_active)
+        (source_name, source_url, document_title, monument_tags, raw_content, is_active)
       VALUES
-        (${source_name}, ${source_url}, ${document_title || null}, true)
+        (${source_name}, ${source_url}, ${document_title || ""}, ${tags}, ${text}, true)
       ON CONFLICT (source_url) DO UPDATE SET
-        source_name = EXCLUDED.source_name,
+        source_name    = EXCLUDED.source_name,
         document_title = EXCLUDED.document_title,
-        is_active = true
+        monument_tags  = EXCLUDED.monument_tags,
+        raw_content    = EXCLUDED.raw_content,
+        fetched_at     = now(),
+        is_active      = true
       RETURNING id
     `;
     sourceId = sourceRows[0]?.id;

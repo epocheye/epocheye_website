@@ -31,6 +31,8 @@ export default function AdminKnowledgePage() {
   const [sourceName, setSourceName] = useState("");
   const [monumentTag, setMonumentTag] = useState("");
   const [search, setSearch] = useState("");
+  const [autoIngested, setAutoIngested] = useState("");
+  const [disablingId, setDisablingId] = useState(null);
 
   useEffect(() => {
     async function loadStats() {
@@ -51,6 +53,7 @@ export default function AdminKnowledgePage() {
       if (sourceName) params.set("source_name", sourceName);
       if (monumentTag) params.set("monument_tag", monumentTag);
       if (search) params.set("search", search);
+      if (autoIngested) params.set("auto_ingested", autoIngested);
 
       const res = await fetch(`/api/admin/knowledge?${params}`);
       if (res.ok) {
@@ -65,7 +68,27 @@ export default function AdminKnowledgePage() {
       startTransition(() => setLoading(false));
     }
     loadChunks();
-  }, [page, verified, sourceName, monumentTag, search]);
+  }, [page, verified, sourceName, monumentTag, search, autoIngested]);
+
+  async function handleDisableSource(sourceId) {
+    if (!sourceId) return;
+    if (!window.confirm("Disable this auto-ingested source? Chunks will be excluded from RAG queries until re-enabled.")) {
+      return;
+    }
+    setDisablingId(sourceId);
+    const res = await fetch(`/api/admin/knowledge/sources/${sourceId}/disable`, {
+      method: "POST",
+    });
+    setDisablingId(null);
+    if (res.ok) {
+      startTransition(() => setPage((p) => p));
+      // Force reload by toggling auto filter state
+      setAutoIngested((v) => v);
+    } else {
+      const json = await res.json().catch(() => ({}));
+      window.alert(`Disable failed: ${json.error || res.statusText}`);
+    }
+  }
 
   async function handleEmbed(e) {
     e.preventDefault();
@@ -234,6 +257,15 @@ export default function AdminKnowledgePage() {
           <option value="false">Unverified</option>
         </select>
 
+        <select
+          value={autoIngested}
+          onChange={(e) => { setAutoIngested(e.target.value); setPage(1); }}
+          className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white/70 focus:outline-none focus:border-white/20">
+          <option value="">All ingestions</option>
+          <option value="true">Auto-ingested</option>
+          <option value="false">Manual only</option>
+        </select>
+
         {stats && (
           <select
             value={sourceName}
@@ -284,6 +316,7 @@ export default function AdminKnowledgePage() {
                   <th className="px-5 py-3 text-left text-xs text-white/35 font-medium">Monument</th>
                   <th className="px-5 py-3 text-left text-xs text-white/35 font-medium">Chunk Preview</th>
                   <th className="px-5 py-3 text-center text-xs text-white/35 font-medium">Status</th>
+                  <th className="px-5 py-3 text-left text-xs text-white/35 font-medium">Origin</th>
                   <th className="px-5 py-3 text-left text-xs text-white/35 font-medium">Verified By</th>
                   <th className="px-5 py-3" />
                 </tr>
@@ -310,14 +343,36 @@ export default function AdminKnowledgePage() {
                       ) : (
                         <span className="text-xs bg-amber-500/10 text-amber-400 px-2 py-0.5 rounded-full">Pending</span>
                       )}
+                      {c.is_active === false && (
+                        <span className="ml-1 text-xs bg-red-500/10 text-red-400 px-2 py-0.5 rounded-full">Disabled</span>
+                      )}
+                    </td>
+                    <td className="px-5 py-3 text-xs">
+                      {c.auto_ingested ? (
+                        <span className="text-xs bg-sky-500/10 text-sky-400 px-2 py-0.5 rounded-full">
+                          Auto ({c.ingest_method || "gemini"})
+                        </span>
+                      ) : (
+                        <span className="text-xs text-white/40">Manual</span>
+                      )}
                     </td>
                     <td className="px-5 py-3 text-white/30 text-xs">{c.verified_by || "—"}</td>
                     <td className="px-5 py-3 text-right">
-                      <Link
-                        href={`/admin/knowledge/${c.id}`}
-                        className="text-xs text-white/40 hover:text-white border border-white/10 hover:border-white/30 px-2.5 py-1 rounded-md transition-colors">
-                        View
-                      </Link>
+                      <div className="flex items-center justify-end gap-2">
+                        {c.auto_ingested && c.is_active !== false && (
+                          <button
+                            onClick={() => handleDisableSource(c.source_id)}
+                            disabled={disablingId === c.source_id}
+                            className="text-xs text-red-400 hover:text-red-300 border border-red-500/20 hover:border-red-500/40 px-2.5 py-1 rounded-md transition-colors disabled:opacity-40">
+                            {disablingId === c.source_id ? "Disabling…" : "Disable"}
+                          </button>
+                        )}
+                        <Link
+                          href={`/admin/knowledge/${c.id}`}
+                          className="text-xs text-white/40 hover:text-white border border-white/10 hover:border-white/30 px-2.5 py-1 rounded-md transition-colors">
+                          View
+                        </Link>
+                      </div>
                     </td>
                   </tr>
                 ))}

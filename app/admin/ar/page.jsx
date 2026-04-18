@@ -180,6 +180,9 @@ export default function AdminArPage() {
         </p>
       </div>
 
+      {/* SAM 3D deploy runbook */}
+      <SamDeployCard currentProvider={form.provider} endpointName={form.sagemaker_endpoint} />
+
       {/* Stats cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
         <StatCard label="24h success rate" value={stats?.success_rate_24h != null ? `${Math.round(stats.success_rate_24h * 100)}%` : "—"} />
@@ -450,6 +453,65 @@ function StatCard({ label, value }) {
     <div className="bg-[#0d0d0d] border border-white/5 rounded-xl px-4 py-3">
       <p className="text-[10px] font-medium text-white/30 uppercase tracking-widest">{label}</p>
       <p className="text-lg font-semibold text-white mt-1">{value}</p>
+    </div>
+  );
+}
+
+function SamDeployCard({ currentProvider, endpointName }) {
+  const providerReady = currentProvider === "sagemaker" && endpointName?.trim();
+  const steps = [
+    {
+      title: "Request GPU quota",
+      body: "AWS Service Quotas → ap-south-1 → Amazon SageMaker → `ml.g4dn.xlarge for endpoint usage`. Approval takes 1–3 business days. This is the blocking step.",
+      check: "Approved quota ≥ 1",
+    },
+    {
+      title: "Build + push image",
+      body: "From `epocheye_backend`, run `python scripts/create_sam3d_infra.py` then `bash scripts/build_and_push_sam3d.sh`. Expect ~15–20 min on first push.",
+      check: "ECR repo `epocheye-sam3d` has `:latest` image",
+    },
+    {
+      title: "Create async endpoint",
+      body: "Run `python scripts/create_sagemaker_endpoint.py`. Wait ~8 min until the endpoint status is `InService`.",
+      check: "SageMaker endpoint shows `InService`",
+    },
+    {
+      title: "Flip provider in this form",
+      body: "Set Provider = AWS SageMaker, SageMaker endpoint = `epocheye-sam3d`, then Save. A Lens scan should produce a real GLB in ~20s.",
+      check: providerReady ? "Live — scan should work" : "Pending — flip provider + endpoint below",
+    },
+  ];
+
+  return (
+    <div className="bg-[#0d0d0d] border border-white/5 rounded-xl p-5 mb-6">
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <p className="text-xs font-medium text-white/35 uppercase tracking-widest">Deploy SAM 3D</p>
+          <p className="text-sm text-white/60 mt-1">
+            One-time setup to move AR off mock and onto real Meta SAM 3D reconstructions.
+          </p>
+        </div>
+        <span className={`text-xs px-2 py-0.5 rounded-full border ${providerReady ? "text-green-400 bg-green-400/10 border-green-400/20" : "text-amber-400 bg-amber-400/10 border-amber-400/20"}`}>
+          {providerReady ? "Live" : "Not configured"}
+        </span>
+      </div>
+      <ol className="space-y-3">
+        {steps.map((s, i) => (
+          <li key={s.title} className="flex gap-3">
+            <span className="w-6 h-6 shrink-0 rounded-full bg-white/5 border border-white/10 text-white/60 text-xs font-mono flex items-center justify-center">
+              {i + 1}
+            </span>
+            <div className="flex-1">
+              <p className="text-sm text-white">{s.title}</p>
+              <p className="text-xs text-white/45 mt-0.5">{s.body}</p>
+              <p className="text-xs text-white/30 mt-1 italic">Done when: {s.check}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+      <p className="text-xs text-white/25 mt-4">
+        Cost ceiling: async endpoint scales to 0 when idle. Each inference is ~$0.003. Expected dev spend ~$1–5/month.
+      </p>
     </div>
   );
 }

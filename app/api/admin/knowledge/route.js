@@ -22,6 +22,7 @@ export async function GET(request) {
   const sourceName = searchParams.get("source_name");
   const monumentTag = searchParams.get("monument_tag");
   const search = searchParams.get("search");
+  const autoIngested = searchParams.get("auto_ingested"); // "true" | "false" | null
 
   const sql = getHeritageSql();
 
@@ -54,6 +55,12 @@ export async function GET(request) {
     paramIdx++;
   }
 
+  if (autoIngested === "true") {
+    conditions.push(`s.auto_ingested = true`);
+  } else if (autoIngested === "false") {
+    conditions.push(`s.auto_ingested = false`);
+  }
+
   const whereClause =
     conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
 
@@ -72,7 +79,8 @@ export async function GET(request) {
     SELECT c.id, c.chunk_text, c.chunk_index, c.total_chunks,
            c.monument_tags, c.verified, c.verified_at, c.verified_by,
            c.verification_notes, c.created_at,
-           s.source_name, s.source_url, s.document_title
+           s.id AS source_id, s.source_name, s.source_url, s.document_title,
+           s.auto_ingested, s.ingest_method, s.is_active, s.fetched_at
     FROM heritage_knowledge_chunks c
     JOIN heritage_knowledge_sources s ON s.id = c.source_id
     ${whereClause}
