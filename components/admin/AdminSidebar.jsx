@@ -14,6 +14,7 @@ import {
   Activity,
   MessageSquare,
   Sparkles,
+  Crown,
   Settings,
   LogOut,
 } from "lucide-react";
@@ -27,6 +28,7 @@ const NAV = [
   { href: "/admin/notifications", label: "Notifications", icon: Bell },
   { href: "/admin/knowledge", label: "Knowledge", icon: BookOpen },
   { href: "/admin/ar", label: "AR", icon: Box },
+  { href: "/admin/premium", label: "Premium", icon: Crown },
   { href: "/admin/engagement", label: "Engagement", icon: Activity },
   { href: "/admin/chat", label: "Chat", icon: MessageSquare },
   { href: "/admin/recommendations", label: "Recommendations", icon: Sparkles },
