@@ -7,7 +7,13 @@ const Beams = dynamic(() => import("@/components/Beams"), {
 	ssr: false,
 });
 
-const DarkBeamsBackground = ({ opacity = 0.26, scrimOpacity = 0.52, beamProps = {} }) => {
+const DarkBeamsBackground = ({
+	opacity = 0.26,
+	scrimOpacity = 0.52,
+	beamProps = {},
+	disableOnMobile = true,
+	minViewportWidth = 768,
+}) => {
 	const [shouldRenderBeams, setShouldRenderBeams] = useState(false);
 
 	useEffect(() => {
@@ -15,8 +21,16 @@ const DarkBeamsBackground = ({ opacity = 0.26, scrimOpacity = 0.52, beamProps = 
 			window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 		if (prefersReducedMotion) return;
 
+		if (disableOnMobile && window.innerWidth < minViewportWidth) return;
+
 		const saveData = navigator.connection?.saveData === true;
 		if (saveData) return;
+
+		const networkType = navigator.connection?.effectiveType || "";
+		if (networkType.includes("2g") || networkType === "3g") return;
+
+		const cpuCores = navigator.hardwareConcurrency || 0;
+		if (cpuCores > 0 && cpuCores <= 4) return;
 
 		let isEnabled = false;
 		const enable = () => {
@@ -26,8 +40,7 @@ const DarkBeamsBackground = ({ opacity = 0.26, scrimOpacity = 0.52, beamProps = 
 		};
 
 		const idleId = window.requestIdleCallback?.(enable, { timeout: 1200 });
-		const fallbackTimer =
-			idleId === undefined ? window.setTimeout(enable, 1200) : undefined;
+		const fallbackTimer = idleId === undefined ? window.setTimeout(enable, 1200) : undefined;
 
 		return () => {
 			if (idleId !== undefined && window.cancelIdleCallback) {
@@ -37,7 +50,7 @@ const DarkBeamsBackground = ({ opacity = 0.26, scrimOpacity = 0.52, beamProps = 
 				window.clearTimeout(fallbackTimer);
 			}
 		};
-	}, []);
+	}, [disableOnMobile, minViewportWidth]);
 
 	return (
 		<>

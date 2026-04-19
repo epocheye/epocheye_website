@@ -10,5 +10,12 @@ export async function GET() {
   if (context.error) return creatorAuthErrorResponse(context.error);
 
   const overview = await getStatsOverview(context.creator.id);
-  return NextResponse.json({ success: true, data: overview });
+  return NextResponse.json(
+    { success: true, data: overview },
+    {
+      headers: {
+        "Cache-Control": "private, max-age=20, stale-while-revalidate=30",
+      },
+    },
+  );
 }

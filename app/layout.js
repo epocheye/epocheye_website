@@ -5,7 +5,6 @@ import {
   Instrument_Sans,
   Instrument_Serif,
 } from "next/font/google";
-import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 
 const getMetadataBase = () => {
@@ -99,11 +98,6 @@ export const metadata = {
 };
 
 import Script from "next/script";
-import { NotificationProvider, NotificationToast } from "@/components/notifications";
-
-const clerkPublishableKey =
-  process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY ||
-  process.env.CLERK_PUBLISHABLE_KEY;
 
 export default function RootLayout({ children }) {
   return (
@@ -111,12 +105,7 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${montserratAlternates.variable} ${instrumentSans.variable} ${instrumentSerif.variable} antialiased`}
       >
-        <ClerkProvider publishableKey={clerkPublishableKey}>
-          <NotificationProvider>
-            {children}
-            <NotificationToast />
-          </NotificationProvider>
-        </ClerkProvider>
+        {children}
         <Script 
           src="https://tally.so/widgets/embed.js" 
           strategy="lazyOnload"

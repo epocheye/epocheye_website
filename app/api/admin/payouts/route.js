@@ -14,6 +14,33 @@ export async function GET(request) {
     );
   }
 
-  const payouts = await listAllPayouts();
-  return NextResponse.json({ success: true, data: payouts });
+  const { searchParams } = new URL(request.url);
+  const page = Math.max(1, Number.parseInt(searchParams.get("page") || "1", 10));
+  const limit = Math.max(
+    10,
+    Math.min(200, Number.parseInt(searchParams.get("limit") || "25", 10)),
+  );
+  const status = searchParams.get("status") || "all";
+  const offset = (page - 1) * limit;
+
+  const payouts = await listAllPayouts({ status, limit, offset });
+  const totalPages = Math.max(1, Math.ceil(payouts.total / limit));
+
+  return NextResponse.json(
+    {
+      success: true,
+      data: {
+        entries: payouts.entries,
+        total: payouts.total,
+        page,
+        limit,
+        total_pages: totalPages,
+      },
+    },
+    {
+      headers: {
+        "Cache-Control": "private, max-age=30, stale-while-revalidate=30",
+      },
+    },
+  );
 }

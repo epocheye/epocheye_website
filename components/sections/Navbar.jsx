@@ -4,7 +4,6 @@ import Link from "next/link";
 import logoWhite from "../../public/logo-white.png";
 import { ArrowRight, User } from "lucide-react";
 import ShinyText from "../ShinyText";
-import { NotificationBell } from "../notifications";
 
 const Navbar = ({ showLogo = true }) => {
 	return (
@@ -36,19 +35,15 @@ const Navbar = ({ showLogo = true }) => {
 				/>
 			</div>
 
-			{/* Right side: Login + Notification Bell + Join Us */}
+			{/* Right side: Login + Join Us */}
 			<div className="flex items-center gap-2 sm:gap-3 pointer-events-auto">
 				{/* Login Button */}
 				<Link
 					href="/login"
-					className="px-3 py-2 sm:px-4 sm:py-2.5 text-white text-xs sm:text-sm font-medium bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full flex items-center gap-2 transition-all border border-white/20 hover:border-white/30"
-				>
+					className="px-3 py-2 sm:px-4 sm:py-2.5 text-white text-xs sm:text-sm font-medium bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full flex items-center gap-2 transition-all border border-white/20 hover:border-white/30">
 					<User className="w-4 h-4" aria-hidden="true" />
 					<span className="hidden sm:inline">Login</span>
 				</Link>
-
-				{/* Notification Bell */}
-				<NotificationBell />
 
 				{/* Join Us Button */}
 				<button

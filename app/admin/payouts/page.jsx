@@ -7,17 +7,32 @@ export default function AdminPayoutsPage() {
 	const [payouts, setPayouts] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [filter, setFilter] = useState("all");
+	const [page, setPage] = useState(1);
+	const [totalPages, setTotalPages] = useState(1);
 	const [actionId, setActionId] = useState(null);
 	const [copiedId, setCopiedId] = useState(null);
 
-	const fetchPayouts = useCallback(() => {
-		fetch("/api/admin/payouts")
-			.then((r) => r.json())
-			.then((d) => {
-				if (d.success) setPayouts(d.data);
-			})
-			.finally(() => setLoading(false));
-	}, []);
+	const fetchPayouts = useCallback(async () => {
+		setLoading(true);
+
+		try {
+			const params = new URLSearchParams({
+				page: String(page),
+				limit: "25",
+				status: filter,
+			});
+
+			const res = await fetch(`/api/admin/payouts?${params.toString()}`);
+			const json = await res.json();
+
+			if (json.success) {
+				setPayouts(json.data?.entries || []);
+				setTotalPages(json.data?.total_pages || 1);
+			}
+		} finally {
+			setLoading(false);
+		}
+	}, [filter, page]);
 
 	useEffect(() => {
 		fetchPayouts();
@@ -41,7 +56,6 @@ export default function AdminPayoutsPage() {
 		});
 	}
 
-	const filtered = filter === "all" ? payouts : payouts.filter((p) => p.status === filter);
 	const currencySymbol = (currency) => (currency === "INR" ? "₹" : "$");
 
 	return (
@@ -52,7 +66,10 @@ export default function AdminPayoutsPage() {
 					{["all", "pending", "processing", "completed", "failed"].map((f) => (
 						<button
 							key={f}
-							onClick={() => setFilter(f)}
+							onClick={() => {
+								setPage(1);
+								setFilter(f);
+							}}
 							className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors ${
 								filter === f
 									? "bg-white/10 text-white"
@@ -77,7 +94,7 @@ export default function AdminPayoutsPage() {
 					<div className="p-8 flex justify-center">
 						<div className="animate-pulse h-4 w-32 bg-white/10 rounded" />
 					</div>
-				) : filtered.length === 0 ? (
+				) : payouts.length === 0 ? (
 					<p className="px-5 py-8 text-sm text-white/30 text-center">
 						No payouts found
 					</p>
@@ -107,7 +124,7 @@ export default function AdminPayoutsPage() {
 								</tr>
 							</thead>
 							<tbody>
-								{filtered.map((p) => (
+								{payouts.map((p) => (
 									<tr
 										key={p.id}
 										className="border-b border-white/3 hover:bg-white/2 transition-colors">
@@ -205,6 +222,32 @@ export default function AdminPayoutsPage() {
 						</table>
 					</div>
 				)}
+
+				{!loading && totalPages > 1 ? (
+					<div className="flex items-center justify-between border-t border-white/5 px-5 py-3">
+						<p className="text-xs text-white/35">
+							Page {page} of {totalPages}
+						</p>
+						<div className="flex items-center gap-2">
+							<button
+								type="button"
+								disabled={page <= 1}
+								onClick={() => setPage((prev) => Math.max(1, prev - 1))}
+								className="px-3 py-1 text-xs rounded border border-white/10 text-white/60 hover:text-white hover:border-white/25 transition-colors disabled:opacity-35 disabled:cursor-not-allowed">
+								Previous
+							</button>
+							<button
+								type="button"
+								disabled={page >= totalPages}
+								onClick={() =>
+									setPage((prev) => Math.min(totalPages, prev + 1))
+								}
+								className="px-3 py-1 text-xs rounded border border-white/10 text-white/60 hover:text-white hover:border-white/25 transition-colors disabled:opacity-35 disabled:cursor-not-allowed">
+								Next
+							</button>
+						</div>
+					</div>
+				) : null}
 			</div>
 		</div>
 	);

@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef, useState, memo, startTransition } from "react";
+import React, { useEffect, useRef, useState, memo } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ComposableMap, Geographies, Geography, Marker, Graticule } from "react-simple-maps";
@@ -118,7 +118,24 @@ const GlobalReach = () => {
 	const [isMapMounted, setIsMapMounted] = useState(false);
 
 	useEffect(() => {
-		startTransition(() => setIsMapMounted(true));
+		const section = sectionRef.current;
+		if (!section) return;
+
+		const observer = new IntersectionObserver(
+			(entries) => {
+				entries.forEach((entry) => {
+					if (entry.isIntersecting) {
+						setIsMapMounted(true);
+						observer.unobserve(section);
+					}
+				});
+			},
+			{ threshold: 0.1, rootMargin: "120px 0px" },
+		);
+
+		observer.observe(section);
+
+		return () => observer.disconnect();
 	}, []);
 
 	useEffect(() => {

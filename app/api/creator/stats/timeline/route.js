@@ -14,5 +14,12 @@ export async function GET(request) {
   const days = Math.min(90, Math.max(7, Number.isFinite(parsedDays) ? parsedDays : 30));
 
   const timeline = await getStatsTimeline(context.creator.id, days);
-  return NextResponse.json({ success: true, data: timeline });
+  return NextResponse.json(
+    { success: true, data: timeline },
+    {
+      headers: {
+        "Cache-Control": "private, max-age=20, stale-while-revalidate=30",
+      },
+    },
+  );
 }

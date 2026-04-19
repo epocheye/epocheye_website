@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { gsap } from "gsap";
@@ -50,18 +50,27 @@ const creatorsNews = [
 const CredibilityStatement = () => {
 	const sectionRef = useRef(null);
 	const contentRef = useRef(null);
-	const videoRef = useRef(null);
+	const [isInView, setIsInView] = useState(false);
 
 	useEffect(() => {
 		const section = sectionRef.current;
 		const content = contentRef.current;
-		const video = videoRef.current;
 
 		if (!section || !content) return;
 
-		if (video) {
-			video.play().catch(() => {});
-		}
+		const observer = new IntersectionObserver(
+			(entries) => {
+				entries.forEach((entry) => {
+					if (entry.isIntersecting) {
+						setIsInView(true);
+						observer.unobserve(section);
+					}
+				});
+			},
+			{ threshold: 0.1, rootMargin: "100px 0px" },
+		);
+
+		observer.observe(section);
 
 		const ctx = gsap.context(() => {
 			gsap.set(content, { opacity: 0, y: 40 });
@@ -78,7 +87,10 @@ const CredibilityStatement = () => {
 			});
 		}, section);
 
-		return () => ctx.revert();
+		return () => {
+			ctx.revert();
+			observer.disconnect();
+		};
 	}, []);
 
 	return (
@@ -87,17 +99,23 @@ const CredibilityStatement = () => {
 			className="relative flex items-center justify-center overflow-hidden py-24 sm:py-32 lg:py-40 px-6 sm:px-10 lg:px-20"
 			style={{ backgroundColor: "#080808" }}>
 			{/* Video Background */}
-			<video
-				ref={videoRef}
-				className="absolute inset-0 w-full h-full object-cover"
-				src="/bg_2.mp4"
-				autoPlay
-				loop
-				muted
-				playsInline
-				preload="metadata"
-				aria-hidden="true"
-			/>
+			{isInView ? (
+				<video
+					className="absolute inset-0 w-full h-full object-cover"
+					src="/bg_2.mp4"
+					autoPlay
+					loop
+					muted
+					playsInline
+					preload="metadata"
+					aria-hidden="true"
+				/>
+			) : (
+				<div
+					className="absolute inset-0 w-full h-full bg-[#080808]"
+					aria-hidden="true"
+				/>
+			)}
 
 			<DarkBeamsBackground
 				opacity={0.2}

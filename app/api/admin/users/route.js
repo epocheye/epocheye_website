@@ -27,7 +27,14 @@ export async function GET(request) {
     if (!res.ok) {
       return NextResponse.json({ success: false, error: res.data?.error || "Backend error" }, { status: res.status });
     }
-    return NextResponse.json({ success: true, data: res.data });
+    return NextResponse.json(
+      { success: true, data: res.data },
+      {
+        headers: {
+          "Cache-Control": "private, max-age=30, stale-while-revalidate=30",
+        },
+      },
+    );
   } catch (err) {
     return NextResponse.json({ success: false, error: err?.message || "Network error" }, { status: 502 });
   }
