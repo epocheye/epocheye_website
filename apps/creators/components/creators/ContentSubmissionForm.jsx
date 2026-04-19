@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { X, Loader2, CheckCircle } from "lucide-react";
 import { creatorFetch } from "@/lib/creatorApi";
+import { trackEvent, EVENT_NAMES } from "@/lib/analytics";
 
 const PLATFORMS = [
 	{ value: "instagram", label: "Instagram" },
@@ -34,6 +35,10 @@ export default function ContentSubmissionForm({ onClose, onSuccess }) {
 			const json = await res.json();
 			if (!json.success) throw new Error(json.error || "Submission failed");
 			setDone(true);
+			trackEvent(EVENT_NAMES.contentSubmitted, {
+				platform: form.platform || "unknown",
+				has_title: Boolean(form.title?.trim()),
+			});
 			setTimeout(() => {
 				onSuccess?.(json.data);
 				onClose?.();

@@ -6,6 +6,7 @@ import {
   Montserrat_Alternates,
 } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
+import { Analytics } from "@vercel/analytics/next";
 
 import "./globals.css";
 
@@ -79,6 +80,7 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} ${montserratAlternates.variable} ${instrumentSans.variable} ${instrumentSerif.variable} antialiased`}
       >
         <ClerkProvider publishableKey={clerkPublishableKey}>{children}</ClerkProvider>
+        <Analytics />
       </body>
     </html>
   );

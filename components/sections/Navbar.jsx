@@ -35,7 +35,7 @@ const Navbar = ({ showLogo = true }) => {
 				/>
 			</div>
 
-			{/* Right side: Login + Join Us */}
+			{/* Right side: Login + Creator CTA + Join Us */}
 			<div className="flex items-center gap-2 sm:gap-3 pointer-events-auto">
 				{/* Login Button */}
 				<Link
@@ -43,6 +43,14 @@ const Navbar = ({ showLogo = true }) => {
 					className="px-3 py-2 sm:px-4 sm:py-2.5 text-white text-xs sm:text-sm font-medium bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full flex items-center gap-2 transition-all border border-white/20 hover:border-white/30">
 					<User className="w-4 h-4" aria-hidden="true" />
 					<span className="hidden sm:inline">Login</span>
+				</Link>
+
+				{/* Creators Program Button */}
+				<Link
+					href="https://creators.epocheye.com/signup"
+					aria-label="Apply to the Epocheye Creators Program"
+					className="px-3 py-2 sm:px-4 sm:py-2.5 text-white text-[11px] sm:text-xs font-semibold uppercase tracking-[0.12em] rounded-full border border-white/30 hover:border-white/45 bg-black/15 hover:bg-black/30 transition-all whitespace-nowrap">
+					Creators
 				</Link>
 
 				{/* Join Us Button */}

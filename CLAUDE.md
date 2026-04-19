@@ -57,17 +57,17 @@ Run both concurrently: `npm run dev` (root) + `cd backend && npm run dev`.
 
 - `/` — Marketing landing page (sections in `components/sections/`)
 - `/login` — Main app auth
-- `/creators` — Creator campaign landing + auth (`/creators/login`, `/creators/signup`)
-- `/creators/dashboard/**` — Protected creator dashboard (overview, content, payouts, settings)
+- `/creators` and `/creators/:path*` — Redirect to dedicated creators app at `https://creators.epocheye.com`
+- Creator auth + dashboard are served from `apps/creators` using `/login`, `/signup`, `/dashboard/**`
 - `/r/[code]` — Referral click tracking route handler (records click, redirects to `/?ref=CODE`)
 
 ### Two Separate Auth Systems
 
 **Main app auth** (`lib/authService.js`): localStorage keys `jwt_token`, `user_data`. Talks to external API at `NEXT_PUBLIC_API_URL`.
 
-**Creator auth** (`lib/creatorAuthService.js`): localStorage keys `creator_jwt`, `creator_refresh_token`, `creator_data`. Talks to creator backend at `NEXT_PUBLIC_CREATOR_API_URL`. Separate JWT issuer (`epocheye-creators`), separate secrets. `creatorFetch()` auto-attaches Bearer token and retries on 401.
+**Creator auth** (`apps/creators` + Clerk): sign-in/sign-up pages live at `apps/creators/app/login/[[...rest]]` and `apps/creators/app/signup/[[...rest]]`, using Clerk path routing. Post-auth routes use the creators app dashboard under `/dashboard/**`.
 
-Dashboard pages in `app/creators/dashboard/` are protected by an `<AuthGuard>` in `app/creators/dashboard/layout.jsx` that checks `isCreatorAuthenticated()` on mount and redirects to `/creators/login` if unauthenticated.
+Creator route constants are centralized in `apps/creators/lib/creatorRoutes.js` so path changes stay env-driven and consistent across environments.
 
 ### Creator Campaign Backend
 

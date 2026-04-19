@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Copy, Check, ExternalLink, Download, QrCode } from "lucide-react";
+import { trackEvent, EVENT_NAMES } from "@/lib/analytics";
 
 const MAIN_SITE_ORIGIN = (
 	process.env.NEXT_PUBLIC_MAIN_SITE_ORIGIN || "https://epocheye.com"
@@ -34,18 +35,32 @@ export default function PromoCodeWidget({ code }) {
 		};
 	}, [code, referralLink]);
 
-	const copy = async (text, setFn) => {
-		await navigator.clipboard.writeText(text);
-		setFn(true);
-		setTimeout(() => setFn(false), 2000);
+	const copy = async (text, setFn, eventName) => {
+		try {
+			await navigator.clipboard.writeText(text);
+			trackEvent(eventName);
+			setFn(true);
+			setTimeout(() => setFn(false), 2000);
+		} catch {
+			// Clipboard access can fail on unsupported contexts.
+		}
 	};
 
 	const downloadQr = () => {
 		if (!qrDataUrl) return;
+		trackEvent(EVENT_NAMES.promoQrDownloaded);
 		const a = document.createElement("a");
 		a.href = qrDataUrl;
 		a.download = `epocheye-${code}-qr.png`;
 		a.click();
+	};
+
+	const toggleQr = () => {
+		setShowQr((v) => {
+			const next = !v;
+			if (next) trackEvent(EVENT_NAMES.promoQrShown);
+			return next;
+		});
 	};
 
 	if (!code) {
@@ -70,7 +85,7 @@ export default function PromoCodeWidget({ code }) {
 						{code}
 					</span>
 					<button
-						onClick={() => copy(code, setCodeCopied)}
+						onClick={() => copy(code, setCodeCopied, EVENT_NAMES.promoCodeCopied)}
 						className="flex items-center gap-1.5 px-3 py-1.5 border border-white/15 rounded-lg text-xs text-white/50 hover:text-white hover:border-white/30 transition-all duration-200"
 						aria-label="Copy promo code">
 						{codeCopied ? (
@@ -84,11 +99,13 @@ export default function PromoCodeWidget({ code }) {
 
 				{/* Referral link */}
 				<button
-					onClick={() => copy(referralLink, setLinkCopied)}
+					onClick={() =>
+						copy(referralLink, setLinkCopied, EVENT_NAMES.referralLinkCopied)
+					}
 					className="flex items-center gap-2 px-4 py-2 border border-white/10 rounded-lg text-xs text-white/40 hover:text-white/70 hover:border-white/25 transition-all duration-200 max-w-full overflow-hidden"
 					aria-label="Copy referral link">
 					<ExternalLink className="w-3.5 h-3.5 shrink-0" />
-					<span className="truncate max-w-[180px] font-mono">
+					<span className="truncate max-w-45 font-mono">
 						{linkCopied ? "Link copied!" : referralLinkLabel}
 					</span>
 					{linkCopied ? (
@@ -103,7 +120,7 @@ export default function PromoCodeWidget({ code }) {
 			<div className="mt-5 pt-5 border-t border-white/5">
 				<div className="flex items-center justify-between">
 					<button
-						onClick={() => setShowQr((v) => !v)}
+						onClick={toggleQr}
 						className="flex items-center gap-2 text-xs text-white/40 hover:text-white/70 transition-colors duration-200">
 						<QrCode className="w-3.5 h-3.5" />
 						{showQr ? "Hide QR code" : "Show QR code"}

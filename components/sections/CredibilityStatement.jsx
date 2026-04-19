@@ -40,8 +40,8 @@ const creatorsNews = [
 		title: "Live Dashboard + Payout Tracking Enabled",
 		description:
 			"Early creators are now viewing clicks, conversions, and payout requests from one focused dashboard.",
-		href: "https://creators.epocheye.com",
-		linkLabel: "Explore the Program",
+		href: "https://creators.epocheye.com/login",
+		linkLabel: "Creator Login",
 		image: "/img10.webp",
 		alt: "Ancient architecture featured in creator content",
 	},

@@ -1,19 +1,31 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import { MousePointerClick, ArrowRightLeft, DollarSign, Wallet } from "lucide-react";
 import { creatorFetch } from "@/lib/creatorApi";
+import { trackEvent, EVENT_NAMES } from "@/lib/analytics";
+import { CREATOR_ROUTES } from "@/lib/creatorRoutes";
 import StatsCard from "@/components/creators/StatsCard";
 import PromoCodeWidget from "@/components/creators/PromoCodeWidget";
 import ReferralChart from "@/components/creators/ReferralChart";
 
 export default function DashboardOverview() {
+	const router = useRouter();
+	const searchParams = useSearchParams();
 	const { user } = useUser();
 	const [stats, setStats] = useState(null);
 	const [timeline, setTimeline] = useState([]);
 	const [promoCode, setPromoCode] = useState(null);
 	const [loading, setLoading] = useState(true);
+
+	useEffect(() => {
+		if (searchParams.get("signup") !== "1") return;
+
+		trackEvent(EVENT_NAMES.signUpCompleted, { source: "signup_redirect" });
+		router.replace(CREATOR_ROUTES.dashboard, { scroll: false });
+	}, [router, searchParams]);
 
 	useEffect(() => {
 		async function load() {

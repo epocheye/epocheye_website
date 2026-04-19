@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Loader2, AlertCircle } from "lucide-react";
 import { creatorFetch } from "@/lib/creatorApi";
+import { trackEvent, EVENT_NAMES } from "@/lib/analytics";
 import { CREATOR_DASHBOARD_ROUTES } from "@/lib/creatorRoutes";
 
 const STATUS_STYLES = {
@@ -13,7 +14,13 @@ const STATUS_STYLES = {
 	failed: "text-red-400",
 };
 
-export default function PayoutSection({ available, payouts, upiId, minPayout = 500, onPayoutRequested }) {
+export default function PayoutSection({
+	available,
+	payouts,
+	upiId,
+	minPayout = 500,
+	onPayoutRequested,
+}) {
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState("");
 
@@ -23,7 +30,9 @@ export default function PayoutSection({ available, payouts, upiId, minPayout = 5
 			return;
 		}
 		if (available < minPayout) {
-			setError(`Minimum payout is ₹${minPayout}. You have ₹${available?.toFixed(2)} available.`);
+			setError(
+				`Minimum payout is ₹${minPayout}. You have ₹${available?.toFixed(2)} available.`,
+			);
 			return;
 		}
 		setIsLoading(true);
@@ -32,6 +41,10 @@ export default function PayoutSection({ available, payouts, upiId, minPayout = 5
 			const res = await creatorFetch("/api/creator/payouts/request", { method: "POST" });
 			const json = await res.json();
 			if (!json.success) throw new Error(json.error);
+			trackEvent(EVENT_NAMES.payoutRequestSubmitted, {
+				has_upi_id: Boolean(upiId),
+				min_payout_inr: minPayout,
+			});
 			onPayoutRequested?.();
 		} catch (err) {
 			setError(err.message);
