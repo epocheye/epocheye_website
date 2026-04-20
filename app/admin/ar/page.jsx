@@ -183,6 +183,9 @@ export default function AdminArPage() {
       {/* SAM 3D deploy runbook */}
       <SamDeployCard currentProvider={form.provider} endpointName={form.sagemaker_endpoint} />
 
+      {/* Live endpoint state + force-stop (only relevant when provider is SageMaker). */}
+      {form.provider === "sagemaker" ? <SamEndpointLiveCard /> : null}
+
       {/* Stats cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
         <StatCard label="24h success rate" value={stats?.success_rate_24h != null ? `${Math.round(stats.success_rate_24h * 100)}%` : "—"} />
@@ -512,6 +515,124 @@ function SamDeployCard({ currentProvider, endpointName }) {
       <p className="text-xs text-white/25 mt-4">
         Cost ceiling: async endpoint scales to 0 when idle. Each inference is ~$0.003. Expected dev spend ~$1–5/month.
       </p>
+    </div>
+  );
+}
+
+const SAM_STATUS_COLORS = {
+  in_service: "text-green-400 bg-green-400/10 border-green-400/20",
+  creating: "text-amber-400 bg-amber-400/10 border-amber-400/20",
+  updating: "text-amber-400 bg-amber-400/10 border-amber-400/20",
+  rolling_back: "text-amber-400 bg-amber-400/10 border-amber-400/20",
+  deleting: "text-white/50 bg-white/5 border-white/10",
+  stopped: "text-white/50 bg-white/5 border-white/10",
+  failed: "text-red-400 bg-red-400/10 border-red-400/20",
+};
+
+function SamEndpointLiveCard() {
+  const [state, setState] = useState(null);
+  const [err, setErr] = useState(null);
+  const [stopping, setStopping] = useState(false);
+  const [stopMsg, setStopMsg] = useState(null);
+
+  const load = useCallback(async () => {
+    try {
+      const res = await fetch("/api/admin/ar/sagemaker/status", { cache: "no-store" });
+      const json = await res.json();
+      if (!json.success) {
+        setErr(json.error || "Failed to load status");
+        return;
+      }
+      setErr(null);
+      setState(json.data);
+    } catch (e) {
+      setErr(e?.message || "Network error");
+    }
+  }, []);
+
+  useEffect(() => {
+    load();
+    const id = setInterval(load, 15000);
+    return () => clearInterval(id);
+  }, [load]);
+
+  async function handleForceStop() {
+    if (!confirm("Force-stop the SAM 3D endpoint now? Any in-flight reconstructions will fail.")) return;
+    setStopping(true);
+    setStopMsg(null);
+    try {
+      const res = await fetch("/api/admin/ar/sagemaker/stop", { method: "POST" });
+      const json = await res.json();
+      if (!res.ok || !json.success) {
+        setStopMsg({ type: "error", text: json.error || "Failed to stop" });
+      } else {
+        setStopMsg({ type: "success", text: "Delete requested — status will flip to `deleting` on next tick." });
+        await load();
+      }
+    } catch {
+      setStopMsg({ type: "error", text: "Network error — please try again" });
+    } finally {
+      setStopping(false);
+    }
+  }
+
+  const status = state?.status || "unknown";
+  const statusColor = SAM_STATUS_COLORS[status] || "text-white/50 bg-white/5 border-white/10";
+  const canForceStop = status === "in_service" || status === "creating" || status === "updating";
+
+  return (
+    <div className="bg-[#0d0d0d] border border-white/5 rounded-xl p-5 mb-6">
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <p className="text-xs font-medium text-white/35 uppercase tracking-widest">Live endpoint state</p>
+          <p className="text-sm text-white/60 mt-1">
+            Endpoint auto-starts on first scan and auto-stops after {state?.idle_timeout_minutes ?? 15} min idle. Force stop only to kill a hung endpoint.
+          </p>
+        </div>
+        <span className={`text-xs px-2 py-0.5 rounded-full border ${statusColor}`}>
+          {status.replace("_", " ")}
+        </span>
+      </div>
+
+      {err ? (
+        <p className="text-xs text-red-400 mb-3">{err}</p>
+      ) : null}
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+        <StatCard label="AWS raw" value={state?.aws_raw_status ?? "—"} />
+        <StatCard label="Last active" value={formatDate(state?.last_active_at)} />
+        <StatCard label="Warmup started" value={formatDate(state?.warmup_started_at)} />
+        <StatCard label="Last shutdown" value={formatDate(state?.last_shutdown_at)} />
+      </div>
+
+      <div className="grid grid-cols-2 gap-3 mb-4">
+        <StatCard label="Pending jobs (1h)" value={state?.pending_jobs ?? 0} />
+        <StatCard label="Processing jobs (1h)" value={state?.processing_jobs ?? 0} />
+      </div>
+
+      {state?.failure_reason ? (
+        <p className="text-xs text-red-400 mb-3">Failure reason: {state.failure_reason}</p>
+      ) : null}
+
+      <div className="flex items-center justify-between gap-4 pt-2 border-t border-white/5">
+        <p className="text-xs text-white/30">
+          Endpoint: <span className="font-mono text-white/50">{state?.endpoint_name ?? "—"}</span>
+        </p>
+        <button
+          type="button"
+          onClick={handleForceStop}
+          disabled={!canForceStop || stopping}
+          className="text-xs px-3 py-1.5 rounded-lg border border-red-400/30 text-red-400 bg-red-400/5 hover:bg-red-400/10 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+        >
+          {stopping ? "Stopping…" : "Force stop now"}
+        </button>
+      </div>
+
+      {stopMsg ? (
+        <p className={`text-xs mt-3 ${stopMsg.type === "error" ? "text-red-400" : "text-green-400"}`}>
+          {stopMsg.text}
+        </p>
+      ) : null}
     </div>
   );
 }
