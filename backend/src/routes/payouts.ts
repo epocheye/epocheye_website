@@ -41,6 +41,14 @@ router.post("/request", requireAuth, async (req: AuthRequest, res: Response) => 
     return;
   }
 
+  if (creator.status !== "active") {
+    res.status(403).json({
+      success: false,
+      error: "Account is not active. Contact support.",
+    });
+    return;
+  }
+
   if (!creator.upi_id) {
     res.status(400).json({
       success: false,

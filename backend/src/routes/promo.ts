@@ -1,6 +1,23 @@
 import { Router, Request, Response } from "express";
+import { timingSafeEqual } from "node:crypto";
+import rateLimit from "express-rate-limit";
 import { z } from "zod";
 import { requireAuth } from "../middleware/auth";
+
+const clickLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { success: false, error: "Too many requests" },
+});
+
+function safeEqual(a: string, b: string): boolean {
+  const ab = Buffer.from(a);
+  const bb = Buffer.from(b);
+  if (ab.length !== bb.length) return false;
+  return timingSafeEqual(ab, bb);
+}
 import {
   getPromoCodeByCreator,
   getPromoCodeByCode,
@@ -36,7 +53,7 @@ router.get("/", requireAuth, async (req: AuthRequest, res: Response) => {
 });
 
 // POST /api/creator/promo/click — record a link click (public, called by /r/[code] route)
-router.post("/click", async (req: Request, res: Response) => {
+router.post("/click", clickLimiter, async (req: Request, res: Response) => {
   const result = clickSchema.safeParse(req.body);
   if (!result.success) {
     res.status(400).json({ success: false, error: result.error.issues[0].message });
@@ -96,7 +113,12 @@ router.post("/validate", async (req: Request, res: Response) => {
 // Protected by X-Webhook-Secret header
 router.post("/redeem", async (req: Request, res: Response) => {
   const webhookSecret = req.headers["x-webhook-secret"];
-  if (!webhookSecret || webhookSecret !== process.env.WEBHOOK_SECRET) {
+  const expectedSecret = process.env.WEBHOOK_SECRET;
+  if (!expectedSecret) {
+    res.status(500).json({ success: false, error: "Webhook secret not configured" });
+    return;
+  }
+  if (typeof webhookSecret !== "string" || !safeEqual(webhookSecret, expectedSecret)) {
     res.status(401).json({ success: false, error: "Invalid webhook secret" });
     return;
   }

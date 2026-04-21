@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.getAdminSettings = getAdminSettings;
 exports.getAvailableBalance = getAvailableBalance;
 exports.requestPayout = requestPayout;
 exports.listPayouts = listPayouts;
@@ -7,16 +8,34 @@ exports.listAllPayouts = listAllPayouts;
 exports.updatePayoutStatus = updatePayoutStatus;
 const supabase_1 = require("../lib/supabase");
 const razorpay_1 = require("../lib/razorpay");
-const MIN_PAYOUT_USD = 10;
-// Approximate USD to INR conversion — in production, fetch live rate
-const USD_TO_INR = 83;
+async function getAdminSettings() {
+    const { data } = await supabase_1.supabase
+        .from("admin_settings")
+        .select("*")
+        .eq("id", 1)
+        .single();
+    return {
+        min_payout_inr: Number(data?.min_payout_inr ?? 500),
+        default_commission_rate: Number(data?.default_commission_rate ?? 10),
+        razorpay_payouts_enabled: data?.razorpay_payouts_enabled !== false,
+        conversion_confirm_days: Number(data?.conversion_confirm_days ?? 7),
+    };
+}
 async function getAvailableBalance(creatorId) {
+    const settings = await getAdminSettings();
+    const cutoff = new Date(Date.now() - settings.conversion_confirm_days * 24 * 60 * 60 * 1000).toISOString();
     const { data: confirmedData } = await supabase_1.supabase
         .from("referral_conversions")
-        .select("commission_amount")
-        .eq("creator_id", creatorId)
-        .eq("status", "confirmed");
-    const confirmed = (confirmedData ?? []).reduce((sum, r) => sum + Number(r.commission_amount), 0);
+        .select("commission_amount, status, converted_at")
+        .eq("creator_id", creatorId);
+    const confirmed = (confirmedData ?? []).reduce((sum, r) => {
+        const isConfirmed = r.status === "confirmed";
+        const isAutoConfirmed = r.status === "pending" && r.converted_at <= cutoff;
+        if (isConfirmed || isAutoConfirmed) {
+            return sum + Number(r.commission_amount);
+        }
+        return sum;
+    }, 0);
     const { data: payoutData } = await supabase_1.supabase
         .from("payout_requests")
         .select("amount")
@@ -26,18 +45,19 @@ async function getAvailableBalance(creatorId) {
     return parseFloat(Math.max(0, confirmed - requested).toFixed(2));
 }
 async function requestPayout(params) {
+    const settings = await getAdminSettings();
     const available = await getAvailableBalance(params.creatorId);
-    if (available < MIN_PAYOUT_USD) {
-        throw new Error(`Minimum payout is $${MIN_PAYOUT_USD}. Your available balance is $${available.toFixed(2)}.`);
+    if (available < settings.min_payout_inr) {
+        throw new Error(`Minimum payout is ₹${settings.min_payout_inr}. Your available balance is ₹${available.toFixed(2)}.`);
     }
-    // Insert payout request first
+    const status = settings.razorpay_payouts_enabled ? "processing" : "pending";
     const { data: pr, error: prError } = await supabase_1.supabase
         .from("payout_requests")
         .insert({
         creator_id: params.creatorId,
         amount: available,
-        currency: "USD",
-        status: "processing",
+        currency: "INR",
+        status,
         upi_id: params.upiId,
     })
         .select()
@@ -45,17 +65,19 @@ async function requestPayout(params) {
     if (prError || !pr) {
         throw new Error(prError?.message ?? "Failed to create payout request");
     }
-    // Initiate Razorpay payout (INR conversion)
+    if (!settings.razorpay_payouts_enabled) {
+        return pr;
+    }
+    // Initiate Razorpay payout — amount is already in INR, convert to paise
     try {
-        const amountInr = Math.round(available * USD_TO_INR * 100); // paise
+        const amountPaise = Math.round(available * 100);
         const rzpPayout = await (0, razorpay_1.createUpiPayout)({
             upiId: params.upiId,
-            amountPaise: amountInr,
+            amountPaise,
             creatorName: params.creatorName,
             referenceId: pr.id,
             notes: { creator_id: params.creatorId, payout_request_id: pr.id },
         });
-        // Update with Razorpay ID
         await supabase_1.supabase
             .from("payout_requests")
             .update({ razorpay_payout_id: rzpPayout.id })
@@ -63,7 +85,6 @@ async function requestPayout(params) {
         return { ...pr, razorpay_payout_id: rzpPayout.id };
     }
     catch (err) {
-        // If Razorpay fails, mark payout as failed
         await supabase_1.supabase
             .from("payout_requests")
             .update({ status: "failed" })

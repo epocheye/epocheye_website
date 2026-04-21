@@ -14,6 +14,7 @@ const eslintConfig = defineConfig([
     "apps/**/.next/**",
     "apps/**/out/**",
     "apps/**/build/**",
+    "apps/**/.open-next/**",
   ]),
 ]);
 

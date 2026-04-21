@@ -8,6 +8,17 @@ import { ContentSubmission } from "../types";
 
 const router = Router();
 
+const uuidSchema = z.string().uuid();
+
+function parseUuidParam(req: Request, res: Response): string | null {
+  const parsed = uuidSchema.safeParse(req.params["id"]);
+  if (!parsed.success) {
+    res.status(400).json({ success: false, error: "Invalid id" });
+    return null;
+  }
+  return parsed.data;
+}
+
 const updateCreatorSchema = z.object({
   commission_rate: z.number().min(5).max(20).optional(),
   customer_discount: z.number().min(0).max(30).optional(),
@@ -31,8 +42,10 @@ router.get("/creators", requireAdmin, async (_req: Request, res: Response) => {
 
 // GET /api/admin/creators/:id
 router.get("/creators/:id", requireAdmin, async (req: Request, res: Response) => {
+  const id = parseUuidParam(req, res);
+  if (!id) return;
   const { findCreatorById } = await import("../services/creatorService");
-  const creator = await findCreatorById(req.params["id"] as string);
+  const creator = await findCreatorById(id);
   if (!creator) {
     res.status(404).json({ success: false, error: "Creator not found" });
     return;
@@ -42,13 +55,15 @@ router.get("/creators/:id", requireAdmin, async (req: Request, res: Response) =>
 
 // PUT /api/admin/creators/:id
 router.put("/creators/:id", requireAdmin, async (req: Request, res: Response) => {
+  const id = parseUuidParam(req, res);
+  if (!id) return;
   const result = updateCreatorSchema.safeParse(req.body);
   if (!result.success) {
     res.status(400).json({ success: false, error: result.error.issues[0].message });
     return;
   }
 
-  const updated = await updateCreator(req.params["id"] as string, result.data);
+  const updated = await updateCreator(id, result.data);
   res.json({ success: true, data: toPublicProfile(updated) });
 });
 
@@ -60,13 +75,15 @@ router.get("/payouts", requireAdmin, async (_req: Request, res: Response) => {
 
 // PUT /api/admin/payouts/:id
 router.put("/payouts/:id", requireAdmin, async (req: Request, res: Response) => {
+  const id = parseUuidParam(req, res);
+  if (!id) return;
   const result = updatePayoutSchema.safeParse(req.body);
   if (!result.success) {
     res.status(400).json({ success: false, error: result.error.issues[0].message });
     return;
   }
 
-  await updatePayoutStatus(req.params["id"] as string, result.data.status);
+  await updatePayoutStatus(id, result.data.status);
   res.json({ success: true, message: "Payout updated" });
 });
 
@@ -87,6 +104,8 @@ router.get("/content", requireAdmin, async (_req: Request, res: Response) => {
 
 // PUT /api/admin/content/:id
 router.put("/content/:id", requireAdmin, async (req: Request, res: Response) => {
+  const id = parseUuidParam(req, res);
+  if (!id) return;
   const result = updateContentSchema.safeParse(req.body);
   if (!result.success) {
     res.status(400).json({ success: false, error: result.error.issues[0].message });
@@ -97,7 +116,7 @@ router.put("/content/:id", requireAdmin, async (req: Request, res: Response) => 
   if (result.data.admin_notes !== undefined) updates.admin_notes = result.data.admin_notes;
   if (result.data.status !== "pending") updates.reviewed_at = new Date().toISOString();
 
-  await supabase.from("content_submissions").update(updates).eq("id", req.params.id);
+  await supabase.from("content_submissions").update(updates).eq("id", id);
   res.json({ success: true, message: "Content updated" });
 });
 

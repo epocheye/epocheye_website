@@ -1,4 +1,12 @@
 import { Request, Response, NextFunction } from "express";
+import { timingSafeEqual } from "node:crypto";
+
+function safeEqual(a: string, b: string): boolean {
+  const ab = Buffer.from(a);
+  const bb = Buffer.from(b);
+  if (ab.length !== bb.length) return false;
+  return timingSafeEqual(ab, bb);
+}
 
 export function requireAdmin(req: Request, res: Response, next: NextFunction): void {
   const adminKey = req.headers["x-admin-key"];
@@ -9,7 +17,7 @@ export function requireAdmin(req: Request, res: Response, next: NextFunction): v
     return;
   }
 
-  if (!adminKey || adminKey !== expectedKey) {
+  if (typeof adminKey !== "string" || !safeEqual(adminKey, expectedKey)) {
     res.status(403).json({ success: false, error: "Forbidden" });
     return;
   }

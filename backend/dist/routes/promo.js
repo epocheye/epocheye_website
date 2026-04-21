@@ -1,8 +1,27 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
+const node_crypto_1 = require("node:crypto");
+const express_rate_limit_1 = __importDefault(require("express-rate-limit"));
 const zod_1 = require("zod");
 const auth_1 = require("../middleware/auth");
+const clickLimiter = (0, express_rate_limit_1.default)({
+    windowMs: 60 * 1000,
+    max: 20,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { success: false, error: "Too many requests" },
+});
+function safeEqual(a, b) {
+    const ab = Buffer.from(a);
+    const bb = Buffer.from(b);
+    if (ab.length !== bb.length)
+        return false;
+    return (0, node_crypto_1.timingSafeEqual)(ab, bb);
+}
 const promoService_1 = require("../services/promoService");
 const creatorService_1 = require("../services/creatorService");
 const router = (0, express_1.Router)();
@@ -27,7 +46,7 @@ router.get("/", auth_1.requireAuth, async (req, res) => {
     res.json({ success: true, data: promo });
 });
 // POST /api/creator/promo/click — record a link click (public, called by /r/[code] route)
-router.post("/click", async (req, res) => {
+router.post("/click", clickLimiter, async (req, res) => {
     const result = clickSchema.safeParse(req.body);
     if (!result.success) {
         res.status(400).json({ success: false, error: result.error.issues[0].message });
@@ -81,7 +100,12 @@ router.post("/validate", async (req, res) => {
 // Protected by X-Webhook-Secret header
 router.post("/redeem", async (req, res) => {
     const webhookSecret = req.headers["x-webhook-secret"];
-    if (!webhookSecret || webhookSecret !== process.env.WEBHOOK_SECRET) {
+    const expectedSecret = process.env.WEBHOOK_SECRET;
+    if (!expectedSecret) {
+        res.status(500).json({ success: false, error: "Webhook secret not configured" });
+        return;
+    }
+    if (typeof webhookSecret !== "string" || !safeEqual(webhookSecret, expectedSecret)) {
         res.status(401).json({ success: false, error: "Invalid webhook secret" });
         return;
     }

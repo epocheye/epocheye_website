@@ -7,22 +7,36 @@ const payoutService_1 = require("../services/payoutService");
 const router = (0, express_1.Router)();
 // GET /api/creator/payouts
 router.get("/", auth_1.requireAuth, async (req, res) => {
-    const [payouts, balance] = await Promise.all([
+    const [payouts, balance, settings] = await Promise.all([
         (0, payoutService_1.listPayouts)(req.creator.sub),
         (0, payoutService_1.getAvailableBalance)(req.creator.sub),
+        (0, payoutService_1.getAdminSettings)(),
     ]);
-    res.json({ success: true, data: { payouts, available_balance: balance } });
+    res.json({
+        success: true,
+        data: { payouts, available_balance: balance, min_payout_inr: settings.min_payout_inr },
+    });
 });
 // GET /api/creator/payouts/balance
 router.get("/balance", auth_1.requireAuth, async (req, res) => {
-    const balance = await (0, payoutService_1.getAvailableBalance)(req.creator.sub);
-    res.json({ success: true, data: { available_balance: balance } });
+    const [balance, settings] = await Promise.all([
+        (0, payoutService_1.getAvailableBalance)(req.creator.sub),
+        (0, payoutService_1.getAdminSettings)(),
+    ]);
+    res.json({ success: true, data: { available_balance: balance, min_payout_inr: settings.min_payout_inr } });
 });
 // POST /api/creator/payouts/request
 router.post("/request", auth_1.requireAuth, async (req, res) => {
     const creator = await (0, creatorService_1.findCreatorById)(req.creator.sub);
     if (!creator) {
         res.status(404).json({ success: false, error: "Creator not found" });
+        return;
+    }
+    if (creator.status !== "active") {
+        res.status(403).json({
+            success: false,
+            error: "Account is not active. Contact support.",
+        });
         return;
     }
     if (!creator.upi_id) {
