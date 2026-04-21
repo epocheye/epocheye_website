@@ -58,7 +58,7 @@ export default function AdminContentPage() {
 	}
 
 	return (
-		<div className="p-8">
+		<div className="p-4 md:p-8">
 			<div className="flex flex-wrap items-center justify-between gap-3 mb-6">
 				<h1 className="text-lg font-semibold text-white">Content submissions</h1>
 

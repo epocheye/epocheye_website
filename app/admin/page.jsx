@@ -32,7 +32,7 @@ export default async function AdminOverviewPage() {
   ]);
 
   return (
-    <div className="p-8">
+    <div className="p-4 md:p-8">
       <h1 className="text-lg font-semibold text-white mb-6">Overview</h1>
 
       {/* Stats grid */}

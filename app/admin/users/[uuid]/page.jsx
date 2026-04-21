@@ -78,7 +78,7 @@ export default function AdminUserDetailPage({ params }) {
 
   if (loading) {
     return (
-      <div className="p-8 md:p-12 max-w-5xl">
+      <div className="p-4 md:p-12 max-w-5xl">
         <div className="h-8 w-60 bg-white/5 rounded animate-pulse mb-8" />
         <div className="space-y-4">
           {[...Array(4)].map((_, i) => <div key={i} className="h-24 bg-white/3 rounded-xl animate-pulse" />)}
@@ -89,7 +89,7 @@ export default function AdminUserDetailPage({ params }) {
 
   if (!user) {
     return (
-      <div className="p-8 md:p-12 max-w-5xl">
+      <div className="p-4 md:p-12 max-w-5xl">
         <Link href="/admin/users" className="text-xs text-white/40 hover:text-white/70">← Back to users</Link>
         <p className="mt-6 text-white/50">User not found.</p>
       </div>
@@ -99,7 +99,7 @@ export default function AdminUserDetailPage({ params }) {
   const engagement = user.engagement || {};
 
   return (
-    <div className="p-8 md:p-12 max-w-5xl">
+    <div className="p-4 md:p-12 max-w-5xl">
       <Link href="/admin/users" className="text-xs text-white/40 hover:text-white/70">← Back to users</Link>
 
       <div className="mt-4 mb-8 flex items-start justify-between gap-4 flex-wrap">

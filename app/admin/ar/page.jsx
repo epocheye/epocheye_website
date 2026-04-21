@@ -160,7 +160,7 @@ export default function AdminArPage() {
 
   if (loading) {
     return (
-      <div className="p-8 md:p-12 max-w-5xl">
+      <div className="p-4 md:p-12 max-w-5xl">
         <div className="h-8 w-40 bg-white/5 rounded animate-pulse mb-8" />
         <div className="space-y-4">
           {[...Array(5)].map((_, i) => (
@@ -172,7 +172,7 @@ export default function AdminArPage() {
   }
 
   return (
-    <div className="p-8 md:p-12 max-w-5xl">
+    <div className="p-4 md:p-12 max-w-5xl">
       <div className="mb-8">
         <h1 className="text-xl font-semibold text-white">AR Reconstruction</h1>
         <p className="text-white/35 text-sm mt-1">

@@ -145,7 +145,7 @@ const CredibilityStatement = () => {
 						<article
 							key={i}
 							className="relative overflow-hidden rounded-2xl border border-white/15 bg-black/45 backdrop-blur-sm">
-							<div className="relative h-40 sm:h-44 w-full overflow-hidden">
+							<div className="relative h-32 sm:h-40 md:h-44 w-full overflow-hidden">
 								<Image
 									src={news.image}
 									alt={news.alt}

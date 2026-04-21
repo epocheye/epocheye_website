@@ -104,7 +104,7 @@ export default function AdminEngagementPage() {
 
   if (loading) {
     return (
-      <div className="p-8 md:p-12 max-w-4xl">
+      <div className="p-4 md:p-12 max-w-4xl">
         <div className="h-8 w-40 bg-white/5 rounded animate-pulse mb-8" />
         <div className="space-y-4">
           {[...Array(4)].map((_, i) => <div key={i} className="h-20 bg-white/3 rounded-xl animate-pulse" />)}
@@ -114,7 +114,7 @@ export default function AdminEngagementPage() {
   }
 
   return (
-    <div className="p-8 md:p-12 max-w-4xl">
+    <div className="p-4 md:p-12 max-w-4xl">
       <div className="mb-8 flex items-center justify-between gap-4 flex-wrap">
         <div>
           <h1 className="text-xl font-semibold text-white">Engagement Cron</h1>
@@ -143,7 +143,7 @@ export default function AdminEngagementPage() {
             <Toggle checked={form.enabled} onChange={(v) => setForm((f) => ({ ...f, enabled: v }))} />
           </div>
 
-          <div className="p-5 grid grid-cols-2 gap-4">
+          <div className="p-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
             <NumberField label="Interval (hours)" value={form.interval_hours} onChange={(v) => setForm((f) => ({ ...f, interval_hours: v }))} />
             <NumberField label="Inactivity threshold (hours)" value={form.inactivity_threshold_hours} onChange={(v) => setForm((f) => ({ ...f, inactivity_threshold_hours: v }))} />
             <NumberField label="Per-user cooldown (hours)" value={form.per_user_cooldown_hours} onChange={(v) => setForm((f) => ({ ...f, per_user_cooldown_hours: v }))} />

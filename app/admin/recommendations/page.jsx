@@ -106,7 +106,7 @@ export default function AdminRecommendationsPage() {
 
   if (loading) {
     return (
-      <div className="p-8 md:p-12 max-w-5xl">
+      <div className="p-4 md:p-12 max-w-5xl">
         <div className="h-8 w-40 bg-white/5 rounded animate-pulse mb-8" />
         <div className="space-y-4">
           {[...Array(3)].map((_, i) => <div key={i} className="h-24 bg-white/3 rounded-xl animate-pulse" />)}
@@ -116,7 +116,7 @@ export default function AdminRecommendationsPage() {
   }
 
   return (
-    <div className="p-8 md:p-12 max-w-5xl">
+    <div className="p-4 md:p-12 max-w-5xl">
       <div className="mb-8">
         <h1 className="text-xl font-semibold text-white">Recommendations Scoring</h1>
         <p className="text-white/35 text-sm mt-1">

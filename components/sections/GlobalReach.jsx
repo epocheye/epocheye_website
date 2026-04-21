@@ -232,7 +232,7 @@ const GlobalReach = () => {
 			{/* World Map Container */}
 			<div
 				ref={mapContainerRef}
-				className="relative w-full max-w-[1400px] aspect-2/1 rounded-2xl overflow-hidden border border-white/8"
+				className="relative w-full max-w-[1400px] aspect-square sm:aspect-[2/1] rounded-2xl overflow-hidden border border-white/8"
 				style={{ backgroundColor: "#0d0d0d" }}>
 				{/* Inner shadow for depth */}
 				<div
@@ -255,7 +255,7 @@ const GlobalReach = () => {
 				{/* Floating Tooltip */}
 				{isMapMounted && hoveredLocation !== null && (
 					<div
-						className="absolute z-20 px-4 py-3 pointer-events-none font-montserrat text-white backdrop-blur-sm text-[12px] sm:text-[14px] tracking-[1px] sm:tracking-[2px] rounded-lg transition-all duration-300 animate-fadeIn"
+						className="absolute z-20 px-4 py-3 pointer-events-none font-montserrat text-white backdrop-blur-sm text-[12px] sm:text-[14px] tracking-[1px] sm:tracking-[2px] rounded-lg transition-all duration-300 animate-fadeIn max-w-[80vw]"
 						style={{
 							left: "50%",
 							top: "10%",

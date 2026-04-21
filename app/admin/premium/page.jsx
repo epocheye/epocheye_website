@@ -86,7 +86,7 @@ export default function AdminPremiumPage() {
 
   if (loading) {
     return (
-      <div className="p-8 md:p-12 max-w-3xl">
+      <div className="p-4 md:p-12 max-w-3xl">
         <div className="h-8 w-40 bg-white/5 rounded animate-pulse mb-8" />
         <div className="space-y-4">
           {[...Array(4)].map((_, i) => (
@@ -98,7 +98,7 @@ export default function AdminPremiumPage() {
   }
 
   return (
-    <div className="p-8 md:p-12 max-w-3xl">
+    <div className="p-4 md:p-12 max-w-3xl">
       <div className="mb-8">
         <h1 className="text-xl font-semibold text-white">Epocheye Premium</h1>
         <p className="text-white/35 text-sm mt-1">
@@ -135,7 +135,7 @@ export default function AdminPremiumPage() {
             />
           </div>
 
-          <div className="p-5 grid grid-cols-2 gap-4">
+          <div className="p-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-medium text-white/40 uppercase tracking-widest mb-1.5">
                 Price (INR)

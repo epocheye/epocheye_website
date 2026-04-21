@@ -51,7 +51,7 @@ export default function AdminKnowledgeChunkPage() {
 
   if (loading) {
     return (
-      <div className="p-8">
+      <div className="p-4 md:p-8">
         <p className="text-sm text-white/30">Loading chunk...</p>
       </div>
     );
@@ -59,7 +59,7 @@ export default function AdminKnowledgeChunkPage() {
 
   if (!chunk) {
     return (
-      <div className="p-8">
+      <div className="p-4 md:p-8">
         <p className="text-sm text-white/30">Chunk not found</p>
         <Link href="/admin/knowledge" className="text-xs text-white/40 hover:text-white mt-4 inline-block">
           Back to list
@@ -69,7 +69,7 @@ export default function AdminKnowledgeChunkPage() {
   }
 
   return (
-    <div className="p-8 max-w-4xl">
+    <div className="p-4 md:p-8 max-w-4xl">
       {/* Header */}
       <div className="flex items-center gap-4 mb-6">
         <Link
@@ -87,7 +87,7 @@ export default function AdminKnowledgeChunkPage() {
 
       {/* Source info */}
       <div className="bg-[#0d0d0d] border border-white/5 rounded-xl p-5 mb-4">
-        <div className="grid grid-cols-2 gap-4 text-sm">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
           <div>
             <p className="text-xs text-white/30 mb-1">Source</p>
             <p className="text-white/70">{chunk.source_name}</p>

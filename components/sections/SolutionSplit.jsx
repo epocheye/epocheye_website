@@ -103,7 +103,7 @@ const SolutionSplit = () => {
 			/>
 
 			{/* Ambient glow */}
-			<div className="absolute top-1/3 -left-1/4 w-[500px] h-[500px] bg-white/2 rounded-full blur-[120px] pointer-events-none" />
+			<div className="absolute top-1/3 -left-1/4 w-[300px] h-[300px] sm:w-[400px] sm:h-[400px] md:w-[500px] md:h-[500px] bg-white/2 rounded-full blur-[120px] pointer-events-none" />
 
 			<div className="relative z-10 flex flex-col lg:flex-row min-h-screen">
 				{/* Left Column */}

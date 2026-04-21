@@ -46,7 +46,7 @@ export default function AdminUsersPage() {
 	}, [load]);
 
 	return (
-		<div className="p-8 md:p-12 max-w-6xl">
+		<div className="p-4 md:p-12 max-w-6xl">
 			<div className="mb-8">
 				<h1 className="text-xl font-semibold text-white">Users</h1>
 				<p className="text-white/35 text-sm mt-1">
@@ -90,15 +90,15 @@ export default function AdminUsersPage() {
 							<tr className="text-white/40 text-[10px] uppercase tracking-widest border-b border-white/5">
 								<th className="text-left px-5 py-3 font-medium">Email</th>
 								<th className="text-left px-3 py-3 font-medium">Name</th>
-								<th className="text-left px-3 py-3 font-medium">Joined</th>
-								<th className="text-left px-3 py-3 font-medium">
+								<th className="hidden sm:table-cell text-left px-3 py-3 font-medium">Joined</th>
+								<th className="hidden md:table-cell text-left px-3 py-3 font-medium">
 									Last login
 								</th>
 								<th className="text-center px-3 py-3 font-medium">Tier</th>
-								<th className="text-center px-3 py-3 font-medium">
+								<th className="hidden sm:table-cell text-center px-3 py-3 font-medium">
 									Opt-out
 								</th>
-								<th className="text-right px-5 py-3 font-medium">
+								<th className="hidden md:table-cell text-right px-5 py-3 font-medium">
 									AR today
 								</th>
 							</tr>
@@ -133,10 +133,10 @@ export default function AdminUsersPage() {
 											</Link>
 										</td>
 										<td className="px-3 py-3">{u.name || "—"}</td>
-										<td className="px-3 py-3 text-white/50">
+										<td className="hidden sm:table-cell px-3 py-3 text-white/50">
 											{formatDate(u.created_at)}
 										</td>
-										<td className="px-3 py-3 text-white/50">
+										<td className="hidden md:table-cell px-3 py-3 text-white/50">
 											{formatDate(u.last_login)}
 										</td>
 										<td className="px-3 py-3 text-center">
@@ -150,7 +150,7 @@ export default function AdminUsersPage() {
 												</span>
 											)}
 										</td>
-										<td className="px-3 py-3 text-center">
+										<td className="hidden sm:table-cell px-3 py-3 text-center">
 											{u.engagement_opt_out ? (
 												<span className="px-2 py-0.5 bg-red-400/10 text-red-300 border border-red-400/20 rounded text-[10px]">
 													Opted out
@@ -161,7 +161,7 @@ export default function AdminUsersPage() {
 												</span>
 											)}
 										</td>
-										<td className="px-5 py-3 text-right font-mono text-white/60">
+										<td className="hidden md:table-cell px-5 py-3 text-right font-mono text-white/60">
 											{u.ar_count_today}
 										</td>
 									</tr>

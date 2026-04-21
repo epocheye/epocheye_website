@@ -38,7 +38,7 @@ export default function AdminNotificationsPage() {
   }
 
   return (
-    <div className="p-8 max-w-xl">
+    <div className="p-4 md:p-8 max-w-xl">
       <h1 className="text-lg font-semibold text-white mb-1">Broadcast Notification</h1>
       <p className="text-xs text-white/35 mb-8">
         Sends a push + in-app notification to every registered user.

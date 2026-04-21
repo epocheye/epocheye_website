@@ -63,7 +63,7 @@ export default function AdminChatPage() {
 
   if (loading) {
     return (
-      <div className="p-8 md:p-12 max-w-6xl">
+      <div className="p-4 md:p-12 max-w-6xl">
         <div className="h-8 w-40 bg-white/5 rounded animate-pulse mb-8" />
         <div className="space-y-4">
           {[...Array(4)].map((_, i) => <div key={i} className="h-20 bg-white/3 rounded-xl animate-pulse" />)}
@@ -73,7 +73,7 @@ export default function AdminChatPage() {
   }
 
   return (
-    <div className="p-8 md:p-12 max-w-6xl">
+    <div className="p-4 md:p-12 max-w-6xl">
       <div className="mb-8">
         <h1 className="text-xl font-semibold text-white">Chat Moderation</h1>
         <p className="text-white/35 text-sm mt-1">Plan-tab sessions and messages. Stats are last 7 days.</p>
@@ -110,7 +110,7 @@ export default function AdminChatPage() {
           <div className="px-5 pt-5 pb-3">
             <p className="text-xs font-medium text-white/35 uppercase tracking-widest">Sessions</p>
           </div>
-          <div className="divide-y divide-white/5 max-h-[600px] overflow-y-auto">
+          <div className="divide-y divide-white/5 max-h-[70vh] overflow-y-auto">
             {sessions.length === 0 ? (
               <p className="p-5 text-white/30 text-sm">No sessions.</p>
             ) : (
@@ -144,7 +144,7 @@ export default function AdminChatPage() {
               </button>
             )}
           </div>
-          <div className="max-h-[600px] overflow-y-auto p-5 space-y-3">
+          <div className="max-h-[70vh] overflow-y-auto p-5 space-y-3">
             {detailLoading && <p className="text-white/40 text-sm">Loading\u2026</p>}
             {!detailLoading && !detail && <p className="text-white/30 text-sm">Select a session to view messages.</p>}
             {detail?.messages?.map((m) => (

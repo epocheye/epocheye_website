@@ -130,7 +130,7 @@ export default function AdminKnowledgePage() {
   const totalPages = Math.ceil(total / perPage);
 
   return (
-    <div className="p-8">
+    <div className="p-4 md:p-8">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-lg font-semibold text-white">Heritage Knowledge</h1>
         <div className="flex items-center gap-3">
@@ -148,7 +148,7 @@ export default function AdminKnowledgePage() {
         <div className="bg-[#0d0d0d] border border-white/10 rounded-xl p-5 mb-6">
           <h2 className="text-sm font-medium text-white/70 mb-4">Seed New Heritage Document</h2>
           <form onSubmit={handleEmbed} className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="text-xs text-white/30 block mb-1.5">Source Name *</label>
                 <input
@@ -238,7 +238,7 @@ export default function AdminKnowledgePage() {
 
       {/* Stats strip */}
       {stats && (
-        <div className="grid grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           <StatCard label="Total Chunks" value={stats.total_chunks} />
           <StatCard label="Verified" value={stats.verified_count} color="text-emerald-400" />
           <StatCard label="Unverified" value={stats.unverified_count} color="text-amber-400" />
@@ -312,19 +312,19 @@ export default function AdminKnowledgePage() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-white/5">
-                  <th className="px-5 py-3 text-left text-xs text-white/35 font-medium">Source</th>
+                  <th className="hidden sm:table-cell px-5 py-3 text-left text-xs text-white/35 font-medium">Source</th>
                   <th className="px-5 py-3 text-left text-xs text-white/35 font-medium">Monument</th>
                   <th className="px-5 py-3 text-left text-xs text-white/35 font-medium">Chunk Preview</th>
                   <th className="px-5 py-3 text-center text-xs text-white/35 font-medium">Status</th>
-                  <th className="px-5 py-3 text-left text-xs text-white/35 font-medium">Origin</th>
-                  <th className="px-5 py-3 text-left text-xs text-white/35 font-medium">Verified By</th>
+                  <th className="hidden md:table-cell px-5 py-3 text-left text-xs text-white/35 font-medium">Origin</th>
+                  <th className="hidden lg:table-cell px-5 py-3 text-left text-xs text-white/35 font-medium">Verified By</th>
                   <th className="px-5 py-3" />
                 </tr>
               </thead>
               <tbody>
                 {chunks.map((c) => (
                   <tr key={c.id} className="border-b border-white/3 hover:bg-white/2 transition-colors">
-                    <td className="px-5 py-3 text-white/50 text-xs">{c.source_name}</td>
+                    <td className="hidden sm:table-cell px-5 py-3 text-white/50 text-xs">{c.source_name}</td>
                     <td className="px-5 py-3">
                       <div className="flex flex-wrap gap-1">
                         {(c.monument_tags || []).slice(0, 2).map((tag) => (
@@ -347,7 +347,7 @@ export default function AdminKnowledgePage() {
                         <span className="ml-1 text-xs bg-red-500/10 text-red-400 px-2 py-0.5 rounded-full">Disabled</span>
                       )}
                     </td>
-                    <td className="px-5 py-3 text-xs">
+                    <td className="hidden md:table-cell px-5 py-3 text-xs">
                       {c.auto_ingested ? (
                         <span className="text-xs bg-sky-500/10 text-sky-400 px-2 py-0.5 rounded-full">
                           Auto ({c.ingest_method || "gemini"})
@@ -356,7 +356,7 @@ export default function AdminKnowledgePage() {
                         <span className="text-xs text-white/40">Manual</span>
                       )}
                     </td>
-                    <td className="px-5 py-3 text-white/30 text-xs">{c.verified_by || "—"}</td>
+                    <td className="hidden lg:table-cell px-5 py-3 text-white/30 text-xs">{c.verified_by || "—"}</td>
                     <td className="px-5 py-3 text-right">
                       <div className="flex items-center justify-end gap-2">
                         {c.auto_ingested && c.is_active !== false && (

@@ -61,7 +61,7 @@ export default function AdminCreatorDetailPage() {
 
   if (loading) {
     return (
-      <div className="p-8">
+      <div className="p-4 md:p-8">
         <div className="animate-pulse space-y-4">
           <div className="h-5 w-32 bg-white/5 rounded" />
           <div className="h-48 bg-white/5 rounded-xl" />
@@ -72,14 +72,14 @@ export default function AdminCreatorDetailPage() {
 
   if (!creator) {
     return (
-      <div className="p-8">
+      <div className="p-4 md:p-8">
         <p className="text-white/40">Creator not found.</p>
       </div>
     );
   }
 
   return (
-    <div className="p-8 max-w-2xl">
+    <div className="p-4 md:p-8 max-w-2xl">
       <button
         onClick={() => router.push("/admin/creators")}
         className="flex items-center gap-2 text-xs text-white/35 hover:text-white/60 mb-6 transition-colors">
@@ -96,7 +96,7 @@ export default function AdminCreatorDetailPage() {
       </div>
 
       {/* Read-only info */}
-      <div className="bg-[#0d0d0d] border border-white/5 rounded-xl p-5 mb-6 grid grid-cols-2 gap-4 text-sm">
+      <div className="bg-[#0d0d0d] border border-white/5 rounded-xl p-5 mb-6 grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
         <div>
           <p className="text-xs text-white/30 mb-1">Promo code</p>
           <p className="font-mono text-white/70">{creator.promo_code ?? "—"}</p>
@@ -119,7 +119,7 @@ export default function AdminCreatorDetailPage() {
       <form onSubmit={handleSave} className="bg-[#0d0d0d] border border-white/5 rounded-xl p-5 space-y-5">
         <h2 className="text-sm font-medium text-white">Edit settings</h2>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="block text-xs text-white/40 mb-1.5">
               Commission rate (%) <span className="text-white/25">— creator earns this</span>

@@ -59,7 +59,7 @@ export default function AdminPayoutsPage() {
 	const currencySymbol = (currency) => (currency === "INR" ? "₹" : "$");
 
 	return (
-		<div className="p-8">
+		<div className="p-4 md:p-8">
 			<div className="flex items-center justify-between mb-2">
 				<h1 className="text-lg font-semibold text-white">Payouts</h1>
 				<div className="flex gap-1.5">
@@ -109,13 +109,13 @@ export default function AdminPayoutsPage() {
 									<th className="px-5 py-3 text-right text-xs text-white/35 font-medium">
 										Amount
 									</th>
-									<th className="px-5 py-3 text-left text-xs text-white/35 font-medium">
+									<th className="hidden md:table-cell px-5 py-3 text-left text-xs text-white/35 font-medium">
 										UPI ID
 									</th>
 									<th className="px-5 py-3 text-center text-xs text-white/35 font-medium">
 										Status
 									</th>
-									<th className="px-5 py-3 text-right text-xs text-white/35 font-medium">
+									<th className="hidden sm:table-cell px-5 py-3 text-right text-xs text-white/35 font-medium">
 										Requested
 									</th>
 									<th className="px-5 py-3 text-right text-xs text-white/35 font-medium">
@@ -145,7 +145,7 @@ export default function AdminPayoutsPage() {
 												{p.currency}
 											</span>
 										</td>
-										<td className="px-5 py-3">
+										<td className="hidden md:table-cell px-5 py-3">
 											{p.upi_id ? (
 												<div className="flex items-center gap-2">
 													<span className="text-white/60 text-xs font-mono">
@@ -170,7 +170,7 @@ export default function AdminPayoutsPage() {
 										<td className="px-5 py-3 text-center">
 											<StatusBadge status={p.status} />
 										</td>
-										<td className="px-5 py-3 text-right text-white/30 text-xs">
+										<td className="hidden sm:table-cell px-5 py-3 text-right text-white/30 text-xs">
 											{new Date(
 												p.requested_at,
 											).toLocaleDateString()}
