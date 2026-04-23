@@ -10,11 +10,12 @@ export async function GET(request) {
   if (!auth.ok) {
     return NextResponse.json({ success: false, error: auth.message }, { status: auth.status });
   }
-
+  const status = new URL(request.url).searchParams.get("status") || "";
+  const qs = status ? `?status=${encodeURIComponent(status)}` : "";
   try {
     const res = await backendProxy(auth.payload, {
       method: "GET",
-      path: "/api/v1/creator/explorer-pass/pricing/overrides",
+      path: `/api/v1/creator/scan-reports/${qs}`,
     });
     if (!res.ok) {
       return NextResponse.json(
