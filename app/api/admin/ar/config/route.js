@@ -25,7 +25,7 @@ export async function GET(request) {
   }
 }
 
-const ALLOWED_PROVIDERS = new Set(["mock", "sagemaker", "vertex"]);
+const ALLOWED_PROVIDERS = new Set(["mock", "sagemaker", "vertex", "meshy"]);
 
 export async function PUT(request) {
   const auth = verifyAdminJWTFromRequest(request);
@@ -45,7 +45,7 @@ export async function PUT(request) {
   if ("provider" in body) {
     const v = String(body.provider ?? "").trim().toLowerCase();
     if (!ALLOWED_PROVIDERS.has(v)) {
-      return NextResponse.json({ success: false, error: "provider must be mock, sagemaker, or vertex" }, { status: 400 });
+      return NextResponse.json({ success: false, error: "provider must be mock, sagemaker, vertex, or meshy" }, { status: 400 });
     }
     updates.provider = v;
   }
