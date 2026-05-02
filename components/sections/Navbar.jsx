@@ -47,7 +47,7 @@ const Navbar = ({ showLogo = true }) => {
 
 				{/* Creators Program Button */}
 				<Link
-					href="https://creators.epocheye.com/signup"
+					href="https://creators.epocheye.com"
 					aria-label="Apply to the Epocheye Creators Program"
 					className="px-3 py-2 sm:px-4 sm:py-2.5 text-white text-[11px] sm:text-xs font-semibold uppercase tracking-[0.12em] rounded-full border border-white/30 hover:border-white/45 bg-black/15 hover:bg-black/30 transition-all whitespace-nowrap">
 					Creators

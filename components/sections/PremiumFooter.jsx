@@ -14,7 +14,7 @@ const productLinks = [
 
 const companyLinks = [
 	{ label: "About", href: "#about" },
-	{ label: "Creators", href: "https://creators.epocheye.com/signup" },
+	{ label: "Creators", href: "https://creators.epocheye.com" },
 	{ label: "Blog", href: "#blog" },
 ];
 
@@ -86,7 +86,7 @@ const PremiumFooter = () => {
 									one dashboard.
 								</p>
 								<Link
-									href="https://creators.epocheye.com/signup"
+									href="https://creators.epocheye.com"
 									className="inline-flex items-center rounded-full border border-white/35 px-5 py-2.5 text-[11px] font-semibold tracking-[0.16em] uppercase text-white transition-colors duration-300 hover:bg-white hover:text-black">
 									Apply as Creator
 								</Link>
