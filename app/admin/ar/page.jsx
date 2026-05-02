@@ -750,10 +750,136 @@ function CatalogBrowser() {
   );
 }
 
+/**
+ * Modal for picking a curated asset from the catalog (monument_objects). Used
+ * by AnchorsPanel and UnknownScansPanel to link an existing row to an asset
+ * without making the curator paste UUIDs by hand.
+ */
+function LinkAssetModal({ open, monumentFilter, currentAssetId, onClose, onSubmit }) {
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [filter, setFilter] = useState(monumentFilter || "");
+  const [pickedId, setPickedId] = useState(currentAssetId || "");
+  const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    if (!open) return undefined;
+    setPickedId(currentAssetId || "");
+    setFilter(monumentFilter || "");
+    let cancelled = false;
+    setLoading(true);
+    (async () => {
+      try {
+        const url = monumentFilter
+          ? `/api/admin/ar/catalog?monument_id=${encodeURIComponent(monumentFilter)}`
+          : "/api/admin/ar/catalog";
+        const res = await fetch(url);
+        const json = await res.json();
+        if (!cancelled && json?.success) {
+          setItems(json.data?.catalog || []);
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [open, monumentFilter, currentAssetId]);
+
+  if (!open) return null;
+
+  const visible = filter
+    ? items.filter((it) => (it.monument_id || "").toLowerCase().includes(filter.toLowerCase()))
+    : items;
+
+  async function submit() {
+    if (!pickedId) return;
+    setBusy(true);
+    try {
+      await onSubmit(pickedId);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4">
+      <div className="bg-[#0d0d0d] border border-white/10 rounded-2xl w-full max-w-lg p-5">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-sm font-semibold text-white">Link to a curated asset</h3>
+          <button
+            type="button"
+            onClick={onClose}
+            disabled={busy}
+            className="text-white/40 hover:text-white/80 text-xs disabled:opacity-40"
+          >
+            Close
+          </button>
+        </div>
+        <input
+          type="text"
+          placeholder="Filter by monument_id (optional)"
+          value={filter}
+          onChange={(e) => setFilter(e.target.value.trim())}
+          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-white/30 mb-3"
+        />
+        <div className="border border-white/5 rounded-lg max-h-72 overflow-y-auto">
+          {loading ? (
+            <p className="text-xs text-white/40 px-3 py-4">Loading catalog…</p>
+          ) : visible.length === 0 ? (
+            <p className="text-xs text-white/40 px-3 py-4">No assets in catalog yet.</p>
+          ) : (
+            <ul className="divide-y divide-white/5">
+              {visible.map((it) => {
+                const picked = pickedId === it.id;
+                return (
+                  <li key={it.id}>
+                    <button
+                      type="button"
+                      onClick={() => setPickedId(it.id)}
+                      className={`w-full text-left px-3 py-2 text-xs hover:bg-white/5 ${picked ? "bg-white/[0.06]" : ""}`}
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-white/85 truncate">{it.object_name}</span>
+                        <span className="text-white/40 shrink-0 text-[10px] font-mono">{it.monument_id}</span>
+                      </div>
+                      <p className="text-[10px] text-white/30 truncate mt-0.5">{it.id}</p>
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </div>
+        <div className="flex items-center justify-end gap-2 mt-4">
+          <button
+            type="button"
+            onClick={onClose}
+            disabled={busy}
+            className="px-3 py-1.5 text-xs rounded border border-white/10 text-white/70 hover:bg-white/5 disabled:opacity-40"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            onClick={submit}
+            disabled={!pickedId || busy}
+            className="px-3 py-1.5 text-xs rounded bg-white text-black font-medium disabled:opacity-40"
+          >
+            {busy ? "Linking…" : "Link asset"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function AnchorsPanel() {
   const [filter, setFilter] = useState("");
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [linkAnchor, setLinkAnchor] = useState(null);
   const [form, setForm] = useState({
     monument_id: "",
     object_label: "",
@@ -815,6 +941,25 @@ function AnchorsPanel() {
       const json = await res.json();
       if (json.success) load();
       else alert(json.error || "Delete failed");
+    } catch (err) {
+      alert(err?.message || "Network error");
+    }
+  }
+
+  async function linkAssetTo(anchor, assetId) {
+    try {
+      const res = await fetch(`/api/admin/ar/anchors/${anchor.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ asset_id: assetId }),
+      });
+      const json = await res.json();
+      if (!json.success) {
+        alert(json.error || "Link failed");
+        return;
+      }
+      setLinkAnchor(null);
+      load();
     } catch (err) {
       alert(err?.message || "Network error");
     }
@@ -902,6 +1047,7 @@ function AnchorsPanel() {
             <tr>
               <th className="text-left px-3 py-2 font-medium">Monument</th>
               <th className="text-left px-3 py-2 font-medium">Object</th>
+              <th className="text-left px-3 py-2 font-medium">Asset</th>
               <th className="text-left px-3 py-2 font-medium">Source</th>
               <th className="text-left px-3 py-2 font-medium">Mode</th>
               <th className="text-left px-3 py-2 font-medium">Lat / Lng</th>
@@ -912,11 +1058,20 @@ function AnchorsPanel() {
           </thead>
           <tbody className="divide-y divide-white/5">
             {list.length === 0 ? (
-              <tr><td colSpan={8} className="px-3 py-6 text-center text-white/30">No anchors yet.</td></tr>
+              <tr><td colSpan={9} className="px-3 py-6 text-center text-white/30">No anchors yet.</td></tr>
             ) : list.map((a) => (
               <tr key={a.id} className="text-white/70 hover:bg-white/3">
                 <td className="px-3 py-2">{a.monument_id}</td>
                 <td className="px-3 py-2">{a.object_label}</td>
+                <td className="px-3 py-2">
+                  {a.asset_id ? (
+                    <span className="font-mono text-[10px] text-white/60" title={a.asset_id}>
+                      {a.asset_id.slice(0, 8)}…
+                    </span>
+                  ) : (
+                    <span className="text-[10px] text-white/30 italic">unlinked</span>
+                  )}
+                </td>
                 <td className="px-3 py-2">
                   <span className={
                     (a.source === 'gemini_runtime')
@@ -933,7 +1088,13 @@ function AnchorsPanel() {
                 </td>
                 <td className="px-3 py-2">{a.altitude != null ? `${a.altitude.toFixed(1)} m` : "—"}</td>
                 <td className="px-3 py-2">{a.heading_deg != null ? `${a.heading_deg.toFixed(0)}°` : "—"}</td>
-                <td className="px-3 py-2 text-right">
+                <td className="px-3 py-2 text-right whitespace-nowrap">
+                  <button
+                    onClick={() => setLinkAnchor(a)}
+                    className="text-[10px] text-amber-300 hover:text-amber-200 mr-3"
+                  >
+                    {a.asset_id ? "relink" : "link"}
+                  </button>
                   <button onClick={() => remove(a.id)} className="text-[10px] text-red-400 hover:text-red-300">delete</button>
                 </td>
               </tr>
@@ -941,6 +1102,14 @@ function AnchorsPanel() {
           </tbody>
         </table>
       </div>
+
+      <LinkAssetModal
+        open={!!linkAnchor}
+        monumentFilter={linkAnchor?.monument_id || ""}
+        currentAssetId={linkAnchor?.asset_id || ""}
+        onClose={() => setLinkAnchor(null)}
+        onSubmit={(assetId) => linkAssetTo(linkAnchor, assetId)}
+      />
     </div>
   );
 }
@@ -950,6 +1119,7 @@ function UnknownScansPanel() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [busyId, setBusyId] = useState(null);
+  const [linkScan, setLinkScan] = useState(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -985,21 +1155,21 @@ function UnknownScansPanel() {
     }
   }
 
-  async function linkAction(id) {
-    const assetId = window.prompt("Paste asset_id (monument_objects.id) to link this scan to:");
-    if (!assetId) return;
-    setBusyId(id);
+  async function submitLink(assetId) {
+    if (!linkScan) return;
+    setBusyId(linkScan.id);
     try {
-      const res = await fetch(`/api/admin/ar/unknown-scans/${encodeURIComponent(id)}?action=link`, {
+      const res = await fetch(`/api/admin/ar/unknown-scans/${encodeURIComponent(linkScan.id)}?action=link`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ asset_id: assetId.trim() }),
+        body: JSON.stringify({ asset_id: assetId }),
       });
       const json = await res.json();
       if (!json.success) {
         alert(json.error || "Link failed");
         return;
       }
+      setLinkScan(null);
       load();
     } finally {
       setBusyId(null);
@@ -1071,7 +1241,7 @@ function UnknownScansPanel() {
                   <button
                     type="button"
                     disabled={busyId === it.id}
-                    onClick={() => linkAction(it.id)}
+                    onClick={() => setLinkScan(it)}
                     className="flex-1 px-2 py-1.5 text-[11px] rounded border border-white/15 text-white/80 hover:bg-white/5 disabled:opacity-40"
                   >
                     Link
@@ -1092,6 +1262,14 @@ function UnknownScansPanel() {
           ))}
         </div>
       )}
+
+      <LinkAssetModal
+        open={!!linkScan}
+        monumentFilter={linkScan?.monument_id || ""}
+        currentAssetId={linkScan?.asset_id || ""}
+        onClose={() => setLinkScan(null)}
+        onSubmit={submitLink}
+      />
     </div>
   );
 }
