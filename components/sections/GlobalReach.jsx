@@ -221,10 +221,10 @@ const GlobalReach = () => {
 				<span className="header-line inline-block px-3 py-1 text-xs font-medium tracking-widest text-white/60 border border-white/20 rounded-full uppercase mb-6">
 					Global Coverage
 				</span>
-				<h2 className="header-line font-montserrat font-light text-white text-4xl sm:text-5xl lg:text-6xl leading-tight">
+				<h2 className="header-line font-instrument-serif font-light text-white text-4xl sm:text-5xl lg:text-6xl leading-tight">
 					Heritage
 				</h2>
-				<h2 className="header-line font-montserrat font-semibold text-white text-4xl sm:text-5xl lg:text-6xl leading-tight">
+				<h2 className="header-line font-instrument-serif font-semibold text-white text-4xl sm:text-5xl lg:text-6xl leading-tight">
 					Around The World
 				</h2>
 			</div>
@@ -255,7 +255,7 @@ const GlobalReach = () => {
 				{/* Floating Tooltip */}
 				{isMapMounted && hoveredLocation !== null && (
 					<div
-						className="absolute z-20 px-4 py-3 pointer-events-none font-montserrat text-white backdrop-blur-sm text-[12px] sm:text-[14px] tracking-[1px] sm:tracking-[2px] rounded-lg transition-all duration-300 animate-fadeIn max-w-[80vw]"
+						className="absolute z-20 px-4 py-3 pointer-events-none font-instrument-sans text-white backdrop-blur-sm text-[12px] sm:text-[14px] tracking-[1px] sm:tracking-[2px] rounded-lg transition-all duration-300 animate-fadeIn max-w-[80vw]"
 						style={{
 							left: "50%",
 							top: "10%",

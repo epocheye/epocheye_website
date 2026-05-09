@@ -115,13 +115,13 @@ const SolutionSplit = () => {
 						</span>
 
 						{/* Headline */}
-						<h2 className="headline-line font-montserrat font-light text-white leading-[1.1] text-4xl sm:text-5xl lg:text-6xl xl:text-7xl mb-2">
+						<h2 className="headline-line font-instrument-serif font-light text-white leading-[1.1] text-4xl sm:text-5xl lg:text-6xl xl:text-7xl mb-2">
 							We Reconstruct
 						</h2>
-						<h2 className="headline-line font-montserrat font-bold text-white leading-[1.1] text-4xl sm:text-5xl lg:text-6xl xl:text-7xl mb-2">
+						<h2 className="headline-line font-instrument-serif font-bold text-white leading-[1.1] text-4xl sm:text-5xl lg:text-6xl xl:text-7xl mb-2">
 							History
 						</h2>
-						<h2 className="headline-line font-montserrat font-light text-white/70 leading-[1.1] text-3xl sm:text-4xl lg:text-5xl xl:text-6xl">
+						<h2 className="headline-line font-instrument-serif font-light text-white/70 leading-[1.1] text-3xl sm:text-4xl lg:text-5xl xl:text-6xl">
 							In The Real World.
 						</h2>
 

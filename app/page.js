@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 
 // Immediate load Hero as it's above the fold
 import Hero from "@/components/sections/Hero";
+import TractionStrip from "@/components/sections/TractionStrip";
 
 // Lazy load below-the-fold components with loading states
 const Problem = dynamic(() => import("@/components/sections/Problem"), {
@@ -43,6 +44,16 @@ const CredibilityStatement = dynamic(() => import("@/components/sections/Credibi
 	ssr: true,
 });
 
+const Team = dynamic(() => import("@/components/sections/Team"), {
+	loading: () => <div className="min-h-[40vh] bg-[#080808]" />,
+	ssr: true,
+});
+
+const InvestorCTA = dynamic(() => import("@/components/sections/InvestorCTA"), {
+	loading: () => <div className="min-h-[20vh] bg-[#0A0A0A]" />,
+	ssr: true,
+});
+
 const PremiumFooter = dynamic(() => import("@/components/sections/PremiumFooter"), {
 	loading: () => <div className="min-h-[50vh] bg-[#0A0A0A]" />,
 	ssr: true,
@@ -60,6 +71,7 @@ const Home = () => {
 			</a>
 			
 			<Hero />
+			<TractionStrip />
 			<div id="main-content">
 				<Suspense fallback={<div className="min-h-screen bg-white" />}>
 					<Problem />
@@ -85,7 +97,13 @@ const Home = () => {
 			<Suspense fallback={<div className="min-h-screen bg-[#0A0A0A]" />}>
 				<CredibilityStatement />
 			</Suspense>
-			
+			<Suspense fallback={<div className="min-h-[40vh] bg-[#080808]" />}>
+				<Team />
+			</Suspense>
+			<Suspense fallback={<div className="min-h-[20vh] bg-[#0A0A0A]" />}>
+				<InvestorCTA />
+			</Suspense>
+
 			{/* Premium Footer */}
 			<Suspense fallback={<div className="min-h-[50vh] bg-[#0A0A0A]" />}>
 				<PremiumFooter />

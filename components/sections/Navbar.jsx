@@ -8,7 +8,7 @@ import ShinyText from "../ShinyText";
 const Navbar = ({ showLogo = true }) => {
 	return (
 		<nav
-			className="w-full flex items-center justify-between px-4 sm:px-6 md:px-8 py-4 font-montserrat relative"
+			className="w-full flex items-center justify-between px-4 sm:px-6 md:px-8 py-4 font-instrument-sans relative"
 			role="navigation"
 			aria-label="Main navigation">
 			<Link href="/" aria-label="EpochEye Home">

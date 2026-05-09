@@ -7,15 +7,16 @@ import DarkBeamsBackground from "@/components/ui/DarkBeamsBackground";
 import logoWhite from "../../public/logo-white.png";
 
 const productLinks = [
-	{ label: "Features", href: "#features" },
-	{ label: "How It Works", href: "#how-it-works" },
-	{ label: "Download", href: "#download" },
+	{ label: "Features", href: "/features" },
+	{ label: "How It Works", href: "/how-it-works" },
+	{ label: "Download", href: "/download" },
 ];
 
 const companyLinks = [
-	{ label: "About", href: "#about" },
+	{ label: "About", href: "/about" },
 	{ label: "Creators", href: "https://creators.epocheye.com" },
-	{ label: "Blog", href: "#blog" },
+	{ label: "Blog", href: "/blog" },
+	{ label: "Investors", href: "/investors" },
 ];
 
 const socialLinks = [
@@ -53,7 +54,7 @@ const PremiumFooter = () => {
 			<div className="relative z-10">
 				{/* CTA Strip */}
 				<div className="px-6 sm:px-10 lg:px-20 pt-20 pb-14 sm:pt-24 sm:pb-16 lg:pt-32 lg:pb-20 text-center">
-					<h2 className="font-montserrat font-light text-white text-3xl sm:text-4xl lg:text-5xl leading-tight mb-8">
+					<h2 className="font-instrument-serif font-light text-white text-3xl sm:text-4xl lg:text-5xl leading-tight mb-8">
 						Ready to see the world
 						<br />
 						<span className="font-semibold">differently?</span>
@@ -77,7 +78,7 @@ const PremiumFooter = () => {
 								<p className="text-[11px] font-semibold tracking-[0.2em] uppercase text-white/55 mb-3">
 									Creators Program News
 								</p>
-								<h3 className="font-montserrat font-semibold text-white text-2xl sm:text-3xl leading-tight mb-4">
+								<h3 className="font-instrument-serif font-semibold text-white text-2xl sm:text-3xl leading-tight mb-4">
 									The creator partner program is now live.
 								</h3>
 								<p className="text-white/62 text-sm sm:text-base leading-relaxed mb-6 max-w-xl">

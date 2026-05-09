@@ -6,7 +6,19 @@
       "Bash(npm run:*)",
       "Bash(node -e \"require\\('typescript'\\)\")",
       "Bash(find /e/epocheye_website/tailwind* -o -name \"tailwind.config.*\")",
-      "Bash(npx eslint:*)"
+      "Bash(npx eslint:*)",
+      "Bash(Get-ChildItem -Path \"E:\\\\epocheye_website\\\\public\" -Filter \"*.mp4\" -Recurse)",
+      "Bash(Select-Object FullName, Length)",
+      "Bash(ffmpeg -version)",
+      "PowerShell(ffmpeg *)",
+      "PowerShell(winget install *)",
+      "PowerShell(Get-Item \"E:\\\\epocheye_website\\\\public\\\\bg_vid.mp4\", \"E:\\\\epocheye_website\\\\public\\\\bg_vid_new.mp4\" | Select-Object Name, @{N='Size \\(MB\\)';E={[math]::Round\\($_.Length/1MB, 2\\)}})",
+      "Bash(Get-ChildItem -Path \"E:\\\\epocheye_website\\\\app\" -Directory -Exclude \"creators\")",
+      "Bash(Select-Object Name)",
+      "Bash(Format-Table -HideTableHeaders)",
+      "Bash(Get-ChildItem *)",
+      "mcp__magic__21st_magic_component_inspiration",
+      "Bash(node --env-file=.env.local scripts/migrate-blog.mjs)"
     ]
   }
 }

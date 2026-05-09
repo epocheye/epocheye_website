@@ -102,3 +102,21 @@ CREATE TABLE IF NOT EXISTS payout_requests (
 
 CREATE INDEX IF NOT EXISTS idx_payouts_creator ON payout_requests(creator_id);
 CREATE INDEX IF NOT EXISTS idx_payouts_status ON payout_requests(status);
+
+-- blog_posts: marketing blog content authored by admin
+CREATE TABLE IF NOT EXISTS blog_posts (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  slug            TEXT NOT NULL UNIQUE,
+  title           TEXT NOT NULL,
+  excerpt         TEXT,
+  cover_image_url TEXT,
+  body_markdown   TEXT NOT NULL DEFAULT '',
+  status          TEXT NOT NULL DEFAULT 'draft'
+    CHECK (status IN ('draft', 'published')),
+  published_at    TIMESTAMPTZ,
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_blog_posts_status_pub ON blog_posts(status, published_at DESC);
+CREATE INDEX IF NOT EXISTS idx_blog_posts_slug ON blog_posts(slug);

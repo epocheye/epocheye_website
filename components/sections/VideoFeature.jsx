@@ -108,7 +108,7 @@ const VideoFeature = () => {
 					How It Works
 				</span>
 
-				<h2 className="font-montserrat font-light text-white text-3xl sm:text-4xl lg:text-5xl text-center mb-4 leading-tight">
+				<h2 className="font-instrument-serif font-light text-white text-3xl sm:text-4xl lg:text-5xl text-center mb-4 leading-tight">
 					Three steps to
 					<br />
 					<span className="font-semibold">see through time</span>
@@ -127,7 +127,7 @@ const VideoFeature = () => {
 							<div className="text-white/20 text-xs font-mono tracking-widest uppercase mb-4">
 								{step.number}
 							</div>
-							<h3 className="font-montserrat font-semibold text-white text-xl mb-3">
+							<h3 className="font-instrument-serif font-semibold text-white text-xl mb-3">
 								{step.title}
 							</h3>
 							<p className="text-white/65 text-sm leading-relaxed">

@@ -8,24 +8,6 @@ import DarkBeamsBackground from "@/components/ui/DarkBeamsBackground";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const testimonials = [
-	{
-		quote: "Finally an app that makes me feel like I'm actually there, not just taking a selfie in front of a ruin.",
-		author: "Travel Content Creator",
-		meta: "180k followers",
-	},
-	{
-		quote: "The historical accuracy is impressive. We've been waiting for something like this for years.",
-		author: "Heritage Tourism Board",
-		meta: "Representative",
-	},
-	{
-		quote: "This is what AR was always supposed to be used for. Genuinely transformative.",
-		author: "Independent Heritage Researcher",
-		meta: "Published author",
-	},
-];
-
 const creatorsNews = [
 	{
 		title: "Creators Program Applications Are Open",
@@ -132,7 +114,7 @@ const CredibilityStatement = () => {
 					<span className="inline-block px-3 py-1 text-xs font-medium tracking-widest text-white/60 border border-white/20 rounded-full uppercase mb-6">
 						What People Are Saying
 					</span>
-					<h2 className="font-montserrat font-light text-white text-3xl sm:text-4xl lg:text-5xl leading-tight">
+					<h2 className="font-instrument-serif font-light text-white text-3xl sm:text-4xl lg:text-5xl leading-tight">
 						Trusted by travelers and
 						<br />
 						<span className="font-semibold">historians alike</span>
@@ -159,7 +141,7 @@ const CredibilityStatement = () => {
 								<p className="text-white/50 text-[11px] font-semibold tracking-[0.18em] uppercase mb-2">
 									Creators Program News
 								</p>
-								<h3 className="font-montserrat font-semibold text-white text-lg leading-tight mb-3">
+								<h3 className="font-instrument-serif font-semibold text-white text-lg leading-tight mb-3">
 									{news.title}
 								</h3>
 								<p className="text-white/62 text-sm leading-relaxed mb-5">
@@ -172,25 +154,6 @@ const CredibilityStatement = () => {
 								</Link>
 							</div>
 						</article>
-					))}
-				</div>
-
-				{/* Testimonial Cards */}
-				<div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-16">
-					{testimonials.map((t, i) => (
-						<div
-							key={i}
-							className="bg-black/40 backdrop-blur-sm border border-white/10 rounded-2xl p-6 sm:p-7 flex flex-col gap-4">
-							<p className="text-white/80 text-sm sm:text-base leading-relaxed italic flex-1">
-								&ldquo;{t.quote}&rdquo;
-							</p>
-							<div>
-								<p className="text-white text-sm font-medium">
-									— {t.author}
-								</p>
-								<p className="text-white/55 text-xs mt-0.5">{t.meta}</p>
-							</div>
-						</div>
 					))}
 				</div>
 

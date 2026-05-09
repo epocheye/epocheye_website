@@ -66,14 +66,15 @@ const Hero = () => {
 				aria-hidden="true">
 				<video
 					className="absolute inset-0 w-full h-full object-cover"
-					src="/bg_vid.mp4"
 					autoPlay
 					loop
 					muted
 					playsInline
-					preload="auto"
-					aria-hidden="true"
-				/>
+					preload="metadata"
+					aria-hidden="true">
+					<source src="/bg_vid.webm" type="video/webm" />
+					<source src="/bg_vid.mp4" type="video/mp4" />
+				</video>
 				{/* Permanent dark overlay for text visibility */}
 				<div className="absolute inset-0 bg-black/30" />
 			</div>

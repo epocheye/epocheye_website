@@ -95,7 +95,7 @@ const WeCover = () => {
 					<span className="inline-block px-3 py-1 text-xs font-medium tracking-widest text-white/60 border border-white/20 rounded-full uppercase mb-6">
 						Coverage
 					</span>
-					<h2 className="font-montserrat font-light text-white text-3xl sm:text-4xl lg:text-5xl leading-tight mb-4">
+					<h2 className="font-instrument-serif font-light text-white text-3xl sm:text-4xl lg:text-5xl leading-tight mb-4">
 						<span className="font-semibold">8 World Heritage</span> Civilizations
 					</h2>
 					<p className="text-white/60 text-base sm:text-lg font-light">
@@ -126,7 +126,7 @@ const WeCover = () => {
 									{String(i + 1).padStart(2, "0")}
 								</span>
 							</div>
-							<h3 className="font-montserrat font-semibold text-white text-base leading-snug mb-1">
+							<h3 className="font-instrument-serif font-semibold text-white text-base leading-snug mb-1">
 								{civ.name}
 							</h3>
 							<p className="text-white/65 text-sm leading-relaxed">

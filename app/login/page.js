@@ -118,7 +118,7 @@ export default function LoginPage() {
                 text="Epocheye"
                 disabled={false}
                 speed={2}
-                className="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight font-montserrat"
+                className="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight font-instrument-serif"
               />
             </motion.div>
             <motion.p

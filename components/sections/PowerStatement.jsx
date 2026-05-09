@@ -64,7 +64,7 @@ const PowerStatement = () => {
 					whileInView={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.7, delay: 0.1 }}
 					viewport={{ once: true }}
-					className="text-center font-montserrat font-light text-white text-3xl sm:text-4xl lg:text-5xl leading-tight mb-4">
+					className="text-center font-instrument-serif font-light text-white text-3xl sm:text-4xl lg:text-5xl leading-tight mb-4">
 					Everything you need to
 					<br />
 					<span className="font-semibold">experience history</span>
@@ -96,7 +96,7 @@ const PowerStatement = () => {
 								/>
 							</div>
 							<div>
-								<h3 className="font-montserrat font-semibold text-white text-lg mb-2">
+								<h3 className="font-instrument-serif font-semibold text-white text-lg mb-2">
 									{title}
 								</h3>
 								<p className="text-white/58 text-sm leading-relaxed">
