@@ -11,6 +11,7 @@
   --font-montserrat: var(--font-montserrat-alternates);
   --font-instrument-sans: var(--font-instrument-sans);
   --font-instrument-serif: var(--font-instrument-serif);
+  --color-accent: #D4AF37;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -130,6 +131,41 @@
 
 .font-instrument-serif {
   font-family: var(--font-instrument-serif), Georgia, "Times New Roman", serif;
+}
+
+/* Marquee scroll for traction strip */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee 40s linear infinite;
+  will-change: transform;
+}
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* Brutalist card — chunky border + offset gold drop shadow */
+.brutalist-card {
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 6px 6px 0 0 rgba(212, 175, 55, 0.35);
+  transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 200ms cubic-bezier(0.22, 1, 0.36, 1),
+              border-color 200ms ease;
+}
+.brutalist-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 10px 10px 0 0 rgba(212, 175, 55, 0.55);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+@media (max-width: 640px) {
+  .brutalist-card {
+    box-shadow: 4px 4px 0 0 rgba(212, 175, 55, 0.35);
+  }
+  .brutalist-card:hover {
+    box-shadow: 6px 6px 0 0 rgba(212, 175, 55, 0.55);
+  }
 }
 
 /* Hide scrollbar for all browsers */

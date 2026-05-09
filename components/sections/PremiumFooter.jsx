@@ -62,7 +62,7 @@ const PremiumFooter = () => {
 
 					<button
 						type="button"
-						className="inline-flex items-center gap-2 px-8 py-4 bg-white text-black text-sm font-semibold rounded-full hover:bg-white/90 transition-all duration-300 cursor-pointer"
+						className="inline-flex items-center gap-2 px-8 py-4 bg-accent text-black font-instrument-sans text-sm sm:text-base font-semibold tracking-[0.15em] uppercase hover:bg-white transition-colors duration-200 cursor-pointer"
 						data-tally-open="mVR7OJ"
 						data-tally-layout="modal"
 						data-tally-width="600"
@@ -135,25 +135,25 @@ const PremiumFooter = () => {
 									height={36}
 								/>
 							</Link>
-							<p className="text-white/45 text-xs leading-relaxed font-light mb-1">
+							<p className="text-white/55 text-sm leading-relaxed font-instrument-sans mb-2">
 								See The Past. Live.
 							</p>
-							<p className="text-white/30 text-xs font-light">
+							<p className="text-white/40 text-sm font-instrument-sans">
 								© {new Date().getFullYear()} EpochEye
 							</p>
 						</div>
 
 						{/* Col 2 — Product */}
 						<div>
-							<h4 className="text-white/65 text-xs font-medium tracking-widest uppercase mb-5">
-								Product
+							<h4 className="font-instrument-sans text-xs sm:text-sm font-semibold tracking-[0.25em] text-accent uppercase mb-5">
+								{"// Product"}
 							</h4>
 							<ul className="space-y-3">
 								{productLinks.map(({ label, href }) => (
 									<li key={label}>
 										<Link
 											href={href}
-											className="text-white/55 text-sm hover:text-white transition-colors duration-200 font-light">
+											className="text-white/60 text-base hover:text-white transition-colors duration-200 font-instrument-sans">
 											{label}
 										</Link>
 									</li>
@@ -163,15 +163,15 @@ const PremiumFooter = () => {
 
 						{/* Col 3 — Company */}
 						<div>
-							<h4 className="text-white/65 text-xs font-medium tracking-widest uppercase mb-5">
-								Company
+							<h4 className="font-instrument-sans text-xs sm:text-sm font-semibold tracking-[0.25em] text-accent uppercase mb-5">
+								{"// Company"}
 							</h4>
 							<ul className="space-y-3">
 								{companyLinks.map(({ label, href }) => (
 									<li key={label}>
 										<Link
 											href={href}
-											className="text-white/55 text-sm hover:text-white transition-colors duration-200 font-light">
+											className="text-white/60 text-base hover:text-white transition-colors duration-200 font-instrument-sans">
 											{label}
 										</Link>
 									</li>
@@ -181,8 +181,8 @@ const PremiumFooter = () => {
 
 						{/* Col 4 — Social */}
 						<div>
-							<h4 className="text-white/65 text-xs font-medium tracking-widest uppercase mb-5">
-								Follow
+							<h4 className="font-instrument-sans text-xs sm:text-sm font-semibold tracking-[0.25em] text-accent uppercase mb-5">
+								{"// Follow"}
 							</h4>
 							<ul className="space-y-3">
 								{socialLinks.map(({ label, href, Icon }) => (
@@ -191,7 +191,7 @@ const PremiumFooter = () => {
 											href={href}
 											target="_blank"
 											rel="noopener noreferrer"
-											className="flex items-center gap-2 text-white/55 text-sm hover:text-white transition-colors duration-200 font-light">
+											className="flex items-center gap-2 text-white/60 text-base hover:text-white transition-colors duration-200 font-instrument-sans">
 											<Icon
 												className="w-4 h-4"
 												aria-hidden="true"
@@ -206,20 +206,20 @@ const PremiumFooter = () => {
 				</div>
 
 				{/* Bottom bar */}
-				<div className="border-t border-white/12 px-6 sm:px-10 lg:px-20 py-5">
+				<div className="border-t border-white/12 px-6 sm:px-10 lg:px-20 py-6">
 					<div className="max-w-[1400px] mx-auto flex flex-col sm:flex-row justify-between items-center gap-3">
-						<p className="text-white/30 text-xs font-light">
+						<p className="text-white/40 text-sm font-instrument-sans">
 							All rights reserved.
 						</p>
 						<div className="flex gap-6">
 							<Link
 								href="/privacy"
-								className="text-white/30 text-xs font-light hover:text-white/65 transition-colors duration-200">
+								className="text-white/40 text-sm font-instrument-sans hover:text-white/70 transition-colors duration-200">
 								Privacy Policy
 							</Link>
 							<Link
 								href="/terms"
-								className="text-white/30 text-xs font-light hover:text-white/65 transition-colors duration-200">
+								className="text-white/40 text-sm font-instrument-sans hover:text-white/70 transition-colors duration-200">
 								Terms of Service
 							</Link>
 						</div>

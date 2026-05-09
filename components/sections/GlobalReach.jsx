@@ -208,7 +208,7 @@ const GlobalReach = () => {
 		<section
 			ref={sectionRef}
 			id="global-reach"
-			className="relative flex flex-col items-center justify-start px-6 sm:px-10 lg:px-20 py-16 sm:py-20 lg:py-24"
+			className="relative flex flex-col items-stretch justify-start px-6 sm:px-10 lg:px-20 py-24 sm:py-32 lg:py-40 max-w-7xl mx-auto"
 			style={{ backgroundColor: "#0A0A0A" }}>
 			<DarkBeamsBackground
 				opacity={0.22}
@@ -217,26 +217,23 @@ const GlobalReach = () => {
 			/>
 
 			{/* Section Header */}
-			<div ref={headerRef} className="relative z-10 text-center mb-10 sm:mb-14 lg:mb-16">
-				<span className="header-line inline-block px-3 py-1 text-xs font-medium tracking-widest text-white/60 border border-white/20 rounded-full uppercase mb-6">
-					Global Coverage
+			<div ref={headerRef} className="relative z-10 mb-10 sm:mb-14 lg:mb-16 max-w-3xl">
+				<span className="header-line font-instrument-sans text-xs sm:text-sm font-semibold tracking-[0.3em] text-accent uppercase">
+					{"// GLOBAL COVERAGE"}
 				</span>
-				<h2 className="header-line font-instrument-serif font-light text-white text-4xl sm:text-5xl lg:text-6xl leading-tight">
-					Heritage
-				</h2>
-				<h2 className="header-line font-instrument-serif font-semibold text-white text-4xl sm:text-5xl lg:text-6xl leading-tight">
-					Around The World
+				<h2 className="header-line font-instrument-serif text-white text-4xl sm:text-5xl lg:text-6xl leading-[1.05] mt-4">
+					Heritage around the world.
 				</h2>
 			</div>
 
 			{/* World Map Container */}
 			<div
 				ref={mapContainerRef}
-				className="relative w-full max-w-[1400px] aspect-square sm:aspect-[2/1] rounded-2xl overflow-hidden border border-white/8"
+				className="brutalist-card relative w-full aspect-square sm:aspect-[2/1] overflow-hidden"
 				style={{ backgroundColor: "#0d0d0d" }}>
 				{/* Inner shadow for depth */}
 				<div
-					className="absolute inset-0 rounded-2xl pointer-events-none z-10"
+					className="absolute inset-0 pointer-events-none z-10"
 					style={{ boxShadow: "inset 0 0 60px rgba(0,0,0,0.4)" }}
 				/>
 
@@ -275,10 +272,8 @@ const GlobalReach = () => {
 			</div>
 
 			{/* Location Count */}
-			<p
-				className="relative z-10 mt-8 sm:mt-10 lg:mt-12 font-light text-center text-[14px] sm:text-[16px] lg:text-[18px] tracking-[2px]"
-				style={{ color: "#D0D0D0" }}>
-				8 MONUMENTS • 5 CONTINENTS • LAUNCHING 2026
+			<p className="relative z-10 mt-10 sm:mt-12 font-instrument-sans text-xs sm:text-sm font-medium tracking-[0.25em] text-white/60 text-center uppercase">
+				8 Monuments · 5 Continents · Launching 2026
 			</p>
 		</section>
 	);

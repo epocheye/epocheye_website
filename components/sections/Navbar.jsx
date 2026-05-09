@@ -49,8 +49,8 @@ const Navbar = ({ showLogo = true }) => {
 				<Link
 					href="https://creators.epocheye.com"
 					aria-label="Apply to the Epocheye Creators Program"
-					className="px-3 py-2 sm:px-4 sm:py-2.5 text-white text-[11px] sm:text-xs font-semibold uppercase tracking-[0.12em] rounded-full border border-white/30 hover:border-white/45 bg-black/15 hover:bg-black/30 transition-all whitespace-nowrap">
-					Creators
+					className="px-3 py-2 sm:px-4 sm:py-2.5 text-white text-[11px] sm:text-xs font-semibold uppercase tracking-[0.12em] rounded-full border border-white/30 hover:border-white/45 bg-black/15 hover:bg-black/30 transition-all whitespace-nowrap flex items-center gap-2">
+					Creators Program
 				</Link>
 
 				{/* Join Us Button */}
@@ -65,8 +65,8 @@ const Navbar = ({ showLogo = true }) => {
 					data-tally-auto-close="1000"
 					data-tally-transparent-background="1"
 					data-tally-form-events-forwarding="1">
-					<span className="hidden sm:inline">Join us</span>
-					<span className="sm:hidden">Join us</span>
+					<span className="hidden sm:inline">Join our team</span>
+					<span className="sm:hidden">Join our team</span>
 					<ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" aria-hidden="true" />
 				</button>
 			</div>

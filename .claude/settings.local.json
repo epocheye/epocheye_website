@@ -18,7 +18,8 @@
       "Bash(Format-Table -HideTableHeaders)",
       "Bash(Get-ChildItem *)",
       "mcp__magic__21st_magic_component_inspiration",
-      "Bash(node --env-file=.env.local scripts/migrate-blog.mjs)"
+      "Bash(node --env-file=.env.local scripts/migrate-blog.mjs)",
+      "WebFetch(domain:speedrun.a16z.com)"
     ]
   }
 }
