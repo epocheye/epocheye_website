@@ -8,11 +8,6 @@ const members = [
 		role: "Founder & CEO",
 		bio: "Full-stack engineer and product builder. Previously worked at 2 startups. Built the Epocheye AR prototype from scratch.",
 	},
-	{
-		name: "Ankur Agarwal",
-		role: "Mentor",
-		bio: "Ex-BCG, Unilever, ClearTax. Operator with B2B SaaS and partnerships experience.",
-	},
 ];
 
 const Team = () => {

@@ -9,11 +9,6 @@ const MEMBERS = [
 		role: "Founder & CEO",
 		bio: "Full-stack engineer and product builder. Previously worked at 2 startups. Built the Epocheye AR prototype from scratch.",
 	},
-	{
-		name: "Ankur Agarwal",
-		role: "Mentor",
-		bio: "Ex-BCG, Unilever, ClearTax. Operator with B2B SaaS and partnerships experience.",
-	},
 ];
 
 const TeamAndInvestor = () => {
@@ -86,7 +81,7 @@ const TeamAndInvestor = () => {
 						Investor or partner inquiry? We&apos;d love to connect.
 					</p>
 					<a
-						href="mailto:sambit@epocheye.com"
+						href="mailto:sambit@epocheye.app"
 						className="mt-8 inline-flex items-center gap-2 bg-accent text-black px-7 py-4 font-instrument-sans text-sm sm:text-base font-semibold tracking-[0.15em] uppercase hover:bg-white transition-colors duration-200">
 						Get in Touch
 						<ArrowRight className="w-5 h-5" aria-hidden="true" />

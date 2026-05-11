@@ -13,7 +13,7 @@ const InvestorCTA = () => {
 					Investor or partner inquiry? We&apos;d love to connect.
 				</p>
 				<a
-					href="mailto:sambit@epocheye.com"
+					href="mailto:sambit@epocheye.app"
 					className="mt-8 inline-flex items-center gap-2 rounded-full border border-white/30 px-6 py-3 text-sm font-semibold tracking-wider uppercase text-white hover:bg-white hover:text-black transition-all duration-500 font-instrument-sans">
 					Get in Touch
 					<ArrowRight className="w-4 h-4" aria-hidden="true" />
