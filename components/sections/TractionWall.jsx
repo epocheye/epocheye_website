@@ -25,7 +25,7 @@ const TractionWall = () => {
 					<span className="font-instrument-sans text-xs sm:text-sm font-semibold tracking-[0.3em] text-accent uppercase">
 						{"// THE NUMBERS"}
 					</span>
-					<h2 className="font-instrument-serif text-white text-4xl sm:text-5xl lg:text-6xl leading-[1.05] mt-4 max-w-3xl">
+					<h2 className="font-instrument-serif text-white text-3xl sm:text-4xl lg:text-5xl leading-[1.05] mt-4 max-w-3xl">
 						By the numbers.
 					</h2>
 				</motion.div>
@@ -40,12 +40,12 @@ const TractionWall = () => {
 							viewport={{ once: true }}
 							className="flex flex-col">
 							<span
-								className="font-instrument-serif text-white text-5xl sm:text-7xl lg:text-8xl xl:text-9xl leading-none tracking-tight"
+								className="font-instrument-serif text-white text-5xl sm:text-8xl leading-none "
 								style={{ wordBreak: "break-word" }}>
 								{stat.value}
 							</span>
 							<span
-								className="block w-10 h-[2px] bg-accent mt-5"
+								className="block w-10 h-0.5 bg-accent mt-5"
 								aria-hidden="true"
 							/>
 							<span className="font-instrument-sans text-xs sm:text-sm font-medium tracking-[0.25em] text-white/55 uppercase mt-4">
