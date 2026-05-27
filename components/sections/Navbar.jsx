@@ -31,7 +31,7 @@ const Navbar = ({ showLogo = true }) => {
 					text="Epocheye"
 					disabled={false}
 					speed={2}
-					className="text-xl sm:text-2xl md:text-3xl font-medium text-white leading-tight"
+					className="text-xl sm:text-2xl md:text-3xl font-medium text-white leading-tight font-montserrat"
 				/>
 			</div>
 
@@ -49,26 +49,35 @@ const Navbar = ({ showLogo = true }) => {
 				<Link
 					href="https://creators.epocheye.com"
 					aria-label="Apply to the Epocheye Creators Program"
-					className="px-3 py-2 sm:px-4 sm:py-2.5 text-white text-[11px] sm:text-xs font-semibold uppercase tracking-[0.12em] rounded-full border border-white/30 hover:border-white/45 bg-black/15 hover:bg-black/30 transition-all whitespace-nowrap flex items-center gap-2">
+					className="hidden md:flex px-3 py-2 sm:px-4 sm:py-2.5 text-white text-[11px] sm:text-xs font-semibold uppercase tracking-[0.12em] rounded-full border border-white/30 hover:border-white/45 bg-black/15 hover:bg-black/30 transition-all whitespace-nowrap items-center gap-2">
 					Creators Program
 				</Link>
 
+				{/* Early Access — primary CTA */}
+				{/* <Link
+					href="/early-access"
+					aria-label="Get early access to Epocheye"
+					className="px-3 py-2 sm:px-4 sm:py-2.5 text-black text-[11px] sm:text-xs font-semibold uppercase tracking-[0.12em] rounded-full bg-white hover:bg-white/90 transition-all whitespace-nowrap flex items-center gap-2">
+					Early Access
+					<ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+				</Link> */}
+
 				{/* Join Us Button */}
-				<button
+				{/* <button
 					type="button"
 					title="Join Us in making the Heritage Tourism an Experience"
 					aria-label="Join Us in making the Heritage Tourism an Experience"
 					className="px-3 py-2 sm:px-4 sm:py-3 text-white text-xs sm:text-sm md:text-base bg-black/20 backdrop-blur-sm rounded-2xl sm:rounded-3xl flex items-center gap-2 sm:gap-3 cursor-pointer hover:bg-black/30 transition-colors whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-transparent"
 					data-tally-open="mZ4Aa0"
 					data-tally-layout="modal"
-					data-tally-width="600"
+					data-tally-width="600"Replace the Join Waitlist button in the hero section of the home page with an Early Access button. Clicking it should redirect to the early access route.
 					data-tally-auto-close="1000"
 					data-tally-transparent-background="1"
 					data-tally-form-events-forwarding="1">
 					<span className="hidden sm:inline">Join our team</span>
 					<span className="sm:hidden">Join our team</span>
 					<ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" aria-hidden="true" />
-				</button>
+				</button> */}
 			</div>
 		</nav>
 	);

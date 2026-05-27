@@ -60,17 +60,12 @@ const PremiumFooter = () => {
 						<span className="font-semibold">differently?</span>
 					</h2>
 
-					<button
-						type="button"
-						className="inline-flex items-center gap-2 px-8 py-4 bg-accent text-black font-instrument-sans text-sm sm:text-base font-semibold tracking-[0.15em] uppercase hover:bg-white transition-colors duration-200 cursor-pointer"
-						data-tally-open="mVR7OJ"
-						data-tally-layout="modal"
-						data-tally-width="600"
-						data-tally-auto-close="1000"
-						data-tally-transparent-background="1">
+					<Link
+						href="/early-access"
+						className="inline-flex items-center gap-2 px-8 py-4 bg-accent text-black font-instrument-sans text-sm sm:text-base font-semibold tracking-[0.15em] uppercase hover:bg-white transition-colors duration-200 cursor-pointer">
 						Get Early Access
 						<ArrowRight className="w-4 h-4" aria-hidden="true" />
-					</button>
+					</Link>
 
 					<div className="max-w-5xl mx-auto mt-14 rounded-3xl overflow-hidden border border-white/15 bg-black/45 backdrop-blur-sm text-left">
 						<div className="grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-0">

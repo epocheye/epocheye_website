@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
 import Navbar from "./Navbar";
 import ShinyText from "../ShinyText";
@@ -187,26 +188,24 @@ const Hero = () => {
 				</motion.p>
 
 				{/* Single CTA */}
-				<motion.button
+				<motion.div
 					initial={{ opacity: 0 }}
 					animate={{
 						opacity: introPhase === "complete" ? 1 : 0,
 					}}
 					transition={{ duration: 1, delay: 1 }}
-					type="button"
-					aria-label="Join the waitlist for early access"
-					className="group mt-8 sm:mt-12 px-6 py-3 sm:px-8 sm:py-4 border border-white/30 text-white rounded-full text-xs sm:text-sm font-semibold cursor-pointer tracking-wider uppercase hover:bg-white hover:text-black transition-all duration-500 pointer-events-auto flex items-center gap-2 sm:gap-3 focus:outline-none focus:ring-2 focus:ring-white/50"
-					data-tally-open="mVR7OJ"
-					data-tally-layout="modal"
-					data-tally-width="600"
-					data-tally-auto-close="1000"
-					data-tally-form-events-forwarding="1">
-					Join Waitlist
-					<ArrowRight
-						className="w-3 h-3 sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform duration-300"
-						aria-hidden="true"
-					/>
-				</motion.button>
+					className="mt-8 sm:mt-12">
+					<Link
+						href="/early-access"
+						aria-label="Get early access to Epocheye"
+						className="group px-6 py-3 sm:px-8 sm:py-4 border border-white/30 text-white rounded-full text-xs sm:text-sm font-semibold cursor-pointer tracking-wider uppercase hover:bg-white hover:text-black transition-all duration-500 pointer-events-auto inline-flex items-center gap-2 sm:gap-3 focus:outline-none focus:ring-2 focus:ring-white/50">
+						Early Access
+						<ArrowRight
+							className="w-3 h-3 sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform duration-300"
+							aria-hidden="true"
+						/>
+					</Link>
+				</motion.div>
 			</motion.div>
 
 			{/* Minimal Scroll Indicator */}

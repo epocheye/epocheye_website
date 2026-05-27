@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "seed:crowd": "node scripts/seedFromCsv.mjs"
+    "seed:crowd": "node scripts/seedFromCsv.mjs",
+    "models:optimize": "node scripts/optimize-models.mjs"
   },
   "dependencies": {
     "@clerk/nextjs": "^7.0.8",

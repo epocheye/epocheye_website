@@ -15,6 +15,8 @@ const eslintConfig = defineConfig([
     "apps/**/out/**",
     "apps/**/build/**",
     "apps/**/.open-next/**",
+    // Static/vendored assets (e.g. Draco decoder) — not source to lint.
+    "public/**",
   ]),
 ]);
 

@@ -19,7 +19,8 @@
       "Bash(Get-ChildItem *)",
       "mcp__magic__21st_magic_component_inspiration",
       "Bash(node --env-file=.env.local scripts/migrate-blog.mjs)",
-      "WebFetch(domain:speedrun.a16z.com)"
+      "WebFetch(domain:speedrun.a16z.com)",
+      "Bash(powershell -Command 'Get-ChildItem '\\\\''E:\\\\epocheye_website\\\\public\\\\*.glb'\\\\'' | Select-Object Name, @{N='\\\\''MB'\\\\'';E={[math]::Round\\($_.Length/1MB,2\\)}}')"
     ]
   }
 }

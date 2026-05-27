@@ -120,3 +120,13 @@ CREATE TABLE IF NOT EXISTS blog_posts (
 
 CREATE INDEX IF NOT EXISTS idx_blog_posts_status_pub ON blog_posts(status, published_at DESC);
 CREATE INDEX IF NOT EXISTS idx_blog_posts_slug ON blog_posts(slug);
+
+-- early_access_signups: emails captured on the /early-access page
+CREATE TABLE IF NOT EXISTS early_access_signups (
+  id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  email      TEXT NOT NULL UNIQUE,
+  source     TEXT NOT NULL DEFAULT 'early-access-page',
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_early_access_created ON early_access_signups(created_at DESC);

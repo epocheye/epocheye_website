@@ -48,5 +48,9 @@ next-env.d.ts
 
 crowd_model.pkl
 
+# heritage GLB source models — multi-hundred-MB originals; optimized copies
+# are committed under public/models/ (see scripts/optimize-models.mjs)
+/models-src/
+
 # creators subdomain — has its own git repo
 /apps/creators/
