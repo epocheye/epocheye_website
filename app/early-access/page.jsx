@@ -221,12 +221,12 @@ export default function EarlyAccessPage() {
 					whileInView={{ opacity: 1, y: 0 }}
 					viewport={{ once: true, margin: "-15% 0px" }}
 					transition={{ duration: 1, ease: EASE }}
-					className="max-w-2xl">
+					className="max-w-4xl">
 					<span className="font-instrument-sans text-xs font-semibold uppercase tracking-[0.3em] text-accent sm:text-sm">
 						{"// The Mission"}
 					</span>
 					<h2 className="mt-4 font-instrument-serif text-3xl font-light leading-[1.1] text-white sm:text-4xl lg:text-5xl">
-						History you can <span className="font-semibold">step inside.</span>
+						History you can <span className="font-bold">step inside.</span>
 					</h2>
 					<p className="mt-7 text-base leading-relaxed text-white/65 sm:text-lg">
 						Heritage is fading faster than we can witness it. The world&apos;s
