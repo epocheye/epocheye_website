@@ -47,6 +47,10 @@ export async function POST(request) {
     place_id: placeId,
     place_name: placeName,
     price_paise: body.price_paise === "" || body.price_paise == null ? null : Number(body.price_paise),
+    price_paise_foreign:
+      body.price_paise_foreign === "" || body.price_paise_foreign == null
+        ? null
+        : Number(body.price_paise_foreign),
     place_type: body.place_type || null,
     lat: body.lat == null ? null : Number(body.lat),
     lng: body.lng == null ? null : Number(body.lng),

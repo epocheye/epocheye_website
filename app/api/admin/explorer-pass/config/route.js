@@ -40,6 +40,11 @@ export async function PUT(request) {
   }
   const payload = {
     default_price_paise: Number(body.default_price_paise),
+    default_price_paise_foreign:
+      body.default_price_paise_foreign == null ||
+      body.default_price_paise_foreign === ""
+        ? 0
+        : Number(body.default_price_paise_foreign),
     single_access_hours: Number(body.single_access_hours),
     pass_default_hours: Number(body.pass_default_hours),
     pass_max_hours: Number(body.pass_max_hours),

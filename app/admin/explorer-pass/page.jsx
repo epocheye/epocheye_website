@@ -4,6 +4,7 @@ import { useEffect, useState, startTransition } from "react";
 
 const EMPTY_CONFIG = {
   default_price_paise: 29900,
+  default_price_paise_foreign: 39900,
   single_access_hours: 12,
   pass_default_hours: 24,
   pass_max_hours: 72,
@@ -15,6 +16,7 @@ const EMPTY_PLACE = {
   place_id: "",
   place_name: "",
   price_paise: "",
+  price_paise_foreign: "",
   place_type: "",
   lat: null,
   lng: null,
@@ -72,6 +74,7 @@ export default function ExplorerPassAdminPage() {
     try {
       const payload = {
         default_price_paise: Number(config.default_price_paise),
+        default_price_paise_foreign: Number(config.default_price_paise_foreign),
         single_access_hours: Number(config.single_access_hours),
         pass_default_hours: Number(config.pass_default_hours),
         pass_max_hours: Number(config.pass_max_hours),
@@ -119,6 +122,7 @@ export default function ExplorerPassAdminPage() {
       place_id: r.place_id,
       place_name: r.name,
       price_paise: "",
+      price_paise_foreign: "",
       place_type: r.place_type || "",
       lat: r.lat ?? null,
       lng: r.lng ?? null,
@@ -138,6 +142,11 @@ export default function ExplorerPassAdminPage() {
           editing.price_paise === "" || editing.price_paise == null
             ? null
             : Number(editing.price_paise),
+        price_paise_foreign:
+          editing.price_paise_foreign === "" ||
+          editing.price_paise_foreign == null
+            ? null
+            : Number(editing.price_paise_foreign),
         place_type: editing.place_type || null,
         lat: editing.lat,
         lng: editing.lng,
@@ -227,10 +236,20 @@ export default function ExplorerPassAdminPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <NumField
-                label="Default price per place (paise)"
+                label="Default price per place — India (paise)"
                 value={config.default_price_paise}
                 onChange={(v) => updateConfigField("default_price_paise", v)}
-                hint={`₹${(config.default_price_paise / 100).toFixed(2)}`}
+                hint={`₹${(config.default_price_paise / 100).toFixed(2)} · domestic`}
+              />
+              <NumField
+                label="Default price per place — Foreign (paise)"
+                value={config.default_price_paise_foreign}
+                onChange={(v) =>
+                  updateConfigField("default_price_paise_foreign", v)
+                }
+                hint={`₹${(
+                  config.default_price_paise_foreign / 100
+                ).toFixed(2)} · shown to non-India visitors`}
               />
               <NumField
                 label="Single place access (hours)"
@@ -359,16 +378,31 @@ export default function ExplorerPassAdminPage() {
                   placeholder="Taj Mahal"
                 />
                 <Field
-                  label="Price (paise)"
+                  label="Price — India (paise)"
                   type="number"
                   min="0"
                   value={editing.price_paise}
                   onChange={(v) => setEditing({ ...editing, price_paise: v })}
-                  placeholder="49900"
+                  placeholder="14900"
                   hint={
                     editing.price_paise
-                      ? `₹${(Number(editing.price_paise) / 100).toFixed(2)}`
-                      : "Leave blank to use the global default"
+                      ? `₹${(Number(editing.price_paise) / 100).toFixed(2)} · domestic`
+                      : "Leave blank to use the India default"
+                  }
+                />
+                <Field
+                  label="Price — Foreign (paise)"
+                  type="number"
+                  min="0"
+                  value={editing.price_paise_foreign}
+                  onChange={(v) =>
+                    setEditing({ ...editing, price_paise_foreign: v })
+                  }
+                  placeholder="39900"
+                  hint={
+                    editing.price_paise_foreign
+                      ? `₹${(Number(editing.price_paise_foreign) / 100).toFixed(2)} · non-India`
+                      : "Leave blank to use the foreign default"
                   }
                 />
                 <Field
@@ -431,7 +465,10 @@ export default function ExplorerPassAdminPage() {
                       </div>
                       <div className="text-xs text-white/60 mt-1 space-x-3">
                         <span>
-                          ₹{p.price_paise != null ? (p.price_paise / 100).toFixed(2) : "default"}
+                          🇮🇳 ₹{p.price_paise != null ? (p.price_paise / 100).toFixed(2) : "default"}
+                        </span>
+                        <span>
+                          🌍 ₹{p.price_paise_foreign != null ? (p.price_paise_foreign / 100).toFixed(2) : "default"}
                         </span>
                         {p.place_type && <span className="text-white/40">· {p.place_type}</span>}
                       </div>
@@ -446,6 +483,7 @@ export default function ExplorerPassAdminPage() {
                             place_id: p.place_id,
                             place_name: p.place_name || "",
                             price_paise: p.price_paise ?? "",
+                            price_paise_foreign: p.price_paise_foreign ?? "",
                             place_type: p.place_type || "",
                             lat: p.lat ?? null,
                             lng: p.lng ?? null,
