@@ -99,12 +99,13 @@ export default function ExplorerPassAdminPage() {
 
   async function runSearch(e) {
     e.preventDefault();
-    if (!searchQuery.trim()) return;
     setSearching(true);
     setSearchResults([]);
     try {
+      // Curated sites only — place_id is the slug the app sends to /quote, so
+      // overrides set here actually resolve in the app. Empty query lists all.
       const res = await fetch(
-        `/api/admin/places/search?q=${encodeURIComponent(searchQuery.trim())}`
+        `/api/admin/explorer-pass/sites?q=${encodeURIComponent(searchQuery.trim())}`
       );
       const json = await res.json();
       if (json.success) {
@@ -317,18 +318,23 @@ export default function ExplorerPassAdminPage() {
               className="rounded-xl border border-white/10 bg-[#0d0d0d] p-6 space-y-4"
             >
               <h2 className="text-sm uppercase tracking-wider text-white/50">
-                Search a place
+                Pick a curated site
               </h2>
+              <p className="text-xs text-white/40 -mt-1">
+                These are the sites the app sells. Picking one keys the price by its
+                slug, so the override shows up in the app. Leave blank and search to
+                list every site.
+              </p>
               <div className="flex gap-2">
                 <input
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Taj Mahal, Konark Sun Temple, Hampi ruins…"
+                  placeholder="Konark Sun Temple, Taj Mahal… (or blank for all)"
                   className="flex-1 bg-white/5 border border-white/10 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-white/30"
                 />
                 <button
                   type="submit"
-                  disabled={searching || !searchQuery.trim()}
+                  disabled={searching}
                   className="px-4 py-2 text-sm rounded-md border border-white/20 hover:bg-white/5 disabled:opacity-40"
                 >
                   {searching ? "Searching…" : "Search"}
