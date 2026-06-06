@@ -150,6 +150,13 @@ export default function PrivacyPage() {
 							correct, or delete your personal information, or to object to
 							certain processing. To make a request, contact us at the
 							address below and we will respond in line with applicable law.
+							You can also{" "}
+							<Link
+								href="/delete-account"
+								className="text-white/80 underline underline-offset-4 hover:text-white transition-colors">
+								request deletion of your account
+							</Link>{" "}
+							at any time.
 						</p>
 					</section>
 
