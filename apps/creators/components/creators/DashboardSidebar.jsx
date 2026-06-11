@@ -7,6 +7,7 @@ import { useClerk, useUser, UserButton } from "@clerk/nextjs";
 import {
 	LayoutDashboard,
 	FileText,
+	BadgePercent,
 	TrendingUp,
 	Wallet,
 	Settings,
@@ -20,6 +21,7 @@ import { CREATOR_DASHBOARD_ROUTES, CREATOR_ROUTES } from "@/lib/creatorRoutes";
 const NAV = [
 	{ href: CREATOR_DASHBOARD_ROUTES.overview, label: "Overview", icon: LayoutDashboard },
 	{ href: CREATOR_DASHBOARD_ROUTES.content, label: "My Content", icon: FileText },
+	{ href: CREATOR_DASHBOARD_ROUTES.coupons, label: "Coupons", icon: BadgePercent },
 	{ href: CREATOR_DASHBOARD_ROUTES.earnings, label: "Earnings", icon: TrendingUp },
 	{ href: CREATOR_DASHBOARD_ROUTES.payouts, label: "Payouts", icon: Wallet },
 	{ href: CREATOR_DASHBOARD_ROUTES.settings, label: "Settings", icon: Settings },
