@@ -54,3 +54,7 @@ crowd_model.pkl
 
 # creators subdomain — has its own git repo
 /apps/creators/
+
+# Android APK — too large for GitHub (100 MB limit); hosted on CloudFront
+# (epocheye-glb-models bucket) and linked from the Navbar instead.
+*.apk
