@@ -40,14 +40,14 @@ const Navbar = ({ showLogo = true }) => {
 				{/* Download App (Beta) — served from CloudFront (the 111 MB APK is too
 				    large for the git repo / Vercel). The object's Content-Disposition:
 				    attachment header forces the download even cross-origin. */}
-				<a
+				{/* <a
 					href="https://d2d3syfid51acn.cloudfront.net/app-release.apk"
 					download="Epocheye.apk"
 					aria-label="Download the Epocheye Android APK (beta)"
 					className="px-3 py-2 sm:px-4 sm:py-2.5 text-white text-xs sm:text-sm font-medium bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full flex items-center gap-2 transition-all border border-white/20 hover:border-white/30">
 					<Download className="w-4 h-4" aria-hidden="true" />
 					<span className="hidden sm:inline">Download App</span>
-				</a>
+				</a> */}
 
 				{/* Login Button */}
 				<Link
