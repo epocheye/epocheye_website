@@ -91,7 +91,6 @@ Database tables (Supabase): `creators`, `promo_codes`, `referral_clicks`, `refer
 
 ### Key Constraints
 
-- **`components/sections/Hero.jsx` must never be modified** — it is the design source of truth.
 - React Compiler is enabled — avoid manual `useMemo`/`useCallback` where unnecessary. The compiler's lint rules (`react-hooks/set-state-in-effect`, `react-hooks/refs`, `react-hooks/immutability`) are enforced as errors. Use `startTransition` when calling setState synchronously in `useEffect`. Never read or write `ref.current` during render.
 - All sections below the hero are dynamically imported — keep it that way.
 - Images must use Next.js `<Image>` (AVIF/WebP configured in `next.config.mjs`).
