@@ -108,7 +108,7 @@ const VideoFeature = () => {
 					How It Works
 				</span>
 
-				<h2 className="font-instrument-serif font-light text-white text-3xl sm:text-4xl lg:text-5xl text-center mb-4 leading-tight">
+				<h2 className="font-instrument-serif font-light text-white text-3xl sm:text-4xl text-center mb-4 leading-tight">
 					Three steps to
 					<br />
 					<span className="font-semibold">see through time</span>

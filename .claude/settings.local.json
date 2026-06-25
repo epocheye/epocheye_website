@@ -20,7 +20,12 @@
       "mcp__magic__21st_magic_component_inspiration",
       "Bash(node --env-file=.env.local scripts/migrate-blog.mjs)",
       "WebFetch(domain:speedrun.a16z.com)",
-      "Bash(powershell -Command 'Get-ChildItem '\\\\''E:\\\\epocheye_website\\\\public\\\\*.glb'\\\\'' | Select-Object Name, @{N='\\\\''MB'\\\\'';E={[math]::Round\\($_.Length/1MB,2\\)}}')"
+      "Bash(powershell -Command 'Get-ChildItem '\\\\''E:\\\\epocheye_website\\\\public\\\\*.glb'\\\\'' | Select-Object Name, @{N='\\\\''MB'\\\\'';E={[math]::Round\\($_.Length/1MB,2\\)}}')",
+      "mcp__plugin_efecto_efecto__session_status",
+      "mcp__plugin_efecto_efecto__list_animation_presets",
+      "mcp__plugin_efecto_efecto__list_brand_kits",
+      "Bash(mkdir -p \"C:\\\\Users\\\\Sambit\\\\.claude\\\\plans\")",
+      "Read(//c/Users/Sambit/.claude/plans/**)"
     ]
   }
 }

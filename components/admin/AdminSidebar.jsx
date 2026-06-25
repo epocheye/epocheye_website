@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
+  BarChart3,
   Users,
   UserCircle,
   Wallet,
@@ -27,6 +28,7 @@ import {
 
 const NAV = [
   { href: "/admin", label: "Overview", icon: LayoutDashboard },
+  { href: "/admin/analytics", label: "Analytics", icon: BarChart3 },
   { href: "/admin/creators", label: "Creators", icon: Users },
   { href: "/admin/users", label: "Users", icon: UserCircle },
   { href: "/admin/payouts", label: "Payouts", icon: Wallet },

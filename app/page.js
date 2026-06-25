@@ -3,49 +3,60 @@
 import React, { Suspense } from "react";
 import dynamic from "next/dynamic";
 
-// Above-the-fold (eager)
+// Above-the-fold (eager) — Hero stays untouched
 import Hero from "@/components/sections/Hero";
-import TractionMarquee from "@/components/sections/TractionMarquee";
+import SmoothScroll from "@/components/fx/SmoothScroll";
+import KineticManifesto from "@/components/sections/KineticManifesto";
 
-// Below-the-fold (lazy)
-const TractionWall = dynamic(() => import("@/components/sections/TractionWall"), {
-	loading: () => <div className="min-h-[60vh] bg-[#080808]" />,
+// Below-the-fold (lazy) — Editorial Brutalist + 3D redesign
+const ProofIndex = dynamic(() => import("@/components/sections/ProofIndex"), {
+	loading: () => <div className="min-h-[60vh] bg-ink" />,
 	ssr: true,
 });
 
-const WhatWeDo = dynamic(() => import("@/components/sections/WhatWeDo"), {
-	loading: () => <div className="min-h-[60vh] bg-[#0A0A0A]" />,
+const CapabilityStack = dynamic(() => import("@/components/sections/CapabilityStack"), {
+	loading: () => <div className="min-h-screen bg-ink-2" />,
 	ssr: true,
 });
 
-const HowItWorks = dynamic(() => import("@/components/sections/HowItWorks"), {
-	loading: () => <div className="min-h-screen bg-[#080808]" />,
+const MonumentWall = dynamic(() => import("@/components/sections/MonumentWall"), {
+	loading: () => <div className="min-h-[80vh] bg-ink" />,
 	ssr: true,
 });
 
-const GlobalReach = dynamic(() => import("@/components/sections/GlobalReach"), {
-	loading: () => <div className="min-h-screen bg-[#0A0A0A]" />,
+const VideoShowcase = dynamic(() => import("@/components/sections/VideoShowcase"), {
+	loading: () => <div className="min-h-[80vh] bg-ink" />,
 	ssr: true,
 });
 
-const PressWall = dynamic(() => import("@/components/sections/PressWall"), {
-	loading: () => <div className="min-h-[60vh] bg-[#080808]" />,
+const TimeScrubber = dynamic(() => import("@/components/sections/TimeScrubber"), {
+	loading: () => <div className="min-h-screen bg-ink" />,
 	ssr: true,
 });
 
-const TeamAndInvestor = dynamic(() => import("@/components/sections/TeamAndInvestor"), {
-	loading: () => <div className="min-h-[60vh] bg-[#0A0A0A]" />,
+const ComingSoon = dynamic(() => import("@/components/sections/ComingSoon"), {
+	loading: () => <div className="min-h-screen bg-ink-2" />,
 	ssr: true,
 });
 
-const PremiumFooter = dynamic(() => import("@/components/sections/PremiumFooter"), {
-	loading: () => <div className="min-h-[50vh] bg-[#0A0A0A]" />,
+const CreatorNetwork = dynamic(() => import("@/components/sections/CreatorNetwork"), {
+	loading: () => <div className="min-h-[60vh] bg-ink" />,
+	ssr: true,
+});
+
+const OperatorsInvestors = dynamic(() => import("@/components/sections/OperatorsInvestors"), {
+	loading: () => <div className="min-h-[60vh] bg-ink-2" />,
+	ssr: true,
+});
+
+const EndFrame = dynamic(() => import("@/components/sections/EndFrame"), {
+	loading: () => <div className="min-h-[60vh] bg-ink" />,
 	ssr: true,
 });
 
 const Home = () => {
 	return (
-		<main className="flex-1 overflow-x-hidden bg-black">
+		<main className="flex-1 overflow-x-hidden bg-ink">
 			{/* Skip to main content for accessibility */}
 			<a
 				href="#main-content"
@@ -53,34 +64,41 @@ const Home = () => {
 				Skip to main content
 			</a>
 
-			<Hero />
-			<TractionMarquee />
+			<SmoothScroll>
+				<Hero />
 
-			<div id="main-content">
-				<Suspense fallback={<div className="min-h-[60vh] bg-[#080808]" />}>
-					<TractionWall />
+				<div id="main-content">
+					<KineticManifesto />
+				</div>
+
+				<Suspense fallback={<div className="min-h-[60vh] bg-ink" />}>
+					<ProofIndex />
 				</Suspense>
-			</div>
-
-			<Suspense fallback={<div className="min-h-[60vh] bg-[#0A0A0A]" />}>
-				<WhatWeDo />
-			</Suspense>
-			<Suspense fallback={<div className="min-h-screen bg-[#080808]" />}>
-				<HowItWorks />
-			</Suspense>
-			<Suspense fallback={<div className="min-h-screen bg-[#0A0A0A]" />}>
-				<GlobalReach />
-			</Suspense>
-			<Suspense fallback={<div className="min-h-[60vh] bg-[#080808]" />}>
-				<PressWall />
-			</Suspense>
-			<Suspense fallback={<div className="min-h-[60vh] bg-[#0A0A0A]" />}>
-				<TeamAndInvestor />
-			</Suspense>
-
-			<Suspense fallback={<div className="min-h-[50vh] bg-[#0A0A0A]" />}>
-				<PremiumFooter />
-			</Suspense>
+				<Suspense fallback={<div className="min-h-screen bg-ink-2" />}>
+					<CapabilityStack />
+				</Suspense>
+				<Suspense fallback={<div className="min-h-[80vh] bg-ink" />}>
+					<MonumentWall />
+				</Suspense>
+				<Suspense fallback={<div className="min-h-[80vh] bg-ink" />}>
+					<VideoShowcase />
+				</Suspense>
+				<Suspense fallback={<div className="min-h-screen bg-ink" />}>
+					<TimeScrubber />
+				</Suspense>
+				<Suspense fallback={<div className="min-h-screen bg-ink-2" />}>
+					<ComingSoon />
+				</Suspense>
+				<Suspense fallback={<div className="min-h-[60vh] bg-ink" />}>
+					<CreatorNetwork />
+				</Suspense>
+				<Suspense fallback={<div className="min-h-[60vh] bg-ink-2" />}>
+					<OperatorsInvestors />
+				</Suspense>
+				<Suspense fallback={<div className="min-h-[60vh] bg-ink" />}>
+					<EndFrame />
+				</Suspense>
+			</SmoothScroll>
 		</main>
 	);
 };

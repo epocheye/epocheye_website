@@ -12,6 +12,16 @@
   --font-instrument-sans: var(--font-instrument-sans);
   --font-instrument-serif: var(--font-instrument-serif);
   --color-accent: #D4AF37;
+  /* ── Editorial Brutalist + 3D redesign tokens ── */
+  --color-ink: #0A0A0B;        /* page canvas */
+  --color-ink-2: #0E0E10;      /* alt section */
+  --color-ink-3: #060606;      /* deepest (hero seam) */
+  --color-bone: #F2EFE6;       /* editorial type */
+  --color-signal: #CCFF00;     /* single electric accent (swappable) */
+  --color-rule: rgba(242, 239, 230, 0.14); /* hairline rules / frames */
+  --color-bone-muted: #8A887F; /* mono labels / secondary */
+  --color-bone-faint: #55534B; /* faintest mono */
+  --color-ghost: #1B1B19;      /* oversized ghost numerals */
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -644,5 +654,227 @@ html {
 @media (max-width: 768px) {
   video {
     will-change: auto;
+  }
+}
+
+/* ============================================
+   EDITORIAL BRUTALIST + 3D REDESIGN
+   Below-hero landing system
+   ============================================ */
+
+/* Lenis smooth-scroll: disable native smooth so Lenis owns it */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* Hairline rule + mono label primitives */
+.bx-rule {
+  border-color: var(--color-rule);
+}
+.mono-label {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+}
+
+/* Kinetic type: per-token reveal — start hidden, GSAP animates in.
+   Tokens are wrapped in .kin-line > .kin-word/.kin-char by KineticText. */
+.kinetic [data-kin] {
+  display: inline-block;
+  will-change: transform;
+}
+.kinetic .kin-line {
+  display: block;
+  overflow: hidden;
+}
+
+/* Magnetic custom cursor */
+.cursor-hidden,
+.cursor-hidden * {
+  cursor: none !important;
+}
+.holo-cursor-dot,
+.holo-cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  border-radius: 9999px;
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: difference;
+  will-change: transform;
+}
+.holo-cursor-dot {
+  width: 8px;
+  height: 8px;
+  margin: -4px 0 0 -4px;
+  background: #ffffff;
+}
+.holo-cursor-ring {
+  width: 42px;
+  height: 42px;
+  margin: -21px 0 0 -21px;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+}
+
+/* Film grain overlay — fixed, ignores pointer */
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
+}
+
+/* Velocity marquee (kinetic strip) */
+@keyframes bx-marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.bx-marquee-track {
+  display: inline-flex;
+  white-space: nowrap;
+  animation: bx-marquee 28s linear infinite;
+  will-change: transform;
+}
+
+/* 3D transform primitives */
+.persp { perspective: 1200px; }
+.persp-near { perspective: 800px; }
+.tw-3d { transform-style: preserve-3d; }
+.bface-hidden { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.depth { will-change: transform; transform-style: preserve-3d; }
+
+/* Animated 3D perspective grid floor */
+.gridfloor {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  perspective: 340px;
+  perspective-origin: 50% 0%;
+}
+.gridfloor::before {
+  content: "";
+  position: absolute;
+  left: -75%;
+  right: -75%;
+  top: 38%;
+  bottom: -90%;
+  background-image:
+    linear-gradient(to bottom, transparent 0 calc(100% - 1px), rgba(204, 255, 0, 0.5) calc(100% - 1px) 100%),
+    linear-gradient(to right, transparent 0 calc(100% - 1px), rgba(204, 255, 0, 0.28) calc(100% - 1px) 100%);
+  background-size: 64px 64px;
+  transform: rotateX(72deg);
+  transform-origin: top center;
+  animation: grid-move 5.5s linear infinite;
+  -webkit-mask-image: linear-gradient(to top, #000 5%, transparent 72%);
+  mask-image: linear-gradient(to top, #000 5%, transparent 72%);
+}
+@keyframes grid-move {
+  to { background-position: 0 64px, 0 0; }
+}
+
+/* Cursor-following spotlight — global depth light over all content */
+.spotlight {
+  position: fixed;
+  inset: 0;
+  z-index: 55;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  mix-blend-mode: screen;
+  background: radial-gradient(
+    560px circle at var(--sx, 50%) var(--sy, 50%),
+    rgba(204, 255, 0, 0.07),
+    rgba(82, 39, 255, 0.05) 30%,
+    transparent 58%
+  );
+}
+.spotlight.on { opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .spotlight { display: none; }
+}
+
+/* Breathing room for the big display headings */
+.kin-spaced {
+  letter-spacing: 0.02em;
+  word-spacing: 0.18em;
+}
+
+/* Neon glow for acid-lime accents */
+.glow-signal {
+  text-shadow: 0 0 28px rgba(204, 255, 0, 0.45), 0 0 6px rgba(204, 255, 0, 0.35);
+}
+.box-glow-signal {
+  box-shadow: 0 0 44px -6px rgba(204, 255, 0, 0.55), 0 14px 40px -18px rgba(0, 0, 0, 0.8);
+}
+
+/* Idle 3D float for hero card */
+@keyframes float3d {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+.float-3d { animation: float3d 7s ease-in-out infinite; will-change: transform; }
+@media (prefers-reduced-motion: reduce) {
+  .float-3d { animation: none !important; }
+}
+
+/* Glare sheen for 3D tilt cards */
+.tilt-glare {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  opacity: 0;
+  background: radial-gradient(
+    circle at var(--gx, 50%) var(--gy, 50%),
+    rgba(255, 255, 255, 0.28),
+    rgba(255, 255, 255, 0) 45%
+  );
+  transition: opacity 0.4s ease;
+  mix-blend-mode: soft-light;
+}
+.group\/tilt:hover .tilt-glare { opacity: 1; }
+
+/* Respect reduced motion across the whole redesign */
+@media (prefers-reduced-motion: reduce) {
+  .bx-marquee-track,
+  .animate-marquee,
+  .animate-shine,
+  .animate-float,
+  .animate-float-delayed,
+  .animate-gradient-x {
+    animation: none !important;
+  }
+  .kinetic [data-kin] {
+    transform: none !important;
+    opacity: 1 !important;
+  }
+  .grain-overlay {
+    display: none;
+  }
+  .depth,
+  .tw-3d {
+    transform: none !important;
+  }
+  .gridfloor::before {
+    animation: none !important;
+  }
+  html {
+    scroll-behavior: auto;
   }
 }
