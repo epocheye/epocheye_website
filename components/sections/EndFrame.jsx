@@ -19,8 +19,8 @@ const COLUMNS = [
 	{
 		head: "Company",
 		links: [
-			["About", "/early-access"],
-			["Blog", "#"],
+			["About", "/about"],
+			["Blog", "/blog"],
 			["Investors", "mailto:sambit@epocheye.app"],
 			["Contact", "mailto:sambit@epocheye.app"],
 		],
@@ -28,9 +28,9 @@ const COLUMNS = [
 	{
 		head: "Follow",
 		links: [
-			["Twitter / X", "#"],
-			["Instagram", "#"],
-			["LinkedIn", "#"],
+			["Twitter / X", "https://x.com/sambitsingha01"],
+			["Instagram", "https://instagram.com"],
+			["LinkedIn", "https://www.linkedin.com/company/epocheye/"],
 		],
 	},
 ];
@@ -79,21 +79,49 @@ export default function EndFrame() {
 					{COLUMNS.map((col) => (
 						<div key={col.head} className="flex flex-col gap-3">
 							<span className="mono-label text-[11px] text-bone-faint mb-1">{col.head}</span>
-							{col.links.map(([label, href]) => (
-								<a
-									key={label}
-									href={href}
-									className="font-mono text-sm text-bone-muted hover:text-signal transition-colors w-fit">
-									{label}
-								</a>
-							))}
+							{col.links.map(([label, href]) => {
+								const cls =
+									"font-mono text-sm text-bone-muted hover:text-signal transition-colors w-fit";
+								if (href.startsWith("/")) {
+									return (
+										<Link key={label} href={href} className={cls}>
+											{label}
+										</Link>
+									);
+								}
+								if (href.startsWith("http")) {
+									return (
+										<a
+											key={label}
+											href={href}
+											target="_blank"
+											rel="noopener noreferrer"
+											className={cls}>
+											{label}
+										</a>
+									);
+								}
+								return (
+									<a key={label} href={href} className={cls}>
+										{label}
+									</a>
+								);
+							})}
 						</div>
 					))}
 				</Scroll3D>
 
 				<div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-t border-rule mt-14 pt-6 mono-label text-[11px] text-bone-faint">
 					<span>© 2026 Epocheye — All rights reserved</span>
-					<span>Privacy / Terms</span>
+					<span className="flex gap-2">
+						<Link href="/privacy" className="hover:text-signal transition-colors">
+							Privacy
+						</Link>
+						<span aria-hidden>/</span>
+						<Link href="/terms" className="hover:text-signal transition-colors">
+							Terms
+						</Link>
+					</span>
 				</div>
 			</div>
 		</footer>
