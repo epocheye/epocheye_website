@@ -89,11 +89,13 @@ export default function AboutPage() {
 				</div>
 
 				<div className="mt-14 flex flex-wrap gap-4">
-					<Link
-						href="/early-access"
+					<a
+						href="https://play.google.com/store/apps/details?id=com.epocheye"
+						target="_blank"
+						rel="noopener noreferrer"
 						className="inline-flex items-center rounded-full border border-white/30 px-5 py-2.5 text-xs font-semibold tracking-widest uppercase text-white/80 hover:bg-white hover:text-black transition-all duration-300 font-instrument-sans">
-						Get early access
-					</Link>
+						Get it on Google Play
+					</a>
 					<a
 						href="mailto:sambit@epocheye.app"
 						className="inline-flex items-center rounded-full border border-white/15 px-5 py-2.5 text-xs font-semibold tracking-widest uppercase text-white/55 hover:text-white transition-all duration-300 font-instrument-sans">

@@ -3,7 +3,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowRight } from "lucide-react";
-import Link from "next/link";
 import DarkBeamsBackground from "@/components/ui/DarkBeamsBackground";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -134,12 +133,14 @@ const SolutionSplit = () => {
 
 						{/* CTA */}
 						<div className="headline-line mt-10">
-							<Link
-								href="/early-access"
+							<a
+								href="https://play.google.com/store/apps/details?id=com.epocheye"
+								target="_blank"
+								rel="noopener noreferrer"
 								className="inline-flex items-center gap-2 px-6 py-3 bg-white text-black text-sm font-semibold rounded-full hover:bg-white/90 transition-all duration-300 cursor-pointer">
-								Get Early Access
+								Get it on Google Play
 								<ArrowRight className="w-4 h-4" aria-hidden="true" />
-							</Link>
+							</a>
 						</div>
 					</div>
 				</div>

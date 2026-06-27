@@ -60,12 +60,14 @@ const PremiumFooter = () => {
 						<span className="font-semibold">differently?</span>
 					</h2>
 
-					<Link
-						href="/early-access"
+					<a
+						href="https://play.google.com/store/apps/details?id=com.epocheye"
+						target="_blank"
+						rel="noopener noreferrer"
 						className="inline-flex items-center gap-2 px-8 py-4 bg-accent text-black font-instrument-sans text-sm sm:text-base font-semibold tracking-[0.15em] uppercase hover:bg-white transition-colors duration-200 cursor-pointer">
-						Get Early Access
+						Get it on Google Play
 						<ArrowRight className="w-4 h-4" aria-hidden="true" />
-					</Link>
+					</a>
 
 					<div className="max-w-5xl mx-auto mt-14 rounded-3xl overflow-hidden border border-white/15 bg-black/45 backdrop-blur-sm text-left">
 						<div className="grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-0">

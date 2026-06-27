@@ -64,10 +64,12 @@ export default function EndFrame() {
 				/>
 
 				<MagneticButton
-					as={Link}
-					href="/early-access"
+					as="a"
+					href="https://play.google.com/store/apps/details?id=com.epocheye"
+					target="_blank"
+					rel="noopener noreferrer"
 					className="mb-24 px-10 sm:px-12 py-5 sm:py-6 bg-signal text-ink mono-label text-sm sm:text-base box-glow-signal">
-					Get Early Access →
+					Get it on Google Play →
 				</MagneticButton>
 
 				<Scroll3D as="div" className="grid grid-cols-2 md:grid-cols-4 gap-10 border-t border-rule pt-12">

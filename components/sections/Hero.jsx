@@ -1,11 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
-import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "motion/react";
 import Navbar from "./Navbar";
 import ShinyText from "../ShinyText";
-import { ArrowRight } from "lucide-react";
 import googlePlayBadge from "../../public/google-play-badge.png";
 
 const Hero = () => {
@@ -189,7 +187,7 @@ const Hero = () => {
 					Historical intelligence for the physical world
 				</motion.p>
 
-				{/* CTAs — Early Access + live on Google Play */}
+				{/* CTA — live on Google Play */}
 				<motion.div
 					initial={{ opacity: 0, y: 20 }}
 					animate={{
@@ -198,33 +196,20 @@ const Hero = () => {
 					}}
 					transition={{ duration: 1, delay: 1, ease: [0.22, 1, 0.36, 1] }}
 					className="mt-8 sm:mt-12 flex flex-col items-center gap-5 sm:gap-6">
-					<div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
-						<Link
-							href="/early-access"
-							aria-label="Get early access to Epocheye"
-							className="group px-6 py-3 sm:px-8 sm:py-4 border border-white/30 text-white rounded-full text-xs sm:text-sm font-semibold cursor-pointer tracking-wider uppercase hover:bg-white hover:text-black transition-all duration-500 pointer-events-auto inline-flex items-center gap-2 sm:gap-3 focus:outline-none focus:ring-2 focus:ring-white/50">
-							Early Access
-							<ArrowRight
-								className="w-3 h-3 sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform duration-300"
-								aria-hidden="true"
-							/>
-						</Link>
-
-						<a
-							href="https://play.google.com/store/apps/details?id=com.epocheye"
-							target="_blank"
-							rel="noopener noreferrer"
-							aria-label="Get Epocheye on Google Play"
-							className="pointer-events-auto inline-flex transition-opacity duration-300 hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-white/50 rounded-lg">
-							<Image
-								src={googlePlayBadge}
-								alt="Get it on Google Play"
-								width={190}
-								height={74}
-								className="h-[52px] w-auto sm:h-[60px]"
-							/>
-						</a>
-					</div>
+					<a
+						href="https://play.google.com/store/apps/details?id=com.epocheye"
+						target="_blank"
+						rel="noopener noreferrer"
+						aria-label="Get Epocheye on Google Play"
+						className="pointer-events-auto inline-flex transition-opacity duration-300 hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-white/50 rounded-lg">
+						<Image
+							src={googlePlayBadge}
+							alt="Get it on Google Play"
+							width={190}
+							height={74}
+							className="h-[52px] w-auto sm:h-[60px]"
+						/>
+					</a>
 
 					<p className="text-white/60 text-[11px] sm:text-xs font-medium tracking-[0.18em] uppercase">
 						Now live on Google Play

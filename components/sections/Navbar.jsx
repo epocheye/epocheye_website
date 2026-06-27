@@ -65,15 +65,6 @@ const Navbar = ({ showLogo = true }) => {
 					Creators Program
 				</Link>
 
-				{/* Early Access — primary CTA */}
-				{/* <Link
-					href="/early-access"
-					aria-label="Get early access to Epocheye"
-					className="px-3 py-2 sm:px-4 sm:py-2.5 text-black text-[11px] sm:text-xs font-semibold uppercase tracking-[0.12em] rounded-full bg-white hover:bg-white/90 transition-all whitespace-nowrap flex items-center gap-2">
-					Early Access
-					<ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
-				</Link> */}
-
 				{/* Join Us Button */}
 				{/* <button
 					type="button"
