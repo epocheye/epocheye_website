@@ -5,7 +5,6 @@ import { motion } from "motion/react";
 const STATS = [
 	{ value: "10K+", label: "Signups" },
 	{ value: "50+", label: "Beta Users" },
-	{ value: "3", label: "OTA Partners" },
 	{ value: "STPI · AWS", label: "Backed By" },
 ];
 

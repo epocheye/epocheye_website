@@ -9,13 +9,11 @@ const NUM_STYLE = { fontSize: "clamp(46px, 7.5vw, 106px)" };
 const ROWS = [
 	{ k: "00 / On the waitlist", node: <CountUp value={10000} suffix="+" className={NUM} /> },
 	{ k: "01 / Field testers", node: <CountUp value={50} suffix="+" className={NUM} /> },
+
 	{
-		k: "02 / OTA partners",
-		node: (
-			<CountUp value={3} className="font-serif text-signal leading-none" />
-		),
+		k: "03 / Backed by",
+		node: <span className="font-serif text-bone leading-none">STPI · AWS</span>,
 	},
-	{ k: "03 / Backed by", node: <span className="font-serif text-bone leading-none">STPI · AWS</span> },
 ];
 
 /**
