@@ -1,11 +1,6 @@
 import React from "react";
 
-const ITEMS = [
-	"10,000+ SIGNUPS",
-	"50+ BETA USERS",
-	"3 OTA PARTNERS",
-	"BACKED BY STPI & AWS ACTIVATE",
-];
+const ITEMS = ["10,000+ SIGNUPS", "50+ BETA USERS", "BACKED BY STPI & AWS ACTIVATE"];
 
 const Row = () => (
 	<div className="flex items-center shrink-0 font-instrument-sans text-sm sm:text-base text-white/70 tracking-[0.18em] uppercase">
