@@ -13,7 +13,9 @@ export default function OperatorsInvestors() {
 		<section id="team" className="relative w-full bg-ink-2 px-6 sm:px-10 py-24 sm:py-32">
 			<div className="flex items-end justify-between border-b border-rule pb-6 mb-10">
 				<span className="mono-label text-xs text-signal">06 — The Team</span>
-				<span className="mono-label text-xs text-bone-muted">Operators / Investors</span>
+				<span className="mono-label text-xs text-bone-muted">
+					Operators / Investors
+				</span>
 			</div>
 
 			<KineticText
@@ -27,19 +29,18 @@ export default function OperatorsInvestors() {
 			<div className="grid md:grid-cols-2 gap-px bg-rule border border-rule">
 				{/* founder */}
 				<Scroll3D className="flex flex-col gap-5 p-8 sm:p-12 bg-ink">
-					<div className="flex items-center justify-center w-[72px] h-[72px] bg-signal">
-						<span className="font-serif text-ink text-3xl">SS</span>
-					</div>
 					<span className="font-serif text-bone text-4xl">Sambit Singha</span>
 					<span className="mono-label text-xs text-signal">Founder &amp; CEO</span>
 					<p className="font-mono text-sm leading-relaxed text-bone-muted max-w-md">
-						Full-stack engineer and product builder. Shipped at two startups before building
-						the Epocheye AR prototype from scratch.
+						Full-stack engineer and product builder. Shipped at two startups
+						before building the Epocheye AR prototype from scratch.
 					</p>
 				</Scroll3D>
 
 				{/* investor CTA */}
-				<Scroll3D delay={0.1} className="flex flex-col justify-center gap-6 p-8 sm:p-12 bg-ink">
+				<Scroll3D
+					delay={0.1}
+					className="flex flex-col justify-center gap-6 p-8 sm:p-12 bg-ink">
 					<span className="mono-label text-xs text-signal">{"// Let's talk"}</span>
 					<KineticText
 						text="Investor or partner? Let's build the future of heritage."
@@ -49,8 +50,8 @@ export default function OperatorsInvestors() {
 						style={{ fontSize: "clamp(26px, 3.4vw, 40px)", lineHeight: 1.1 }}
 					/>
 					<p className="font-mono text-sm leading-relaxed text-bone-muted">
-						We&apos;re raising to scale coverage across continents. If you back deep-tech with
-						cultural impact, we should talk.
+						We&apos;re raising to scale coverage across continents. If you back
+						deep-tech with cultural impact, we should talk.
 					</p>
 					<MagneticButton
 						href="mailto:sambit@epocheye.app"
