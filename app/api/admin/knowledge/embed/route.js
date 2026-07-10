@@ -7,7 +7,11 @@ export const runtime = "nodejs";
 export const maxDuration = 60;
 
 const GEMINI_EMBED_MODEL = "gemini-embedding-001";
-const GEMINI_EMBED_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_EMBED_MODEL}:embedContent`;
+// Vertex AI express mode (aiplatform.googleapis.com) so embedding usage bills the
+// GCP project that owns the key and Google Cloud credits apply. Mirrors the Go
+// backend's genai.Embed Vertex branch (apis/genai/endpoint.go). The AI Studio
+// rollback shape was generativelanguage.googleapis.com/...:embedContent.
+const GEMINI_EMBED_URL = `https://aiplatform.googleapis.com/v1/publishers/google/models/${GEMINI_EMBED_MODEL}:predict`;
 const EMBED_DIMENSIONS = 768;
 const TARGET_WORDS_PER_CHUNK = 200;
 const EMBED_CONCURRENCY = 5;
@@ -42,27 +46,30 @@ function chunkText(text, targetWords = TARGET_WORDS_PER_CHUNK) {
 }
 
 async function embedChunk(text, apiKey) {
-  const res = await fetch(`${GEMINI_EMBED_URL}?key=${apiKey}`, {
+  // Vertex express :predict shape — key rides the x-goog-api-key header (not ?key=),
+  // task_type is snake_case inside the instance, dims go under parameters.
+  const res = await fetch(GEMINI_EMBED_URL, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      "x-goog-api-key": apiKey,
+    },
     body: JSON.stringify({
-      model: `models/${GEMINI_EMBED_MODEL}`,
-      content: { parts: [{ text }] },
-      outputDimensionality: EMBED_DIMENSIONS,
-      taskType: "RETRIEVAL_DOCUMENT",
+      instances: [{ content: text, task_type: "RETRIEVAL_DOCUMENT" }],
+      parameters: { outputDimensionality: EMBED_DIMENSIONS },
     }),
     signal: AbortSignal.timeout(20000),
   });
 
   if (!res.ok) {
     const errText = await res.text().catch(() => "");
-    throw new Error(`Gemini ${res.status}: ${errText.slice(0, 200)}`);
+    throw new Error(`Vertex embed ${res.status}: ${errText.slice(0, 200)}`);
   }
 
   const data = await res.json();
-  const values = data?.embedding?.values;
+  const values = data?.predictions?.[0]?.embeddings?.values;
   if (!Array.isArray(values) || values.length === 0) {
-    throw new Error("Gemini response missing embedding.values");
+    throw new Error("Vertex response missing predictions[0].embeddings.values");
   }
   return values;
 }
