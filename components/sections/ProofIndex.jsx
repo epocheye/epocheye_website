@@ -7,7 +7,7 @@ const NUM = "font-serif text-bone leading-none";
 const NUM_STYLE = { fontSize: "clamp(46px, 7.5vw, 106px)" };
 
 const ROWS = [
-	{ k: "00 / On the waitlist", node: <CountUp value={10000} suffix="+" className={NUM} /> },
+	{ k: "00 / On the waitlist", node: <CountUp value={5000} suffix="+" className={NUM} /> },
 	{ k: "01 / Field testers", node: <CountUp value={50} suffix="+" className={NUM} /> },
 
 	{
