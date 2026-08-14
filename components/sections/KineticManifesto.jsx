@@ -17,7 +17,7 @@ const CUBE_FACES = [
 	{ src: IMG.boudhanath, label: "Boudhanath" },
 ];
 
-const METRICS = ["10,000+ SIGNUPS", "50+ FIELD TESTERS", "BACKED BY STPI · AWS"];
+const METRICS = ["10,000+ SIGNUPS", "50+ FIELD TESTERS", "BACKED BY STPI · AWS · DRAPER"];
 
 function MarqueeRow() {
 	return (
