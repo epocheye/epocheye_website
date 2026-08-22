@@ -20,6 +20,7 @@ import {
   Sparkles,
   Crown,
   Settings,
+  Wrench,
   Compass,
   AlertTriangle,
   LogOut,
@@ -46,6 +47,7 @@ const NAV = [
   { href: "/admin/chat", label: "Chat", icon: MessageSquare },
   { href: "/admin/recommendations", label: "Recommendations", icon: Sparkles },
   { href: "/admin/settings", label: "Settings", icon: Settings },
+  { href: "/admin/maintenance", label: "Maintenance", icon: Wrench },
 ];
 
 export default function AdminSidebar() {
