@@ -1,5 +1,6 @@
 import { supabase } from "../lib/supabase";
 import { PromoCode } from "../types";
+import { createHash } from "node:crypto";
 
 /** Generate a promo code like SAMBIT2391 */
 function generateCode(name: string): string {
@@ -64,6 +65,27 @@ export async function getPromoCodeByCode(code: string): Promise<PromoCode | null
   return data as PromoCode | null;
 }
 
+/**
+ * Day-scoped, non-reversible token for a caller's IP. Mirrors hashClientIp in
+ * lib/server/creatorRepository.js — see that file for why the date is mixed in
+ * and why a missing salt stores NULL rather than an unsalted digest.
+ */
+function hashClientIp(ipAddress?: string): string | null {
+  const salt = process.env.REFERRAL_HASH_SALT;
+  if (!salt || !ipAddress || ipAddress === "unknown") return null;
+  const day = new Date().toISOString().slice(0, 10);
+  return createHash("sha256").update(`${salt}|${day}|${ipAddress}`).digest("hex").slice(0, 32);
+}
+
+/** ios | android | desktop. */
+function platformFromUserAgent(userAgent?: string): string | null {
+  const ua = String(userAgent || "").toLowerCase();
+  if (!ua) return null;
+  if (/iphone|ipad|ipod/.test(ua)) return "ios";
+  if (/android/.test(ua)) return "android";
+  return "desktop";
+}
+
 export async function recordClick(params: {
   code: string;
   creatorId: string | null;
@@ -73,8 +95,13 @@ export async function recordClick(params: {
   await supabase.from("referral_clicks").insert({
     code: params.code.toUpperCase(),
     creator_id: params.creatorId,
-    ip_address: params.ipAddress ?? null,
-    user_agent: params.userAgent ?? null,
+    // Reduced exactly as the Neon writer reduces them
+    // (lib/server/creatorRepository.js): a day-scoped, salted digest instead of
+    // the address, and the three-value platform instead of the full user-agent.
+    // Two writers into one table must agree on what the columns MEAN, or the
+    // table ends up holding raw addresses from whichever path was forgotten.
+    ip_address: hashClientIp(params.ipAddress),
+    user_agent: platformFromUserAgent(params.userAgent),
   });
 }
 

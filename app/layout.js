@@ -98,6 +98,7 @@ export const metadata = {
 };
 
 import Script from "next/script";
+import AnnouncementBanner from "@/components/layout/AnnouncementBanner";
 
 export default function RootLayout({ children }) {
   return (
@@ -105,6 +106,7 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${montserratAlternates.variable} ${instrumentSans.variable} ${instrumentSerif.variable} antialiased`}
       >
+        <AnnouncementBanner />
         {children}
         <Script 
           src="https://tally.so/widgets/embed.js" 

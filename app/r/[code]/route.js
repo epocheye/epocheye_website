@@ -1,7 +1,11 @@
 import { NextResponse } from "next/server";
 
+import { recordClick } from "@/lib/server/creatorRepository";
+
 const IOS_STORE_URL = "https://apps.apple.com/app/epocheye/id6504869173";
 const ANDROID_STORE_URL = "https://play.google.com/store/apps/details?id=com.epocheye";
+
+export const runtime = "nodejs";
 
 function detectPlatform(userAgent = "") {
   const ua = userAgent.toLowerCase();
@@ -20,12 +24,19 @@ export async function GET(request, { params }) {
     "unknown";
   const userAgent = request.headers.get("user-agent") || "";
 
-  // Fire-and-forget click recording — don't block the redirect
-  const clickEndpoint = new URL("/api/creator/promo/click", request.url);
-  fetch(clickEndpoint, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ code: upperCode, ip_address: ip, user_agent: userAgent }),
+  // Fire-and-forget click recording — don't block the redirect.
+  //
+  // RECORDED IN-PROCESS, not through an HTTP hop to our own click endpoint. The
+  // hop was why the visitor's IP and user-agent had to travel in a JSON body in
+  // the first place: a server-to-server fetch presents the SERVER's headers, not
+  // the visitor's. That body was then trusted by a public, unauthenticated
+  // endpoint. Calling the repository directly keeps the real connection details
+  // in scope and removes the reason the spoofable path existed at all.
+  recordClick({
+    code: upperCode,
+    creatorId: null,
+    ipAddress: ip,
+    userAgent,
   }).catch(() => {});
 
   const platform = detectPlatform(userAgent);

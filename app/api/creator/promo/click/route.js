@@ -23,12 +23,17 @@ export async function POST(request) {
 
   const promo = await getPromoCodeByCode(code);
 
+  // HEADERS ONLY. This endpoint is public and unauthenticated, and it used to
+  // prefer `body.ip_address` / `body.user_agent` over the real connection — so
+  // any caller could post whatever they liked. That made the click record both
+  // personal AND untrustworthy for the one job it exists to do: a competitor
+  // could inflate a creator's clicks, or forge them onto someone else's address.
+  // The body fields are now ignored entirely.
   const ipAddress =
-    body?.ip_address ||
     request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
     request.headers.get("x-real-ip") ||
     null;
-  const userAgent = body?.user_agent || request.headers.get("user-agent") || null;
+  const userAgent = request.headers.get("user-agent") || null;
 
   await recordClick({
     code,

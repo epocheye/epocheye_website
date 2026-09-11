@@ -60,14 +60,18 @@ router.post("/click", clickLimiter, async (req: Request, res: Response) => {
     return;
   }
 
-  const { code, ip_address, user_agent } = result.data;
+  // `ip_address` / `user_agent` are still ACCEPTED by the schema for backward
+  // compatibility with older callers, but they are deliberately no longer READ:
+  // this endpoint is public, so a body-supplied address let any caller forge a
+  // click onto someone else's IP. Connection headers only.
+  const { code } = result.data;
   const promo = await getPromoCodeByCode(code);
 
   await recordClick({
     code,
     creatorId: promo?.creator_id ?? null,
-    ipAddress: ip_address ?? (req.headers["x-forwarded-for"] as string) ?? req.ip,
-    userAgent: user_agent ?? req.headers["user-agent"],
+    ipAddress: (req.headers["x-forwarded-for"] as string) ?? req.ip,
+    userAgent: req.headers["user-agent"],
   });
 
   // Return discount info so the referral link landing page can display it
