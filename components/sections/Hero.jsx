@@ -4,6 +4,7 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "motion/react";
 import Navbar from "./Navbar";
 import ShinyText from "../ShinyText";
+import HeroOffer from "./HeroOffer";
 import googlePlayBadge from "../../public/google-play-badge.png";
 
 const Hero = () => {
@@ -186,6 +187,17 @@ const Hero = () => {
 					className="text-white text-base sm:text-lg md:text-xl font-medium mt-6 sm:mt-8">
 					Historical intelligence for the physical world
 				</motion.p>
+
+				{/* Bangalore launch offer — first 500 free */}
+				<motion.div
+					initial={{ opacity: 0, y: 20 }}
+					animate={{
+						opacity: introPhase === "complete" ? 1 : 0,
+						y: introPhase === "complete" ? 0 : 20,
+					}}
+					transition={{ duration: 1, delay: 0.85, ease: [0.22, 1, 0.36, 1] }}>
+					<HeroOffer />
+				</motion.div>
 
 				{/* CTA — live on Google Play */}
 				<motion.div

@@ -90,6 +90,46 @@ export async function PUT(request) {
     updates.product_enabled = !!body.product_enabled;
   }
 
+  if ("offer_enabled" in body) {
+    if (typeof body.offer_enabled !== "boolean") {
+      return NextResponse.json({ success: false, error: "offer_enabled must be a boolean" }, { status: 400 });
+    }
+    updates.offer_enabled = body.offer_enabled;
+  }
+
+  if ("offer_total" in body) {
+    const v = Number(body.offer_total);
+    if (!Number.isInteger(v) || v < 1) {
+      return NextResponse.json({ success: false, error: "offer_total must be a positive integer" }, { status: 400 });
+    }
+    updates.offer_total = v;
+  }
+
+  if ("offer_claimed" in body) {
+    const v = Number(body.offer_claimed);
+    if (!Number.isInteger(v) || v < 0) {
+      return NextResponse.json({ success: false, error: "offer_claimed must be a non-negative integer" }, { status: 400 });
+    }
+    updates.offer_claimed = v;
+  }
+
+  if ("offer_claimed" in updates || "offer_total" in updates) {
+    const current = await getAdminSettings();
+    const claimed = updates.offer_claimed ?? current.offer_claimed;
+    const total = updates.offer_total ?? current.offer_total;
+    if (claimed > total) {
+      return NextResponse.json({ success: false, error: `offer_claimed cannot exceed offer_total (${total})` }, { status: 400 });
+    }
+  }
+
+  if ("offer_promo_code" in body) {
+    const v = String(body.offer_promo_code ?? "").trim().toUpperCase();
+    if (v.length > 32 || !/^[A-Z0-9_-]*$/.test(v)) {
+      return NextResponse.json({ success: false, error: "offer_promo_code must be up to 32 letters, digits, - or _" }, { status: 400 });
+    }
+    updates.offer_promo_code = v;
+  }
+
   await updateAdminSettings(updates);
   const settings = await getAdminSettings();
   return NextResponse.json({ success: true, data: settings });
