@@ -2,9 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 
-// Shown if /api/offer can't be reached, so the offer is never silently missing from the Hero.
-// No promo code in the fallback — we never show a code the backend might not accept.
-const FALLBACK_OFFER = { claimed: 120, total: 500, promoCode: "", soldOut: false };
+// Shown until /api/offer responds (or if it can't be reached), so the offer is never missing from the Hero.
+const FALLBACK_OFFER = { claimed: 120, total: 500, promoCode: "BLR500", soldOut: false };
 
 // "First 500 in Bangalore free" launch offer, rendered inside the Hero below the subtext.
 // Counter + promo code are admin-editable (Admin → Settings → Bangalore Launch Offer).

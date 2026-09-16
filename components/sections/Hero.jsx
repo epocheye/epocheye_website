@@ -217,15 +217,11 @@ const Hero = () => {
 						<Image
 							src={googlePlayBadge}
 							alt="Get it on Google Play"
-							width={190}
-							height={74}
-							className="h-[52px] w-auto sm:h-[60px]"
+							width={200}
+							height={77}
+							className="h-[64px] w-auto sm:h-[76px]"
 						/>
 					</a>
-
-					<p className="text-white/60 text-[11px] sm:text-xs font-medium tracking-[0.18em] uppercase">
-						Now live on Google Play
-					</p>
 				</motion.div>
 			</motion.div>
 

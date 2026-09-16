@@ -5,6 +5,9 @@ import { getAdminSettings } from "@/lib/server/creatorRepository";
 export const runtime = "nodejs";
 export const revalidate = 60;
 
+// Used when admin_settings can't be read (e.g. db/007_bangalore_offer.sql not run yet).
+const DEFAULT_OFFER = { enabled: true, claimed: 120, total: 500, promoCode: "BLR500", soldOut: false };
+
 // Public: powers the "first 500 free in Bangalore" section on the landing page.
 // Only exposes the offer fields, never the rest of admin_settings.
 export async function GET() {
@@ -24,6 +27,6 @@ export async function GET() {
     });
   } catch (err) {
     console.error("[api/offer] failed to load offer settings:", err?.message);
-    return NextResponse.json({ success: false, error: "Offer unavailable" }, { status: 503 });
+    return NextResponse.json({ success: true, data: DEFAULT_OFFER });
   }
 }
