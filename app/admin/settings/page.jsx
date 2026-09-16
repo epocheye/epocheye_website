@@ -20,6 +20,14 @@ export default function AdminSettingsPage() {
     razorpay_payouts_enabled: true,
     conversion_confirm_days: "",
   });
+  const [offer, setOffer] = useState({
+    offer_enabled: true,
+    offer_claimed: "",
+    offer_total: "",
+    offer_promo_code: "",
+  });
+  const [savingOffer, setSavingOffer] = useState(false);
+  const [offerMessage, setOfferMessage] = useState(null);
   const [tiers, setTiers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -39,6 +47,12 @@ export default function AdminSettingsPage() {
             default_commission_rate: String(settingsJson.data.default_commission_rate),
             razorpay_payouts_enabled: settingsJson.data.razorpay_payouts_enabled,
             conversion_confirm_days: String(settingsJson.data.conversion_confirm_days),
+          });
+          setOffer({
+            offer_enabled: settingsJson.data.offer_enabled,
+            offer_claimed: String(settingsJson.data.offer_claimed),
+            offer_total: String(settingsJson.data.offer_total),
+            offer_promo_code: settingsJson.data.offer_promo_code || "",
           });
         }
         if (tiersJson.success && tiersJson.data?.tiers) {
@@ -87,6 +101,42 @@ export default function AdminSettingsPage() {
       setMessage({ type: "error", text: "Network error — please try again" });
     } finally {
       setSaving(false);
+    }
+  }
+
+  async function handleSaveOffer(e) {
+    e.preventDefault();
+    setSavingOffer(true);
+    setOfferMessage(null);
+
+    try {
+      const res = await fetch("/api/admin/settings", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          offer_enabled: offer.offer_enabled,
+          offer_claimed: Number(offer.offer_claimed),
+          offer_total: Number(offer.offer_total),
+          offer_promo_code: offer.offer_promo_code,
+        }),
+      });
+
+      const json = await res.json();
+      if (!res.ok || !json.success) {
+        setOfferMessage({ type: "error", text: json.error || "Failed to save offer" });
+      } else {
+        setOffer({
+          offer_enabled: json.data.offer_enabled,
+          offer_claimed: String(json.data.offer_claimed),
+          offer_total: String(json.data.offer_total),
+          offer_promo_code: json.data.offer_promo_code || "",
+        });
+        setOfferMessage({ type: "success", text: "Offer saved. The website updates within a minute." });
+      }
+    } catch {
+      setOfferMessage({ type: "error", text: "Network error — please try again" });
+    } finally {
+      setSavingOffer(false);
     }
   }
 
@@ -277,6 +327,121 @@ export default function AdminSettingsPage() {
           className="mt-5 px-6 py-2.5 bg-white text-black text-sm font-semibold rounded-lg hover:bg-white/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
         >
           {saving ? "Saving\u2026" : "Save settings"}
+        </button>
+      </form>
+
+      {/* Bangalore launch offer (landing page section) */}
+      <form onSubmit={handleSaveOffer} className="mt-10">
+        <div className="bg-[#0d0d0d] border border-white/5 rounded-xl divide-y divide-white/5">
+          <div className="px-5 pt-5 pb-3">
+            <p className="text-xs font-medium text-white/35 uppercase tracking-widest">Bangalore Launch Offer</p>
+            <p className="text-xs text-white/25 mt-1">
+              Controls the &ldquo;first 500 free&rdquo; section under the hero. The promo code must also exist in the app backend.
+            </p>
+          </div>
+
+          <div className="p-5 flex items-center justify-between gap-4">
+            <div>
+              <p className="text-sm text-white font-medium">Show on website</p>
+              <p className="text-xs text-white/25 mt-0.5">When off, the section is hidden from the landing page.</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setOffer((o) => ({ ...o, offer_enabled: !o.offer_enabled }))}
+              className={`relative w-11 h-6 rounded-full transition-colors duration-200 focus:outline-none shrink-0 ${
+                offer.offer_enabled ? "bg-white" : "bg-white/15"
+              }`}
+              aria-pressed={offer.offer_enabled}
+            >
+              <span
+                className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full shadow transition-transform duration-200 ${
+                  offer.offer_enabled ? "bg-black translate-x-5" : "bg-white/50 translate-x-0"
+                }`}
+              />
+            </button>
+          </div>
+
+          <div className="p-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-medium text-white/40 uppercase tracking-widest mb-1.5">
+                Spots claimed
+              </label>
+              <div className="flex gap-2">
+                <input
+                  type="number"
+                  min="0"
+                  step="1"
+                  value={offer.offer_claimed}
+                  onChange={(e) => setOffer((o) => ({ ...o, offer_claimed: e.target.value }))}
+                  required
+                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white placeholder-white/20 focus:outline-none focus:border-white/30 transition-colors"
+                  placeholder="120"
+                />
+                <button
+                  type="button"
+                  onClick={() =>
+                    setOffer((o) => ({
+                      ...o,
+                      offer_claimed: String(Math.min(Number(o.offer_claimed || 0) + 10, Number(o.offer_total || 0))),
+                    }))
+                  }
+                  className="px-3 rounded-lg border border-white/10 text-xs text-white/70 hover:bg-white/5 transition-colors shrink-0"
+                >
+                  +10
+                </button>
+              </div>
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-white/40 uppercase tracking-widest mb-1.5">
+                Total spots
+              </label>
+              <input
+                type="number"
+                min="1"
+                step="1"
+                value={offer.offer_total}
+                onChange={(e) => setOffer((o) => ({ ...o, offer_total: e.target.value }))}
+                required
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white placeholder-white/20 focus:outline-none focus:border-white/30 transition-colors"
+                placeholder="500"
+              />
+            </div>
+          </div>
+
+          <div className="p-5">
+            <label className="block text-xs font-medium text-white/40 uppercase tracking-widest mb-1.5">
+              Promo code
+            </label>
+            <input
+              type="text"
+              maxLength={32}
+              value={offer.offer_promo_code}
+              onChange={(e) => setOffer((o) => ({ ...o, offer_promo_code: e.target.value.toUpperCase() }))}
+              className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white font-mono tracking-widest placeholder-white/20 focus:outline-none focus:border-white/30 transition-colors"
+              placeholder="BLR500"
+            />
+            <p className="text-xs text-white/25 mt-1.5">Leave empty to hide the code box on the website.</p>
+          </div>
+        </div>
+
+        {offerMessage && (
+          <p
+            className={`mt-4 text-sm px-4 py-2.5 rounded-lg border ${
+              offerMessage.type === "success"
+                ? "text-green-400 bg-green-400/10 border-green-400/20"
+                : "text-red-400 bg-red-400/10 border-red-400/20"
+            }`}
+          >
+            {offerMessage.text}
+          </p>
+        )}
+
+        <button
+          type="submit"
+          disabled={savingOffer}
+          className="mt-5 px-6 py-2.5 bg-white text-black text-sm font-semibold rounded-lg hover:bg-white/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+        >
+          {savingOffer ? "Saving…" : "Save offer"}
         </button>
       </form>
 
