@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { verifyAdminJWTFromRequest } from "@/lib/server/adminAuth";
+import { syncFreeAccessCodeToBackend } from "@/lib/server/backendSync";
 import { getAdminSettings, updateAdminSettings } from "@/lib/server/creatorRepository";
 
 export const runtime = "nodejs";
@@ -132,5 +133,16 @@ export async function PUT(request) {
 
   await updateAdminSettings(updates);
   const settings = await getAdminSettings();
-  return NextResponse.json({ success: true, data: settings });
+
+  // The app redeems the offer code against the Go backend, so keep it in step.
+  let offerSynced;
+  if (["offer_enabled", "offer_total", "offer_promo_code"].some((k) => k in updates)) {
+    offerSynced = await syncFreeAccessCodeToBackend({
+      code: settings.offer_promo_code,
+      total: settings.offer_total,
+      enabled: settings.offer_enabled,
+    });
+  }
+
+  return NextResponse.json({ success: true, data: settings, offerSynced });
 }
