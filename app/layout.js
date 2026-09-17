@@ -99,6 +99,7 @@ export const metadata = {
 
 import Script from "next/script";
 import AnnouncementBanner from "@/components/layout/AnnouncementBanner";
+import { Analytics } from "@vercel/analytics/next";
 
 export default function RootLayout({ children }) {
   return (
@@ -112,6 +113,7 @@ export default function RootLayout({ children }) {
           src="https://tally.so/widgets/embed.js" 
           strategy="lazyOnload"
         />
+        <Analytics />
       </body>
     </html>
   );
