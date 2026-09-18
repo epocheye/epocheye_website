@@ -1,28 +1,23 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Copy, Check, ExternalLink, Download, QrCode } from "lucide-react";
+import { Copy, Check, Download, QrCode } from "lucide-react";
 import { trackEvent, EVENT_NAMES } from "@/lib/analytics";
 
-const MAIN_SITE_ORIGIN = (
-	process.env.NEXT_PUBLIC_MAIN_SITE_ORIGIN || "https://epocheye.com"
-).replace(/\/$/, "");
-
+// Creators share only their code (or a QR of it). There is no link: nobody is
+// sent to a website or an app store. Followers type or scan the code into the
+// Epocheye app at checkout, which is where entries and sales are counted.
 export default function PromoCodeWidget({ code }) {
 	const [codeCopied, setCodeCopied] = useState(false);
-	const [linkCopied, setLinkCopied] = useState(false);
 	const [qrDataUrl, setQrDataUrl] = useState(null);
 	const [showQr, setShowQr] = useState(false);
 
-	const referralLink = `${MAIN_SITE_ORIGIN}/r/${code}`;
-	const referralLinkLabel = referralLink.replace(/^https?:\/\//, "");
-
-	// Generate QR code on client side only
+	// QR of the plain code (no URL), generated on the client only.
 	useEffect(() => {
 		if (!code) return;
 		let cancelled = false;
 		import("qrcode").then((QRCode) => {
-			QRCode.toDataURL(referralLink, {
+			QRCode.toDataURL(code, {
 				width: 300,
 				margin: 2,
 				color: { dark: "#ffffff", light: "#0d0d0d" },
@@ -33,7 +28,7 @@ export default function PromoCodeWidget({ code }) {
 		return () => {
 			cancelled = true;
 		};
-	}, [code, referralLink]);
+	}, [code]);
 
 	const copy = async (text, setFn, eventName) => {
 		try {
@@ -97,23 +92,6 @@ export default function PromoCodeWidget({ code }) {
 					</button>
 				</div>
 
-				{/* Referral link */}
-				<button
-					onClick={() =>
-						copy(referralLink, setLinkCopied, EVENT_NAMES.referralLinkCopied)
-					}
-					className="flex items-center gap-2 px-4 py-2 border border-white/10 rounded-lg text-xs text-white/40 hover:text-white/70 hover:border-white/25 transition-all duration-200 max-w-full overflow-hidden"
-					aria-label="Copy referral link">
-					<ExternalLink className="w-3.5 h-3.5 shrink-0" />
-					<span className="truncate max-w-45 font-mono">
-						{linkCopied ? "Link copied!" : referralLinkLabel}
-					</span>
-					{linkCopied ? (
-						<Check className="w-3.5 h-3.5 text-green-400 shrink-0" />
-					) : (
-						<Copy className="w-3.5 h-3.5 shrink-0" />
-					)}
-				</button>
 			</div>
 
 			{/* QR code section */}
@@ -159,9 +137,10 @@ export default function PromoCodeWidget({ code }) {
 				)}
 			</div>
 
-			<p className="text-xs text-white/25 mt-4">
-				Share your code or link. Customers get a discount; you earn commission on every
-				purchase.
+			<p className="text-xs text-white/35 mt-4 leading-relaxed">
+				Share only this code, or its QR. Your followers enter it in the Epocheye app when
+				they unlock your monument. Each person entering it counts once a day as a code
+				entry; a sale counts only when they pay in the app with your code.
 			</p>
 		</div>
 	);

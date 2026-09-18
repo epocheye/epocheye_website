@@ -488,8 +488,8 @@ export default function AdminSettingsPage() {
           <div className="px-5 pt-5 pb-3">
             <p className="text-xs font-medium text-white/35 uppercase tracking-widest">Creator Page</p>
             <p className="text-xs text-white/25 mt-1">
-              Monuments shown on creators.epocheye.com (top of the page, FAQ, terms and signup).
-              Only list monuments that are live in the app.
+              Monuments shown on creators.epocheye.com and given to creators in Creator sites.
+              Each needs its app slug. Only list monuments that are live in the app.
             </p>
           </div>
 
@@ -510,7 +510,16 @@ export default function AdminSettingsPage() {
                   value={m.place}
                   onChange={(e) => updateMonument(i, "place", e.target.value)}
                   placeholder="City / state"
-                  className="sm:w-48 bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white placeholder-white/20 focus:outline-none focus:border-white/30 transition-colors"
+                  className="sm:w-40 bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white placeholder-white/20 focus:outline-none focus:border-white/30 transition-colors"
+                />
+                <input
+                  type="text"
+                  maxLength={80}
+                  value={m.slug || ""}
+                  onChange={(e) => updateMonument(i, "slug", e.target.value.trim().toLowerCase())}
+                  placeholder="app slug"
+                  title="The site's slug in the app, e.g. tipu-summer-palace-bengaluru"
+                  className="sm:w-56 bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white font-mono placeholder-white/20 focus:outline-none focus:border-white/30 transition-colors"
                 />
                 <button
                   type="button"
@@ -524,7 +533,7 @@ export default function AdminSettingsPage() {
             ))}
             <button
               type="button"
-              onClick={() => setMonuments((list) => [...list, { name: "", place: "" }])}
+              onClick={() => setMonuments((list) => [...list, { name: "", place: "", slug: "" }])}
               disabled={monuments.length >= 20}
               className="mt-1 px-4 py-2 text-xs text-white/60 border border-white/10 rounded-lg hover:text-white hover:border-white/30 disabled:opacity-30 transition-colors"
             >

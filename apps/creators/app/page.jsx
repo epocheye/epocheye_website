@@ -11,8 +11,10 @@ import { CREATOR_ROUTES } from "@/lib/creatorRoutes";
 import {
 	ACCESS_HOURS,
 	CUSTOMER_DISCOUNT_PERCENT,
+	ASSIGNMENT_DAYS,
 	HOLD_DAYS,
 	LIST_PRICE_INR,
+	MAX_CREATORS,
 	MIN_PAYOUT_INR,
 	SUPPORT_EMAIL,
 	TIERS,
@@ -34,12 +36,12 @@ const MIN_RATE = TIERS[0].rate;
 const MAX_RATE = TIERS[TIERS.length - 1].rate;
 
 const KEY_METRICS = [
-	{ value: "Instant", label: "your creator code is ready when you sign up" },
+	{ value: String(MAX_CREATORS), label: "creator spots, by application" },
 	{
 		value: `${MIN_RATE}-${MAX_RATE}%`,
 		label: `of the ${formatInr(LIST_PRICE_INR)} list price on every sale`,
 	},
-	{ value: "Live", label: "clicks, sales, and earnings in your dashboard" },
+	{ value: `${ASSIGNMENT_DAYS / 7} weeks`, label: "your own monument, no other creator" },
 ];
 
 const CHANNELS = [
@@ -54,23 +56,23 @@ const CHANNELS = [
 const PROCESS_STEPS = [
 	{
 		number: "01",
-		title: "Open your creator account",
-		body: "Sign up, accept the creator terms, and your code is ready.",
+		title: "Apply",
+		body: `Sign up and send us your profile. We review every application and take up to ${MAX_CREATORS} creators.`,
 	},
 	{
 		number: "02",
-		title: "Get one code that follows you everywhere",
-		body: "Every qualifying referral through your code maps back to your account automatically.",
+		title: "Get your own monument",
+		body: `Approved creators get one monument for ${ASSIGNMENT_DAYS} days, with no other creator on it. Your code works only there, only during your window.`,
 	},
 	{
 		number: "03",
-		title: "Publish where your audience already watches",
-		body: "Post monument explainers, reels, shorts, reviews, or travel walkthroughs. Use the format that already works for you.",
+		title: "Share your code, not a link",
+		body: "Post your code, or its QR, with your monument content. Visitors enter it in the Epocheye app when they unlock the monument. There are no links to click.",
 	},
 	{
 		number: "04",
-		title: "Review results and request payouts",
-		body: "Track performance live and request withdrawals directly from the creator dashboard.",
+		title: "Sell to keep it",
+		body: `Reach the sales target in your window and the monument is yours for another ${ASSIGNMENT_DAYS} days. Miss it and it passes to the next creator in line.`,
 	},
 ];
 
@@ -118,12 +120,20 @@ const BENEFITS = [
 function buildFaq(monuments) {
 	return [
 		{
-			question: "Do I need a minimum follower count?",
-			answer: "No minimum. We care about paid conversions, not vanity metrics. If your audience trusts you, you can do well.",
+			question: "Can anyone join?",
+			answer: `No. The program is invite-only and limited to ${MAX_CREATORS} creators. Sign up, send your profile, and we review it. There is no minimum follower count: we look for creators whose audience visits monuments.`,
+		},
+		{
+			question: "What counts as a click and what counts as a sale?",
+			answer: "There are no links. A click is someone entering your code in the Epocheye app, counted once per person per day. A sale is someone paying for a monument unlock in the app with your code. Commission is paid on sales only.",
+		},
+		{
+			question: "How does monument exclusivity work?",
+			answer: `Each monument has one creator at a time, for ${ASSIGNMENT_DAYS} days. Your code works only at your monument during your window. Reach the sales target and you keep it for another ${ASSIGNMENT_DAYS} days; otherwise it goes to the next approved creator in line, and you rejoin the line.`,
 		},
 		{
 			question: "Can I promote Epocheye on multiple platforms?",
-			answer: "Yes. The same code works across Instagram, YouTube, TikTok, blogs, newsletters, and community groups.",
+			answer: "Yes. Share the same code (or its QR) on Instagram, YouTube, TikTok, blogs, newsletters, and community groups. Don't share it as a link: it's entered in the app.",
 		},
 		{
 			question: "What are my followers buying?",
@@ -232,12 +242,12 @@ export default function CreatorsLandingPage() {
 								<Link
 									href={CREATOR_ROUTES.signup}
 									className="hidden sm:inline-flex rounded-full border border-white/30 px-5 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-white transition-all duration-300 hover:bg-white hover:text-black">
-									Join Program
+									Apply
 								</Link>
 								<Link
 									href={CREATOR_ROUTES.signup}
 									className="inline-flex sm:hidden rounded-full border border-white/30 px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-white transition-all duration-300 hover:bg-white hover:text-black">
-									Join
+									Apply
 								</Link>
 							</Show>
 							<Show when="signed-in">
@@ -293,7 +303,7 @@ export default function CreatorsLandingPage() {
 												href={CREATOR_ROUTES.signup}
 												onClick={() => setMobileNavOpen(false)}
 												className="flex items-center px-3 py-2.5 text-sm font-semibold uppercase tracking-[0.14em] text-white/50 hover:text-white transition-colors rounded-lg hover:bg-white/5">
-												Join Program
+												Apply
 											</Link>
 											<Link
 												href={CREATOR_ROUTES.login}
@@ -370,7 +380,7 @@ export default function CreatorsLandingPage() {
 							<Link
 								href={CREATOR_ROUTES.signup}
 								className="group inline-flex items-center gap-3 rounded-full border border-white/30 px-7 py-3 text-sm font-semibold uppercase tracking-[0.12em] text-white transition-all duration-300 hover:bg-white hover:text-black">
-								Get My Creator Code
+								Apply for a spot
 								<ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
 							</Link>
 							<Link
@@ -505,7 +515,7 @@ export default function CreatorsLandingPage() {
 							gives, and your rate rises as your total sales grow.
 						</p>
 
-						<div className="mt-6 grid grid-cols-2 gap-2.5 md:gap-3 xl:grid-cols-4">
+						<div className="mt-6 grid grid-cols-2 gap-2.5 md:gap-3 lg:grid-cols-3 xl:grid-cols-5">
 							{TIERS.map((tier, index) => (
 								<motion.div
 									key={tier.from}
@@ -724,13 +734,13 @@ export default function CreatorsLandingPage() {
 							<span className="font-bold">Now give them a code.</span>
 						</h2>
 						<p className="mx-auto mt-5 max-w-xl text-sm leading-relaxed text-white/54 md:text-base">
-							Sign up, accept the creator terms, and your code is ready to share
-							today.
+							{MAX_CREATORS} spots. One monument each, {ASSIGNMENT_DAYS} days at a time. Apply
+							and we&apos;ll get back to you.
 						</p>
 						<Link
 							href={CREATOR_ROUTES.signup}
 							className="group mt-8 inline-flex items-center gap-3 rounded-full border border-white/30 px-8 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-white transition-all duration-300 hover:bg-white hover:text-black">
-							Join Creator Program
+							Apply to the program
 							<ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
 						</Link>
 					</motion.div>

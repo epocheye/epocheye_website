@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
 
-import { syncPromoCodeToBackend } from "@/lib/server/backendSync";
+import { syncCreatorCouponState } from "@/lib/server/backendSync";
 import { creatorAuthErrorResponse, getCreatorContext } from "@/lib/server/creatorAuth";
 import { CREATOR_TERMS_VERSION } from "@/lib/server/creatorProgram";
 import { markPromoCodeSynced, toPublicProfile, updateCreator } from "@/lib/server/creatorRepository";
+import { getLiveAssignmentForCreator, rotateSites } from "@/lib/server/creatorSites";
 
 export const runtime = "nodejs";
 
@@ -12,6 +13,12 @@ export const runtime = "nodejs";
 export async function POST(request) {
   const context = await getCreatorContext();
   if (context.error) return creatorAuthErrorResponse(context.error);
+  if (context.creator.status !== "active") {
+    return NextResponse.json(
+      { success: false, error: "Your application hasn't been approved yet." },
+      { status: 403 }
+    );
+  }
 
   let body;
   try {
@@ -39,14 +46,16 @@ export async function POST(request) {
     country: "IN",
   });
 
-  // First acceptance: make the code live in the app now rather than on the
-  // next request.
+  // Register the code with the app backend (off until a site is assigned),
+  // then fill any free site so an accepted creator doesn't wait for the cron.
   const promo = context.promo;
-  if (promo?.code && !promo.backend_synced_at) {
-    if (await syncPromoCodeToBackend(updated, promo.code)) {
+  if (promo?.code) {
+    const assignment = await getLiveAssignmentForCreator(updated.id).catch(() => null);
+    if (await syncCreatorCouponState(updated, promo.code, assignment)) {
       await markPromoCodeSynced(promo.id).catch(() => {});
     }
   }
+  await rotateSites().catch((err) => console.error("[accept-terms] rotate:", err?.message ?? err));
 
   return NextResponse.json({ success: true, data: toPublicProfile(updated) });
 }

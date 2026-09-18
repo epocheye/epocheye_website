@@ -87,6 +87,9 @@ async function handleBackendOrderWebhook(body) {
     planAmount: planAmountInr,
     customerDiscountRate: Number(creator.customer_discount),
     discountAmount: discountInr,
+    // The sale's site, so a creator's sales at their assigned monument count
+    // towards renewing their window.
+    siteSlug: Array.isArray(body?.place_ids) && body.place_ids.length ? String(body.place_ids[0]) : null,
   });
 
   return NextResponse.json({

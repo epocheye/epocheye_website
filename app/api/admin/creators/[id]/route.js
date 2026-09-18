@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 
 import { verifyAdminJWTFromRequest } from "@/lib/server/adminAuth";
-import { syncPromoCodeToBackend } from "@/lib/server/backendSync";
+import { syncCreatorCouponState } from "@/lib/server/backendSync";
+import { endAssignment, getLiveAssignmentForCreator } from "@/lib/server/creatorSites";
 import {
   findCreatorById,
   listActivePromoCodesByCreator,
@@ -72,9 +73,9 @@ export async function PUT(request, { params }) {
   }
 
   if (body.status !== undefined) {
-    if (!["active", "suspended"].includes(body.status)) {
+    if (!["pending", "active", "rejected", "suspended"].includes(body.status)) {
       return NextResponse.json(
-        { success: false, error: "status must be active or suspended" },
+        { success: false, error: "status must be pending, active, rejected or suspended" },
         { status: 400 }
       );
     }
@@ -87,14 +88,23 @@ export async function PUT(request, { params }) {
     return NextResponse.json({ success: false, error: "Creator not found" }, { status: 404 });
   }
 
+  // A creator who is no longer active loses their site (and their code goes off).
+  if ("status" in updates && updates.status !== "active") {
+    const live = await getLiveAssignmentForCreator(updated.id);
+    if (live) await endAssignment(live.id);
+  }
+
   // The app charges whatever discount the backend holds for the code, so push
   // a changed discount to every active promo code of this creator.
+  // Only approved creators have codes in the backend; the state sync keeps the
+  // code limited to their site and window (off when they hold none).
   let backendSynced;
-  if ("customer_discount" in updates) {
+  if ("customer_discount" in updates && updated.status === "active" && updated.terms_accepted_at) {
     const promos = await listActivePromoCodesByCreator(updated.id);
+    const live = await getLiveAssignmentForCreator(updated.id);
     const results = await Promise.all(
       promos.map(async (promo) => {
-        const ok = await syncPromoCodeToBackend(updated, promo.code);
+        const ok = await syncCreatorCouponState(updated, promo.code, live);
         if (ok) await markPromoCodeSynced(promo.id).catch(() => {});
         return ok;
       })

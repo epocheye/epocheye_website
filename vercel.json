@@ -11,5 +11,11 @@
       "destination": "https://epocheye.com/:path*",
       "statusCode": 308
     }
+  ],
+  "crons": [
+    {
+      "path": "/api/cron/rotate-sites",
+      "schedule": "30 0 * * *"
+    }
   ]
 }

@@ -9,6 +9,7 @@ import { trackEvent, EVENT_NAMES } from "@/lib/analytics";
 import { CREATOR_ROUTES } from "@/lib/creatorRoutes";
 import StatsCard from "@/components/creators/StatsCard";
 import PromoCodeWidget from "@/components/creators/PromoCodeWidget";
+import SiteCard from "@/components/creators/SiteCard";
 import ReferralChart from "@/components/creators/ReferralChart";
 
 export default function DashboardOverview() {
@@ -69,23 +70,26 @@ export default function DashboardOverview() {
 				</p>
 			</div>
 
+			{/* Assigned monument / place in line */}
+			<SiteCard />
+
 			{/* Promo code */}
 			<PromoCodeWidget code={promoCode} />
 
 			{/* Stats */}
 			<div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
 				<StatsCard
-					label="Total Clicks"
+					label="Code entries in app"
 					value={loading ? "—" : (stats?.total_clicks?.toLocaleString() ?? "0")}
-					sub={`${stats?.current_month_clicks ?? 0} this month`}
+					sub="People who typed your code"
 					icon={MousePointerClick}
 				/>
 				<StatsCard
-					label="Conversions"
+					label="Sales"
 					value={loading ? "—" : (stats?.total_conversions?.toLocaleString() ?? "0")}
 					sub={
 						stats?.conversion_rate != null
-							? `${stats.conversion_rate}% conversion rate`
+							? `${stats.conversion_rate}% of code entries`
 							: undefined
 					}
 					icon={ArrowRightLeft}

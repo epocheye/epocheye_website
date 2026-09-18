@@ -148,6 +148,12 @@ export async function PUT(request) {
         { status: 400 }
       );
     }
+    if (monuments.some((m) => !/^[a-z0-9-]{3,80}$/.test(m.slug))) {
+      return NextResponse.json(
+        { success: false, error: "Every monument needs its app site slug, e.g. tipu-summer-palace-bengaluru" },
+        { status: 400 }
+      );
+    }
     if (monuments.some((m) => m.name.length > 80 || m.place.length > 60)) {
       return NextResponse.json(
         { success: false, error: "Monument names are max 80 characters, places max 60" },
@@ -155,6 +161,23 @@ export async function PUT(request) {
       );
     }
     updates.creator_monuments = monuments;
+  }
+
+  for (const [key, min, max] of [
+    ["max_creators", 1, 10000],
+    ["assignment_days", 1, 90],
+    ["assignment_sales_target", 0, 100000],
+  ]) {
+    if (key in body) {
+      const v = Number(body[key]);
+      if (!Number.isInteger(v) || v < min || v > max) {
+        return NextResponse.json(
+          { success: false, error: `${key} must be a whole number from ${min} to ${max}` },
+          { status: 400 }
+        );
+      }
+      updates[key] = v;
+    }
   }
 
   await updateAdminSettings(updates);
