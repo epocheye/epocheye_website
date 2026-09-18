@@ -1,3 +1,4 @@
+import { ClerkProvider } from "@clerk/nextjs";
 import {
   Geist,
   Geist_Mono,
@@ -5,7 +6,6 @@ import {
   Instrument_Serif,
   Montserrat_Alternates,
 } from "next/font/google";
-import { ClerkProvider } from "@clerk/nextjs";
 import { Analytics } from "@vercel/analytics/next";
 
 import "./globals.css";
@@ -70,17 +70,16 @@ export const metadata = {
   },
 };
 
-const clerkPublishableKey =
-  process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || process.env.CLERK_PUBLISHABLE_KEY;
-
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${montserratAlternates.variable} ${instrumentSans.variable} ${instrumentSerif.variable} antialiased`}
       >
-        <ClerkProvider publishableKey={clerkPublishableKey}>{children}</ClerkProvider>
-        <Analytics />
+        <ClerkProvider>
+          {children}
+          <Analytics />
+        </ClerkProvider>
       </body>
     </html>
   );
