@@ -8,6 +8,21 @@ import { Show, UserButton } from "@clerk/nextjs";
 import { ArrowRight, BarChart3, Check, Link2, Menu, ShieldCheck, Wallet, X } from "lucide-react";
 import CreatorBrandLink from "@/components/creators/CreatorBrandLink";
 import { CREATOR_ROUTES } from "@/lib/creatorRoutes";
+import {
+	ACCESS_HOURS,
+	CUSTOMER_DISCOUNT_PERCENT,
+	HOLD_DAYS,
+	LIST_PRICE_INR,
+	MIN_PAYOUT_INR,
+	SUPPORT_EMAIL,
+	TIERS,
+	commissionPerSale,
+	discountedPrice,
+	earningsForSales,
+	formatInr,
+	rateForSale,
+} from "@/lib/creatorProgram";
+import { monumentSentence, useCreatorMonuments } from "@/lib/useCreatorMonuments";
 
 const DITHER_WAVE_COLOR = [0.78, 0.78, 0.78];
 
@@ -15,10 +30,16 @@ const DitherBackground = dynamic(() => import("@/components/Dither"), {
 	ssr: false,
 });
 
+const MIN_RATE = TIERS[0].rate;
+const MAX_RATE = TIERS[TIERS.length - 1].rate;
+
 const KEY_METRICS = [
-	{ value: "3 min", label: "to go live with your creator code" },
-	{ value: "5-20%", label: "commission on each paid referral" },
-	{ value: "Live", label: "clicks, conversions, and earnings in real time" },
+	{ value: "Instant", label: "your creator code is ready when you sign up" },
+	{
+		value: `${MIN_RATE}-${MAX_RATE}%`,
+		label: `of the ${formatInr(LIST_PRICE_INR)} list price on every sale`,
+	},
+	{ value: "Live", label: "clicks, sales, and earnings in your dashboard" },
 ];
 
 const CHANNELS = [
@@ -34,7 +55,7 @@ const PROCESS_STEPS = [
 	{
 		number: "01",
 		title: "Open your creator account",
-		body: "Set up your profile and launch your dashboard in one short flow.",
+		body: "Sign up, accept the creator terms, and your code is ready.",
 	},
 	{
 		number: "02",
@@ -53,11 +74,22 @@ const PROCESS_STEPS = [
 	},
 ];
 
-const EARNING_SCENARIOS = [
-	{ signups: "25", low: "$0.75", high: "$3.00" },
-	{ signups: "100", low: "$3.00", high: "$12.00" },
-	{ signups: "500", low: "$15.00", high: "$60.00" },
-	{ signups: "1,000", low: "$30.00", high: "$120.00" },
+function tierLabel(tier) {
+	return tier.to === null ? `Sale ${tier.from}+` : `Sales ${tier.from}-${tier.to}`;
+}
+
+// Illustrative dashboard sample. Sales and earnings are computed from the
+// program model; clicks are a made-up example figure, and the panel says so.
+const SAMPLE_SALES = 40;
+const SAMPLE_CLICKS = 1120;
+const SAMPLE_METRICS = [
+	{ label: "Clicks", value: SAMPLE_CLICKS.toLocaleString("en-IN") },
+	{ label: "Sales", value: String(SAMPLE_SALES) },
+	{
+		label: "Earned",
+		value: formatInr(earningsForSales(SAMPLE_SALES), { decimals: 2 }),
+	},
+	{ label: "Current rate", value: `${rateForSale(SAMPLE_SALES + 1)}%` },
 ];
 
 const BENEFITS = [
@@ -83,24 +115,42 @@ const BENEFITS = [
 	},
 ];
 
-const FAQ_ITEMS = [
-	{
-		question: "Do I need a minimum follower count?",
-		answer: "No minimum. We care about paid conversions, not vanity metrics. If your audience trusts you, you can do well.",
-	},
-	{
-		question: "Can I promote Epocheye on multiple platforms?",
-		answer: "Yes. The same code works across Instagram, YouTube, TikTok, blogs, newsletters, and community groups.",
-	},
-	{
-		question: "How is commission calculated?",
-		answer: "You earn a percentage of paid subscriptions attributed to your creator code. Tiers range from 5% to 20%.",
-	},
-	{
-		question: "Where do I track performance?",
-		answer: "Inside the creators dashboard. You can review clicks, conversions, earnings, and payout requests in one place.",
-	},
-];
+function buildFaq(monuments) {
+	return [
+		{
+			question: "Do I need a minimum follower count?",
+			answer: "No minimum. We care about paid conversions, not vanity metrics. If your audience trusts you, you can do well.",
+		},
+		{
+			question: "Can I promote Epocheye on multiple platforms?",
+			answer: "Yes. The same code works across Instagram, YouTube, TikTok, blogs, newsletters, and community groups.",
+		},
+		{
+			question: "What are my followers buying?",
+			answer: `A one-time unlock of one monument in the Epocheye app: ${formatInr(LIST_PRICE_INR)} for ${ACCESS_HOURS} hours of access on site. It is not a subscription. Your code takes ${CUSTOMER_DISCOUNT_PERCENT}% off, so they pay ${formatInr(discountedPrice(), { decimals: 2 })}.`,
+		},
+		{
+			question: "Where does it work?",
+			answer: `Only at ${monumentSentence(monuments)}. A sale happens when someone unlocks a monument in the app, so your code earns from followers who can visit.`,
+		},
+		{
+			question: "How is commission calculated?",
+			answer: `As a percentage of the ${formatInr(LIST_PRICE_INR)} list price, not the discounted price, so the discount never comes out of your earnings. Your rate rises with your total sales: ${TIERS.map((t) => `${tierLabel(t).toLowerCase()} earn ${t.rate}%`).join(", ")}.`,
+		},
+		{
+			question: "When and how do I get paid?",
+			answer: `A sale becomes payable ${HOLD_DAYS} days after purchase. Once your payable balance reaches ${formatInr(MIN_PAYOUT_INR)}, request a payout to your UPI ID from the dashboard.`,
+		},
+		{
+			question: "I'm not in India. Can I join?",
+			answer: `Not yet. Payouts currently go only to Indian UPI accounts. Email ${SUPPORT_EMAIL} and we'll tell you when international creators can join.`,
+		},
+		{
+			question: "Where do I track performance?",
+			answer: "Inside the creators dashboard. You can review clicks, sales, earnings, and payout requests in one place.",
+		},
+	];
+}
 
 const MOTION_EASE = [0.16, 1, 0.3, 1];
 const PANEL_CLASS = "rounded-2xl border border-white/10 bg-black/65";
@@ -114,6 +164,8 @@ const NAV_LINKS = [
 
 export default function CreatorsLandingPage() {
 	const [mobileNavOpen, setMobileNavOpen] = useState(false);
+	const monuments = useCreatorMonuments();
+	const faqItems = buildFaq(monuments);
 
 	useEffect(() => {
 		if (!mobileNavOpen) return undefined;
@@ -288,8 +340,31 @@ export default function CreatorsLandingPage() {
 						<p className="mt-6 max-w-2xl text-sm leading-relaxed text-white/62 md:text-base">
 							History and travel creators already have the right audience.
 							Share one code when people plan a monument visit, then track paid
-							conversions and payouts from one focused dashboard.
+							sales and payouts from one focused dashboard.
 						</p>
+
+						<div className="mt-6 max-w-3xl rounded-2xl border border-white/15 bg-black/60 p-4">
+							<p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-white/45">
+								Live at these monuments only
+							</p>
+							<ul className="mt-3 flex flex-wrap gap-2">
+								{monuments.map((m) => (
+									<li
+										key={m.name}
+										className="rounded-full border border-white/20 px-3 py-1.5 text-xs text-white/85">
+										{m.name}
+										{m.place ? (
+										<span className="text-white/45"> · {m.place}</span>
+									) : null}
+									</li>
+								))}
+							</ul>
+							<p className="mt-3 text-xs leading-relaxed text-white/50">
+								A sale happens when a visitor unlocks{" "}
+								{monuments.length === 1 ? "this monument" : "one of these monuments"} in
+								the app. Followers who can&apos;t visit can&apos;t buy yet.
+							</p>
+						</div>
 
 						<div className="mt-8 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
 							<Link
@@ -418,22 +493,22 @@ export default function CreatorsLandingPage() {
 							Payout Model
 						</p>
 						<h2 className="mt-4 text-3xl font-light leading-tight md:text-4xl">
-							Clear conversion math.
+							One price. One rate card.
 							<br />
 							<span className="font-bold text-white">
-								Predictable monthly upside.
+								Earnings you can work out.
 							</span>
 						</h2>
 						<p className="mt-5 max-w-2xl text-sm leading-relaxed text-white/56 md:text-base">
-							Epocheye is priced between $2 and $4 per order. <br /> Your
-							commission tier sets payout per paid conversion. As volume
-							improves, payout tiers can scale too.
+							One monument unlock is {formatInr(LIST_PRICE_INR)}. Your commission
+							is a percentage of that list price, whatever discount your code
+							gives, and your rate rises as your total sales grow.
 						</p>
 
 						<div className="mt-6 grid grid-cols-2 gap-2.5 md:gap-3 xl:grid-cols-4">
-							{EARNING_SCENARIOS.map((scenario, index) => (
+							{TIERS.map((tier, index) => (
 								<motion.div
-									key={scenario.signups}
+									key={tier.from}
 									initial={{ opacity: 0, y: 20 }}
 									whileInView={{ opacity: 1, y: 0 }}
 									viewport={{ once: true, margin: "-60px" }}
@@ -444,20 +519,36 @@ export default function CreatorsLandingPage() {
 									}}
 									className={`${PANEL_CLASS} p-4 md:p-5`}>
 									<p className="text-2xl font-bold text-white md:text-3xl">
-										{scenario.signups}
+										{tier.rate}%
 									</p>
 									<p className="mt-1 text-[11px] uppercase tracking-[0.14em] text-white/35">
-										signups
+										{tierLabel(tier)}
 									</p>
 									<p className="mt-4 text-base font-semibold text-white/88 md:text-lg">
-										{scenario.low} - {scenario.high}
+										{formatInr(commissionPerSale(tier.rate), { decimals: 2 })}
 									</p>
-									<p className="text-xs text-white/35">
-										estimated payout range
+									<p className="text-xs text-white/35">per sale</p>
+									<p className="mt-3 text-sm text-white/70">
+										{formatInr(commissionPerSale(tier.rate) * 100, { decimals: 0 })}
+										<span className="text-white/35"> per 100 sales</span>
+									</p>
+									<p className="text-sm text-white/70">
+										{formatInr(commissionPerSale(tier.rate) * 1000, { decimals: 0 })}
+										<span className="text-white/35"> per 1,000 sales</span>
 									</p>
 								</motion.div>
 							))}
 						</div>
+						<p className="mt-4 text-xs leading-relaxed text-white/40">
+							The per-100 and per-1,000 figures apply one tier&apos;s rate to every
+							sale. Your real total mixes tiers as you move up. Sales are held{" "}
+							{HOLD_DAYS} days before they are payable, and refunded sales are
+							reversed. See the{" "}
+							<Link href="/terms" className="underline hover:text-white/70">
+								creator terms
+							</Link>
+							.
+						</p>
 					</motion.div>
 				</section>
 
@@ -527,15 +618,16 @@ export default function CreatorsLandingPage() {
 							</h2>
 							<p className="mt-6 text-sm leading-relaxed text-white/58 md:text-base">
 								Every creator gets referral-level visibility into clicks,
-								conversions, estimated commission, and payout status.
+								sales, commission, and payout status.
 							</p>
 							<div className="mt-6 rounded-2xl border border-white/10 bg-black/65 p-4">
 								<div className="flex items-start gap-3">
 									<Check className="mt-0.5 h-4 w-4 text-white/70" />
 									<p className="text-sm text-white/62">
-										Creators who review this dashboard weekly usually
-										improve conversion quality faster than creators
-										who only track top-line reach.
+										The preview is an illustrative example, not real creator
+										data. Its earnings are {SAMPLE_SALES} sales on the rate card
+										above: the first {TIERS[0].to} at {TIERS[0].rate}% and the
+										next {SAMPLE_SALES - TIERS[0].to} at {TIERS[1].rate}%.
 									</p>
 								</div>
 							</div>
@@ -549,7 +641,7 @@ export default function CreatorsLandingPage() {
 							className={`${PANEL_CLASS} overflow-hidden`}>
 							<div className="flex items-center justify-between border-b border-white/10 px-5 py-3">
 								<p className="text-xs uppercase tracking-[0.14em] text-white/40">
-									creators.epocheye.com{CREATOR_ROUTES.dashboard}
+									Illustrative example · not real data
 								</p>
 								<div className="flex items-center gap-2">
 									<div className="h-2 w-2 rounded-full bg-white/20" />
@@ -559,12 +651,7 @@ export default function CreatorsLandingPage() {
 							</div>
 
 							<div className="grid grid-cols-2 gap-px bg-white/10 p-px">
-								{[
-									{ label: "Total Clicks", value: "3,428" },
-									{ label: "Conversions", value: "272" },
-									{ label: "Est. Earnings", value: "$82.50" },
-									{ label: "Available", value: "$26.40" },
-								].map((item) => (
+								{SAMPLE_METRICS.map((item) => (
 									<div
 										key={item.label}
 										className="bg-black/78 px-4 py-5">
@@ -580,17 +667,12 @@ export default function CreatorsLandingPage() {
 
 							<div className="border-t border-white/10 px-5 py-5">
 								<p className="text-[11px] uppercase tracking-[0.13em] text-white/35">
-									Your promo code
+									Your promo code (sample)
 								</p>
 								<div className="mt-2 flex flex-wrap items-center justify-between gap-4">
 									<p className="font-mono text-xl font-bold tracking-[0.18em] text-white md:text-2xl">
-										EPCH7412
+										SAMPLE123
 									</p>
-									<button
-										type="button"
-										className="rounded-full border border-white/20 px-4 py-2 text-xs uppercase tracking-widest text-white/68 transition-colors hover:text-white">
-										Copy promo code
-									</button>
 								</div>
 							</div>
 						</motion.div>
@@ -610,10 +692,10 @@ export default function CreatorsLandingPage() {
 							FAQ
 						</p>
 						<h2 className="mt-4 text-3xl font-light md:text-4xl">
-							Questions before you apply?
+							Questions before you join?
 						</h2>
 						<div className="mt-5 space-y-2.5">
-							{FAQ_ITEMS.map((item) => (
+							{faqItems.map((item) => (
 								<details
 									key={item.question}
 									className={`${PANEL_CLASS} group p-3 md:p-4`}>
@@ -642,8 +724,8 @@ export default function CreatorsLandingPage() {
 							<span className="font-bold">Now give them a code.</span>
 						</h2>
 						<p className="mx-auto mt-5 max-w-xl text-sm leading-relaxed text-white/54 md:text-base">
-							Join in minutes, get your code, launch your first campaign, and
-							track outcomes from day one.
+							Sign up, accept the creator terms, and your code is ready to share
+							today.
 						</p>
 						<Link
 							href={CREATOR_ROUTES.signup}
@@ -668,6 +750,9 @@ export default function CreatorsLandingPage() {
 							© {new Date().getFullYear()} Epocheye. All rights reserved.
 						</p>
 						<div className="flex items-center gap-6 text-xs uppercase tracking-widest text-white/35">
+							<Link href="/terms" className="hover:text-white/70 transition-colors">
+								Creator Terms
+							</Link>
 							<Link
 								href={CREATOR_ROUTES.login}
 								className="hover:text-white/70 transition-colors">

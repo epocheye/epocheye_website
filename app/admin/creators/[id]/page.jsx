@@ -51,7 +51,11 @@ export default function AdminCreatorDetailPage() {
     const data = await res.json();
     if (data.success) {
       setCreator(data.data);
-      setFlash({ type: "success", msg: "Creator updated successfully" });
+      setFlash(
+        data.backendSynced === false
+          ? { type: "error", msg: "Saved, but the app didn't get the new discount yet. Save again to retry." }
+          : { type: "success", msg: "Creator updated successfully" }
+      );
     } else {
       setFlash({ type: "error", msg: data.error || "Update failed" });
     }
@@ -141,9 +145,9 @@ export default function AdminCreatorDetailPage() {
             </label>
             <input
               type="number"
-              min="0"
-              max="30"
-              step="0.5"
+              min="5"
+              max="25"
+              step="1"
               value={customerDiscount}
               onChange={(e) => setCustomerDiscount(e.target.value)}
               className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-white/30 transition-colors"

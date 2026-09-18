@@ -26,6 +26,10 @@ export default function AdminSettingsPage() {
     offer_total: "",
     offer_promo_code: "",
   });
+  // Monuments listed on creators.epocheye.com: [{ name, place }].
+  const [monuments, setMonuments] = useState([]);
+  const [savingMonuments, setSavingMonuments] = useState(false);
+  const [monumentMessage, setMonumentMessage] = useState(null);
   const [savingOffer, setSavingOffer] = useState(false);
   const [offerMessage, setOfferMessage] = useState(null);
   const [tiers, setTiers] = useState([]);
@@ -54,6 +58,7 @@ export default function AdminSettingsPage() {
             offer_total: String(settingsJson.data.offer_total),
             offer_promo_code: settingsJson.data.offer_promo_code || "",
           });
+          setMonuments(settingsJson.data.creator_monuments || []);
         }
         if (tiersJson.success && tiersJson.data?.tiers) {
           setTiers(
@@ -137,6 +142,38 @@ export default function AdminSettingsPage() {
       setOfferMessage({ type: "error", text: "Network error — please try again" });
     } finally {
       setSavingOffer(false);
+    }
+  }
+
+  function updateMonument(index, key, value) {
+    setMonuments((list) => list.map((m, i) => (i === index ? { ...m, [key]: value } : m)));
+  }
+
+  async function handleSaveMonuments(e) {
+    e.preventDefault();
+    setSavingMonuments(true);
+    setMonumentMessage(null);
+
+    try {
+      const res = await fetch("/api/admin/settings", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ creator_monuments: monuments }),
+      });
+      const json = await res.json();
+      if (!res.ok || !json.success) {
+        setMonumentMessage({ type: "error", text: json.error || "Failed to save monuments" });
+      } else {
+        setMonuments(json.data.creator_monuments || []);
+        setMonumentMessage({
+          type: "success",
+          text: "Saved. The creator page updates within a minute.",
+        });
+      }
+    } catch {
+      setMonumentMessage({ type: "error", text: "Network error — please try again" });
+    } finally {
+      setSavingMonuments(false);
     }
   }
 
@@ -442,6 +479,78 @@ export default function AdminSettingsPage() {
           className="mt-5 px-6 py-2.5 bg-white text-black text-sm font-semibold rounded-lg hover:bg-white/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
         >
           {savingOffer ? "Saving…" : "Save offer"}
+        </button>
+      </form>
+
+      {/* Creator page: monuments listed on creators.epocheye.com */}
+      <form onSubmit={handleSaveMonuments} className="mt-10">
+        <div className="bg-[#0d0d0d] border border-white/5 rounded-xl">
+          <div className="px-5 pt-5 pb-3">
+            <p className="text-xs font-medium text-white/35 uppercase tracking-widest">Creator Page</p>
+            <p className="text-xs text-white/25 mt-1">
+              Monuments shown on creators.epocheye.com (top of the page, FAQ, terms and signup).
+              Only list monuments that are live in the app.
+            </p>
+          </div>
+
+          <div className="px-5 pb-5 space-y-2">
+            {monuments.map((m, i) => (
+              <div key={i} className="flex flex-col sm:flex-row gap-2">
+                <input
+                  type="text"
+                  maxLength={80}
+                  value={m.name}
+                  onChange={(e) => updateMonument(i, "name", e.target.value)}
+                  placeholder="Monument name"
+                  className="flex-1 bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white placeholder-white/20 focus:outline-none focus:border-white/30 transition-colors"
+                />
+                <input
+                  type="text"
+                  maxLength={60}
+                  value={m.place}
+                  onChange={(e) => updateMonument(i, "place", e.target.value)}
+                  placeholder="City / state"
+                  className="sm:w-48 bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white placeholder-white/20 focus:outline-none focus:border-white/30 transition-colors"
+                />
+                <button
+                  type="button"
+                  onClick={() => setMonuments((list) => list.filter((_, j) => j !== i))}
+                  disabled={monuments.length <= 1}
+                  className="px-3 py-2.5 text-xs text-white/40 border border-white/10 rounded-lg hover:text-red-400 hover:border-red-400/30 disabled:opacity-30 transition-colors"
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+            <button
+              type="button"
+              onClick={() => setMonuments((list) => [...list, { name: "", place: "" }])}
+              disabled={monuments.length >= 20}
+              className="mt-1 px-4 py-2 text-xs text-white/60 border border-white/10 rounded-lg hover:text-white hover:border-white/30 disabled:opacity-30 transition-colors"
+            >
+              + Add monument
+            </button>
+          </div>
+        </div>
+
+        {monumentMessage && (
+          <p
+            className={`mt-4 text-sm px-4 py-2.5 rounded-lg border ${
+              monumentMessage.type === "success"
+                ? "text-green-400 bg-green-400/10 border-green-400/20"
+                : "text-red-400 bg-red-400/10 border-red-400/20"
+            }`}
+          >
+            {monumentMessage.text}
+          </p>
+        )}
+
+        <button
+          type="submit"
+          disabled={savingMonuments}
+          className="mt-5 px-6 py-2.5 bg-white text-black text-sm font-semibold rounded-lg hover:bg-white/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+        >
+          {savingMonuments ? "Saving…" : "Save creator page"}
         </button>
       </form>
 

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
-import { MousePointerClick, ArrowRightLeft, DollarSign, Wallet } from "lucide-react";
+import { MousePointerClick, ArrowRightLeft, IndianRupee, Wallet } from "lucide-react";
 import { creatorFetch } from "@/lib/creatorApi";
 import { trackEvent, EVENT_NAMES } from "@/lib/analytics";
 import { CREATOR_ROUTES } from "@/lib/creatorRoutes";
@@ -93,15 +93,15 @@ export default function DashboardOverview() {
 				<StatsCard
 					label="Lifetime Earnings"
 					value={
-						loading ? "—" : `$${stats?.lifetime_earnings?.toFixed(2) ?? "0.00"}`
+						loading ? "—" : `₹${stats?.lifetime_earnings?.toFixed(2) ?? "0.00"}`
 					}
-					sub={`$${stats?.pending_earnings?.toFixed(2) ?? "0.00"} pending`}
-					icon={DollarSign}
+					sub={`₹${stats?.pending_earnings?.toFixed(2) ?? "0.00"} pending`}
+					icon={IndianRupee}
 				/>
 				<StatsCard
 					label="Available Balance"
 					value={
-						loading ? "—" : `$${stats?.available_balance?.toFixed(2) ?? "0.00"}`
+						loading ? "—" : `₹${stats?.available_balance?.toFixed(2) ?? "0.00"}`
 					}
 					sub="Ready to withdraw"
 					icon={Wallet}

@@ -205,8 +205,8 @@ export default function SettingsPage() {
 
 			<Section title="Payment Details">
 				<p className="text-xs text-white/30 mb-4">
-					Your UPI ID is used for Razorpay payouts. It will only be used when you
-					request a withdrawal.
+					Payouts go to your UPI ID, in rupees. The program is open to Indian
+					residents only.
 				</p>
 
 				<form onSubmit={saveUpi} className="space-y-4">

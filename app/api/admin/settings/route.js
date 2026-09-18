@@ -2,7 +2,11 @@ import { NextResponse } from "next/server";
 
 import { verifyAdminJWTFromRequest } from "@/lib/server/adminAuth";
 import { syncFreeAccessCodeToBackend } from "@/lib/server/backendSync";
-import { getAdminSettings, updateAdminSettings } from "@/lib/server/creatorRepository";
+import {
+  getAdminSettings,
+  normalizeMonuments,
+  updateAdminSettings,
+} from "@/lib/server/creatorRepository";
 
 export const runtime = "nodejs";
 
@@ -129,6 +133,28 @@ export async function PUT(request) {
       return NextResponse.json({ success: false, error: "offer_promo_code must be up to 32 letters, digits, - or _" }, { status: 400 });
     }
     updates.offer_promo_code = v;
+  }
+
+  // Monuments listed on creators.epocheye.com. Only list monuments that are
+  // live in the app: the creator page tells creators sales happen there.
+  if ("creator_monuments" in body) {
+    if (!Array.isArray(body.creator_monuments)) {
+      return NextResponse.json({ success: false, error: "creator_monuments must be a list" }, { status: 400 });
+    }
+    const monuments = normalizeMonuments(body.creator_monuments);
+    if (monuments.length === 0 || monuments.length > 20) {
+      return NextResponse.json(
+        { success: false, error: "List between 1 and 20 monuments on the creator page" },
+        { status: 400 }
+      );
+    }
+    if (monuments.some((m) => m.name.length > 80 || m.place.length > 60)) {
+      return NextResponse.json(
+        { success: false, error: "Monument names are max 80 characters, places max 60" },
+        { status: 400 }
+      );
+    }
+    updates.creator_monuments = monuments;
   }
 
   await updateAdminSettings(updates);

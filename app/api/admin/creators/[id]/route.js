@@ -1,8 +1,11 @@
 import { NextResponse } from "next/server";
 
 import { verifyAdminJWTFromRequest } from "@/lib/server/adminAuth";
+import { syncPromoCodeToBackend } from "@/lib/server/backendSync";
 import {
   findCreatorById,
+  listActivePromoCodesByCreator,
+  markPromoCodeSynced,
   toPublicProfile,
   updateCreator,
 } from "@/lib/server/creatorRepository";
@@ -57,10 +60,11 @@ export async function PUT(request, { params }) {
   }
 
   if (body.customer_discount !== undefined) {
+    // Must match what the app's coupon backend accepts (whole numbers, 5-25).
     const customerDiscount = Number(body.customer_discount);
-    if (!Number.isFinite(customerDiscount) || customerDiscount < 0 || customerDiscount > 30) {
+    if (!Number.isInteger(customerDiscount) || customerDiscount < 5 || customerDiscount > 25) {
       return NextResponse.json(
-        { success: false, error: "customer_discount must be between 0 and 30" },
+        { success: false, error: "customer_discount must be a whole number between 5 and 25" },
         { status: 400 }
       );
     }
@@ -83,5 +87,20 @@ export async function PUT(request, { params }) {
     return NextResponse.json({ success: false, error: "Creator not found" }, { status: 404 });
   }
 
-  return NextResponse.json({ success: true, data: toPublicProfile(updated) });
+  // The app charges whatever discount the backend holds for the code, so push
+  // a changed discount to every active promo code of this creator.
+  let backendSynced;
+  if ("customer_discount" in updates) {
+    const promos = await listActivePromoCodesByCreator(updated.id);
+    const results = await Promise.all(
+      promos.map(async (promo) => {
+        const ok = await syncPromoCodeToBackend(updated, promo.code);
+        if (ok) await markPromoCodeSynced(promo.id).catch(() => {});
+        return ok;
+      })
+    );
+    backendSynced = results.every(Boolean);
+  }
+
+  return NextResponse.json({ success: true, data: toPublicProfile(updated), backendSynced });
 }

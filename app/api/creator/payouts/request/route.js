@@ -2,9 +2,8 @@ import { NextResponse } from "next/server";
 
 import { creatorAuthErrorResponse, getCreatorContext } from "@/lib/server/creatorAuth";
 import {
-  MIN_PAYOUT_INR,
-  MIN_PAYOUT_USD,
   createPayoutRequest,
+  getAdminSettings,
   getAvailableBalance,
 } from "@/lib/server/creatorRepository";
 
@@ -21,17 +20,19 @@ export async function POST() {
     );
   }
 
-  const currency = context.creator.currency || "INR";
-  const available = await getAvailableBalance(context.creator.id);
-
-  const minPayout = currency === "INR" ? MIN_PAYOUT_INR : MIN_PAYOUT_USD;
-  const currencySymbol = currency === "INR" ? "₹" : "$";
+  // Program is India-only: every balance and payout is in rupees.
+  const currency = "INR";
+  const [available, settings] = await Promise.all([
+    getAvailableBalance(context.creator.id),
+    getAdminSettings(),
+  ]);
+  const minPayout = settings.min_payout_inr;
 
   if (available < minPayout) {
     return NextResponse.json(
       {
         success: false,
-        error: `Minimum payout is ${currencySymbol}${minPayout}. Your available balance is ${currencySymbol}${available.toFixed(2)}.`,
+        error: `Minimum payout is ₹${minPayout}. Your available balance is ₹${available.toFixed(2)}.`,
       },
       { status: 400 }
     );

@@ -16,12 +16,21 @@ export async function PUT(request) {
     return NextResponse.json({ success: false, error: "Invalid JSON body" }, { status: 400 });
   }
 
-  const upiId = body?.upi_id;
-  if (typeof upiId !== "string" || upiId.trim().length < 5 || upiId.trim().length > 100) {
-    return NextResponse.json({ success: false, error: "UPI ID must be 5-100 characters" }, { status: 400 });
+  const updates = {};
+
+  if (body?.upi_id !== undefined) {
+    const upiId = body.upi_id;
+    if (typeof upiId !== "string" || upiId.trim().length < 5 || upiId.trim().length > 100) {
+      return NextResponse.json({ success: false, error: "UPI ID must be 5-100 characters" }, { status: 400 });
+    }
+    updates.upi_id = upiId.trim();
   }
 
-  const updated = await updateCreator(context.creator.id, { upi_id: upiId.trim() });
+  if (!Object.keys(updates).length) {
+    return NextResponse.json({ success: false, error: "Nothing to update" }, { status: 400 });
+  }
+
+  const updated = await updateCreator(context.creator.id, updates);
 
   return NextResponse.json({
     success: true,

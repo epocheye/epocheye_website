@@ -57,30 +57,41 @@ async function handleBackendOrderWebhook(body) {
     );
   }
 
-  const creator = await findCreatorById(creatorId);
+  // creator_id is the website creators.id the coupon was synced under. Older
+  // coupons made through the creators app used a different id, so fall back to
+  // the owner of the promo code.
+  let creator = await findCreatorById(creatorId).catch(() => null);
+  if (!creator) {
+    const promo = await getPromoCodeByCode(couponCode);
+    if (promo) creator = await findCreatorById(promo.creator_id);
+  }
   if (!creator) {
     return NextResponse.json({ success: false, error: "Creator not found" }, { status: 404 });
   }
 
-  // Amounts from backend are in paise — convert to rupees (INR)
-  const planAmountInr = Number((finalAmount / 100).toFixed(2));
+  // Commission base is the LIST price (the pre-discount original amount), so a
+  // bigger customer discount never lowers the creator's earnings. Amounts from
+  // the backend are paise — convert to rupees.
+  const listPaise =
+    Number.isFinite(originalAmount) && originalAmount >= finalAmount ? originalAmount : finalAmount;
+  const planAmountInr = Number((listPaise / 100).toFixed(2));
+  const discountInr = Number.isFinite(discountAmount) && discountAmount >= 0
+    ? Number((discountAmount / 100).toFixed(2))
+    : undefined;
 
-  const commissionAmount = Number(
-    ((planAmountInr * Number(creator.commission_rate)) / 100).toFixed(2)
-  );
-
-  await recordConversion({
+  // Rate comes from the creator's sales tier (see lib/server/creatorProgram.js).
+  const { commissionAmount, commissionRate } = await recordConversion({
     code: couponCode,
     creatorId: creator.id,
     customerId: customerUserId,
     planAmount: planAmountInr,
-    commissionRate: Number(creator.commission_rate),
     customerDiscountRate: Number(creator.customer_discount),
+    discountAmount: discountInr,
   });
 
   return NextResponse.json({
     success: true,
-    data: { commission_amount: commissionAmount },
+    data: { commission_amount: commissionAmount, commission_rate: commissionRate },
   });
 }
 
