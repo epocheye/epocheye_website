@@ -127,7 +127,17 @@ function ApplicationCard({ a, busy, approveDisabled, onApprove, onReject }) {
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <p className="text-white font-medium">{app.name || a.name}</p>
-          <p className="text-xs text-white/40">{a.email}</p>
+          <p className="text-xs text-white/40">
+            {a.email}
+            {app.phone ? (
+              <>
+                {" · "}
+                <a href={`tel:${app.phone}`} className="hover:text-white/70">
+                  {app.phone}
+                </a>
+              </>
+            ) : null}
+          </p>
         </div>
         <p className="text-xs text-white/30">
           {a.applied_at ? `Applied ${new Date(a.applied_at).toLocaleDateString()}` : "Signed up, no profile yet"}

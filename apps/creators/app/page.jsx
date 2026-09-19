@@ -13,18 +13,14 @@ import {
 	CUSTOMER_DISCOUNT_PERCENT,
 	ASSIGNMENT_DAYS,
 	HOLD_DAYS,
-	LIST_PRICE_INR,
 	MAX_CREATORS,
-	MIN_PAYOUT_INR,
 	SUPPORT_EMAIL,
 	TIERS,
-	commissionPerSale,
-	discountedPrice,
 	earningsForSales,
-	formatInr,
+	formatUsd,
 	rateForSale,
 } from "@/lib/creatorProgram";
-import { monumentSentence, useCreatorMonuments } from "@/lib/useCreatorMonuments";
+import { monumentSentence, useCreatorProgram } from "@/lib/useCreatorMonuments";
 
 const DITHER_WAVE_COLOR = [0.78, 0.78, 0.78];
 
@@ -39,7 +35,7 @@ const KEY_METRICS = [
 	{ value: String(MAX_CREATORS), label: "creator spots, by application" },
 	{
 		value: `${MIN_RATE}-${MAX_RATE}%`,
-		label: `of the ${formatInr(LIST_PRICE_INR)} list price on every sale`,
+		label: "commission on every sale, before the customer discount",
 	},
 	{ value: `${ASSIGNMENT_DAYS / 7} weeks`, label: "your own monument, no other creator" },
 ];
@@ -80,19 +76,19 @@ function tierLabel(tier) {
 	return tier.to === null ? `Sale ${tier.from}+` : `Sales ${tier.from}-${tier.to}`;
 }
 
-// Illustrative dashboard sample. Sales and earnings are computed from the
-// program model; clicks are a made-up example figure, and the panel says so.
+// Illustrative dashboard sample. Sales and earnings follow the program
+// model (shown in dollars at today's rate); scans are a made-up example
+// figure, and the panel says so.
 const SAMPLE_SALES = 40;
 const SAMPLE_CLICKS = 1120;
-const SAMPLE_METRICS = [
-	{ label: "Clicks", value: SAMPLE_CLICKS.toLocaleString("en-IN") },
-	{ label: "Sales", value: String(SAMPLE_SALES) },
-	{
-		label: "Earned",
-		value: formatInr(earningsForSales(SAMPLE_SALES), { decimals: 2 }),
-	},
-	{ label: "Current rate", value: `${rateForSale(SAMPLE_SALES + 1)}%` },
-];
+function sampleMetrics(inrPerUsd) {
+	return [
+		{ label: "QR scans", value: SAMPLE_CLICKS.toLocaleString("en-US") },
+		{ label: "Sales", value: String(SAMPLE_SALES) },
+		{ label: "Earned", value: formatUsd(earningsForSales(SAMPLE_SALES), inrPerUsd) },
+		{ label: "Current rate", value: `${rateForSale(SAMPLE_SALES + 1)}%` },
+	];
+}
 
 const BENEFITS = [
 	{
@@ -117,7 +113,7 @@ const BENEFITS = [
 	},
 ];
 
-function buildFaq(monuments) {
+function buildFaq(monuments, minPayoutUsd) {
 	return [
 		{
 			question: "Can anyone join?",
@@ -137,7 +133,7 @@ function buildFaq(monuments) {
 		},
 		{
 			question: "What are my followers buying?",
-			answer: `A one-time unlock of one monument in the Epocheye app: ${formatInr(LIST_PRICE_INR)} for ${ACCESS_HOURS} hours of access on site. It is not a subscription. Your code takes ${CUSTOMER_DISCOUNT_PERCENT}% off, so they pay ${formatInr(discountedPrice(), { decimals: 2 })}.`,
+			answer: `A one-time unlock of one monument in the Epocheye app, with ${ACCESS_HOURS} hours of access on site. It is not a subscription. Your code gives them ${CUSTOMER_DISCOUNT_PERCENT}% off.`,
 		},
 		{
 			question: "Where does it work?",
@@ -145,15 +141,15 @@ function buildFaq(monuments) {
 		},
 		{
 			question: "How is commission calculated?",
-			answer: `As a percentage of the ${formatInr(LIST_PRICE_INR)} list price, not the discounted price, so the discount never comes out of your earnings. Your rate rises with your total sales: ${TIERS.map((t) => `${tierLabel(t).toLowerCase()} earn ${t.rate}%`).join(", ")}.`,
+			answer: `As a percentage of the full price of each unlock, before the customer discount, so the discount never comes out of your earnings. Your rate rises with your total sales: ${TIERS.map((t) => `${tierLabel(t).toLowerCase()} earn ${t.rate}%`).join(", ")}.`,
 		},
 		{
 			question: "When and how do I get paid?",
-			answer: `A sale becomes payable ${HOLD_DAYS} days after purchase. Once your payable balance reaches ${formatInr(MIN_PAYOUT_INR)}, request a payout to your UPI ID from the dashboard.`,
+			answer: `A sale becomes payable ${HOLD_DAYS} days after purchase. Once your payable balance reaches ${minPayoutUsd}, request a payout from your dashboard. Amounts are shown in US dollars and paid in Indian rupees. For anything about payments, email ${SUPPORT_EMAIL}.`,
 		},
 		{
 			question: "I'm not in India. Can I join?",
-			answer: `Not yet. Payouts currently go only to Indian UPI accounts. Email ${SUPPORT_EMAIL} and we'll tell you when international creators can join.`,
+			answer: `Not yet. The program is open to residents of India for now. Email ${SUPPORT_EMAIL} and we'll tell you when international creators can join.`,
 		},
 		{
 			question: "Where do I track performance?",
@@ -174,8 +170,9 @@ const NAV_LINKS = [
 
 export default function CreatorsLandingPage() {
 	const [mobileNavOpen, setMobileNavOpen] = useState(false);
-	const monuments = useCreatorMonuments();
-	const faqItems = buildFaq(monuments);
+	const { monuments, inrPerUsd, minPayoutInr } = useCreatorProgram();
+	const faqItems = buildFaq(monuments, formatUsd(minPayoutInr, inrPerUsd, { decimals: 0 }));
+	const sample = sampleMetrics(inrPerUsd);
 
 	useEffect(() => {
 		if (!mobileNavOpen) return undefined;
@@ -510,9 +507,9 @@ export default function CreatorsLandingPage() {
 							</span>
 						</h2>
 						<p className="mt-5 max-w-2xl text-sm leading-relaxed text-white/56 md:text-base">
-							One monument unlock is {formatInr(LIST_PRICE_INR)}. Your commission
-							is a percentage of that list price, whatever discount your code
-							gives, and your rate rises as your total sales grow.
+							Your commission is a percentage of the full price of every unlock sold
+							with your code, before the customer discount, and your rate rises as
+							your total sales grow.
 						</p>
 
 						<div className="mt-6 grid grid-cols-2 gap-2.5 md:gap-3 lg:grid-cols-3 xl:grid-cols-5">
@@ -534,24 +531,13 @@ export default function CreatorsLandingPage() {
 									<p className="mt-1 text-[11px] uppercase tracking-[0.14em] text-white/35">
 										{tierLabel(tier)}
 									</p>
-									<p className="mt-4 text-base font-semibold text-white/88 md:text-lg">
-										{formatInr(commissionPerSale(tier.rate), { decimals: 2 })}
-									</p>
-									<p className="text-xs text-white/35">per sale</p>
-									<p className="mt-3 text-sm text-white/70">
-										{formatInr(commissionPerSale(tier.rate) * 100, { decimals: 0 })}
-										<span className="text-white/35"> per 100 sales</span>
-									</p>
-									<p className="text-sm text-white/70">
-										{formatInr(commissionPerSale(tier.rate) * 1000, { decimals: 0 })}
-										<span className="text-white/35"> per 1,000 sales</span>
-									</p>
+									<p className="mt-3 text-xs text-white/35">of every sale in this tier</p>
 								</motion.div>
 							))}
 						</div>
 						<p className="mt-4 text-xs leading-relaxed text-white/40">
-							The per-100 and per-1,000 figures apply one tier&apos;s rate to every
-							sale. Your real total mixes tiers as you move up. Sales are held{" "}
+							Each rate applies to the sales in its tier, so your total mixes tiers
+							as you move up. Sales are held{" "}
 							{HOLD_DAYS} days before they are payable, and refunded sales are
 							reversed. See the{" "}
 							<Link href="/terms" className="underline hover:text-white/70">
@@ -661,7 +647,7 @@ export default function CreatorsLandingPage() {
 							</div>
 
 							<div className="grid grid-cols-2 gap-px bg-white/10 p-px">
-								{SAMPLE_METRICS.map((item) => (
+								{sample.map((item) => (
 									<div
 										key={item.label}
 										className="bg-black/78 px-4 py-5">

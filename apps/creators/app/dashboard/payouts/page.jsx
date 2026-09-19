@@ -37,7 +37,8 @@ export default function PayoutsPage() {
 			<div className="mb-8">
 				<h1 className="text-xl font-semibold text-white">Payouts</h1>
 				<p className="text-white/35 text-sm mt-1">
-					Withdraw your earnings via UPI.
+					Withdraw your earnings via UPI. Amounts are shown in US dollars at today&apos;s rate
+					and paid in Indian rupees.
 				</p>
 			</div>
 

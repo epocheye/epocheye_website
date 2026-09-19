@@ -6,6 +6,8 @@ import { Loader2, AlertCircle } from "lucide-react";
 import { creatorFetch } from "@/lib/creatorApi";
 import { trackEvent, EVENT_NAMES } from "@/lib/analytics";
 import { CREATOR_DASHBOARD_ROUTES } from "@/lib/creatorRoutes";
+import { formatUsd } from "@/lib/creatorProgram";
+import { useCreatorProgram } from "@/lib/useCreatorMonuments";
 
 const STATUS_STYLES = {
 	pending: "text-yellow-400",
@@ -22,6 +24,9 @@ export default function PayoutSection({
 	onPayoutRequested,
 }) {
 	const [isLoading, setIsLoading] = useState(false);
+	// Balances are in rupees (and paid in rupees); shown in US dollars.
+	const { inrPerUsd } = useCreatorProgram();
+	const usd = (inr) => formatUsd(inr, inrPerUsd);
 	const [error, setError] = useState("");
 
 	const handleRequest = async () => {
@@ -31,7 +36,7 @@ export default function PayoutSection({
 		}
 		if (available < minPayout) {
 			setError(
-				`Minimum payout is ₹${minPayout}. You have ₹${available?.toFixed(2)} available.`,
+				`Minimum payout is ${usd(minPayout)}. You have ${usd(available)} available.`,
 			);
 			return;
 		}
@@ -61,7 +66,7 @@ export default function PayoutSection({
 					Available Balance
 				</p>
 				<p className="text-4xl font-semibold text-white mb-1">
-					₹{available?.toFixed(2) ?? "0.00"}
+					{usd(available)}
 				</p>
 				<p className="text-xs text-white/30 mb-6">Ready to withdraw</p>
 
@@ -121,7 +126,7 @@ export default function PayoutSection({
 										key={p.id}
 										className="hover:bg-white/1.5 transition-colors">
 										<td className="py-3.5 px-2 text-white font-medium">
-											₹{Number(p.amount).toFixed(2)}
+											{usd(p.amount)}
 										</td>
 										<td className="py-3.5 px-2">
 											<span

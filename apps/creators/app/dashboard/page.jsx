@@ -3,13 +3,15 @@
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
-import { MousePointerClick, ArrowRightLeft, IndianRupee, Wallet } from "lucide-react";
+import { MousePointerClick, ArrowRightLeft, DollarSign, Wallet } from "lucide-react";
 import { creatorFetch } from "@/lib/creatorApi";
 import { trackEvent, EVENT_NAMES } from "@/lib/analytics";
 import { CREATOR_ROUTES } from "@/lib/creatorRoutes";
 import StatsCard from "@/components/creators/StatsCard";
 import PromoCodeWidget from "@/components/creators/PromoCodeWidget";
 import SiteCard from "@/components/creators/SiteCard";
+import { formatUsd } from "@/lib/creatorProgram";
+import { useCreatorProgram } from "@/lib/useCreatorMonuments";
 import ReferralChart from "@/components/creators/ReferralChart";
 
 export default function DashboardOverview() {
@@ -20,6 +22,8 @@ export default function DashboardOverview() {
 	const [timeline, setTimeline] = useState([]);
 	const [promoCode, setPromoCode] = useState(null);
 	const [loading, setLoading] = useState(true);
+	// Earnings are recorded in rupees and shown in US dollars at today's rate.
+	const { inrPerUsd } = useCreatorProgram();
 
 	useEffect(() => {
 		if (searchParams.get("signup") !== "1") return;
@@ -97,15 +101,15 @@ export default function DashboardOverview() {
 				<StatsCard
 					label="Lifetime Earnings"
 					value={
-						loading ? "—" : `₹${stats?.lifetime_earnings?.toFixed(2) ?? "0.00"}`
+						loading ? "—" : formatUsd(stats?.lifetime_earnings, inrPerUsd)
 					}
-					sub={`₹${stats?.pending_earnings?.toFixed(2) ?? "0.00"} pending`}
-					icon={IndianRupee}
+					sub={`${formatUsd(stats?.pending_earnings, inrPerUsd)} pending`}
+					icon={DollarSign}
 				/>
 				<StatsCard
 					label="Available Balance"
 					value={
-						loading ? "—" : `₹${stats?.available_balance?.toFixed(2) ?? "0.00"}`
+						loading ? "—" : formatUsd(stats?.available_balance, inrPerUsd)
 					}
 					sub="Ready to withdraw"
 					icon={Wallet}

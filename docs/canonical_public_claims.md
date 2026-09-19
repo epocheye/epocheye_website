@@ -48,17 +48,23 @@ works until it does.
 
 ## Creator program
 
+**On the creator site (creators.epocheye.com):** amounts are shown in **US dollars**,
+converted from rupees at the day's exchange rate, and paid in Indian rupees. The creator
+site never states a price per monument (prices may change) and never mentions UPI;
+payment questions go to support@epocheye.app. The UPI payout flow exists only inside the
+signed-in dashboard.
+
 | Claim | Canonical wording |
 |---|---|
-| Who can join | Residents of India with a UPI ID. International creators: not yet (waitlist by email). |
+| Who can join | Residents of India, 18+, with a valid Indian mobile number on the application. International creators: not yet (waitlist by email). |
 | Joining | Invite-only, up to 100 creators. Sign up, submit a profile, Epocheye approves or declines, then the creator accepts the terms. |
 | Exclusivity | One creator per monument for 14 days; their code works only there, only in that window. Renewed for another 14 days if the sales target is met, otherwise the monument goes to the next creator in line. |
 | Customer discount | 10% off, set by Epocheye per creator. The creator cannot change it. |
-| Commission base | A % of the **₹449 list price**, whatever the discount. |
+| Commission base | A % of the full price of each unlock, before the customer discount. (On the creator site: percentages only, no price.) |
 | Tiers (lifetime qualifying sales, applied per sale) | Sales 1–24: 5% (₹22.45) · 25–99: 10% (₹44.90) · 100–249: 15% (₹67.35) · 250–499: 20% (₹89.80) · 500+: 25% (₹112.25) |
 | Per 1,000 sales at one tier | ₹22,450 (5%) · ₹44,900 (10%) · ₹67,350 (15%) · ₹89,800 (20%) · ₹1,12,250 (25%) |
 | Hold | 7 days before a sale is payable |
-| Minimum payout | ₹500, by UPI, in rupees |
+| Minimum payout | ₹500 (shown on the creator site in dollars at the day's rate), paid in rupees |
 | Click | A scan of the creator's QR (epocheye.com/r/CODE), which opens Epocheye in the Play Store / App Store. Clicks earn nothing. |
 | Qualifying sale | The creator's code used at checkout in the app, at their monument during their window, payment captured. |
 | QR design | Every Epocheye QR uses the house style (`apps/creators/lib/styledQr.js`). |
@@ -78,6 +84,7 @@ Change it there, not in page copy.
 - Any conversion rate, number of buyers, or "creators typically earn…" claim
 - That the app works at a monument whose recognition is switched off
 - Any access length other than 4 hours
+- A monument's price, or UPI, on the creator site
 - Any monument not listed in Admin → Settings → Creator Page
 
 ---

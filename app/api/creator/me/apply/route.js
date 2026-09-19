@@ -18,8 +18,17 @@ function cleanUrl(value) {
   }
 }
 
-// A creator submits (or updates) their application. It lands in
-// Admin -> Creator applications and is emailed to the team.
+// Indian mobile number: optional +91 / 0 prefix, then 10 digits starting 6-9.
+function normalizeIndianMobile(value) {
+  const digits = String(value ?? "").replace(/[\s()-]/g, "");
+  const m = digits.match(/^(?:\+?91|0)?([6-9]\d{9})$/);
+  return m ? `+91${m[1]}` : null;
+}
+
+// A creator submits their application once. It lands in
+// Admin -> Creator applications and is emailed to the team. A submitted
+// application can't be edited while it is pending; after a rejection the
+// creator may submit a fresh one.
 export async function POST(request) {
   const context = await getCreatorContext();
   if (context.error) return creatorAuthErrorResponse(context.error);
@@ -30,6 +39,12 @@ export async function POST(request) {
   }
   if (creator.status === "suspended") {
     return NextResponse.json({ success: false, error: "This account is suspended." }, { status: 403 });
+  }
+  if (creator.status === "pending" && creator.applied_at) {
+    return NextResponse.json(
+      { success: false, error: "Your application is already submitted and can't be changed." },
+      { status: 409 }
+    );
   }
 
   let body;
@@ -42,6 +57,14 @@ export async function POST(request) {
   const name = String(body?.name ?? "").trim();
   if (name.length < 2 || name.length > 100) {
     return NextResponse.json({ success: false, error: "Name must be 2-100 characters" }, { status: 400 });
+  }
+
+  const phone = normalizeIndianMobile(body?.phone);
+  if (!phone) {
+    return NextResponse.json(
+      { success: false, error: "Enter a valid 10-digit Indian mobile number" },
+      { status: 400 }
+    );
   }
 
   const links = {};
@@ -67,7 +90,7 @@ export async function POST(request) {
     );
   }
 
-  const application = { name, ...links, audience_size: audience, city, niche, pitch };
+  const application = { name, phone, ...links, audience_size: audience, city, niche, pitch };
   const updated = await updateCreator(creator.id, {
     name,
     ...links,
@@ -79,6 +102,7 @@ export async function POST(request) {
 
   const details = [
     `Email: ${creator.email}`,
+    `Phone: ${phone}`,
     ...URL_FIELDS.filter((k) => links[k]).map((k) => `${k.replace("_url", "")}: ${links[k]}`),
     audience ? `Audience: ${audience}` : null,
     city ? `City: ${city}` : null,

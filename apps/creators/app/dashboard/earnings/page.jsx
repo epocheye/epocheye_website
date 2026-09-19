@@ -3,11 +3,8 @@
 import { useEffect, useState } from "react";
 import { TrendingUp } from "lucide-react";
 import { creatorFetch } from "@/lib/creatorApi";
-
-function formatCurrency(amount, currency = "INR") {
-	const symbol = currency === "INR" ? "₹" : "$";
-	return `${symbol}${Number(amount || 0).toFixed(2)}`;
-}
+import { formatUsd } from "@/lib/creatorProgram";
+import { useCreatorProgram } from "@/lib/useCreatorMonuments";
 
 function formatDate(value) {
 	if (!value) return "—";
@@ -40,6 +37,9 @@ function StatusPill({ conversion }) {
 }
 
 export default function EarningsPage() {
+	// Recorded in rupees; shown in US dollars at today's rate.
+	const { inrPerUsd } = useCreatorProgram();
+	const formatCurrency = (amount) => formatUsd(amount, inrPerUsd);
 	const [conversions, setConversions] = useState([]);
 	const [loading, setLoading] = useState(true);
 
@@ -131,10 +131,10 @@ export default function EarningsPage() {
 											{c.code}
 										</td>
 										<td className="px-5 py-4 text-white/60 text-right">
-											{formatCurrency(c.plan_amount, c.currency)}
+											{formatCurrency(c.plan_amount)}
 										</td>
 										<td className="px-5 py-4 text-white text-right font-medium">
-											{formatCurrency(c.commission_amount, c.currency)}
+											{formatCurrency(c.commission_amount)}
 										</td>
 										<td className="px-5 py-4">
 											<StatusPill conversion={c} />
