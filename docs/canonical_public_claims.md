@@ -4,7 +4,7 @@ The only numbers and facts that may appear in public content: website, creators
 site, social posts, press, pitch material, creator briefs. If a claim is not here,
 it does not go out. If a fact changes, change it here first, then everywhere else.
 
-Last updated: 2026-09-18. Owner: Sambit.
+Last updated: 2026-09-19. Owner: Sambit.
 
 ---
 
@@ -51,15 +51,18 @@ works until it does.
 | Claim | Canonical wording |
 |---|---|
 | Who can join | Residents of India with a UPI ID. International creators: not yet (waitlist by email). |
-| Signup | Instant: sign up, accept the terms, and the code is live. No application or approval step. |
+| Joining | Invite-only, up to 100 creators. Sign up, submit a profile, Epocheye approves or declines, then the creator accepts the terms. |
+| Exclusivity | One creator per monument for 14 days; their code works only there, only in that window. Renewed for another 14 days if the sales target is met, otherwise the monument goes to the next creator in line. |
 | Customer discount | 10% off, set by Epocheye per creator. The creator cannot change it. |
 | Commission base | A % of the **₹449 list price**, whatever the discount. |
-| Tiers (lifetime qualifying sales, applied per sale) | Sales 1–24: 5% (₹22.45) · 25–99: 10% (₹44.90) · 100–249: 15% (₹67.35) · 250+: 20% (₹89.80) |
-| Per 1,000 sales at one tier | ₹22,450 (5%) · ₹44,900 (10%) · ₹67,350 (15%) · ₹89,800 (20%) |
+| Tiers (lifetime qualifying sales, applied per sale) | Sales 1–24: 5% (₹22.45) · 25–99: 10% (₹44.90) · 100–249: 15% (₹67.35) · 250–499: 20% (₹89.80) · 500+: 25% (₹112.25) |
+| Per 1,000 sales at one tier | ₹22,450 (5%) · ₹44,900 (10%) · ₹67,350 (15%) · ₹89,800 (20%) · ₹1,12,250 (25%) |
 | Hold | 7 days before a sale is payable |
 | Minimum payout | ₹500, by UPI, in rupees |
-| Qualifying sale | Code entered at checkout + payment captured. No link or cookie window. |
-| Terms | creators.epocheye.com/terms, version 2026-09-18 |
+| Click | A scan of the creator's QR (epocheye.com/r/CODE), which opens Epocheye in the Play Store / App Store. Clicks earn nothing. |
+| Qualifying sale | The creator's code used at checkout in the app, at their monument during their window, payment captured. |
+| QR design | Every Epocheye QR uses the house style (`apps/creators/lib/styledQr.js`). |
+| Terms | creators.epocheye.com/terms, version 2026-09-19 |
 
 Every creator-site number is computed from `apps/creators/lib/creatorProgram.js`.
 Change it there, not in page copy.
