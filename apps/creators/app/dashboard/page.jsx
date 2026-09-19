@@ -79,9 +79,9 @@ export default function DashboardOverview() {
 			{/* Stats */}
 			<div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
 				<StatsCard
-					label="Code entries in app"
+					label="QR scans"
 					value={loading ? "—" : (stats?.total_clicks?.toLocaleString() ?? "0")}
-					sub="People who typed your code"
+					sub={`${stats?.code_entries ?? 0} code entries in the app`}
 					icon={MousePointerClick}
 				/>
 				<StatsCard
@@ -89,7 +89,7 @@ export default function DashboardOverview() {
 					value={loading ? "—" : (stats?.total_conversions?.toLocaleString() ?? "0")}
 					sub={
 						stats?.conversion_rate != null
-							? `${stats.conversion_rate}% of code entries`
+							? `${stats.conversion_rate}% of scans`
 							: undefined
 					}
 					icon={ArrowRightLeft}

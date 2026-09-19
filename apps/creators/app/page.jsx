@@ -66,8 +66,8 @@ const PROCESS_STEPS = [
 	},
 	{
 		number: "03",
-		title: "Share your code, not a link",
-		body: "Post your code, or its QR, with your monument content. Visitors enter it in the Epocheye app when they unlock the monument. There are no links to click.",
+		title: "Share your code and your QR",
+		body: "Post your code and your Epocheye QR with your monument content. Scanning the QR opens Epocheye in the Play Store or App Store, and your followers use your code when they unlock the monument in the app.",
 	},
 	{
 		number: "04",
@@ -125,7 +125,7 @@ function buildFaq(monuments) {
 		},
 		{
 			question: "What counts as a click and what counts as a sale?",
-			answer: "There are no links. A click is someone entering your code in the Epocheye app, counted once per person per day. A sale is someone paying for a monument unlock in the app with your code. Commission is paid on sales only.",
+			answer: "A click is someone scanning your QR, which opens Epocheye in the Play Store or App Store. A sale is someone paying for a monument unlock in the app with your code. Commission is paid on sales only.",
 		},
 		{
 			question: "How does monument exclusivity work?",
@@ -133,7 +133,7 @@ function buildFaq(monuments) {
 		},
 		{
 			question: "Can I promote Epocheye on multiple platforms?",
-			answer: "Yes. Share the same code (or its QR) on Instagram, YouTube, TikTok, blogs, newsletters, and community groups. Don't share it as a link: it's entered in the app.",
+			answer: "Yes. Share the same code and QR on Instagram, YouTube, TikTok, blogs, newsletters, posters and community groups.",
 		},
 		{
 			question: "What are my followers buying?",

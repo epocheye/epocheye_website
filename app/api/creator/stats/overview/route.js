@@ -12,16 +12,11 @@ export async function GET() {
 
   const overview = await getStatsOverview(context.creator.id);
 
-  // There are no share links: a creator's "clicks" are people entering their
-  // code in the app, counted by the backend (one per person per day).
-  const entries =
-    context.creator.status === "active" ? await fetchCreatorCodeEntries(context.creator) : 0;
-  overview.total_clicks = entries ?? 0;
-  overview.current_month_clicks = null;
-  overview.conversion_rate =
-    overview.total_clicks > 0
-      ? Number(((overview.total_conversions / overview.total_clicks) * 100).toFixed(1))
-      : 0;
+  // Clicks = scans of the creator's QR (epocheye.com/r/CODE, counted by the
+  // website). Code entries = people typing the code in the app, counted by the
+  // backend. Sales are counted only when someone pays with the code.
+  overview.code_entries =
+    context.creator.status === "active" ? (await fetchCreatorCodeEntries(context.creator)) ?? 0 : 0;
   return NextResponse.json(
     { success: true, data: overview },
     {
