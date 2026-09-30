@@ -1,6 +1,8 @@
 import DashboardSidebar from "@/components/creators/DashboardSidebar";
 import DashboardAuthGate from "@/components/creators/DashboardAuthGate";
 
+export const metadata = { robots: { index: false, follow: false } };
+
 export default function DashboardLayout({ children }) {
 	// Auth is gated client-side (DashboardAuthGate) rather than via a server
 	// auth()/redirect here: this app is a separate subdomain deployment whose

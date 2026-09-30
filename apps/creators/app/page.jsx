@@ -16,11 +16,10 @@ import {
 	MAX_CREATORS,
 	SUPPORT_EMAIL,
 	TIERS,
-	earningsForSales,
-	formatUsd,
 	rateForSale,
 } from "@/lib/creatorProgram";
 import { monumentSentence, useCreatorProgram } from "@/lib/useCreatorMonuments";
+import { LEGAL_NAME, MAIN_SITE_URL, SOCIAL_PROFILES } from "@/lib/site";
 
 const DITHER_WAVE_COLOR = [0.78, 0.78, 0.78];
 
@@ -76,19 +75,17 @@ function tierLabel(tier) {
 	return tier.to === null ? `Sale ${tier.from}+` : `Sales ${tier.from}-${tier.to}`;
 }
 
-// Illustrative dashboard sample. Sales and earnings follow the program
-// model (shown in dollars at today's rate); scans are a made-up example
-// figure, and the panel says so.
+// Illustrative dashboard sample. Sales and rate follow the program model; scans are
+// a made-up example figure, and the panel says so. No money amounts on the public
+// site (docs/canonical_public_claims.md): earnings are shown only inside the dashboard.
 const SAMPLE_SALES = 40;
 const SAMPLE_CLICKS = 1120;
-function sampleMetrics(inrPerUsd) {
-	return [
-		{ label: "QR scans", value: SAMPLE_CLICKS.toLocaleString("en-US") },
-		{ label: "Sales", value: String(SAMPLE_SALES) },
-		{ label: "Earned", value: formatUsd(earningsForSales(SAMPLE_SALES), inrPerUsd) },
-		{ label: "Current rate", value: `${rateForSale(SAMPLE_SALES + 1)}%` },
-	];
-}
+const SAMPLE_METRICS = [
+	{ label: "QR scans", value: SAMPLE_CLICKS.toLocaleString("en-US") },
+	{ label: "Sales", value: String(SAMPLE_SALES) },
+	{ label: "Payable after", value: `${HOLD_DAYS} days` },
+	{ label: "Current rate", value: `${rateForSale(SAMPLE_SALES + 1)}%` },
+];
 
 const BENEFITS = [
 	{
@@ -113,7 +110,7 @@ const BENEFITS = [
 	},
 ];
 
-function buildFaq(monuments, minPayoutUsd) {
+function buildFaq(monuments) {
 	return [
 		{
 			question: "Can anyone join?",
@@ -145,7 +142,7 @@ function buildFaq(monuments, minPayoutUsd) {
 		},
 		{
 			question: "When and how do I get paid?",
-			answer: `A sale becomes payable ${HOLD_DAYS} days after purchase. Once your payable balance reaches ${minPayoutUsd}, request a payout from your dashboard. Amounts are shown in US dollars and paid in Indian rupees. For anything about payments, email ${SUPPORT_EMAIL}.`,
+			answer: `A sale becomes payable ${HOLD_DAYS} days after purchase. Once your payable balance reaches the payout minimum shown in your dashboard, request a payout from there. Payouts are made in Indian rupees. For anything about payments, email ${SUPPORT_EMAIL}.`,
 		},
 		{
 			question: "I'm not in India. Can I join?",
@@ -170,9 +167,9 @@ const NAV_LINKS = [
 
 export default function CreatorsLandingPage() {
 	const [mobileNavOpen, setMobileNavOpen] = useState(false);
-	const { monuments, inrPerUsd, minPayoutInr } = useCreatorProgram();
-	const faqItems = buildFaq(monuments, formatUsd(minPayoutInr, inrPerUsd, { decimals: 0 }));
-	const sample = sampleMetrics(inrPerUsd);
+	const { monuments } = useCreatorProgram();
+	const faqItems = buildFaq(monuments);
+	const sample = SAMPLE_METRICS;
 
 	useEffect(() => {
 		if (!mobileNavOpen) return undefined;
@@ -736,16 +733,25 @@ export default function CreatorsLandingPage() {
 					<div className="mx-auto flex w-full max-w-7xl flex-col items-center justify-between gap-3 sm:flex-row">
 						<div className="flex items-center gap-3">
 							<CreatorBrandLink href="/" size="sm" showBadge={false} />
-							<Link
-								href="/"
+							<a
+								href={MAIN_SITE_URL}
 								className="text-sm text-white/40 transition-colors hover:text-white/70">
 								Back to Epocheye
-							</Link>
+							</a>
 						</div>
 						<p className="text-xs text-white/25">
-							© {new Date().getFullYear()} Epocheye. All rights reserved.
+							© {new Date().getFullYear()} {LEGAL_NAME}. All rights reserved.
 						</p>
-						<div className="flex items-center gap-6 text-xs uppercase tracking-widest text-white/35">
+						<div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs uppercase tracking-widest text-white/35">
+							<a href={SOCIAL_PROFILES.instagram} target="_blank" rel="noopener" className="hover:text-white/70 transition-colors">
+								Instagram
+							</a>
+							<a href={SOCIAL_PROFILES.x} target="_blank" rel="noopener" className="hover:text-white/70 transition-colors">
+								X
+							</a>
+							<a href={SOCIAL_PROFILES.linkedin} target="_blank" rel="noopener" className="hover:text-white/70 transition-colors">
+								LinkedIn
+							</a>
 							<Link href="/terms" className="hover:text-white/70 transition-colors">
 								Creator Terms
 							</Link>

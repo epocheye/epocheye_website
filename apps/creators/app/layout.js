@@ -9,15 +9,7 @@ import {
 import { Analytics } from "@vercel/analytics/next";
 
 import "./globals.css";
-
-const getMetadataBase = () => {
-  const raw = process.env.NEXT_PUBLIC_SITE_URL || "https://creators.epocheye.com";
-  try {
-    return new URL(raw);
-  } catch {
-    return new URL(`https://${raw}`);
-  }
-};
+import { CREATORS_URL, LEGAL_NAME, MAIN_SITE_URL, SOCIAL_PROFILES } from "@/lib/site";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -59,15 +51,37 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata = {
-  metadataBase: getMetadataBase(),
+  metadataBase: new URL(CREATORS_URL),
+  // Children without their own canonical inherit "/": only /terms is indexable besides
+  // the landing page, and it sets its own. Private routes are noindex.
+  alternates: { canonical: "/" },
   title: "Creator Program - Epocheye",
   description:
     "Join the Epocheye Creator Program. Make content, share your promo code, and earn commissions.",
   openGraph: {
+    type: "website",
+    siteName: "Epocheye",
     title: "Creator Program - Epocheye",
     description: "Turn your audience into income with Epocheye.",
-    url: "https://creators.epocheye.com",
+    url: CREATORS_URL,
   },
+  twitter: {
+    card: "summary",
+    site: "@epocheyeinc",
+    title: "Creator Program - Epocheye",
+    description: "Turn your audience into income with Epocheye.",
+  },
+};
+
+// Same @id as the Organization on www.epocheye.com, so engines merge the two.
+const ORGANIZATION = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": `${MAIN_SITE_URL}/#organization`,
+  name: "Epocheye",
+  legalName: LEGAL_NAME,
+  url: MAIN_SITE_URL,
+  sameAs: Object.values(SOCIAL_PROFILES),
 };
 
 export default function RootLayout({ children }) {
@@ -76,6 +90,12 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${montserratAlternates.variable} ${instrumentSans.variable} ${instrumentSerif.variable} antialiased`}
       >
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(ORGANIZATION).replace(/</g, "\\u003c"),
+          }}
+        />
         <ClerkProvider>
           {children}
           <Analytics />
