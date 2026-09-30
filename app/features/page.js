@@ -2,6 +2,8 @@ import Link from "next/link";
 import { BGPattern } from "@/components/ui/bg-pattern";
 
 export const metadata = {
+	// "Coming soon" stub: kept out of the index until it has content.
+	robots: { index: false, follow: true },
 	title: "Features — Epocheye",
 	description: "Explore the Epocheye feature set.",
 };

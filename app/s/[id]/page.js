@@ -27,6 +27,7 @@ export async function generateMetadata({ params }) {
 	return {
 		title,
 		description,
+		robots: { index: false, follow: false },
 		openGraph: { title, description, images, type: "website" },
 		twitter: {
 			card: images.length ? "summary_large_image" : "summary",

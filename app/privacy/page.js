@@ -2,6 +2,7 @@ import Link from "next/link";
 import { BGPattern } from "@/components/ui/bg-pattern";
 
 export const metadata = {
+	alternates: { canonical: "/privacy" },
 	title: "Privacy Policy — Epocheye",
 	description:
 		"How Epocheye collects, uses, and protects your information.",

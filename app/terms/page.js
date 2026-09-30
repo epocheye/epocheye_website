@@ -2,6 +2,7 @@ import Link from "next/link";
 import { BGPattern } from "@/components/ui/bg-pattern";
 
 export const metadata = {
+	alternates: { canonical: "/terms" },
 	title: "Terms of Service — Epocheye",
 	description:
 		"The terms that govern your use of the Epocheye app, website, and creator program.",

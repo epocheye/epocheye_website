@@ -18,7 +18,12 @@ export async function generateMetadata({ params }) {
 	return {
 		title: `${post.title} — Epocheye`,
 		description: post.excerpt || undefined,
+		alternates: { canonical: `/blog/${post.slug}` },
 		openGraph: {
+			type: "article",
+			siteName: "Epocheye",
+			url: `/blog/${post.slug}`,
+			...(post.published_at ? { publishedTime: new Date(post.published_at).toISOString() } : {}),
 			title: post.title,
 			description: post.excerpt || undefined,
 			images: post.cover_image_url ? [{ url: post.cover_image_url }] : undefined,

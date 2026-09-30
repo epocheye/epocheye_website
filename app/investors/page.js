@@ -3,9 +3,10 @@ import { ArrowRight } from "lucide-react";
 import { BGPattern } from "@/components/ui/bg-pattern";
 
 export const metadata = {
+	alternates: { canonical: "/investors" },
 	title: "Invest in Epocheye",
 	description:
-		"Epocheye is raising $500K on a SAFE to bring AR heritage experiences to 10 monuments across 5 cities.",
+		"Epocheye is raising on a SAFE. Live today at four monuments in Bengaluru and Kolkata. Request the pitch deck.",
 };
 
 export default function InvestorsPage() {
@@ -17,7 +18,7 @@ export default function InvestorsPage() {
 					Invest in Epocheye
 				</h1>
 				<p className="font-instrument-sans text-white/70 max-w-2xl mt-6 text-base sm:text-lg leading-relaxed">
-					We&apos;re raising $500K on a SAFE to bring AR heritage experiences to 10 monuments across 5 cities. If you&apos;re interested in learning more, reach out directly.
+					We&apos;re raising on a SAFE. Epocheye is live today at Tipu Sultan&apos;s Summer Palace and Bangalore Fort in Bengaluru, and the Indian Museum and Victoria Memorial in Kolkata. If you&apos;re interested in learning more, reach out directly.
 				</p>
 				<a
 					href="mailto:sambit@epocheye.com?subject=Pitch%20Deck%20Request%20%E2%80%94%20Epocheye"

@@ -4,7 +4,11 @@ The only numbers and facts that may appear in public content: website, creators
 site, social posts, press, pitch material, creator briefs. If a claim is not here,
 it does not go out. If a fact changes, change it here first, then everywhere else.
 
-Last updated: 2026-09-19. Owner: Sambit.
+Last updated: 2026-09-30 (where it works, never-say). Owner: Sambit.
+
+**SEO and monument pages** (docs/seo/) are stricter than this file: no price, no payout
+amount and no currency figure appear on any public page. Prices below stay here as the
+internal record.
 
 ---
 
@@ -35,14 +39,40 @@ imply any conversion rate at the standing price.
 
 ---
 
+## Identity
+
+| Claim | Canonical wording |
+|---|---|
+| Legal name | Epocheye Private Limited (no parent entity, anywhere) |
+| Spoken name | "Epoch Eye". Use it in descriptions and bios as "Epocheye (Epoch Eye)", never as a separate title keyword. |
+| One-liner (approved 2026-09-30) | Epocheye is an augmented-reality app that shows heritage monuments as the historical record describes them, and says plainly where the record runs out. |
+| Site | https://www.epocheye.com (canonical host) |
+| Profiles | linkedin.com/company/epocheye · instagram.com/epocheyeinc · x.com/epocheyeinc · Play: com.epocheye · Crunchbase: being created |
+
+---
+
 ## Where it works
 
-**Tipu Sultan's Summer Palace, Bengaluru.** It is the only monument live in the app
-(recognition switched on) and the only one listed on the creator page.
+Live means `monuments.status = 'active'` **and** `recognition_enabled = true` in
+production. Checked by read-only query on 2026-09-30:
 
-The creator page's monument list is controlled in **Admin → Settings → Creator Page**.
-Add a monument there only after it is switched on in the app. Do not claim a monument
-works until it does.
+| Monument | City | Recognition | Public wording |
+|---|---|---|---|
+| Tipu Sultan's Summer Palace | Bengaluru | on | Live. Reconstruction and narration (English, Hindi). |
+| Indian Museum | Kolkata | on | Live. |
+| Victoria Memorial | Kolkata | on | Live. The audio guide is still admin-only (`audio_admin_only = true`), so do not promise narration here. |
+| Bangalore Fort | Bengaluru | **off** | Listed as live on every public surface **by owner decision (Sambit, 2026-09-30)**, although production recognition is off. Risk accepted by the owner: a visitor who opens the app at the Fort gets no recognition until `recognition_enabled` is switched on. Switch it on. |
+
+Only Tipu Sultan's Summer Palace is listed on the creator page today. The creator
+page's monument list is controlled in **Admin → Settings → Creator Page**. Add a monument
+there only after it is switched on in the app. Do not claim a monument works until it
+does.
+
+**The four public monuments, named exactly:** Tipu Sultan's Summer Palace (Bengaluru),
+Bangalore Fort (Bengaluru), Indian Museum (Kolkata), Victoria Memorial (Kolkata).
+
+Konark Sun Temple and Udayagiri Caves are **not live** (recognition off). Never list them
+as available.
 
 ---
 
@@ -85,7 +115,11 @@ Change it there, not in page copy.
 - That the app works at a monument whose recognition is switched off
 - Any access length other than 4 hours
 - A monument's price, or UPI, on the creator site
-- Any monument not listed in Admin → Settings → Creator Page
+- Any monument not listed in Admin → Settings → Creator Page (on the creator site)
+- Konark or Udayagiri as live
+- Waitlist, signup, tester, user or download counts; ratings
+- Backers other than STPI, AWS and Draper Startup House (owner confirmed these three are real, 2026-09-30)
+- Parent-company framing. The company is **Epocheye Private Limited**.
 
 ---
 

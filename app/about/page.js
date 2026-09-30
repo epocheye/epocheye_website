@@ -7,6 +7,7 @@ import Link from "next/link";
 import { BGPattern } from "@/components/ui/bg-pattern";
 
 export const metadata = {
+	alternates: { canonical: "/about" },
 	title: "About Epocheye",
 	description:
 		"Why I built Epocheye — a founder's story about a stutter, history, and seeing the past live.",

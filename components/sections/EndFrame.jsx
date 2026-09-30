@@ -5,6 +5,7 @@ import KineticText from "@/components/fx/KineticText";
 import MagneticButton from "@/components/fx/MagneticButton";
 import GridFloor from "@/components/fx/GridFloor";
 import Scroll3D from "@/components/fx/Scroll3D";
+import { PLAY_STORE_URL, SOCIAL_PROFILES } from "@/lib/site";
 
 const COLUMNS = [
 	{
@@ -12,7 +13,8 @@ const COLUMNS = [
 		links: [
 			["Features", "#capabilities"],
 			["How It Works", "#how-it-works"],
-			["Download", "https://play.google.com/store/apps/details?id=com.epocheye"],
+			["Monuments", "/monuments"],
+			["Download", PLAY_STORE_URL],
 			["Creators", "https://creators.epocheye.com"],
 		],
 	},
@@ -28,9 +30,9 @@ const COLUMNS = [
 	{
 		head: "Follow",
 		links: [
-			["Twitter / X", "https://x.com/sambitsingha01"],
-			["Instagram", "https://instagram.com"],
-			["LinkedIn", "https://www.linkedin.com/company/epocheye/"],
+			["Twitter / X", SOCIAL_PROFILES.x],
+			["Instagram", SOCIAL_PROFILES.instagram],
+			["LinkedIn", SOCIAL_PROFILES.linkedin],
 		],
 	},
 ];
@@ -75,8 +77,9 @@ export default function EndFrame() {
 				<Scroll3D as="div" className="grid grid-cols-2 md:grid-cols-4 gap-10 border-t border-rule pt-12">
 					<div className="flex flex-col gap-4 col-span-2 md:col-span-1">
 						<span className="font-serif text-bone text-2xl">Epocheye</span>
+						<span className="font-mono text-xs text-bone-faint">Say it &ldquo;Epoch Eye&rdquo;</span>
 						<span className="font-mono text-xs leading-relaxed text-bone-muted">See the past. Live.</span>
-						<span className="font-mono text-xs text-bone-faint mt-2">© 2026 Epocheye</span>
+						<span className="font-mono text-xs text-bone-faint mt-2">© 2026 Epocheye Private Limited</span>
 					</div>
 					{COLUMNS.map((col) => (
 						<div key={col.head} className="flex flex-col gap-3">
@@ -114,7 +117,7 @@ export default function EndFrame() {
 				</Scroll3D>
 
 				<div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-t border-rule mt-14 pt-6 mono-label text-[11px] text-bone-faint">
-					<span>© 2026 Epocheye — All rights reserved</span>
+					<span>© 2026 Epocheye Private Limited — All rights reserved</span>
 					<span className="flex gap-2">
 						<Link href="/privacy" className="hover:text-signal transition-colors">
 							Privacy

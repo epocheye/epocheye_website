@@ -4,6 +4,7 @@ import { BGPattern } from "@/components/ui/bg-pattern";
 import { listPublishedPosts } from "@/lib/server/blogRepository";
 
 export const metadata = {
+	alternates: { canonical: "/blog" },
 	title: "Blog — Epocheye",
 	description: "Notes, updates, and stories from the Epocheye team.",
 };

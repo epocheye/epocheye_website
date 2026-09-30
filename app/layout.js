@@ -6,16 +6,10 @@ import {
   Instrument_Serif,
 } from "next/font/google";
 import "./globals.css";
+import { ONE_LINER, SITE_NAME, SITE_URL } from "@/lib/site";
+import { organization, website } from "@/lib/seo/schema";
+import JsonLd from "@/components/seo/JsonLd";
 
-const getMetadataBase = () => {
-  const raw = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_APP_URL;
-  if (!raw) return new URL("http://localhost:3000");
-  try {
-    return new URL(raw);
-  } catch {
-    return new URL(`https://${raw}`);
-  }
-};
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -69,25 +63,22 @@ export const viewport = {
 }
 
 export const metadata = {
-  metadataBase: getMetadataBase(),
-  title: "Epocheye - Historical Intelligence for the Physical World",
-  description:
-    "See historical monuments in their original glory through your smartphone using Augmented Reality",
-  keywords:
-    "Historical Intelligence for the Physical World, AR heritage tourism, historical site AR app, UNESCO World Heritage AR, India heritage tourism, historical reconstruction AR, augmented reality monuments, cultural heritage AR experience, virtual heritage tours, historical landmarks AR",
+  // Hard-coded canonical host: www.epocheye.com (apex and epocheye.app redirect here).
+  metadataBase: new URL(SITE_URL),
+  title: "Epocheye (Epoch Eye): monuments as the record describes them",
+  description: ONE_LINER,
+  applicationName: SITE_NAME,
   openGraph: {
-    title: "Epocheye - Bringing the Experience to Heritage Tourism",
-    description:
-      "See historical monuments in their original glory through your smartphone using Augmented Reality",
     type: "website",
-    
+    siteName: SITE_NAME,
+    title: "Epocheye (Epoch Eye): monuments as the record describes them",
+    description: ONE_LINER,
   },
   twitter: {
     card: "summary_large_image",
-    title: "Epocheye - Bringing the Experience to Heritage Tourism",
-    description:
-      "See historical monuments in their original glory through your smartphone using Augmented Reality",
-   
+    site: "@epocheyeinc",
+    title: "Epocheye (Epoch Eye): monuments as the record describes them",
+    description: ONE_LINER,
   },
   icons: {
     icon: [
@@ -107,6 +98,7 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${montserratAlternates.variable} ${instrumentSans.variable} ${instrumentSerif.variable} antialiased`}
       >
+        <JsonLd data={[organization(), website()]} />
         <AnnouncementBanner />
         {children}
         <Script 

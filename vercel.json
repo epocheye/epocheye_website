@@ -1,14 +1,25 @@
 {
   "redirects": [
     {
+      "source": "/:path((?!api/).*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "epocheye.com"
+        }
+      ],
+      "destination": "https://www.epocheye.com/:path",
+      "statusCode": 308
+    },
+    {
       "source": "/:path*",
       "has": [
         {
           "type": "host",
-          "value": "epocheye.app"
+          "value": "(?:www\\.)?epocheye\\.app"
         }
       ],
-      "destination": "https://epocheye.com/:path*",
+      "destination": "https://www.epocheye.com/:path*",
       "statusCode": 308
     }
   ],

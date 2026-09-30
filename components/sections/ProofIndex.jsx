@@ -1,14 +1,14 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 
 import Scroll3D from "@/components/fx/Scroll3D";
-import CountUp from "@/components/fx/CountUp";
+import { LIVE_MONUMENTS } from "@/lib/monuments/live";
 import logoStpi from "../../public/logo-stpi.png";
 import logoAws from "../../public/logo-aws.png";
 import logoDraper from "../../public/logo-draper.png";
 
-const NUM = "font-serif text-bone leading-none";
 const NUM_STYLE = { fontSize: "clamp(46px, 7.5vw, 106px)" };
 
 /**
@@ -50,21 +50,35 @@ function BackerLogos() {
 	);
 }
 
+// Where the app works, each linked to its sourced monument page. Names are exact
+// (docs/canonical_public_claims.md); no counts are shown here.
+function LiveMonuments() {
+	return (
+		<span className="flex flex-col items-start gap-2 text-left sm:items-end sm:gap-3 sm:text-right">
+			{LIVE_MONUMENTS.map((m) => (
+				<Link
+					key={m.slug}
+					href={`/monuments/${m.slug}`}
+					className="font-serif text-bone leading-tight transition-colors hover:text-signal"
+					style={{ fontSize: "clamp(24px, 3.6vw, 48px)" }}>
+					{m.name}
+					<span className="mono-label ml-3 align-middle text-[10px] sm:text-xs text-bone-muted">{m.city}</span>
+				</Link>
+			))}
+		</span>
+	);
+}
+
 const ROWS = [
 	{
-		k: "00 / On the waitlist",
-		align: "items-baseline",
-		style: NUM_STYLE,
-		node: <CountUp value={5000} suffix="+" className={NUM} />,
+		k: "00 / Live at",
+		// stacked on phones so the names don't wrap word by word beside the label
+		align: "flex-col items-start sm:flex-row",
+		style: {},
+		node: <LiveMonuments />,
 	},
 	{
-		k: "01 / Field testers",
-		align: "items-baseline",
-		style: NUM_STYLE,
-		node: <CountUp value={50} suffix="+" className={NUM} />,
-	},
-	{
-		k: "03 / Backed by",
+		k: "01 / Backed by",
 		align: "items-center",
 		// same clamp as the numerals, as a floor — keeps the ledger row rhythm
 		style: { minHeight: NUM_STYLE.fontSize },
@@ -80,7 +94,7 @@ export default function ProofIndex() {
 	return (
 		<section className="relative w-full bg-ink px-6 sm:px-10 py-24 sm:py-32">
 			<div className="flex items-end justify-between border-b border-rule pb-6 mb-4">
-				<span className="mono-label text-xs text-signal">01 — Traction</span>
+				<span className="mono-label text-xs text-signal">01 — Where it works</span>
 				<span className="mono-label text-xs text-bone-muted">Index / The Signal</span>
 			</div>
 

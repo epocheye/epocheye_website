@@ -10,7 +10,7 @@ const BLOCKS = [
 	{
 		n: "01",
 		title: "AR Time Travel",
-		desc: "Aim your phone at a ruin and watch it rebuild itself across a thousand years — stone by stone, era by era.",
+		desc: "Stand at the monument and see what the record says was there — Tipu Sultan's Summer Palace as it was painted, Bangalore Fort's lost rampart back on its wall.",
 		src: IMG.pyramids,
 		caption: "Pyramids of Giza · Egypt",
 		align: "left",
@@ -18,15 +18,15 @@ const BLOCKS = [
 	{
 		n: "02",
 		title: "AI Historian",
-		desc: "A historian in your ear, narrating the exact stone you're standing on — verified by experts, tuned to your location.",
+		desc: "A guided narration at Tipu Sultan's Summer Palace, in English and Hindi, stop by stop as you walk the rooms.",
 		src: IMG.boudhanath,
 		caption: "Boudhanath Stupa · Nepal",
 		align: "right",
 	},
 	{
 		n: "03",
-		title: "Offline-First",
-		desc: "The whole engine runs with zero bars. Download any heritage site before you arrive and leave the grid behind.",
+		title: "Sourced, Every Card",
+		desc: "Point at an exhibit and read what the published record says, with the source named. Where no record exists, the app says so.",
 		src: "/img7.webp",
 		caption: "Bagan · Myanmar",
 		align: "left",

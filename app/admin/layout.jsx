@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { verifyAdminJWT } from "@/lib/server/adminAuth";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 
-export const metadata = { title: "Admin — Epocheye" };
+export const metadata = { title: "Admin — Epocheye", robots: { index: false, follow: false } };
 
 export default async function AdminLayout({ children }) {
   const auth = await verifyAdminJWT();

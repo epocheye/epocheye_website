@@ -17,7 +17,14 @@ const CUBE_FACES = [
 	{ src: IMG.boudhanath, label: "Boudhanath" },
 ];
 
-const METRICS = ["10,000+ SIGNUPS", "50+ FIELD TESTERS", "BACKED BY STPI · AWS · DRAPER"];
+// No counts: docs/canonical_public_claims.md. Live monuments, named exactly.
+const METRICS = [
+	"LIVE AT TIPU SULTAN'S SUMMER PALACE",
+	"BANGALORE FORT",
+	"VICTORIA MEMORIAL",
+	"INDIAN MUSEUM",
+	"BACKED BY STPI · AWS · DRAPER",
+];
 
 function MarqueeRow() {
 	return (
