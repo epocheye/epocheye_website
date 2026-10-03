@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const NOTIFICATION_TYPES = [
   { value: "announcement", label: "Announcement" },
@@ -45,6 +45,64 @@ function readTestUser() {
   } catch {
     return "";
   }
+}
+
+/**
+ * Whether a notification sent now would actually reach a phone.
+ *
+ * Push was once off on the server for months while this page kept reporting
+ * broadcasts as sent, so the state of the transport is shown before the form
+ * rather than discovered after a send.
+ */
+function PushHealth() {
+  // null while loading; { unavailable } when the check itself failed.
+  const [health, setHealth] = useState(null);
+
+  useEffect(() => {
+    let live = true;
+    fetch("/api/admin/notifications/health", { cache: "no-store" })
+      .then(async (res) => {
+        const json = await res.json();
+        if (!live) return;
+        setHealth(res.ok ? json : { unavailable: json.error || "The health check was refused" });
+      })
+      .catch(() => {
+        if (live) setHealth({ unavailable: "Could not reach the server" });
+      });
+    return () => {
+      live = false;
+    };
+  }, []);
+
+  if (!health) {
+    return <p className="mb-6 text-xs text-white/30">Checking push delivery…</p>;
+  }
+  if (health.unavailable) {
+    return (
+      <div className="mb-6 px-4 py-3 rounded-lg text-sm bg-white/5 text-white/50 border border-white/8">
+        Push status unknown: {health.unavailable}.
+      </div>
+    );
+  }
+
+  const summary = `${health.devices?.tokens ?? 0} devices across ${health.devices?.users ?? 0} users`;
+  if (health.healthy) {
+    return (
+      <div className="mb-6 px-4 py-3 rounded-lg text-sm bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+        Push is working. {summary}.
+      </div>
+    );
+  }
+  return (
+    <div className="mb-6 px-4 py-3 rounded-lg text-sm bg-red-500/10 text-red-400 border border-red-500/20">
+      <p className="font-medium">Push has a problem. {summary}.</p>
+      <ul className="mt-1.5 list-disc pl-5 space-y-1 text-red-400/90">
+        {(health.problems ?? []).map((problem) => (
+          <li key={problem}>{problem}</li>
+        ))}
+      </ul>
+    </div>
+  );
 }
 
 export default function AdminNotificationsPage() {
@@ -189,6 +247,8 @@ export default function AdminNotificationsPage() {
       <p className="text-xs text-white/35 mb-8">
         Sends a push + in-app notification to every registered user. Send a test to yourself first.
       </p>
+
+      <PushHealth />
 
       <form
         onSubmit={(e) => {
