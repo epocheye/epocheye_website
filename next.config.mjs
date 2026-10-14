@@ -39,6 +39,20 @@ const nextConfig = {
     ];
   },
 
+  // virtual.epocheye.com serves the /virtual campaign page at its root. Other paths on
+  // that host (/privacy, /terms, /refunds, /_next, /api) resolve as on the main site.
+  async rewrites() {
+    return {
+      beforeFiles: [
+        {
+          source: '/',
+          has: [{ type: 'host', value: 'virtual.epocheye.com' }],
+          destination: '/virtual',
+        },
+      ],
+    };
+  },
+
   // Headers for caching and security
   async headers() {
     return [

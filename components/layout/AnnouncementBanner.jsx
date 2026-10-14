@@ -2,12 +2,21 @@
 
 import { startTransition, useEffect, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 
 const DISMISS_KEY = "announcement-dismissed:epocheye-cst-mou";
 const POST_HREF = "/blog/epocheye-caribbean-steelpan-tours-mou";
 
+// The /virtual campaign page (also served at virtual.epocheye.com) has its own copy rules
+// that this announcement would break, so the banner stays off there.
+function isVirtualPage(pathname) {
+  if (pathname?.startsWith("/virtual")) return true;
+  return typeof window !== "undefined" && window.location.hostname.startsWith("virtual.");
+}
+
 export default function AnnouncementBanner() {
+  const pathname = usePathname();
   const [visible, setVisible] = useState(false);
   const [ready, setReady] = useState(false);
 
@@ -33,7 +42,7 @@ export default function AnnouncementBanner() {
     }
   };
 
-  if (!ready) return null;
+  if (!ready || isVirtualPage(pathname)) return null;
 
   return (
     <AnimatePresence>
