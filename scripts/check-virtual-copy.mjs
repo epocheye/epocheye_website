@@ -9,7 +9,7 @@ import path from "node:path";
 const ROOT = process.cwd();
 const COPY_FILES = [
 	"lib/virtual/copy.js",
-	"lib/virtual/images.js",
+	"lib/virtual/media.js",
 	"app/virtual/page.js",
 	"app/virtual/opengraph-image.js",
 	"app/refunds/page.js",

@@ -7,14 +7,16 @@ import { trackVirtual } from "./track";
 // verify the webhook signature, record the purchase, grant access, send the access email.
 export default function CheckoutButton({ href, label, note }) {
 	return (
-		<div className="w-full max-w-md">
+		<div className="flex w-full max-w-md flex-col items-center">
 			<a
 				href={href}
 				onClick={() => trackVirtual("virtual_checkout_click")}
-				className="inline-flex h-12 items-center justify-center rounded-full border border-white/70 px-8 font-montserrat text-sm font-medium text-white transition-colors hover:bg-white hover:text-black">
-				{label}
+				className="inline-flex items-center rounded-full border border-white/20 bg-white/10 p-1 backdrop-blur-sm transition-opacity duration-300 hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-white/50">
+				<span className="rounded-full bg-white px-6 py-3 font-montserrat text-xs font-semibold uppercase tracking-[0.14em] text-black sm:text-sm">
+					{label}
+				</span>
 			</a>
-			<p className="mt-3 font-instrument-sans text-sm text-white/50">{note}</p>
+			<p className="mt-3 max-w-sm font-montserrat text-xs leading-relaxed text-white/60">{note}</p>
 		</div>
 	);
 }
