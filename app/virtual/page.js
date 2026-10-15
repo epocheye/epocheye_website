@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { preload } from "react-dom";
 
 import JsonLd from "@/components/seo/JsonLd";
 import { ORG_ID } from "@/lib/seo/schema";
@@ -9,8 +10,6 @@ import {
 	CONSENT_LABEL,
 	FAQ,
 	FOOTER_LINE,
-	HEADLINE_LEAD,
-	HEADLINE_TURN,
 	SUBLINE,
 	SUCCESS,
 	TITLE,
@@ -18,16 +17,14 @@ import {
 	WAITLIST_NOTE,
 	WHAT_YOU_GET,
 } from "@/lib/virtual/copy";
-import { HERO_VIDEO, STORY_IS_PREVIEW, STORY_VIDEO } from "@/lib/virtual/media";
 import WaitlistForm from "@/components/virtual/WaitlistForm";
 import CheckoutButton from "@/components/virtual/CheckoutButton";
 import PageViewTracker from "@/components/virtual/PageViewTracker";
-import StoryVideo from "@/components/virtual/StoryVideo";
-import FadeUp from "@/components/virtual/FadeUp";
+import PalaceExperience from "@/components/virtual/experience/PalaceExperience";
 
-// Standalone campaign page, built in the main site's Hero language: full-bleed footage under a
-// dark overlay, centred Montserrat Alternates, glass pills. Also served at virtual.epocheye.com
-// via the host rewrite in next.config.mjs. Not linked from the nav, footer, homepage or sitemap.
+// Standalone campaign page: a scroll-driven walk through the 3D reconstruction of the palace
+// (components/virtual/experience), ending on early access. Also served at virtual.epocheye.com via
+// the host rewrite in next.config.mjs. Not linked from the nav, footer, homepage or sitemap.
 
 const PATH = "/virtual";
 
@@ -80,11 +77,8 @@ function webPage() {
 }
 
 const PILL =
-	"inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 font-montserrat text-[11px] font-medium uppercase tracking-[0.18em] text-white backdrop-blur-sm sm:text-xs";
-
-function Caption({ children }) {
-	return <span className={PILL}>{children}</span>;
-}
+	"inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-[11px] font-medium uppercase tracking-[0.18em] text-white backdrop-blur-sm sm:text-xs";
+const CARD = "rounded-3xl border border-white/15 bg-white/5 backdrop-blur-md";
 
 function Cta({ sales }) {
 	return sales.open ? (
@@ -99,128 +93,77 @@ function Cta({ sales }) {
 	);
 }
 
+// The end of the walk: dusk over the palace, then the ask.
+function Finale({ sales }) {
+	return (
+		<div className="px-5 pb-10">
+			<div className="mx-auto flex max-w-3xl flex-col items-center text-center">
+				<span className={PILL}>Early access</span>
+				<p className="mt-6 text-xl font-light leading-snug sm:text-3xl">{SUBLINE}</p>
+				<div className="mt-8 flex w-full justify-center">
+					<Cta sales={sales} />
+				</div>
+			</div>
+
+			<section className="mx-auto mt-24 max-w-5xl">
+				<div className="flex justify-center">
+					<span className={PILL}>What you get</span>
+				</div>
+				<ul className="mt-8 grid gap-4 sm:grid-cols-3">
+					{WHAT_YOU_GET.map((item) => (
+						<li key={item} className={`${CARD} px-6 py-8 text-center text-lg font-light leading-snug`}>
+							{item}
+						</li>
+					))}
+				</ul>
+			</section>
+
+			<section className="mx-auto mt-24 max-w-2xl">
+				<div className="flex justify-center">
+					<span className={PILL}>Questions</span>
+				</div>
+				<div className="mt-8 flex flex-col gap-3">
+					{FAQ.map(({ q, a }) => (
+						<details key={q} className={`group ${CARD} px-6 py-5 open:bg-white/10`}>
+							<summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-base font-medium [&::-webkit-details-marker]:hidden">
+								{q}
+								<span className="text-xl font-light text-white/60 transition-transform duration-300 group-open:rotate-45" aria-hidden="true">
+									+
+								</span>
+							</summary>
+							<p className="mt-3 text-sm leading-relaxed text-white/70 sm:text-base">{a}</p>
+						</details>
+					))}
+				</div>
+			</section>
+
+			<footer className="mx-auto mt-24 flex max-w-5xl flex-col items-center gap-4 border-t border-white/10 pt-8 text-center text-[11px] font-medium uppercase tracking-[0.18em] text-white/50 sm:flex-row sm:justify-between">
+				<p>{FOOTER_LINE}</p>
+				<nav aria-label="Legal" className="flex gap-6">
+					<Link href="/privacy" className="hover:text-white">
+						Privacy
+					</Link>
+					<Link href="/terms" className="hover:text-white">
+						Terms
+					</Link>
+					<Link href="/refunds" className="hover:text-white">
+						Refunds
+					</Link>
+				</nav>
+			</footer>
+		</div>
+	);
+}
+
 export default function VirtualPage() {
 	const sales = salesConfig();
-
+	// Start the model download with the HTML instead of after three.js boots.
+	preload("/virtual/palace.glb", { as: "fetch", crossOrigin: "anonymous" });
 	return (
-		<main className="bg-black font-montserrat text-white">
+		<>
 			<JsonLd data={webPage()} />
 			<PageViewTracker />
-
-			{/* 1. Hero: the painted ceiling coming back, under the headline and the form. */}
-			<section className="relative flex min-h-svh items-center justify-center overflow-hidden">
-				<video
-					className="absolute inset-0 h-full w-full object-cover object-[50%_60%]"
-					autoPlay
-					loop
-					muted
-					playsInline
-					preload="metadata"
-					poster={HERO_VIDEO.poster}
-					aria-hidden="true">
-					<source src={HERO_VIDEO.webm} type="video/webm" />
-					<source src={HERO_VIDEO.mp4} type="video/mp4" />
-				</video>
-				<div className="absolute inset-0 bg-black/55" aria-hidden="true" />
-				<div className="absolute inset-x-0 bottom-0 h-40 bg-linear-to-b from-transparent to-black" aria-hidden="true" />
-
-				<p className="absolute left-5 top-6 z-10 text-xl font-bold tracking-tight sm:left-8 sm:top-8 sm:text-2xl">
-					Epocheye
-				</p>
-
-				<div className="relative z-10 mx-auto flex max-w-sm flex-col items-center px-5 py-24 text-center sm:max-w-2xl md:max-w-3xl">
-					<h1 className="text-[1.75rem] font-light leading-[1.18] tracking-tight sm:text-4xl md:text-5xl lg:text-6xl">
-						{HEADLINE_LEAD}
-						<br />
-						<span className="font-semibold">{HEADLINE_TURN}</span>
-					</h1>
-					<p className="mt-6 max-w-xl text-sm font-medium leading-relaxed text-white/70 sm:mt-8 sm:text-lg">
-						{SUBLINE}
-					</p>
-					<div className="mt-8 flex w-full justify-center sm:mt-10">
-						<Cta sales={sales} />
-					</div>
-				</div>
-
-				<div className="absolute bottom-6 left-1/2 z-10 -translate-x-1/2 opacity-50" aria-hidden="true">
-					<div className="h-12 w-px bg-linear-to-b from-transparent via-white to-transparent" />
-				</div>
-			</section>
-
-			{/* 2. What you get */}
-			<section className="px-5 py-20 sm:py-28">
-				<FadeUp className="mx-auto flex max-w-5xl flex-col items-center text-center">
-					<Caption>What you get</Caption>
-					<ul className="mt-10 grid w-full gap-4 sm:grid-cols-3">
-						{WHAT_YOU_GET.map((item, i) => (
-							<li key={item} className="list-none">
-								<FadeUp
-									delay={0.1 * i}
-									className="h-full rounded-3xl border border-white/15 bg-white/5 px-6 py-8 text-lg font-light leading-snug text-white backdrop-blur-sm sm:text-xl">
-									{item}
-								</FadeUp>
-							</li>
-						))}
-					</ul>
-				</FadeUp>
-			</section>
-
-			{/* 3. The story: the Blender film of the palace and the fort around it. */}
-			<section className="px-5 pb-20 sm:pb-28">
-				<FadeUp className="mx-auto flex max-w-xl flex-col items-center text-center">
-					<Caption>The story</Caption>
-					<div className="mt-10 w-full">
-						<StoryVideo video={STORY_VIDEO} />
-					</div>
-					{STORY_IS_PREVIEW && process.env.VERCEL_ENV !== "production" ? (
-						<p className="mt-3 font-mono text-[11px] text-white/40">
-							Preview render. Swap in the final film (see lib/virtual/media.js).
-						</p>
-					) : null}
-				</FadeUp>
-			</section>
-
-			{/* 4. FAQ */}
-			<section className="px-5 pb-20 sm:pb-28">
-				<FadeUp className="mx-auto flex max-w-2xl flex-col items-center">
-					<Caption>Questions</Caption>
-					<div className="mt-10 flex w-full flex-col gap-3">
-						{FAQ.map(({ q, a }) => (
-							<details
-								key={q}
-								className="group rounded-3xl border border-white/15 bg-white/5 px-6 py-5 backdrop-blur-sm open:bg-white/10">
-								<summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-base font-medium text-white [&::-webkit-details-marker]:hidden">
-									{q}
-									<span
-										className="text-xl font-light text-white/60 transition-transform duration-300 group-open:rotate-45"
-										aria-hidden="true">
-										+
-									</span>
-								</summary>
-								<p className="mt-3 text-sm leading-relaxed text-white/70 sm:text-base">{a}</p>
-							</details>
-						))}
-					</div>
-				</FadeUp>
-			</section>
-
-			{/* 5. Footer */}
-			<footer className="border-t border-white/10 px-5 py-10">
-				<div className="mx-auto flex max-w-5xl flex-col items-center gap-4 text-center text-[11px] font-medium uppercase tracking-[0.18em] text-white/50 sm:flex-row sm:justify-between">
-					<p>{FOOTER_LINE}</p>
-					<nav aria-label="Legal" className="flex gap-6">
-						<Link href="/privacy" className="hover:text-white">
-							Privacy
-						</Link>
-						<Link href="/terms" className="hover:text-white">
-							Terms
-						</Link>
-						<Link href="/refunds" className="hover:text-white">
-							Refunds
-						</Link>
-					</nav>
-				</div>
-			</footer>
-		</main>
+			<PalaceExperience cta={<Finale sales={sales} />} />
+		</>
 	);
 }

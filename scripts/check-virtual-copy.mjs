@@ -7,13 +7,18 @@ import { readFileSync, readdirSync, statSync } from "node:fs";
 import path from "node:path";
 
 const ROOT = process.cwd();
+function filesUnder(dir) {
+	return readdirSync(path.join(ROOT, dir), { withFileTypes: true }).flatMap((d) =>
+		d.isDirectory() ? filesUnder(`${dir}/${d.name}`) : [`${dir}/${d.name}`],
+	);
+}
+
 const COPY_FILES = [
-	"lib/virtual/copy.js",
-	"lib/virtual/media.js",
+	...filesUnder("lib/virtual"),
 	"app/virtual/page.js",
 	"app/virtual/opengraph-image.js",
 	"app/refunds/page.js",
-	...readdirSync(path.join(ROOT, "components/virtual")).map((f) => `components/virtual/${f}`),
+	...filesUnder("components/virtual"),
 ];
 const PRICE_HOME = "lib/virtual/copy.js";
 const PRICE_RE = /\$\s?25\b|\b25\s?(?:USD|US\$|dollars)\b|\bUSD\s?25\b/i;
