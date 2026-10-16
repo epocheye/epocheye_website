@@ -2,14 +2,14 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { ImageResponse } from "next/og";
 
-// Share card for Reddit / X: the rebuilt hall from our Blender film,
-// with the page's title. No price, ever.
-export const alt = "Tipu Sultan's Summer Palace, rebuilt: the hall with its painted arches and green and gold pillars.";
+// Share card for Reddit / X: the hall, rendered from the 3D reconstruction in capture mode
+// (/virtual?shot=shade&clean=1), with the page's title. No price, ever.
+export const alt = "Tipu Sultan's Summer Palace, rebuilt: the hall, its galleries and cusped arches.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 export default async function VirtualOgImage() {
-	// Static path (built by scripts/build-virtual-media.mjs) so the bundler traces only this file.
+	// Static path so the bundler traces only this file.
 	const buf = await readFile(path.join(process.cwd(), "public", "virtual", "share.jpg"));
 	const src = `data:image/jpeg;base64,${buf.toString("base64")}`;
 	const { width: W, height: H } = size;

@@ -4,8 +4,9 @@ import { useState } from "react";
 import Link from "next/link";
 import { trackVirtual, utmParams } from "./track";
 
-// Glass pill with the white action inside it, as in the main site's HeroOffer.
-export default function WaitlistForm({ buttonLabel, note, consentLabel, successMessage }) {
+// Early-access form. `onDark` for the hero (over the video), light otherwise.
+// id="early-access" is the target of the header button and the sticky mobile button.
+export default function WaitlistForm({ buttonLabel, note, consentLabel, successMessage, onDark = false }) {
 	const [status, setStatus] = useState("idle"); // idle | submitting | success | error
 	const [error, setError] = useState("");
 
@@ -39,19 +40,20 @@ export default function WaitlistForm({ buttonLabel, note, consentLabel, successM
 		}
 	}
 
+	const ink = onDark ? "text-white" : "text-[#2e1f16]";
+	const soft = onDark ? "text-white/80" : "text-[#5c4636]";
+
 	if (status === "success") {
 		return (
-			<p
-				role="status"
-				className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-5 py-2.5 font-montserrat text-sm font-semibold text-white backdrop-blur-sm sm:text-base">
+			<p id="early-access" role="status" className={`font-instrument-serif text-3xl ${ink}`}>
 				{successMessage}
 			</p>
 		);
 	}
 
 	return (
-		<form onSubmit={onSubmit} className="relative flex w-full max-w-md flex-col items-center">
-			<div className="flex w-full items-center gap-2 rounded-full border border-white/20 bg-white/10 py-1 pl-5 pr-1 backdrop-blur-sm focus-within:border-white/50">
+		<form id="early-access" onSubmit={onSubmit} className="relative w-full max-w-lg scroll-mt-28">
+			<div className="flex flex-col gap-3 sm:flex-row sm:items-end">
 				<label htmlFor="virtual-email" className="sr-only">
 					Email address
 				</label>
@@ -63,19 +65,21 @@ export default function WaitlistForm({ buttonLabel, note, consentLabel, successM
 					autoComplete="email"
 					maxLength={254}
 					placeholder="Your email"
-					className="min-w-0 flex-1 bg-transparent py-2 font-montserrat text-sm text-white placeholder:text-white/50 focus:outline-none sm:text-base"
+					className={`h-12 w-full border-0 border-b bg-transparent px-0 font-instrument-sans text-lg focus:outline-none focus:ring-0 sm:flex-1 ${
+						onDark
+							? "border-white/70 text-white placeholder:text-white/60 focus:border-white"
+							: "border-[#2e1f16]/40 text-[#2e1f16] placeholder:text-[#5c4636]/60 focus:border-[#2e1f16]"
+					}`}
 				/>
 				<button
 					type="submit"
 					disabled={status === "submitting"}
-					className="shrink-0 rounded-full bg-white px-4 py-2.5 font-montserrat text-[11px] font-semibold uppercase tracking-[0.12em] text-black transition-opacity duration-300 hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-white/50 disabled:opacity-60 sm:px-5 sm:text-xs">
+					className="h-12 shrink-0 bg-[#c0614a] px-7 font-instrument-sans text-base font-medium text-white transition-colors duration-500 hover:bg-[#a44f3b] disabled:opacity-60">
 					{buttonLabel}
 				</button>
 			</div>
 
-			<p className="mt-3 font-montserrat text-xs font-medium text-white/60 sm:text-sm">
-				{note}
-			</p>
+			<p className={`mt-3 font-instrument-sans text-sm ${soft}`}>{note}</p>
 
 			{/* Honeypot: off-screen and skipped by keyboard and assistive tech. */}
 			<div aria-hidden="true" className="absolute -left-[9999px] top-0 h-px w-px overflow-hidden">
@@ -85,18 +89,18 @@ export default function WaitlistForm({ buttonLabel, note, consentLabel, successM
 				</label>
 			</div>
 
-			<label className="mt-4 flex max-w-sm cursor-pointer items-start gap-2.5 text-left font-montserrat text-xs leading-relaxed text-white/70">
-				<input type="checkbox" name="consent" required className="mt-0.5 h-4 w-4 shrink-0 accent-white" />
+			<label className={`mt-4 flex cursor-pointer items-start gap-3 font-instrument-sans text-sm leading-relaxed ${soft}`}>
+				<input type="checkbox" name="consent" required className="mt-1 h-4 w-4 shrink-0 accent-[#c0614a]" />
 				<span>
 					{consentLabel}{" "}
-					<Link href="/privacy" className="text-white underline decoration-white/40 underline-offset-2 hover:decoration-white">
+					<Link href="/privacy" className={`underline underline-offset-2 ${ink}`}>
 						Privacy
 					</Link>
 				</span>
 			</label>
 
 			{status === "error" ? (
-				<p role="alert" className="mt-3 font-montserrat text-xs text-red-300">
+				<p role="alert" className={`mt-3 font-instrument-sans text-sm ${onDark ? "text-[#ffd0c4]" : "text-[#a44f3b]"}`}>
 					{error}
 				</p>
 			) : null}
