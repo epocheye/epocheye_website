@@ -4,9 +4,9 @@ import { useState } from "react";
 import Link from "next/link";
 import { trackVirtual, utmParams } from "./track";
 
-// Early-access form. `onDark` for the hero (over the video), light otherwise.
-// id="early-access" is the target of the header button and the sticky mobile button.
-export default function WaitlistForm({ buttonLabel, note, consentLabel, successMessage, onDark = false }) {
+// Early-access form. `onDark` over the 3D palace, light otherwise. The page has two of them (after
+// the opening and at the end of the walk); scrollToForm finds the nearest by data-early-access.
+export default function WaitlistForm({ id = "early-access", buttonLabel, note, consentLabel, successMessage, onDark = false }) {
 	const [status, setStatus] = useState("idle"); // idle | submitting | success | error
 	const [error, setError] = useState("");
 
@@ -40,25 +40,25 @@ export default function WaitlistForm({ buttonLabel, note, consentLabel, successM
 		}
 	}
 
-	const ink = onDark ? "text-white" : "text-[#2e1f16]";
-	const soft = onDark ? "text-white/80" : "text-[#5c4636]";
+	const ink = onDark ? "text-[#f3e9d8]" : "text-[#2e1f16]";
+	const soft = onDark ? "text-[#f3e9d8]/70" : "text-[#5c4636]";
 
 	if (status === "success") {
 		return (
-			<p id="early-access" role="status" className={`font-instrument-serif text-3xl ${ink}`}>
+			<p id={id} data-early-access role="status" className={`font-instrument-serif text-3xl ${ink}`}>
 				{successMessage}
 			</p>
 		);
 	}
 
 	return (
-		<form id="early-access" onSubmit={onSubmit} className="relative w-full max-w-lg scroll-mt-28">
+		<form id={id} data-early-access onSubmit={onSubmit} className="relative w-full max-w-lg scroll-mt-28">
 			<div className="flex flex-col gap-3 sm:flex-row sm:items-end">
-				<label htmlFor="virtual-email" className="sr-only">
+				<label htmlFor={`${id}-email`} className="sr-only">
 					Email address
 				</label>
 				<input
-					id="virtual-email"
+					id={`${id}-email`}
 					name="email"
 					type="email"
 					required
@@ -67,7 +67,7 @@ export default function WaitlistForm({ buttonLabel, note, consentLabel, successM
 					placeholder="Your email"
 					className={`h-12 w-full border-0 border-b bg-transparent px-0 font-instrument-sans text-lg focus:outline-none focus:ring-0 sm:flex-1 ${
 						onDark
-							? "border-white/70 text-white placeholder:text-white/60 focus:border-white"
+							? "border-[#f3e9d8]/50 text-[#f3e9d8] placeholder:text-[#f3e9d8]/50 focus:border-[#d4a85a]"
 							: "border-[#2e1f16]/40 text-[#2e1f16] placeholder:text-[#5c4636]/60 focus:border-[#2e1f16]"
 					}`}
 				/>

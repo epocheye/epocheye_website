@@ -4,6 +4,8 @@ import { Suspense, useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { Canvas, advance, useFrame, useThree } from "@react-three/fiber";
 import { AdaptiveDpr, Environment, PerformanceMonitor, Sky, Sparkles, useGLTF } from "@react-three/drei";
+import { Bloom, EffectComposer, ToneMapping } from "@react-three/postprocessing";
+import { ToneMappingMode } from "postprocessing";
 import { KTX2Loader } from "three/examples/jsm/loaders/KTX2Loader.js";
 
 import { HALL, STOPS, TIERS, WAYPOINTS, planToWorld, tierOf } from "@/lib/virtual/journey";
@@ -13,13 +15,17 @@ const MODEL_URL = "/virtual/palace-lite.glb";
 const HDRI_URL = "/virtual/env/kloppenheim_06_puresky_1k.hdr";
 const TEX_MANIFEST = "/virtual/tex/manifest.json";
 
-// The sun stands to the front-left of the main facade (bearing about 160 degrees), so light rakes
-// across the colonnade and reaches into the hall. Plan direction (-0.80, -0.60) -> world (x, z).
-const SUN_DIR = new THREE.Vector2(-0.8, 0.6).normalize();
+// Dusk: the sun sets behind the palace, a little to the left as you face the main facade, so the
+// building stands against the glow and the lamplit colonnade reads from the lawn.
+// Plan direction (-0.45, 0.90) -> world (x, z) = (-0.45, -0.90).
+const SUN_DIR = new THREE.Vector2(-0.45, -0.9).normalize();
 const SUN_DISTANCE = 90;
 const PALACE_CENTRE = new THREE.Vector3(...planToWorld([0, 11.5, 0]));
 const HALL_FILL = planToWorld([0.5, 10, 2.4]);
 const CEILING_FILL = planToWorld([0.5, 11, 3.4]);
+// Warm light spilling out along the colonnade at dusk. Light only: no lamp fixtures are modelled,
+// because none are recorded.
+const COLONNADE_GLOW = [-7, 0, 7].map((x) => planToWorld([x, 2.6, 2.8]));
 
 // Shared across the model and the streamed texture sets.
 let ktx2 = null;
@@ -157,6 +163,15 @@ function CameraRig({ skyRef, sunRef, cloudsRef }) {
 			s.position.x += Math.sin(time * 0.05) * 6 * s.drift;
 			s.position.z += Math.cos(time * 0.04) * 4 * s.drift;
 		}
+		// Opening move: once the palace has loaded, the camera settles in from higher and further out.
+		if (!still && !journey.locked) {
+			const since = journey.readyAt ? (performance.now() - journey.readyAt) / 1000 : 0;
+			const away = Math.pow(1 - THREE.MathUtils.clamp(since / 5.5, 0, 1), 3);
+			if (away > 0) {
+				s.position.lerp(s.target, -0.45 * away);
+				s.position.y += 14 * away;
+			}
+		}
 
 		// Damped follow of the scroll position: smooth, never a jump.
 		const k = 1 - Math.exp(-Math.min(dt, 0.1) * 3);
@@ -175,8 +190,8 @@ function CameraRig({ skyRef, sunRef, cloudsRef }) {
 		const fog = frame.scene.fog;
 		if (fog) {
 			const high = THREE.MathUtils.clamp(camera.position.y / 30, 0, 1);
-			fog.near = 30 + high * 60;
-			fog.far = 260 + high * 340;
+			fog.near = 24 + high * 50;
+			fog.far = 190 + high * 300;
 		}
 
 		// Sun: elevation follows the chapters; azimuth breathes very slightly, so light is never static.
@@ -191,9 +206,10 @@ function CameraRig({ skyRef, sunRef, cloudsRef }) {
 			light.position.copy(PALACE_CENTRE).addScaledVector(state.sun, SUN_DISTANCE);
 			light.target.position.copy(PALACE_CENTRE);
 			light.target.updateMatrixWorld();
-			const warm = THREE.MathUtils.clamp(1 - s.sunElevation / 18, 0, 1);
-			light.color.setHSL(0.08, 0.45 + warm * 0.4, 0.78 - warm * 0.18);
-			light.intensity = 2.2 + (1 - warm) * 1.8;
+			// Dusk: a low, deep amber sun that fades as it sets.
+			const dusk = THREE.MathUtils.clamp(s.sunElevation / 4.5, 0, 1);
+			light.color.setHSL(0.065, 0.85, 0.58);
+			light.intensity = 0.6 + dusk * 2.6;
 			// Shadows are re-rendered only when the sun has actually moved.
 			if (shadows.dirty || state.sun.distanceToSquared(state.lastSun) > 1e-6) {
 				shadows.dirty = false;
@@ -329,7 +345,9 @@ const cloudMaterial = new THREE.ShaderMaterial({
 			vec2 uv = vDir.xz / (vDir.y + 0.25) * 1.6 + vec2(uTime * 0.004, uTime * 0.0015);
 			float c = vFbm(vec3(uv, 0.0) * 1.3);
 			c = smoothstep(0.52, 0.82, c) * smoothstep(0.02, 0.25, vDir.y);
-			gl_FragColor = vec4(vec3(1.0, 0.97, 0.92), c * 0.55);
+			// Undersides lit by the set sun: warm near the horizon, ash above.
+			vec3 tint = mix(vec3(0.98, 0.62, 0.42), vec3(0.42, 0.36, 0.38), smoothstep(0.05, 0.5, vDir.y));
+			gl_FragColor = vec4(tint, c * 0.5);
 		}`,
 });
 
@@ -341,7 +359,7 @@ function Clouds({ cloudsRef }) {
 	);
 }
 
-export default function PalaceCanvas({ evidence, onReady, onLost, quality = "high", active = true, capture = false, streamTextures, onDecline }) {
+export default function PalaceCanvas({ evidence, onReady, onLost, quality = "high", active = true, capture = false, streamTextures, onDecline, className = "absolute inset-0" }) {
 	const skyRef = useRef(null);
 	const sunRef = useRef(null);
 	const cloudsRef = useRef(null);
@@ -349,7 +367,7 @@ export default function PalaceCanvas({ evidence, onReady, onLost, quality = "hig
 
 	return (
 		<Canvas
-			className="absolute inset-0"
+			className={className}
 			frameloop={capture || !active ? "never" : "always"}
 			dpr={high ? [1, 1.75] : [1, 1.4]}
 			shadows={OFF.has("shadows") ? false : { type: THREE.PCFSoftShadowMap, autoUpdate: false }}
@@ -357,7 +375,7 @@ export default function PalaceCanvas({ evidence, onReady, onLost, quality = "hig
 			camera={{ position: [0, 40, 80], fov: 60 }}
 			onCreated={({ gl }) => {
 				gl.toneMapping = THREE.AgXToneMapping;
-				gl.toneMappingExposure = 1.15;
+				gl.toneMappingExposure = 1.0;
 				gl.shadowMap.autoUpdate = false;
 				// Phones can drop the GPU context under memory pressure; fall back to a still.
 				gl.domElement.addEventListener("webglcontextlost", (e) => {
@@ -367,15 +385,16 @@ export default function PalaceCanvas({ evidence, onReady, onLost, quality = "hig
 			}}>
 			<PerformanceMonitor onDecline={onDecline} />
 			<AdaptiveDpr pixelated={false} />
-			<color attach="background" args={["#d8c6a4"]} />
-			<fog attach="fog" args={["#d4c1a0", 30, 260]} />
-			<Sky ref={skyRef} distance={4500} turbidity={7} rayleigh={1.8} mieCoefficient={0.006} mieDirectionalG={0.86} />
+			<color attach="background" args={["#120c08"]} />
+			<fog attach="fog" args={["#24180f", 24, 190]} />
+			<Sky ref={skyRef} distance={4500} turbidity={10} rayleigh={2.6} mieCoefficient={0.009} mieDirectionalG={0.9} />
 			{OFF.has("clouds") ? null : <Clouds cloudsRef={cloudsRef} />}
-			{OFF.has("env") ? null : <Environment files={HDRI_URL} environmentIntensity={0.75} />}
-			<hemisphereLight args={["#fff2dc", "#7a644a", 0.5]} />
-			{/* Bounce light inside the hall: the sun alone never reaches the galleries or the ceiling. */}
-			<pointLight position={HALL_FILL} intensity={70} distance={26} decay={2} color="#ffd6a0" />
-			<pointLight position={CEILING_FILL} intensity={18} distance={12} decay={2} color="#ffcf98" />
+			{OFF.has("env") ? null : <Environment files={HDRI_URL} environmentIntensity={0.32} />}
+			<hemisphereLight args={["#6a76a0", "#2a1c12", 0.55]} />
+			{/* Lamplight inside: at dusk the hall glows warmer than the sky outside. */}
+			<pointLight position={HALL_FILL} intensity={150} distance={30} decay={2} color="#ffae62" />
+			<pointLight position={CEILING_FILL} intensity={12} distance={11} decay={2} color="#ffb877" />
+			{high ? COLONNADE_GLOW.map((p) => <pointLight key={p.join()} position={p} intensity={22} distance={11} decay={2} color="#ffa95c" />) : null}
 			<directionalLight
 				ref={sunRef}
 				castShadow
@@ -397,13 +416,21 @@ export default function PalaceCanvas({ evidence, onReady, onLost, quality = "hig
 				<Ready onReady={onReady} />
 			</Suspense>
 			{/* Dust in the light shafts of the hall. */}
-			{OFF.has("sparkles") ? null : <Sparkles count={high ? 220 : 90} scale={HALL.size} position={HALL.centre} size={1.4} speed={0.12} opacity={0.45} noise={0.4} color="#fff0d2" />}
+			{OFF.has("sparkles") ? null : <Sparkles count={high ? 220 : 90} scale={HALL.size} position={HALL.centre} size={1.6} speed={0.12} opacity={0.6} noise={0.4} color="#ffd9a0" />}
+			{/* Gold dust drifting in the evening air around the building. */}
+			{OFF.has("sparkles") ? null : <Sparkles count={high ? 260 : 110} scale={[90, 24, 90]} position={PALACE_CENTRE.toArray()} size={3.2} speed={0.18} opacity={0.55} noise={1} color="#ffc56e" />}
 			<CameraRig skyRef={skyRef} sunRef={sunRef} cloudsRef={cloudsRef} />
 			{capture ? <Capture /> : null}
 			{capture ? <ManualClock /> : null}
-			{/* No post-processing composer: with it Chrome failed a framebuffer blit every frame
-			    (depth/stencil read = write), which can end in a lost WebGL context on phones. Tone
-			    mapping is AgX on the renderer; ambient occlusion is baked into the vertex colours. */}
+			{/* Bloom on desktop only. No multisampling in the composer: with it Chrome failed a
+			    depth/stencil framebuffer blit every frame, which can end in a lost context. The
+			    composer renders untonemapped, so AgX is applied as its last pass. */}
+			{high && !capture && !OFF.has("post") ? (
+				<EffectComposer multisampling={0} enableNormalPass={false}>
+					<Bloom mipmapBlur intensity={0.75} luminanceThreshold={0.82} luminanceSmoothing={0.2} radius={0.7} />
+					<ToneMapping mode={ToneMappingMode.AGX} />
+				</EffectComposer>
+			) : null}
 		</Canvas>
 	);
 }

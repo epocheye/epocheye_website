@@ -7,4 +7,5 @@ export const journey = {
 	reducedMotion: false,
 	locked: false, // capture mode: scroll does not move the camera
 	capture: null, // capture mode: a toBlob callback, served after the next rendered frame
+	readyAt: 0, // performance.now() when the palace finished loading, for the opening camera move
 };
