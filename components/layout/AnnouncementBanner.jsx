@@ -12,6 +12,8 @@ const POST_HREF = "/blog/epocheye-caribbean-steelpan-tours-mou";
 // that this announcement would break, so the banner stays off there.
 function isVirtualPage(pathname) {
   if (pathname?.startsWith("/virtual")) return true;
+  // /journeys has its own chrome and copy rules too.
+  if (pathname?.startsWith("/journeys")) return true;
   return typeof window !== "undefined" && window.location.hostname.startsWith("virtual.");
 }
 

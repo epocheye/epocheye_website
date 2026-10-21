@@ -58,3 +58,5 @@ crowd_model.pkl
 # Android APK — too large for GitHub (100 MB limit); hosted on CloudFront
 # (epocheye-glb-models bucket) and linked from the Navbar instead.
 *.apk
+# /journeys teaser build intermediates (scripts/journeys-assets.mjs)
+/.journeys-build/
