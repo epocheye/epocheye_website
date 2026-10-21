@@ -11,8 +11,9 @@
   --accent-2: #e5532d;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
 
-  font-family: var(--jr-font), "Hanken Grotesk", system-ui, sans-serif;
+  font-family: var(--jr-font), "Archivo", system-ui, sans-serif;
   font-weight: 300;
+  font-stretch: 100%;
   background: var(--bg);
   color: var(--text);
   -webkit-font-smoothing: antialiased;
@@ -40,27 +41,30 @@
 .jr-h1 {
   text-transform: uppercase;
   font-weight: 600;
-  font-size: clamp(3rem, 6vw, 5.5rem);
-  line-height: 0.8;
-  letter-spacing: -0.03em;
+  font-stretch: 112%;
+  font-size: clamp(3.25rem, 7.6vw, 8rem);
+  line-height: 0.9;
+  letter-spacing: -0.035em;
   margin: 0;
 }
 
 .jr-h2 {
+  text-transform: uppercase;
   font-weight: 600;
-  font-size: clamp(2rem, 3.6vw, 3.25rem);
+  font-stretch: 108%;
+  font-size: clamp(1.9rem, 3.4vw, 3.4rem);
   line-height: 1;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.03em;
   margin: 0;
-  text-wrap: balance;
 }
 
 .jr-eyebrow {
   text-transform: uppercase;
   font-weight: 600;
-  font-size: 1.4rem;
+  font-stretch: 105%;
+  font-size: clamp(0.95rem, 1.1vw, 1.25rem);
   line-height: 1.1;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.07em;
   color: var(--accent-1);
   margin: 0 0 1.25rem;
 }
@@ -157,8 +161,10 @@
 
 .jr-wordmark {
   font-weight: 600;
-  font-size: 1.25rem;
-  letter-spacing: -0.01em;
+  font-stretch: 110%;
+  text-transform: uppercase;
+  font-size: 1.1rem;
+  letter-spacing: 0.04em;
   color: var(--text);
   text-decoration: none;
 }
@@ -225,7 +231,7 @@
 }
 
 .jr-frame__col {
-  max-width: 640px;
+  max-width: 720px;
 }
 
 .jr-frame--right .jr-frame__col {
@@ -293,9 +299,11 @@
 
 .jr-steps__a {
   font-weight: 600;
+  font-stretch: 108%;
+  text-transform: uppercase;
   font-size: clamp(1.5rem, 2.4vw, 2.25rem);
   line-height: 1;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.03em;
 }
 
 .jr-steps__b {
@@ -315,9 +323,11 @@
 
 .jr-fact__sub {
   font-weight: 600;
-  font-size: clamp(2.75rem, 7vw, 7rem);
+  font-stretch: 112%;
+  text-transform: uppercase;
+  font-size: clamp(2.75rem, 7.6vw, 8rem);
   line-height: 0.9;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.035em;
   margin: 0.5rem 0 0;
 }
 
@@ -383,9 +393,11 @@
 
 .jr-card__name {
   font-weight: 600;
-  font-size: 1.35rem;
-  line-height: 1.1;
-  letter-spacing: -0.01em;
+  font-stretch: 108%;
+  text-transform: uppercase;
+  font-size: 1.25rem;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
   margin: 0;
 }
 
@@ -449,6 +461,7 @@
 
 .jr-tier__founding {
   font-weight: 600;
+  font-stretch: 112%;
   font-size: clamp(3.5rem, 7vw, 6rem);
   line-height: 0.9;
   letter-spacing: -0.04em;
@@ -504,10 +517,11 @@
 
 .jr-promise li {
   font-weight: 600;
-  font-size: clamp(1.6rem, 3vw, 2.75rem);
-  line-height: 1.1;
-  letter-spacing: -0.015em;
-  text-wrap: balance;
+  font-stretch: 108%;
+  text-transform: uppercase;
+  font-size: clamp(1.6rem, 3.2vw, 3rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
 }
 
 .jr-promise li span {
@@ -612,6 +626,20 @@
   font-size: 0.95rem;
 }
 
+.jr-footer__credits {
+  flex-basis: 100%;
+  order: 3;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.62);
+  max-width: 900px;
+}
+
+.jr-footer .jr-footer__credits a {
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 .jr-footer nav {
   display: flex;
   gap: 1.5rem;
@@ -668,6 +696,9 @@
 
 .jr-modal__title {
   font-weight: 600;
+  font-stretch: 108%;
+  text-transform: uppercase;
+  letter-spacing: -0.03em;
   font-size: 1.5rem;
   line-height: 1.1;
   letter-spacing: -0.015em;
@@ -723,6 +754,8 @@
 
 .jr-legal h1 {
   font-weight: 600;
+  font-stretch: 110%;
+  text-transform: uppercase;
   font-size: clamp(2rem, 4vw, 3rem);
   letter-spacing: -0.02em;
   line-height: 1;
@@ -774,8 +807,8 @@
     margin-right: auto;
   }
 
-  .jr-eyebrow {
-    font-size: 1.1rem;
+  .jr-h1 {
+    font-size: clamp(2.75rem, 13vw, 3.5rem);
   }
 
   .jr-steps__item {

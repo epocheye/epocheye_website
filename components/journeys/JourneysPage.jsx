@@ -12,6 +12,7 @@ import {
 	FRAMES,
 	HERO,
 	MONUMENTS,
+	PHOTO_CREDITS,
 	PRICING_NOTE,
 	TIERS,
 	VOTE_CARD,
@@ -214,6 +215,18 @@ function Footer() {
 	return (
 		<footer className="jr-footer">
 			<p>{FOOTER.company}</p>
+			<p className="jr-footer__credits">
+				{FOOTER.creditsLead}{" "}
+				{PHOTO_CREDITS.map((c, i) => (
+					<span key={c.url}>
+						<a href={c.url} rel="noreferrer">
+							{c.title}
+						</a>{" "}
+						by {c.author}, {c.licence}
+						{i < PHOTO_CREDITS.length - 1 ? "; " : "."}
+					</span>
+				))}
+			</p>
 			<nav aria-label="Legal">
 				{FOOTER.links.map((l) =>
 					l.href.startsWith("/") ? (

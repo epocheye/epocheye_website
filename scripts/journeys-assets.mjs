@@ -4,6 +4,7 @@
  *
  *   node scripts/journeys-assets.mjs            # build + process everything
  *   node scripts/journeys-assets.mjs --process  # skip Blender, process .journeys-build/
+ *   node scripts/journeys-assets.mjs --media    # posters + loops only (Meshy flow: GLBs come from meshy-simplify.mjs)
  *
  * Blender (headless, scripts/journeys/build-teasers.py) writes to .journeys-build/:
  *   <name>.glb, <name>.png (bake), <name>-today.png (hero only), <name>-poster.png, frames/<name>/
@@ -34,7 +35,10 @@ const OBJECTS = [
 
 for (const d of ["models", "posters", "loops"]) mkdirSync(path.join(OUT, d), { recursive: true });
 
-if (!process.argv.includes("--process")) {
+// --media: only posters and loops (the GLBs come from scripts/journeys/meshy-simplify.mjs).
+const MEDIA_ONLY = process.argv.includes("--media");
+
+if (!process.argv.includes("--process") && !MEDIA_ONLY) {
 	execFileSync(BLENDER, ["-b", "--python", path.join(root, "scripts/journeys/build-teasers.py"), "--", BUILD, "all"], {
 		stdio: "inherit",
 	});
@@ -44,19 +48,19 @@ const mb = (p) => (statSync(p).size / 1024 / 1024).toFixed(2);
 
 for (const o of OBJECTS) {
 	const glbIn = path.join(BUILD, `${o.name}.glb`);
-	if (!existsSync(glbIn)) {
+	if (!MEDIA_ONLY && !existsSync(glbIn)) {
 		console.warn(`! missing ${glbIn}`);
 		continue;
 	}
 	const glbOut = path.join(OUT, "models", `${o.name}.glb`);
-	execFileSync(
+	if (!MEDIA_ONLY) execFileSync(
 		npx,
 		["--yes", "@gltf-transform/cli@latest", "optimize", glbIn, glbOut, "--compress", "draco", "--texture-compress", "webp", "--texture-size", String(o.tex), "--simplify", "false"],
 		{ stdio: "inherit", cwd: root, shell: process.platform === "win32" },
 	);
-	console.log(`✔ ${o.name}.glb ${mb(glbOut)} MB`);
+	if (!MEDIA_ONLY) console.log(`✔ ${o.name}.glb ${mb(glbOut)} MB`);
 
-	if (o.hero) {
+	if (o.hero && !MEDIA_ONLY) {
 		const today = path.join(OUT, "models", `${o.name}-today.webp`);
 		await sharp(path.join(BUILD, `${o.name}-today.png`)).resize(o.tex, o.tex).webp({ quality: 82 }).toFile(today);
 		console.log(`✔ ${o.name}-today.webp ${mb(today)} MB`);

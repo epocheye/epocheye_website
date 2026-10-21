@@ -22,12 +22,15 @@ export default function SplitReveal({ as: Tag = "h2", className = "", children, 
 		const trigger = el.closest("[data-frame], [data-section]") || el;
 		let split = null;
 		let cancelled = false;
-		// Split after hydration has settled and fonts are in, so the first paint is never blocked.
-		const idle = window.requestIdleCallback || ((fn) => window.setTimeout(fn, 200));
-		const id = idle(() => {
-			document.fonts.ready.then(() => {
-				if (cancelled) return;
-				split = SplitText.create(el, {
+		// Split only once the heading is within a screen of the viewport, after fonts are in, so
+		// the first paint never pays for measuring every heading on the page.
+		const io = new IntersectionObserver(
+			(entries) => {
+				if (!entries.some((e) => e.isIntersecting)) return;
+				io.disconnect();
+				document.fonts.ready.then(() => {
+					if (cancelled) return;
+					split = SplitText.create(el, {
 					type: "lines",
 					mask: "lines",
 					linesClass: "line",
@@ -40,12 +43,15 @@ export default function SplitReveal({ as: Tag = "h2", className = "", children, 
 							stagger: 0.08,
 							scrollTrigger: { trigger, start, once: true },
 						}),
+					});
 				});
-			});
-		});
+			},
+			{ rootMargin: "100% 0px" },
+		);
+		io.observe(el);
 		return () => {
 			cancelled = true;
-			(window.cancelIdleCallback || window.clearTimeout)(id);
+			io.disconnect();
 			split?.revert();
 		};
 	});

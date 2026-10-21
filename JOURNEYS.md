@@ -33,6 +33,12 @@ Not linked from the main site; people arrive by shared links. Prices live only h
    API stores; `object` is the asset file stem.
 3. The card, the modal's monument list and the API's allow-list all read from that array.
 
+## Replacing files under public/journeys/
+
+Those files are served with a one-year immutable cache. After replacing any of them, bump
+`ASSET_VERSION` in `lib/journeys/config.js`; every model, poster and loop URL carries it as a
+query string, which is what makes browsers fetch the new file.
+
 ## Change dates, copy or prices
 
 Everything is in `lib/journeys/config.js`. `opens` on each monument is shown as
@@ -84,21 +90,49 @@ or `vote`; `variant` records the audience switch; `country` comes from the edge.
 
 ## Teaser objects
 
-The brief asks for Meshy-generated objects cleaned up in Blender. When this page was built,
-Meshy refused to create tasks on the account's free plan (HTTP 402, "Task creation on the free
-plan is no longer supported") and the Blender MCP server would not connect, so the four
-objects are procedural placeholders built and baked in headless Blender 5.2 by
-`scripts/journeys/build-teasers.py`. They keep the brief's budgets (hero 2048 texture,
-cards 1024, Draco + WebP, under 30k triangles, origin at the base centre, lighting baked in)
-and the hero has the two texture sets (`today` and `1791`) the `uMix` crossfade needs.
+Made with Meshy image-to-3D from licensed Wikimedia Commons photographs of each monument (listed
+in CREDITS.md and credited in the page footer), then simplified for the web with meshoptimizer
+(UV seams locked, Meshy's own textures kept), Draco-compressed, with WebP textures (2048 hero,
+1024 cards). The hero also gets a Meshy retexture for the faded "today" set on the same UVs; the
+page crossfades the two with a single `uMix` uniform. Lighting is live in three.js (one warm key
+spot, one cool rim, low ambient), which keeps the photographic detail that baking into a
+30k-triangle re-unwrap destroyed. Triangle counts are 100k to 200k per object; the files still sit
+under the brief's budgets (hero 1.7 MB, cards 0.5 to 0.8 MB).
 
-To replace one with a Meshy object: export the cleaned GLB with the same file stem, run
-`node scripts/journeys-assets.mjs --process` with your GLB and renders in `.journeys-build/`
-(or just overwrite the files in `public/journeys/`). The hero pillar needs
-`palace-pillar.glb` (painted texture inside) plus `palace-pillar-today.webp` on the same UVs.
+Pipeline, all resumable:
 
-Rebuild everything from scratch: `node scripts/journeys-assets.mjs` (needs Blender 5.2 at the
-path in `BLENDER`, and ffmpeg).
+1. `node scripts/journeys/meshy-teasers.mjs image` (key from the `MESHY_API_KEY` user env var;
+   REST API, because the project's MCP entry was on a dead free-plan key). Downloads land in
+   `.journeys-build/meshy-img/`. About 130 credits for all four objects.
+2. `node scripts/journeys/meshy-simplify.mjs` writes `public/journeys/models/`.
+3. `blender -b --python scripts/journeys/render-teasers.py -- .journeys-build all` renders the
+   posters and the 144-frame turntables from those web GLBs with the same spotlight.
+4. `node scripts/journeys-assets.mjs --media` writes the posters and loops. (Never run it without
+   `--media` in this flow: `--process` is the older bake pipeline and overwrites the models.)
+5. Bump `ASSET_VERSION` in `lib/journeys/config.js`.
+
+Kept for reference: `scripts/journeys/build-teasers.py` (procedural fallback) and
+`scripts/journeys/meshy-cleanup.py` (Blender bake pipeline). Both produce the older baked look.
+
+To replace or add an object: pick a licensed frontal photograph of the fragment (not a wide
+scene; image-to-3D needs one object), add it to `IMAGE_OBJECTS` in `meshy-teasers.mjs` and to
+`OBJECTS` in `meshy-simplify.mjs`, run steps 1 to 5, log the photo in CREDITS.md and
+`PHOTO_CREDITS` in `lib/journeys/config.js`, and add the card (see "Add a monument card").
+
+## Scroll choreography
+
+`lib/journeys/keyframes.js` holds one pose per frame for each of the four objects (position,
+rotation, scale, fade, and `mix` for the hero). A `fade` of 0 hides an object; between frames
+it flies from its hidden spot, so the fort enters on the rockets frame and the four monuments
+line up on the "Pick a monument" frame. Phone poses are derived at the bottom of the file.
+
+## Performance notes
+
+The main site's root layout still wraps this route (its four font families, global CSS and
+analytics). The announcement banner's motion library is now lazy-loaded only on pages that show
+it (`components/layout/AnnouncementBanner.jsx`), which keeps it off `/journeys` and `/virtual`.
+On phones the three.js canvas mounts on the first scroll or touch so it never competes with the
+first paint; on desktop it mounts when the page is idle after first paint.
 
 ## Facts allowed in copy
 

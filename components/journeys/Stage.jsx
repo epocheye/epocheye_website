@@ -4,10 +4,12 @@ import { startTransition, useEffect, useState } from "react";
 import { preload } from "react-dom";
 import dynamic from "next/dynamic";
 
+import { assetUrl } from "@/lib/journeys/config";
+
 const Scene = dynamic(() => import("./Scene"), { ssr: false });
 
-const POSTER = "/journeys/posters/palace-pillar.webp";
-const POSTER_SRCSET = "/journeys/posters/palace-pillar-800.webp 800w, /journeys/posters/palace-pillar.webp 1600w";
+const POSTER = assetUrl("/journeys/posters/palace-pillar.webp");
+const POSTER_SRCSET = `${assetUrl("/journeys/posters/palace-pillar-800.webp")} 800w, ${POSTER} 1600w`;
 const POSTER_SIZES = "100vw";
 
 function lowPower() {

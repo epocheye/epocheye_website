@@ -10,3 +10,6 @@ export const stage = {
 	pointerX: 0,
 	pointerY: 0,
 };
+
+// Dev-only handle for poking the scroll state from the browser console.
+if (typeof window !== "undefined" && process.env.NODE_ENV !== "production") window.__jrStage = stage;

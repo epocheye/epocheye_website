@@ -1,5 +1,6 @@
 import "./journeys.css";
 import { journeysFont } from "./fonts";
+import { assetUrl } from "@/lib/journeys/config";
 
 // /journeys has its own type, tokens and chrome. The root layout still wraps it (fonts,
 // analytics), but nothing from the main site's nav, footer or sections is used here.
@@ -13,7 +14,7 @@ export const metadata = {
 	openGraph: {
 		title: "Walk into 1791 | Epocheye Journeys",
 		description: "Tipu Sultan's Summer Palace, Bengaluru, as it stood in the 1790s. Narrated stop by stop. No flight required.",
-		images: [{ url: "/journeys/posters/palace-pillar.webp", width: 1600, height: 1600 }],
+		images: [{ url: assetUrl("/journeys/posters/palace-pillar.webp"), width: 1600, height: 1600 }],
 	},
 };
 

@@ -60,3 +60,7 @@ crowd_model.pkl
 *.apk
 # /journeys teaser build intermediates (scripts/journeys-assets.mjs)
 /.journeys-build/
+
+# /journeys audit extras (the committed report is lighthouse-mobile.report.html)
+/docs/journeys/*.json
+/docs/journeys/*.webm

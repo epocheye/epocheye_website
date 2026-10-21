@@ -668,6 +668,7 @@ def run(key):
     print(f"[teasers] done {name}")
 
 
-keys = list(BUILDERS) if WHICH == "all" else [WHICH]
-for k in keys:
-    run(k)
+if __name__ == "__main__":
+    keys = list(BUILDERS) if WHICH == "all" else [WHICH]
+    for k in keys:
+        run(k)
