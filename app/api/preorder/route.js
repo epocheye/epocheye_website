@@ -1,16 +1,20 @@
 import { after, NextResponse } from "next/server";
 
-import { LIVE_MONUMENTS } from "@/lib/monuments/live";
+import { OTHER_SITE, PREORDER_SITES, SITE_BY_SLUG } from "@/lib/preorder/sites";
 import { ADMIN_NOTIFY_EMAIL, sendEmail } from "@/lib/server/email";
-import { countRecentPreordersByIp, hashPreorderIp, upsertPreorder } from "@/lib/server/preorderRepository";
+import {
+	countPreordersBySlug,
+	countRecentPreordersByIp,
+	hashPreorderIp,
+	upsertPreorder,
+} from "@/lib/server/preorderRepository";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const MONUMENT_BY_SLUG = new Map(LIVE_MONUMENTS.map((m) => [m.slug, m]));
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-const MONTH_RE = /^\d{4}-(0[1-9]|1[0-2])$/;
 const MAX_PER_IP_PER_HOUR = 8;
+const SLUGS = PREORDER_SITES.map((s) => s.slug);
 
 const fail = (status, error) => NextResponse.json({ success: false, error }, { status });
 
@@ -18,8 +22,23 @@ function clean(value, max) {
 	return typeof value === "string" ? value.trim().replace(/\s+/g, " ").slice(0, max) : "";
 }
 
-// Public: the reserve form on /preorder. Nothing is charged; the row only
-// holds the visitor's place and lets us email them.
+// Public: the leaderboard on /preorder. Counts for the listed sites only;
+// "other" suggestions are never shown.
+export async function GET() {
+	try {
+		const counts = await countPreordersBySlug(SLUGS);
+		return NextResponse.json(
+			{ success: true, data: { counts } },
+			{ headers: { "Cache-Control": "public, s-maxage=30, stale-while-revalidate=120" } }
+		);
+	} catch (err) {
+		console.error("[api/preorder] leaderboard failed:", err?.message ?? err);
+		return fail(500, "Leaderboard unavailable.");
+	}
+}
+
+// Public: the pre-order form on /preorder. Nothing is charged; the row counts
+// toward the site's place on the leaderboard and lets us email the visitor.
 export async function POST(request) {
 	let body;
 	try {
@@ -35,18 +54,17 @@ export async function POST(request) {
 
 	const name = clean(body?.name, 80);
 	const email = clean(body?.email, 254).toLowerCase();
-	const phoneRaw = clean(body?.phone, 24);
-	const phoneDigits = phoneRaw.replace(/[^\d+]/g, "");
-	const monument = MONUMENT_BY_SLUG.get(clean(body?.monument, 80));
-	const visitMonth = clean(body?.visitMonth, 7) || null;
+	const siteSlug = clean(body?.site, 80);
+	const site = SITE_BY_SLUG.get(siteSlug);
+	const suggestion = siteSlug === OTHER_SITE ? clean(body?.suggestion, 100) : "";
 	const marketingOk = body?.marketingOk === true;
 
 	if (name.length < 2) return fail(400, "Please enter your name.");
 	if (!EMAIL_RE.test(email)) return fail(400, "Please enter a valid email address.");
-	if (phoneRaw && !/^\+?\d{10,15}$/.test(phoneDigits)) return fail(400, "Please enter a valid phone number, or leave it blank.");
-	if (!monument) return fail(400, "Please choose a monument.");
-	if (visitMonth && !MONTH_RE.test(visitMonth)) return fail(400, "Please choose a valid visit month.");
+	if (!site && siteSlug !== OTHER_SITE) return fail(400, "Please choose a site.");
+	if (siteSlug === OTHER_SITE && suggestion.length < 3) return fail(400, "Please tell us which site you want.");
 
+	const siteLabel = site ? `${site.name}, ${site.place}` : suggestion;
 	const ip =
 		request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || request.headers.get("x-real-ip") || "unknown";
 	const ipHash = hashPreorderIp(ip);
@@ -59,27 +77,26 @@ export async function POST(request) {
 		const { reference, created } = await upsertPreorder({
 			name,
 			email,
-			phone: phoneRaw ? phoneDigits : null,
-			monumentSlug: monument.slug,
-			visitMonth,
+			siteSlug,
+			suggestion: suggestion || null,
 			marketingOk,
 			ipHash,
 			userAgent: clean(request.headers.get("user-agent"), 300) || null,
 		});
 
 		if (created) {
-			const place = `${monument.name}, ${monument.city}`;
 			after(() =>
 				Promise.all([
 					sendEmail({
 						to: email,
-						subject: `Your Epocheye pre-order: ${monument.name}`,
+						subject: `Your Epocheye pre-order: ${site ? site.name : suggestion}`,
 						text: [
 							`Hi ${name},`,
 							"",
-							`Your pre-order for ${place} is in. Your reference is ${reference}.`,
+							`Your pre-order for ${siteLabel} is in. Your reference is ${reference}.`,
 							"",
-							"Nothing has been charged. We will email you about your pre-order before your visit.",
+							"Nothing has been charged. The sites with the most pre-orders are built first,",
+							"and when yours is ready we will email you so you can see it first.",
 							"",
 							"Epocheye",
 							"support@epocheye.app",
@@ -88,14 +105,12 @@ export async function POST(request) {
 					}),
 					sendEmail({
 						to: ADMIN_NOTIFY_EMAIL,
-						subject: `New pre-order ${reference}: ${monument.name}`,
+						subject: `New pre-order ${reference}: ${site ? site.name : `Suggestion: ${suggestion}`}`,
 						text: [
 							`Reference: ${reference}`,
 							`Name: ${name}`,
 							`Email: ${email}`,
-							`Phone: ${phoneRaw ? phoneDigits : "-"}`,
-							`Monument: ${place}`,
-							`Visit month: ${visitMonth ?? "-"}`,
+							`Site: ${siteLabel}${site ? "" : " (suggested)"}`,
 							`Marketing email OK: ${marketingOk ? "yes" : "no"}`,
 						].join("\n"),
 					}),

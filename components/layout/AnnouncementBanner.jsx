@@ -2,12 +2,16 @@
 
 import { startTransition, useEffect, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 
 const DISMISS_KEY = "announcement-dismissed:epocheye-cst-mou";
 const POST_HREF = "/blog/epocheye-caribbean-steelpan-tours-mou";
+// Full-screen 3D pages where an in-flow banner would sit on top of the scene.
+const HIDDEN_ON = new Set(["/preorder"]);
 
 export default function AnnouncementBanner() {
+  const pathname = usePathname();
   const [visible, setVisible] = useState(false);
   const [ready, setReady] = useState(false);
 
@@ -33,7 +37,7 @@ export default function AnnouncementBanner() {
     }
   };
 
-  if (!ready) return null;
+  if (!ready || HIDDEN_ON.has(pathname)) return null;
 
   return (
     <AnimatePresence>
