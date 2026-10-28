@@ -119,9 +119,31 @@ Repeat section 1 exactly (same queries, logged out, `gl=IN`) on **2026-10-14** (
 
 | Query | Play 09-30 | Play 10-14 | Play 10-28 | Google 09-30 | Google 10-14 | Google 10-28 |
 |---|---|---|---|---|---|---|
-| epocheye | 1 | | | 1 | | |
-| epoch eye | 2 | | | >20 | | |
-| epocheye app | 1 | | | 1 | | |
-| epocheye ar | 1 | | | 1 | | |
-| epoch eye app | 2 | | | >10 | | |
-| epoch | >30 | | | n/a | | |
+| epocheye | 1 | 1 | | 1 | 1 | |
+| epoch eye | 2 | 2 | | >20 | >20 | |
+| epocheye app | 1 | 1 | | 1 | 1 | |
+| epocheye ar | 1 | 1 | | 1 | 1 | |
+| epoch eye app | 2 | 2 | | >10 | **1** (Play listing) | |
+| epoch | >30 | >29 | | n/a | n/a | |
+
+### Two-week check (measured 2026-10-15/16; the scheduled 10-14 run did not record)
+
+- **Play listing is live:**
+  - Title "Epocheye - Experience Heritage"; the owner's wording, which contains "Epocheye" exactly.
+  - Short description "Epocheye (Epoch Eye): … in XR".
+  - The new full description.
+  - Category Travel & Local.
+- **Play listing still to fix:** the developer name is still "Epocheye". Downloads 100+; rating 5 (12).
+- **Play positions are unchanged.** "epoch eye" is still #2 behind Epoch Li-ion.
+- **Google "epoch eye app":** **#1 is the Play listing**. It was not on page 1 on 09-30. This is the first branded-search gain.
+- **Google "epoch eye":** still >20 (Epoch Eyewear). No Epocheye mention on pages 1–2.
+- **Google AI Overview for "epocheye":**
+  - Improved: it now opens "Epocheye (Epoch Eye)… developed by Epocheye Private Limited". It describes the English and Hindi narration and source transparency.
+  - Still wrong: it **lists Konark as live**. No owned page mentions Konark any more, so this is stale crawl data.
+- **Indexing:** `site:www.epocheye.com/monuments` returns **no results**. None of the four monument pages is indexed after 15 days. Google still indexes `epocheye.com/login` from before the noindex was added.
+- **Autocomplete:** unchanged. "epoche" gives epocheye at #5, "epochey" gives it at #1, and "epoch ey" gives "epoch eye" at #7.
+- **Redirects:** apex, epocheye.app and www.epocheye.app all return 308 to www. creators.epocheye.com serves robots.txt and the sitemap.
+- **Production:** Bangalore Fort `recognition_enabled` is still **false**.
+- **GEO spot check:**
+  - Gemini: P5 (AR app in Bengaluru/Kolkata) still does not name Epocheye.
+  - ChatGPT: logged-out access showed a verification error, so it was not run.
