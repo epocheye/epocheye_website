@@ -6,7 +6,7 @@ import { SITE_URL } from "@/lib/site";
 export const revalidate = 3600;
 
 // Only pages with real content. The "coming soon" stubs and private routes stay out.
-const STATIC_PATHS = ["/", "/monuments", "/about", "/blog", "/investors", "/download", "/privacy", "/terms"];
+const STATIC_PATHS = ["/", "/monuments", "/about", "/blog", "/investors", "/download", "/preorder", "/privacy", "/terms"];
 
 export default async function sitemap() {
 	const posts = await listPublishedPosts({ limit: 500 })
