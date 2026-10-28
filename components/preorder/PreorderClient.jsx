@@ -6,7 +6,7 @@ import dynamic from "next/dynamic";
 // server-rendered copy lives in app/preorder/page.js for crawlers and screen readers.
 const PreorderExperience = dynamic(() => import("./PreorderExperience"), {
 	ssr: false,
-	loading: () => <div className="fixed inset-0 bg-[#07040f]" />,
+	loading: () => <div className="fixed inset-0 bg-black" />,
 });
 
 export default function PreorderClient() {

@@ -1,26 +1,23 @@
 "use client";
 
-import { Suspense, useRef, useState } from "react";
+import { Suspense, useState } from "react";
 import * as THREE from "three";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Sparkles } from "@react-three/drei";
 import { Bloom, ChromaticAberration, EffectComposer, Noise, Vignette } from "@react-three/postprocessing";
 
-import { COLORS } from "./theme";
+import { ThemeContext, usePalette } from "./theme";
 import { STATIONS, isPortrait, smoothstep } from "./stations";
-import { Columns, Floor, Gate } from "./Field";
-import { AppStation, BoardStation, FormStation, HeroStation, HowStation } from "./Stations3D";
+import { GridFloor } from "./Holo";
+import { AppStation, BoardStation, FormStation, Gates, HeroStation, HowStation } from "./Stations3D";
 
-const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
-const raycaster = new THREE.Raycaster();
-const hit = new THREE.Vector3();
 const camA = new THREE.Vector3();
 const camB = new THREE.Vector3();
 const lookA = new THREE.Vector3();
 const lookB = new THREE.Vector3();
 const look = new THREE.Vector3();
 const dir = new THREE.Vector3();
-const caOffset = new THREE.Vector2(0.0006, 0.0004);
+const caOffset = new THREE.Vector2(0.0007, 0.0005);
 
 /** Where the camera rests for station i, pulled back until its frame fits the screen. */
 function stationCamera(i, aspect, fov, outCam, outLook) {
@@ -35,26 +32,26 @@ function stationCamera(i, aspect, fov, outCam, outLook) {
 }
 
 function Rig({ progress, reduced }) {
-	const pointer = useRef(new THREE.Vector2());
-	const energy = useRef(0);
-
 	useFrame((state, delta) => {
-		const { camera, scene, size } = state;
+		const { camera, size } = state;
 		const aspect = size.width / size.height;
-		const fov = isPortrait(aspect) ? 58 : 42;
+		const portrait = isPortrait(aspect);
+		const fov = portrait ? 58 : 42;
 		if (camera.fov !== fov) {
 			camera.fov = fov;
 			camera.updateProjectionMatrix();
 		}
-
-		// Between stations: hold near each one, glide in between, lifting over the grid.
+		// Hold near each station, fly in between, rising to clear what's in the way.
 		const p = progress.get() * (STATIONS.length - 1);
 		const i = Math.min(STATIONS.length - 2, Math.floor(p));
 		const e = smoothstep(0.12, 0.88, p - i);
 		stationCamera(i, aspect, fov, camA, lookA);
 		stationCamera(i + 1, aspect, fov, camB, lookB);
-		const tx = THREE.MathUtils.lerp(camA.x, camB.x, e) + Math.sin(e * Math.PI) * (i % 2 ? -2.5 : 2.5) + state.pointer.x * 0.7;
-		const ty = THREE.MathUtils.lerp(camA.y, camB.y, e) + Math.sin(e * Math.PI) * 2.4 + state.pointer.y * 0.35;
+		const from = STATIONS[i];
+		const lift = (portrait ? from.liftPortrait : undefined) ?? from.lift ?? 0.8;
+		const arc = Math.sin(e * Math.PI);
+		const tx = THREE.MathUtils.lerp(camA.x, camB.x, e) + state.pointer.x * 0.6;
+		const ty = THREE.MathUtils.lerp(camA.y, camB.y, e) + arc * lift + state.pointer.y * 0.3;
 		const tz = THREE.MathUtils.lerp(camA.z, camB.z, e);
 		look.lerpVectors(lookA, lookB, e);
 
@@ -63,51 +60,37 @@ function Rig({ progress, reduced }) {
 		camera.position.y = THREE.MathUtils.damp(camera.position.y, ty, k, delta);
 		camera.position.z = THREE.MathUtils.damp(camera.position.z, tz, k, delta);
 		camera.lookAt(look);
-		camera.rotateZ(Math.sin(e * Math.PI) * (i % 2 ? 0.05 : -0.05));
-
-		// Pointer → point on the floor; the column ripple follows it everywhere.
-		raycaster.setFromCamera(state.pointer, camera);
-		if (raycaster.ray.intersectPlane(plane, hit)) {
-			pointer.current.x = THREE.MathUtils.damp(pointer.current.x, hit.x, 4, delta);
-			pointer.current.y = THREE.MathUtils.damp(pointer.current.y, hit.z, 4, delta);
-		}
-		const moving = Math.min(1, Math.abs(tz - camera.position.z) * 0.2);
-		energy.current = THREE.MathUtils.damp(energy.current, reduced ? 0 : 0.3 + moving, 2, delta);
-		const cols = scene.getObjectByName("columns");
-		if (cols) {
-			cols.material.uniforms.uPointer.value.copy(pointer.current);
-			cols.material.uniforms.uEnergy.value = energy.current;
-		}
+		// A slight bank mid-flight sells the speed.
+		camera.rotateZ(arc * (i % 2 ? 0.04 : -0.04));
 	});
 	return null;
 }
 
 function Scene(props) {
-	const { progress, reduced, introDelay } = props;
+	const { progress, reduced, intro } = props;
+	const t = usePalette();
 	const aspect = useThree((s) => s.size.width / s.size.height);
 	const portrait = isPortrait(aspect);
 	const [small] = useState(() => window.matchMedia("(max-width: 767px)").matches);
 
 	return (
 		<>
-			<color attach="background" args={[COLORS.ink]} />
-			<fog attach="fog" args={[COLORS.ink, 16, 44]} />
-			<Columns cols={small ? 26 : 46} spacing={small ? 0.85 : 0.66} reduced={reduced} />
-			<Floor reduced={reduced} />
-			{STATIONS.slice(1).map((s) => (
-				<Gate key={s.id} z={s.look[2] + 11} />
-			))}
-			<Sparkles count={small ? 140 : 320} scale={[30, 12, 150]} position={[0, 6, -62]} size={3} speed={0.3} color={COLORS.violetLight} opacity={0.7} />
-			<Sparkles count={small ? 60 : 140} scale={[26, 10, 150]} position={[0, 5, -62]} size={2.5} speed={0.45} color={COLORS.lime} opacity={0.6} />
+			<color attach="background" args={[t.bg]} />
+			<fog attach="fog" args={[t.bg, 24, 64]} />
+			<GridFloor />
+			<Sparkles count={small ? 120 : 280} scale={[30, 14, 160]} position={[0, 6, -66]} size={2.4} speed={0.35} color={t.blue} opacity={0.8} />
+			<Sparkles count={small ? 40 : 90} scale={[30, 14, 160]} position={[0, 6, -66]} size={3} speed={0.5} color={t.amber} opacity={0.8} />
+			<Gates />
 
-			{/* Text fetches its font: suspend the stations, never the grid. */}
+			{/* Text fetches its font: suspend the stations, never the room. */}
 			<Suspense fallback={null}>
-				<HeroStation portrait={portrait} introDelay={introDelay} />
+				<HeroStation portrait={portrait} progress={progress} intro={intro} />
 			</Suspense>
 			<Suspense fallback={null}>
-				<HowStation portrait={portrait} progress={progress} reduced={reduced} />
+				<HowStation portrait={portrait} progress={progress} />
 				<BoardStation
 					portrait={portrait}
+					progress={progress}
 					sites={props.sites}
 					counts={props.counts}
 					selected={props.selected}
@@ -129,23 +112,25 @@ function Scene(props) {
 
 			<Rig progress={progress} reduced={reduced} />
 			<EffectComposer multisampling={0}>
-				<Bloom intensity={1.25} luminanceThreshold={0.5} luminanceSmoothing={0.25} mipmapBlur />
+				<Bloom intensity={t.bloom} luminanceThreshold={t.bloomThreshold} luminanceSmoothing={0.3} mipmapBlur />
 				<ChromaticAberration offset={caOffset} radialModulation={false} modulationOffset={0} />
-				<Noise opacity={0.045} />
-				<Vignette eskil={false} offset={0.22} darkness={0.85} />
+				<Noise opacity={t.mode === "dark" ? 0.05 : 0.03} />
+				<Vignette eskil={false} offset={0.25} darkness={t.mode === "dark" ? 0.8 : 0.25} />
 			</EffectComposer>
 		</>
 	);
 }
 
-export default function World(props) {
+export default function World({ palette, ...props }) {
 	return (
 		<Canvas
 			dpr={[1, 1.75]}
-			camera={{ position: [0, 14, 24], fov: 42, near: 0.1, far: 140 }}
+			camera={{ position: [0, 6, 26], fov: 42, near: 0.1, far: 160 }}
 			gl={{ antialias: false, powerPreference: "high-performance" }}
 			onPointerMissed={() => props.onHover(null)}>
-			<Scene {...props} />
+			<ThemeContext.Provider value={palette}>
+				<Scene {...props} />
+			</ThemeContext.Provider>
 		</Canvas>
 	);
 }

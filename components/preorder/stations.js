@@ -1,14 +1,16 @@
-// The page is one camera flight down a corridor of the grid. Each station is a
-// stop on it; scroll progress (0 → 1) moves the camera from one to the next.
+// The page is one camera flight down a corridor, through a holographic ring
+// between each pair of stations. Scroll progress (0 → 1) moves the camera.
 // `look` is what the camera faces; `from` is the direction it views it from;
 // `frame` is the [width, height] in world units that must fit on screen, in
 // landscape and in portrait; `lookPortrait` overrides `look` on tall screens.
+// `lift` / `liftPortrait`: how far the camera rises on the way to the next
+// station, to clear what stands between them (default 0.8).
 export const STATIONS = [
-	{ id: "hero", label: "Pre-order", look: [0, 4, 0], from: [0, 0.26, 1], frame: [15, 10], framePortrait: [7.5, 12] },
-	{ id: "how", label: "How it works", look: [0, 3.4, -32], lookPortrait: [0, 5.8, -32], from: [0, 0.12, 1], frame: [17.5, 7], framePortrait: [5.6, 12.2] },
-	{ id: "board", label: "Most wanted", look: [0, 4.4, -64], from: [0, 0.14, 1], frame: [17.5, 11], framePortrait: [7.8, 12.5] },
-	{ id: "form", label: "Your pre-order", look: [0, 3.4, -96], from: [0, 0.08, 1], frame: [16.5, 11], framePortrait: [6, 10.5] },
-	{ id: "app", label: "Get the app", look: [0, 3.6, -126], from: [0, 0.18, 1], frame: [13, 8], framePortrait: [7.8, 9.5] },
+	{ id: "hero", label: "Pre-order", look: [0, 3.4, 0], lookPortrait: [0, 4.6, 0], from: [0, 0.12, 1], frame: [16.5, 10], framePortrait: [8, 13.5] },
+	{ id: "how", label: "How it works", look: [0, 3.6, -34], lookPortrait: [0, 6.2, -34], from: [0, 0.08, 1], frame: [17, 8], framePortrait: [6, 14], lift: 5, liftPortrait: 9 },
+	{ id: "board", label: "Most wanted", look: [0, 5.2, -68], from: [0, 0.1, 1], frame: [17.5, 12.6], framePortrait: [7.8, 13.6], lift: 7, liftPortrait: 9 },
+	{ id: "form", label: "Your pre-order", look: [0, 4.9, -102], from: [0, 0.05, 1], frame: [12, 12.2], framePortrait: [6.4, 12.4] },
+	{ id: "app", label: "Get the app", look: [0, 3.8, -134], from: [0, 0.08, 1], frame: [13, 9], framePortrait: [7.5, 11] },
 ];
 
 export const STATION_COUNT = STATIONS.length;
@@ -32,3 +34,9 @@ export function smoothstep(a, b, x) {
 }
 
 export const isPortrait = (aspect) => aspect < 0.9;
+
+/** Scroll progress shared between the scroll driver and the 3D scene, outside React state. */
+export function createProgress() {
+	const store = { value: 0, get: () => store.value };
+	return store;
+}
