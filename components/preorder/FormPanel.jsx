@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 
+import { formatPrice } from "@/lib/preorder/price";
 import { OTHER_SITE } from "@/lib/preorder/sites";
+import { payForPreorder } from "./checkout";
 
 const EMPTY = { name: "", email: "", suggestion: "", marketingOk: false, website: "" };
 
@@ -20,7 +22,7 @@ function Corner({ className }) {
  * The pre-order form, styled as a terminal. Rendered as real DOM: placed in the
  * 3D scene through drei's <Html transform>, or flat in the no-WebGL fallback.
  */
-export default function FormPanel({ sites, selected, onSelect, onDone, narrow = false }) {
+export default function FormPanel({ sites, price, selected, onSelect, onDone, narrow = false }) {
 	const [form, setForm] = useState(EMPTY);
 	const [status, setStatus] = useState("idle"); // idle | sending | done
 	const [error, setError] = useState("");
@@ -28,6 +30,7 @@ export default function FormPanel({ sites, selected, onSelect, onDone, narrow = 
 
 	const set = (key) => (e) => setForm((f) => ({ ...f, [key]: e.target.type === "checkbox" ? e.target.checked : e.target.value }));
 	const site = sites.find((s) => s.slug === selected);
+	const priceLabel = formatPrice(price);
 
 	async function onSubmit(e) {
 		e.preventDefault();
@@ -35,17 +38,11 @@ export default function FormPanel({ sites, selected, onSelect, onDone, narrow = 
 		setStatus("sending");
 		setError("");
 		try {
-			const res = await fetch("/api/preorder", {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ ...form, site: selected }),
-			});
-			const json = await res.json().catch(() => null);
-			if (!res.ok || !json?.success) throw new Error(json?.error || "Something went wrong. Please try again.");
 			const label = site ? site.name : form.suggestion;
-			setResult({ ...json.data, label });
+			const paid = await payForPreorder({ form, site: selected, siteLabel: label });
+			setResult({ ...paid, label });
 			setStatus("done");
-			onDone?.({ slug: selected, ...json.data });
+			onDone?.({ slug: selected, ...paid });
 		} catch (err) {
 			setError(err.message);
 			setStatus("idle");
@@ -69,15 +66,15 @@ export default function FormPanel({ sites, selected, onSelect, onDone, narrow = 
 				<div role="status">
 					<p className="mb-5 flex items-center gap-2 font-(family-name:--font-pre-mono) text-[10px] uppercase tracking-[0.24em] text-(--pa-ochre-text)">
 						<span className="h-1.5 w-1.5 bg-(--pa-ochre) shadow-[0_0_10px_var(--pa-ochre)]" />
-						{result.created ? "Pre-order logged" : "Already logged"}
+						{result.alreadyPaid ? "Already pre-ordered" : "Pre-order paid"}
 					</p>
 					<h3 className="font-(family-name:--font-pre-display) text-2xl font-bold uppercase leading-tight">
 						{result.label}
 						<span className="mt-1 block text-(--pa-ochre-text)">+1 on the board.</span>
 					</h3>
 					<p className="mt-4 text-sm leading-relaxed text-(--pa-text-soft)">
-						Nothing has been charged. The most-wanted sites are built first, and we will email you when yours is ready
-						so you can see it first.
+						The most-wanted sites are built first, and we will email you when yours is ready so you can see it first. If
+						we don&apos;t build it, you get a full refund.
 					</p>
 					<p className="mt-7 font-(family-name:--font-pre-mono) text-[10px] uppercase tracking-[0.24em] text-(--pa-accent-text)">Reference</p>
 					<p className="font-(family-name:--font-pre-mono) text-3xl tracking-[0.14em]">{result.reference}</p>
@@ -91,7 +88,7 @@ export default function FormPanel({ sites, selected, onSelect, onDone, narrow = 
 			) : (
 				<form onSubmit={onSubmit} noValidate className="flex flex-col gap-5">
 					<div>
-						<p className="font-(family-name:--font-pre-mono) text-[10px] uppercase tracking-[0.24em] text-(--pa-ochre-text)">{`> pre-order · nothing to pay`}</p>
+						<p className="font-(family-name:--font-pre-mono) text-[10px] uppercase tracking-[0.24em] text-(--pa-ochre-text)">{`> pre-order${priceLabel ? ` · ${priceLabel}` : ""} · full refund if we don't build it`}</p>
 						<h3 className="mt-2 font-(family-name:--font-pre-display) text-2xl font-bold uppercase leading-tight">Which site do you want to see?</h3>
 					</div>
 
@@ -160,12 +157,15 @@ export default function FormPanel({ sites, selected, onSelect, onDone, narrow = 
 						className="group relative h-14 overflow-hidden bg-(--pa-accent) font-(family-name:--font-pre-mono) text-[13px] font-semibold uppercase tracking-[0.18em] text-white shadow-[0_10px_40px_-8px_var(--pa-accent-glow)] disabled:cursor-wait disabled:opacity-70">
 						<span className="absolute inset-0 origin-left scale-x-0 bg-(--pa-ochre) transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-x-100" />
 						<span className="relative transition-colors duration-500 group-hover:text-black">
-							{status === "sending" ? "Transmitting…" : `Pre-order ${site ? site.name : "this site"} →`}
+							{status === "sending"
+								? "Opening payment…"
+								: `${priceLabel ? `Pay ${priceLabel} · ` : ""}Pre-order ${site ? site.name : "this site"} →`}
 						</span>
 					</button>
 
 					<p className="text-[11px] leading-relaxed text-(--pa-text-muted)">
-						Nothing is charged. We use these details only for your pre-order, as set out in our{" "}
+						Payment by Razorpay. Full refund if we don&apos;t build the site. We use these details only for your pre-order, as
+						set out in our{" "}
 						{/* Plain <a>: inside the 3D scene this renders in its own React root, outside the router. */}
 						<a href="/privacy" className="underline underline-offset-2 hover:text-(--pa-text)">
 							privacy policy

@@ -5,7 +5,7 @@ import { rajdhani, shareTechMono } from "./fonts";
 
 const TITLE = "Pre-order the next Epocheye site";
 const DESCRIPTION =
-	"Pick the heritage site you want to see in Epocheye next and pre-order it. Nothing to pay. The most-wanted sites get built first.";
+	"Pick the heritage site you want to see in Epocheye next and pre-order it. The most-wanted sites get built first, and if we don't build yours, you get a full refund.";
 
 // openGraph is replaced, not merged, when a page sets it, so repeat the layout's fields.
 export const metadata = {

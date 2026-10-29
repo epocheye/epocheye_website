@@ -6,8 +6,10 @@ import { useFrame } from "@react-three/fiber";
 import { Html } from "@react-three/drei";
 import { gsap } from "gsap";
 
+import { formatPrice } from "@/lib/preorder/price";
 import { OTHER_SITE } from "@/lib/preorder/sites";
 import { usePalette } from "./theme";
+import { payForPreorder } from "./checkout";
 import { T } from "./ui3d";
 
 // The pre-order is an admission ticket. You flip through sites with the
@@ -80,12 +82,14 @@ function Field({ label, value, placeholder, focused, y }) {
 	);
 }
 
-export default function Ticket({ sites, counts, selected, onSelect, onDone, onSeeBrick, visible, position, scale = 1 }) {
+export default function Ticket({ sites, counts, price, selected, onSelect, onDone, onSeeBrick, visible, position, scale = 1 }) {
 	const t = usePalette();
 	const shape = useMemo(() => ticketShape(), []);
 	const tilt = useRef(null);
 	const stamp = useRef(null);
 	const imprint = useRef(null);
+	// The inputs are uncontrolled, so their DOM values are the truth at submit time.
+	const fields = useRef({});
 	const [form, setForm] = useState({ name: "", email: "", suggestion: "", marketingOk: false });
 	const [focus, setFocus] = useState(null);
 	const [status, setStatus] = useState("idle"); // idle | sending | done
@@ -99,6 +103,7 @@ export default function Ticket({ sites, counts, selected, onSelect, onDone, onSe
 	const rank = site ? ranked.findIndex((s) => s.slug === site.slug) + 1 : 0;
 	const n = site ? counts?.[site.slug] ?? 0 : 0;
 	const done = status === "done" && result;
+	const priceLabel = formatPrice(price);
 
 	const step = (dir) => {
 		const i = order.indexOf(selected);
@@ -119,26 +124,29 @@ export default function Ticket({ sites, counts, selected, onSelect, onDone, onSe
 
 	async function submit() {
 		if (status === "sending") return;
-		if (form.name.trim().length < 2) return setError("Write your name on the ticket.");
-		if (!EMAIL_RE.test(form.email.trim())) return setError("That email doesn't look right.");
-		if (selected === OTHER_SITE && form.suggestion.trim().length < 3) return setError("Tell us which site you want.");
+		const el = fields.current;
+		const current = {
+			...form,
+			name: el.name?.value ?? form.name,
+			email: el.email?.value ?? form.email,
+			suggestion: el.suggestion?.value ?? form.suggestion,
+		};
+		setForm(current);
+		if (current.name.trim().length < 2) return setError("Write your name on the ticket.");
+		if (!EMAIL_RE.test(current.email.trim())) return setError("That email doesn't look right.");
+		if (selected === OTHER_SITE && current.suggestion.trim().length < 3) return setError("Tell us which site you want.");
 		setError("");
 		setStatus("sending");
 		// The stamp comes down while the request is in flight.
 		if (stamp.current) gsap.to(stamp.current.position, { z: 0.12, duration: 0.22, ease: "power3.in" });
 		try {
-			const res = await fetch("/api/preorder", {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ ...form, site: selected }),
-			});
-			const json = await res.json().catch(() => null);
-			if (!res.ok || !json?.success) throw new Error(json?.error || "Something went wrong. Please try again.");
-			setResult({ ...json.data, label: site ? site.name : form.suggestion });
+			const label = site ? site.name : current.suggestion;
+			const paid = await payForPreorder({ form: current, site: selected, siteLabel: label });
+			setResult({ ...paid, label });
 			setStatus("done");
 			if (stamp.current) gsap.to(stamp.current.position, { z: 0.55, duration: 0.5, ease: "power3.out", delay: 0.05 });
 			if (imprint.current) gsap.fromTo(imprint.current.scale, { x: 1.6, y: 1.6, z: 1.6 }, { x: 1, y: 1, z: 1, duration: 0.45, ease: "power4.out" });
-			onDone?.({ slug: selected, ...json.data });
+			onDone?.({ slug: selected, ...paid });
 		} catch (err) {
 			setError(err.message);
 			setStatus("idle");
@@ -241,7 +249,11 @@ export default function Ticket({ sites, counts, selected, onSelect, onDone, onSe
 						{done ? "YOU'RE ON THE WALL" : "PRE-ORDER"}
 					</T>
 					<T font="mono" fontSize={0.11} letterSpacing={0.14} color="#8c7466" anchorX="left" maxWidth={2.9} position={[-2.3, -2.98, 0]}>
-						{done ? "NOTHING CHARGED. WE'LL EMAIL YOU WHEN IT'S READY." : "NOTHING TO PAY · PRESS THE STAMP"}
+						{done
+							? result.alreadyPaid
+								? "ALREADY PAID FOR THIS SITE. WE'LL EMAIL YOU WHEN IT'S READY."
+								: "PAID. WE'LL EMAIL YOU WHEN IT'S READY."
+							: `${priceLabel || "PAY"} · FULL REFUND IF WE DON'T BUILD IT`}
 					</T>
 					{done && (
 						<>
@@ -267,7 +279,7 @@ export default function Ticket({ sites, counts, selected, onSelect, onDone, onSe
 						<meshStandardMaterial color="#7a4a2e" roughness={0.55} />
 					</mesh>
 					<T font="display" fontSize={0.14} letterSpacing={0.08} color="#fffaf4" position={[0, -0.27, 0.09]}>
-						{status === "sending" ? "…" : "STAMP"}
+						{status === "sending" ? "…" : `PAY ${priceLabel}`.trim()}
 					</T>
 				</group>
 
@@ -286,6 +298,9 @@ export default function Ticket({ sites, counts, selected, onSelect, onDone, onSe
 							{!site && (
 								<input
 									aria-label="Which site do you want?"
+									ref={(n) => {
+										fields.current.suggestion = n;
+									}}
 									defaultValue={form.suggestion}
 									onChange={set("suggestion")}
 									onFocus={() => setFocus("suggestion")}
@@ -298,6 +313,9 @@ export default function Ticket({ sites, counts, selected, onSelect, onDone, onSe
 								<>
 									<input
 										aria-label="Your name"
+										ref={(n) => {
+											fields.current.name = n;
+										}}
 										autoComplete="name"
 										defaultValue={form.name}
 										onChange={set("name")}
@@ -308,6 +326,9 @@ export default function Ticket({ sites, counts, selected, onSelect, onDone, onSe
 									/>
 									<input
 										aria-label="Your email"
+										ref={(n) => {
+											fields.current.email = n;
+										}}
 										type="email"
 										autoComplete="email"
 										defaultValue={form.email}
@@ -329,7 +350,7 @@ export default function Ticket({ sites, counts, selected, onSelect, onDone, onSe
 									/>
 									<button
 										type="button"
-										aria-label={`Pre-order ${site ? site.name : "this site"}`}
+										aria-label={`${priceLabel ? `Pay ${priceLabel} and pre-order` : "Pre-order"} ${site ? site.name : "this site"}`}
 										onClick={submit}
 										onPointerEnter={() => setHoverStamp(true)}
 										onPointerLeave={() => setHoverStamp(false)}

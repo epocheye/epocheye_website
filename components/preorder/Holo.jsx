@@ -102,7 +102,7 @@ const CLOUD_FRAG = /* glsl */ `
 
 /**
  * Konark's Jagamohana as a live hologram: points assemble out of a scattered
- * shell (driven by `assemble`, 0–1) while an amber scan line sweeps the height.
+ * shell (driven by `assemble`, 0–1) while an ochre scan line sweeps the height.
  */
 const rayCaster = new THREE.Raycaster();
 const centre = new THREE.Vector3();
