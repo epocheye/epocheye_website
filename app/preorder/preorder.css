@@ -1,0 +1,57 @@
+/*
+ * /preorder palette, laid out 60-30-10:
+ *   60  ground      near-white (light) / near-black (dark)
+ *   30  structure   charcoal type, cards and hardware
+ *   10  action      electric blue, only for what you can press or what leads
+ * The theme is set on <html data-pa-theme> before first paint (see page.js),
+ * so a dark-mode visitor never sees a white flash.
+ */
+.pa-root {
+	--pa-bg: #fafafa;
+	--pa-surface: #ffffff;
+	--pa-surface-2: #f2f2f4;
+	--pa-text: #1c1c1e;
+	--pa-text-soft: #48484a;
+	--pa-text-muted: #86868b;
+	--pa-line: rgba(28, 28, 30, 0.1);
+	--pa-accent: #2f6bff;
+	--pa-accent-hover: #1f5af0;
+	--pa-accent-soft: rgba(47, 107, 255, 0.1);
+	--pa-on-accent: #ffffff;
+	--pa-error: #d92d20;
+	--pa-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 12px 40px -12px rgba(0, 0, 0, 0.12);
+	color-scheme: light;
+}
+
+:root[data-pa-theme="dark"] .pa-root {
+	--pa-bg: #0b0b0d;
+	--pa-surface: #161618;
+	--pa-surface-2: #1f1f22;
+	--pa-text: #f5f5f7;
+	--pa-text-soft: #c7c7cc;
+	--pa-text-muted: #8e8e93;
+	--pa-line: rgba(255, 255, 255, 0.1);
+	--pa-accent: #4c82ff;
+	--pa-accent-hover: #6a97ff;
+	--pa-accent-soft: rgba(76, 130, 255, 0.14);
+	--pa-on-accent: #ffffff;
+	--pa-error: #ff6b5e;
+	--pa-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 16px 48px -16px rgba(0, 0, 0, 0.6);
+	color-scheme: dark;
+}
+
+.pa-root ::selection {
+	background: var(--pa-accent);
+	color: var(--pa-on-accent);
+}
+
+/* The logo mark follows the theme: dark mark on light, light mark on dark. */
+.pa-root .pa-logo-dark {
+	display: none;
+}
+:root[data-pa-theme="dark"] .pa-root .pa-logo-light {
+	display: none;
+}
+:root[data-pa-theme="dark"] .pa-root .pa-logo-dark {
+	display: block;
+}

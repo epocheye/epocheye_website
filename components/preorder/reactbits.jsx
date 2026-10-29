@@ -1,38 +1,17 @@
 "use client";
 
-// React Bits patterns (DecryptedText, Magnet, ClickSpark), rebuilt on GSAP and
-// canvas so the page runs on GSAP, anime.js and three.js only.
+// React Bits patterns (Magnet, BlurText, CountUp), rebuilt on GSAP and
+// anime.js so the page runs on GSAP, anime.js and three.js only.
 
-import { useEffect, useRef } from "react";
+import { Fragment, useEffect, useRef } from "react";
 import { gsap } from "gsap";
-import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
+import { animate } from "animejs";
 
-if (typeof window !== "undefined") gsap.registerPlugin(ScrambleTextPlugin, useGSAP);
+if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger);
 
 const reduced = () => window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-
-/** Decrypts into `text` whenever it changes (React Bits DecryptedText). */
-export function ScrambleText({ text, className = "", duration = 0.9, chars = "upperCase", as: Tag = "span" }) {
-	const ref = useRef(null);
-	useGSAP(
-		() => {
-			const el = ref.current;
-			if (!el) return;
-			if (reduced()) {
-				el.textContent = text;
-				return;
-			}
-			gsap.to(el, { duration, scrambleText: { text, chars, speed: 0.6, revealDelay: 0.15 }, ease: "none" });
-		},
-		{ dependencies: [text], scope: ref }
-	);
-	return (
-		<Tag ref={ref} className={className} aria-label={text}>
-			{text}
-		</Tag>
-	);
-}
 
 /** Pulls toward the pointer when it comes near (React Bits Magnet). */
 export function Magnet({ children, strength = 0.35, className = "", ...rest }) {
@@ -68,55 +47,73 @@ export function Magnet({ children, strength = 0.35, className = "", ...rest }) {
 	);
 }
 
-/** Sparks burst from every click (React Bits ClickSpark), drawn on one canvas. */
-export function ClickSpark({ color = "#ffb020", count = 10, radius = 26, duration = 450 }) {
+/**
+ * Words come into focus one after another, rising out of a blur, when the line
+ * scrolls into view (React Bits BlurText). `immediate` plays it on mount.
+ */
+export function BlurText({ text, as: Tag = "span", className = "", immediate = false, delay = 0 }) {
 	const ref = useRef(null);
-	useEffect(() => {
-		const canvas = ref.current;
-		if (!canvas || reduced()) return;
-		const ctx = canvas.getContext("2d");
-		const sparks = [];
-		let raf = 0;
-		const resize = () => {
-			canvas.width = window.innerWidth * devicePixelRatio;
-			canvas.height = window.innerHeight * devicePixelRatio;
-		};
-		const draw = (now) => {
-			ctx.clearRect(0, 0, canvas.width, canvas.height);
-			for (let i = sparks.length - 1; i >= 0; i -= 1) {
-				const s = sparks[i];
-				const k = (now - s.t) / duration;
-				if (k >= 1) {
-					sparks.splice(i, 1);
-					continue;
+	useGSAP(
+		() => {
+			const words = ref.current?.querySelectorAll("[data-word]");
+			if (!words?.length || reduced()) return;
+			gsap.fromTo(
+				words,
+				{ opacity: 0, y: "0.35em", filter: "blur(10px)" },
+				{
+					opacity: 1,
+					y: 0,
+					filter: "blur(0px)",
+					duration: 0.9,
+					ease: "power3.out",
+					stagger: 0.07,
+					delay,
+					scrollTrigger: immediate ? undefined : { trigger: ref.current, start: "top 85%", once: true },
 				}
-				const e = 1 - Math.pow(1 - k, 3);
-				const d = e * radius * devicePixelRatio;
-				const len = (1 - e) * 10 * devicePixelRatio;
-				ctx.strokeStyle = color;
-				ctx.lineWidth = 2 * devicePixelRatio;
-				ctx.beginPath();
-				ctx.moveTo(s.x + d * Math.cos(s.a), s.y + d * Math.sin(s.a));
-				ctx.lineTo(s.x + (d + len) * Math.cos(s.a), s.y + (d + len) * Math.sin(s.a));
-				ctx.stroke();
-			}
-			raf = sparks.length ? requestAnimationFrame(draw) : 0;
-		};
-		const click = (e) => {
-			const now = performance.now();
-			for (let i = 0; i < count; i += 1) {
-				sparks.push({ x: e.clientX * devicePixelRatio, y: e.clientY * devicePixelRatio, a: (i / count) * Math.PI * 2, t: now });
-			}
-			if (!raf) raf = requestAnimationFrame(draw);
-		};
-		resize();
-		window.addEventListener("resize", resize);
-		window.addEventListener("pointerdown", click);
-		return () => {
-			cancelAnimationFrame(raf);
-			window.removeEventListener("resize", resize);
-			window.removeEventListener("pointerdown", click);
-		};
-	}, [color, count, radius, duration]);
-	return <canvas ref={ref} className="pointer-events-none fixed inset-0 z-[80] h-full w-full" aria-hidden="true" />;
+			);
+		},
+		{ scope: ref }
+	);
+	return (
+		<Tag ref={ref} className={className} aria-label={text}>
+			{/* Spaces sit between the word boxes, so a wrapped line never starts indented. */}
+			{text.split(" ").map((w, i) => (
+				<Fragment key={i}>
+					{i > 0 && " "}
+					<span data-word aria-hidden="true" className="inline-block">
+						{w}
+					</span>
+				</Fragment>
+			))}
+		</Tag>
+	);
+}
+
+/** Counts up to `value` (React Bits CountUp), and on to any new value it is given. */
+export function CountUp({ value, className = "" }) {
+	const ref = useRef(null);
+	const shown = useRef({ n: 0 });
+	useEffect(() => {
+		const el = ref.current;
+		if (!el || value == null) return;
+		if (reduced()) {
+			shown.current.n = value;
+			el.textContent = String(value);
+			return;
+		}
+		const a = animate(shown.current, {
+			n: value,
+			duration: 1200,
+			ease: "outExpo",
+			onUpdate: () => {
+				el.textContent = String(Math.round(shown.current.n));
+			},
+		});
+		return () => a.pause();
+	}, [value]);
+	return (
+		<span ref={ref} className={`tabular-nums ${className}`}>
+			{value == null ? "–" : 0}
+		</span>
+	);
 }
