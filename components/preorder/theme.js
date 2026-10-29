@@ -2,50 +2,67 @@
 
 import { createContext, useContext } from "react";
 
-// Electric blue and amber. Blue is the brand colour and holds up on both
-// backgrounds; amber is the light: the scan beam, the leader, what to look at.
-// The 3D scene reads the palette from context, the DOM layer (HUD, form) from
-// the CSS variables in cssVars().
+// Warm & approachable: terracotta, ochre, soft peach and deep espresso, the
+// sandstone and fired-brick colours of the sites themselves. Laid out 60-30-10:
+//   60  the ground   — soft peach (light) / deep espresso (dark)
+//   30  structure    — espresso text and frames (light) / peach (dark)
+//   10  action       — terracotta (buttons, selection); ochre marks the leader
+// The 3D scene reads the palette from context, the DOM layer (HUD, fallback
+// form) from the CSS variables in cssVars().
 export const THEMES = {
-	dark: {
-		mode: "dark",
-		bg: "#05070d",
-		panel: "#0a0f1f",
-		grid: "#1c2c5c",
-		blue: "#2f6bff",
-		blueText: "#8fb0ff",
-		amber: "#ffb020",
-		amberText: "#ffc75a",
-		text: "#eef2ff",
-		textSoft: "#b6c0dc",
-		textMuted: "#6b7698",
-		points: "#4d82ff",
-		error: "#ff8a8a",
-		bloom: 1.0,
-		bloomThreshold: 0.5,
-		additive: true,
-	},
 	light: {
 		mode: "light",
-		bg: "#eef1f7",
-		panel: "#ffffff",
-		grid: "#b9c4e0",
-		blue: "#2457f5",
-		blueText: "#2457f5",
-		amber: "#ff9f0a",
-		amberText: "#b46400",
-		text: "#0b1022",
-		textSoft: "#3a4566",
-		textMuted: "#7b85a3",
-		points: "#1d46d6",
-		error: "#c62828",
-		bloom: 0.4,
-		bloomThreshold: 0.9,
+		bg: "#f6e8dc",
+		paper: "#fbf3ec",
+		sand: "#e6cdb8",
+		ink: "#2a1c15",
+		accent: "#c4543a",
+		accentText: "#a8432c",
+		ochre: "#d99a2b",
+		ochreText: "#9a6510",
+		text: "#2a1c15",
+		textSoft: "#5b463b",
+		textMuted: "#8c7466",
+		points: "#5b3a2a",
+		brick: "#c4543a",
+		brickAlt: "#b0472f",
+		error: "#b3261e",
+		hemiSky: "#fff3e6",
+		hemiGround: "#d9b99e",
+		sun: "#ffe9d2",
+		sunIntensity: 1.8,
+		bloom: 0.25,
+		bloomThreshold: 0.95,
 		additive: false,
+	},
+	dark: {
+		mode: "dark",
+		bg: "#1a120e",
+		paper: "#f4e4d6",
+		sand: "#3a2a22",
+		ink: "#f4e4d6",
+		accent: "#e2674b",
+		accentText: "#f08a70",
+		ochre: "#e8a93a",
+		ochreText: "#f0bf63",
+		text: "#f4e4d6",
+		textSoft: "#cdb7a6",
+		textMuted: "#8f786a",
+		points: "#f1c9a8",
+		brick: "#c95a3f",
+		brickAlt: "#b24a32",
+		error: "#ff8a7a",
+		hemiSky: "#6b4a3a",
+		hemiGround: "#120c09",
+		sun: "#ffd9b8",
+		sunIntensity: 1.3,
+		bloom: 0.5,
+		bloomThreshold: 0.75,
+		additive: true,
 	},
 };
 
-export const ThemeContext = createContext(THEMES.dark);
+export const ThemeContext = createContext(THEMES.light);
 export const usePalette = () => useContext(ThemeContext);
 
 const mix = (hex, pct) => `color-mix(in srgb, ${hex} ${pct}%, transparent)`;
@@ -54,17 +71,17 @@ const mix = (hex, pct) => `color-mix(in srgb, ${hex} ${pct}%, transparent)`;
 export function cssVars(t) {
 	return {
 		"--pa-bg": t.bg,
-		"--pa-panel": t.panel,
-		"--pa-blue": t.blue,
-		"--pa-blue-text": t.blueText,
-		"--pa-blue-glow": mix(t.blue, 45),
-		"--pa-amber": t.amber,
-		"--pa-amber-text": t.amberText,
-		"--pa-amber-glow": mix(t.amber, 55),
+		"--pa-panel": t.mode === "light" ? t.paper : "#241912",
+		"--pa-accent": t.accent,
+		"--pa-accent-text": t.accentText,
+		"--pa-accent-glow": mix(t.accent, 40),
+		"--pa-ochre": t.ochre,
+		"--pa-ochre-text": t.ochreText,
+		"--pa-ochre-glow": mix(t.ochre, 45),
 		"--pa-text": t.text,
 		"--pa-text-soft": t.textSoft,
 		"--pa-text-muted": t.textMuted,
-		"--pa-line": mix(t.text, 16),
+		"--pa-line": mix(t.text, 18),
 		"--pa-error": t.error,
 		colorScheme: t.mode,
 	};
@@ -80,7 +97,7 @@ export function initialTheme() {
 	} catch {
 		// storage blocked: fall through to the system setting
 	}
-	return window.matchMedia?.("(prefers-color-scheme: light)").matches ? "light" : "dark";
+	return window.matchMedia?.("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
 
 // 3D text (troika needs .woff). The DOM layer uses the same faces through

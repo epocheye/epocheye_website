@@ -45,7 +45,7 @@ function Fallback({ sites, counts, selected, onSelect, onDone }) {
 	return (
 		<div className="mx-auto max-w-3xl px-5 py-28 text-(--pa-text)">
 			<h1 className="font-(family-name:--font-pre-display) text-5xl font-bold uppercase">
-				Pre-order <span className="text-(--pa-amber-text)">the past.</span>
+				Pre-order <span className="text-(--pa-ochre-text)">the past.</span>
 			</h1>
 			<p className="mt-4 text-(--pa-text-soft)">Pick the heritage site you want to see next. The most-wanted gets built first.</p>
 			<ol className="mt-10 space-y-2 font-(family-name:--font-pre-mono)">
@@ -53,10 +53,10 @@ function Fallback({ sites, counts, selected, onSelect, onDone }) {
 					<li key={s.slug}>
 						<button type="button" onClick={() => onSelect(s.slug)} className="flex w-full justify-between border-b border-(--pa-line) py-3 text-left">
 							<span>
-								<span className="mr-3 text-(--pa-amber-text)">{String(i + 1).padStart(2, "0")}</span>
+								<span className="mr-3 text-(--pa-ochre-text)">{String(i + 1).padStart(2, "0")}</span>
 								{s.name}, {s.place}
 							</span>
-							<span className="text-sm text-(--pa-blue-text)">{counts?.[s.slug] ?? 0}</span>
+							<span className="text-sm text-(--pa-accent-text)">{counts?.[s.slug] ?? 0}</span>
 						</button>
 					</li>
 				))}
@@ -175,6 +175,7 @@ export default function PreorderExperience() {
 					onPick={pick}
 					onSelect={setSelected}
 					onDone={onDone}
+					onSeeBrick={() => scrollToStation(2)}
 					flash={flash}
 					formVisible={formVisible}
 				/>
