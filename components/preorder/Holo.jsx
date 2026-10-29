@@ -108,7 +108,7 @@ const rayCaster = new THREE.Raycaster();
 const centre = new THREE.Vector3();
 const hitPoint = new THREE.Vector3();
 
-export function KonarkScan({ assemble, size = 26, interactive = false, ...props }) {
+export function KonarkScan({ assemble, size = 26, interactive = false, color, ...props }) {
 	const t = usePalette();
 	const geometry = usePointCloud();
 	const mat = useRef(null);
@@ -138,9 +138,11 @@ export function KonarkScan({ assemble, size = 26, interactive = false, ...props 
 		u.uPixelRatio.value = state.gl.getPixelRatio();
 		u.uAssemble.value = assemble?.get ? assemble.get() : 1;
 		u.uScan.value = -0.7 + ((time * 0.28) % 1.6);
-		u.uColor.value.set(t.points);
+		u.uColor.value.set(color ?? t.points);
 		u.uScanColor.value.set(t.accent);
-		u.uOpacity.value = t.mode === "dark" ? 0.85 : 0.8;
+		u.uOpacity.value = t.mode === "dark" ? 0.85 : 1;
+		// Dark dots on a light ground read thinner than glowing ones on dark: draw them larger.
+		u.uSize.value = size * (t.mode === "dark" ? 1 : 1.35);
 		const g = group.current;
 		if (!g) return;
 		// Slow spin, steered a little by the pointer.

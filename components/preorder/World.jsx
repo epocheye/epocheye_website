@@ -86,7 +86,8 @@ function Scene(props) {
 	return (
 		<>
 			<color attach="background" args={[t.bg]} />
-			<fog attach="fog" args={[t.bg, 24, 64]} />
+			{/* Fog to a light ground washes things out sooner, so it starts further off in light mode. */}
+			<fog attach="fog" args={t.mode === "light" ? [t.bg, 38, 95] : [t.bg, 24, 64]} />
 			<hemisphereLight args={[t.hemiSky, t.hemiGround, t.mode === "light" ? 1.2 : 0.8]} />
 			<directionalLight position={[6, 12, 9]} intensity={t.sunIntensity} color={t.sun} />
 			<ambientLight intensity={t.mode === "light" ? 0.35 : 0.2} />

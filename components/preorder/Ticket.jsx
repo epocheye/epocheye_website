@@ -172,7 +172,7 @@ export default function Ticket({ sites, counts, price, selected, onSelect, onDon
 					<meshStandardMaterial
 						color={t.mode === "light" ? "#fffaf4" : t.paper}
 						emissive={t.paper}
-						emissiveIntensity={t.mode === "light" ? 0 : 0.42}
+						emissiveIntensity={t.mode === "light" ? 0.32 : 0.42}
 						roughness={0.92}
 					/>
 				</mesh>

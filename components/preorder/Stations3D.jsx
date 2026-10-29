@@ -206,7 +206,8 @@ function Phone(props) {
 				<boxGeometry args={[0.55, 0.08, 0.01]} />
 				<meshBasicMaterial color="#3d2b22" />
 			</mesh>
-			<KonarkScan scale={1} position={[0, 0.1, 0.4]} size={9} />
+			{/* The phone screen is dark in both themes, so its temple is always drawn light. */}
+			<KonarkScan scale={1} position={[0, 0.1, 0.4]} size={9} color="#f1c9a8" />
 			<T font="mono" fontSize={0.12} letterSpacing={0.2} color="#f0bf63" position={[0, -1.85, 0.13]}>
 				LIVE IN AR
 			</T>
