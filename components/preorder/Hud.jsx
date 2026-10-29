@@ -140,16 +140,36 @@ function Clock() {
 	return <span>IST {now}</span>;
 }
 
-/** Crosshair that trails the pointer on desktop. */
-function Reticle() {
+const glass = "border border-(--pa-glass-line) bg-(--pa-glass) shadow-(--pa-glass-shadow) backdrop-blur-xl";
+
+/** "Scroll" in a small glass pill, for a visitor who has stopped scrolling. */
+function ScrollHint({ show, className = "" }) {
+	return (
+		<span
+			aria-hidden="true"
+			className={`flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-1.5 font-(family-name:--font-pre-mono) text-[10px] uppercase tracking-[0.22em] text-(--pa-text) transition-all duration-500 ${glass} ${
+				show ? "translate-y-0 opacity-100" : "translate-y-1 opacity-0"
+			} ${className}`}>
+			Scroll <span className="animate-bounce">↓</span>
+		</span>
+	);
+}
+
+/** Crosshair that trails the pointer on desktop; it says "scroll" when the visitor stops. */
+function Reticle({ hint }) {
 	const ref = useRef(null);
 	useGSAP(() => {
 		const el = ref.current;
 		if (!el || !window.matchMedia?.("(pointer: fine)").matches || reduced()) return;
-		gsap.set(el, { opacity: 1 });
 		const x = gsap.quickTo(el, "x", { duration: 0.35, ease: "power3" });
 		const y = gsap.quickTo(el, "y", { duration: 0.35, ease: "power3" });
+		let shown = false;
 		const move = (e) => {
+			// Hidden until the pointer first moves, so it never sits in the corner.
+			if (!shown) {
+				gsap.set(el, { x: e.clientX, y: e.clientY, opacity: 1 });
+				shown = true;
+			}
 			x(e.clientX);
 			y(e.clientY);
 		};
@@ -164,16 +184,24 @@ function Reticle() {
 					<path d="M17 0v6M17 28v6M0 17h6M28 17h6" />
 				</svg>
 			</div>
+			<ScrollHint show={hint} className="absolute left-0 top-6 -translate-x-1/2" />
 		</div>
 	);
 }
 
-export function Hud({ station, mode, onToggleTheme, onJump, onIos, percentRef }) {
+export function Hud({ station, mode, onToggleTheme, onJump, onIos, scrollHint, percentRef }) {
 	const light = mode === "light";
+	// No reticle on phones or with reduced motion: the hint sits above the bottom bar instead.
+	const [fixedHint] = useState(() => !window.matchMedia?.("(pointer: fine)").matches || reduced());
 	return (
 		<>
 			<Corners />
-			<Reticle />
+			<Reticle hint={scrollHint && !fixedHint} />
+			{fixedHint && (
+				<div className="pointer-events-none fixed inset-x-0 bottom-20 z-40 flex justify-center">
+					<ScrollHint show={scrollHint} />
+				</div>
+			)}
 			<header className="pointer-events-none fixed inset-x-0 top-0 z-40 flex items-center justify-between px-6 py-6 sm:px-11 sm:py-8">
 				<Link href="/" className="pointer-events-auto font-(family-name:--font-pre-display) text-sm font-bold tracking-[0.2em] text-(--pa-text)">
 					EPOCHEYE
@@ -184,7 +212,7 @@ export function Hud({ station, mode, onToggleTheme, onJump, onIos, percentRef })
 							type="button"
 							onClick={onToggleTheme}
 							aria-label={light ? "Switch to dark mode" : "Switch to light mode"}
-							className="grid h-9 w-9 place-items-center border border-(--pa-line) bg-(--pa-panel)/70 text-(--pa-text) backdrop-blur-sm transition-colors hover:border-(--pa-ochre) hover:text-(--pa-ochre-text) sm:h-10 sm:w-10">
+							className={`grid h-9 w-9 place-items-center rounded-full text-(--pa-text) transition-colors hover:text-(--pa-ochre-text) sm:h-10 sm:w-10 ${glass}`}>
 							{light ? <Moon className="h-4 w-4" aria-hidden="true" /> : <Sun className="h-4 w-4" aria-hidden="true" />}
 						</button>
 						<Magnet>
@@ -202,7 +230,7 @@ export function Hud({ station, mode, onToggleTheme, onJump, onIos, percentRef })
 					<button
 						type="button"
 						onClick={onIos}
-						className="flex h-8 items-center gap-1.5 border border-(--pa-line) bg-(--pa-panel)/70 px-3 font-(family-name:--font-pre-mono) text-[10px] uppercase tracking-[0.16em] text-(--pa-text) backdrop-blur-sm transition-colors hover:border-(--pa-ochre) hover:text-(--pa-ochre-text)">
+						className={`flex h-8 items-center gap-1.5 rounded-full px-3.5 font-(family-name:--font-pre-mono) text-[10px] uppercase tracking-[0.16em] text-(--pa-text) transition-colors hover:text-(--pa-ochre-text) ${glass}`}>
 						<Smartphone className="h-3.5 w-3.5" aria-hidden="true" />
 						iPhone? Get notified
 					</button>

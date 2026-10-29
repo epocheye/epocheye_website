@@ -21,8 +21,8 @@ export function Gates() {
 
 /* ───────────────────────── 00 · Hero ───────────────────────── */
 
-/** "Lay a brick" in the hero: pay straight away, without scrolling to the ticket. */
-function HeroBuy({ portrait, active, priceLabel, onBuy }) {
+/** "Step inside": nudges the camera on to the next station; the visitor scrolls from there. */
+function HeroEnter({ portrait, active, priceLabel, onEnter }) {
 	return (
 		<Html
 			position={[0, portrait ? -2.75 : -1.75, 0]}
@@ -36,23 +36,22 @@ function HeroBuy({ portrait, active, priceLabel, onBuy }) {
 			<div className={`flex w-max flex-col gap-2.5 ${portrait ? "-translate-x-1/2 items-center text-center" : "items-start"}`}>
 				<button
 					type="button"
-					onClick={onBuy}
+					onClick={onEnter}
 					tabIndex={active ? 0 : -1}
-					className="group relative h-14 overflow-hidden bg-(--pa-accent) px-7 font-(family-name:--font-pre-display) text-[19px] font-bold uppercase tracking-[0.08em] text-white shadow-[0_10px_40px_-8px_var(--pa-accent-glow)]">
-					<span className="absolute inset-0 origin-left scale-x-0 bg-(--pa-ochre) transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-x-100" />
-					<span className="relative transition-colors duration-500 group-hover:text-black">
-						{`Lay a brick${priceLabel ? ` · ${priceLabel}` : ""} →`}
-					</span>
+					className="group relative h-14 overflow-hidden rounded-full border border-white/35 bg-(--pa-accent)/85 px-8 font-(family-name:--font-pre-display) text-[19px] font-bold uppercase tracking-[0.08em] text-white shadow-[0_12px_40px_-10px_var(--pa-accent-glow),inset_0_1px_0_rgba(255,255,255,0.35)] backdrop-blur-xl transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-[1.03]">
+					{/* Glass sheen across the top half. */}
+					<span className="pointer-events-none absolute inset-x-0 top-0 h-1/2 rounded-t-full bg-gradient-to-b from-white/25 to-transparent" />
+					<span className="relative">Step inside ↓</span>
 				</button>
 				<span className="font-(family-name:--font-pre-display) text-[14px] font-medium text-(--pa-text-soft)">
-					{`Full refund if your site isn't live by ${REFUND_BY}.`}
+					{`Pre-order${priceLabel ? ` for ${priceLabel}` : ""} · full refund if your site isn't live by ${REFUND_BY}.`}
 				</span>
 			</div>
 		</Html>
 	);
 }
 
-export function HeroStation({ portrait, progress, intro, active, priceLabel, onBuy }) {
+export function HeroStation({ portrait, progress, intro, active, priceLabel, onEnter }) {
 	const t = usePalette();
 	const title = useRef(null);
 	const scan = useRef(null);
@@ -100,7 +99,7 @@ export function HeroStation({ portrait, progress, intro, active, priceLabel, onB
 					Pick the heritage site you want in Epocheye next. Every pre-order lays a brick, and the tallest tower goes live
 					for Diwali.
 				</T>
-				<HeroBuy portrait={portrait} active={active} priceLabel={priceLabel} onBuy={onBuy} />
+				<HeroEnter portrait={portrait} active={active} priceLabel={priceLabel} onEnter={onEnter} />
 			</group>
 		</>
 	);

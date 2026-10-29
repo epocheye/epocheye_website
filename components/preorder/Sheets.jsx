@@ -5,12 +5,14 @@ import { animate } from "animejs";
 import { Check, Copy, Share2, X } from "lucide-react";
 
 import { PROMISE } from "@/lib/preorder/promise";
-import FormPanel from "./FormPanel";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 const mono = "font-(family-name:--font-pre-mono) uppercase tracking-[0.22em]";
-const ghost = `flex h-12 items-center justify-center gap-2 border border-(--pa-line) px-4 text-[11px] text-(--pa-text) transition-colors hover:border-(--pa-ochre) hover:text-(--pa-ochre-text) ${mono}`;
+const glass = "border border-(--pa-glass-line) bg-(--pa-glass) shadow-(--pa-glass-shadow) backdrop-blur-xl";
+const panel = `rounded-[28px] border border-(--pa-glass-line) bg-(--pa-glass-strong) text-(--pa-text) shadow-(--pa-glass-shadow) backdrop-blur-2xl`;
+const primary = `relative flex h-12 items-center justify-center overflow-hidden rounded-full border border-white/35 bg-(--pa-accent)/90 text-[12px] font-semibold text-white shadow-[0_10px_30px_-10px_var(--pa-accent-glow),inset_0_1px_0_rgba(255,255,255,0.35)] transition-transform hover:scale-[1.02] ${mono}`;
+const ghost = `flex h-12 items-center justify-center gap-2 rounded-full px-4 text-[11px] text-(--pa-text) transition-colors hover:text-(--pa-ochre-text) ${glass} ${mono}`;
 
 /** Dialog shell: dims the scene, closes on Escape or a click outside, and rises in. */
 function Modal({ label, onClose, children }) {
@@ -33,29 +35,19 @@ function Modal({ label, onClose, children }) {
 			role="dialog"
 			aria-modal="true"
 			aria-label={label}
-			className="fixed inset-0 z-[80] flex items-end justify-center overflow-y-auto bg-black/55 p-3 backdrop-blur-sm sm:items-center sm:p-6"
+			className="fixed inset-0 z-[80] flex items-end justify-center overflow-y-auto bg-black/35 p-3 backdrop-blur-md sm:items-center sm:p-6"
 			onClick={(e) => e.target === e.currentTarget && onClose()}>
 			<div ref={panel} className="relative my-auto">
 				<button
 					type="button"
 					onClick={onClose}
 					aria-label="Close"
-					className="absolute -top-3 right-0 z-10 grid h-9 w-9 -translate-y-full place-items-center border border-(--pa-line) bg-(--pa-panel) text-(--pa-text) transition-colors hover:border-(--pa-ochre)">
+					className={`absolute -top-3 right-0 z-10 grid h-10 w-10 -translate-y-full place-items-center rounded-full text-(--pa-text) transition-colors hover:text-(--pa-ochre-text) ${glass}`}>
 					<X className="h-4 w-4" aria-hidden="true" />
 				</button>
 				{children}
 			</div>
 		</div>
-	);
-}
-
-/** The checkout form, opened from the hero so no one has to scroll to the ticket. */
-export function BuySheet({ onClose, ...form }) {
-	const [narrow] = useState(() => window.matchMedia("(max-width: 520px)").matches);
-	return (
-		<Modal label="Pre-order a site" onClose={onClose}>
-			<FormPanel {...form} narrow={narrow} />
-		</Modal>
 	);
 }
 
@@ -82,17 +74,17 @@ export function ShareSheet({ share, onClose, onSeeBrick }) {
 
 	return (
 		<Modal label="Share your pre-order" onClose={onClose}>
-			<div className="relative w-[min(92vw,420px)] border border-(--pa-accent)/40 bg-(--pa-panel) p-6 text-(--pa-text) shadow-[0_0_80px_-16px_var(--pa-accent-glow)] sm:p-8">
+			<div className={`relative w-[min(92vw,420px)] p-6 sm:p-8 ${panel}`}>
 				<p className={`flex items-center gap-2 text-[10px] text-(--pa-ochre-text) ${mono}`}>
-					<span className="h-1.5 w-1.5 bg-(--pa-ochre) shadow-[0_0_10px_var(--pa-ochre)]" />
+					<span className="h-1.5 w-1.5 rounded-full bg-(--pa-ochre) shadow-[0_0_10px_var(--pa-ochre)]" />
 					{share.alreadyPaid ? "Already pre-ordered" : "Pre-order paid"} · {share.reference}
 				</p>
 
 				{/* The card people see: what they laid a brick for. */}
-				<div className="mt-5 border border-(--pa-line) bg-(--pa-bg) p-5">
+				<div className={`mt-5 rounded-3xl p-5 ${glass}`}>
 					<div className="mb-4 grid w-max grid-cols-2 gap-1" aria-hidden="true">
 						{[0, 1, 2, 3].map((i) => (
-							<span key={i} className={`h-3 w-7 ${i === 3 ? "bg-(--pa-ochre)" : "bg-(--pa-accent)"} ${i > 1 ? "translate-x-2" : ""}`} />
+							<span key={i} className={`h-3 w-7 rounded-[4px] ${i === 3 ? "bg-(--pa-ochre)" : "bg-(--pa-accent)"} ${i > 1 ? "translate-x-2" : ""}`} />
 						))}
 					</div>
 					<p className="font-(family-name:--font-pre-display) text-[15px] font-semibold uppercase tracking-[0.12em] text-(--pa-text-soft)">
@@ -108,7 +100,7 @@ export function ShareSheet({ share, onClose, onSeeBrick }) {
 						target="_blank"
 						rel="noopener noreferrer"
 						data-autofocus
-						className={`col-span-2 flex h-12 items-center justify-center gap-2 bg-(--pa-accent) text-[12px] font-semibold text-white transition-colors hover:bg-(--pa-ochre) hover:text-black ${mono}`}>
+						className={`col-span-2 ${primary}`}>
 						Share on WhatsApp
 					</a>
 					<a href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(message)}`} target="_blank" rel="noopener noreferrer" className={ghost}>
@@ -168,7 +160,7 @@ export function IosSheet({ onClose }) {
 
 	return (
 		<Modal label="Get notified when Epocheye is on iPhone" onClose={onClose}>
-			<div className="w-[min(92vw,400px)] border border-(--pa-accent)/40 bg-(--pa-panel) p-6 text-(--pa-text) shadow-[0_0_80px_-16px_var(--pa-accent-glow)] sm:p-8">
+			<div className={`w-[min(92vw,400px)] p-6 sm:p-8 ${panel}`}>
 				<p className={`text-[10px] text-(--pa-ochre-text) ${mono}`}>{"> iPhone · App Store"}</p>
 				<h3 className="mt-2 font-(family-name:--font-pre-display) text-2xl font-bold uppercase leading-tight">Epocheye is coming to iPhone</h3>
 				{status === "done" ? (
@@ -190,7 +182,7 @@ export function IosSheet({ onClose }) {
 							type="email"
 							autoComplete="email"
 							placeholder="you@example.com"
-							className="w-full border border-(--pa-line) bg-(--pa-bg)/60 px-4 py-3 text-[16px] text-(--pa-text) outline-none transition-colors placeholder:text-(--pa-text-muted) focus:border-(--pa-accent)"
+							className={`w-full rounded-full px-5 py-3 text-[16px] text-(--pa-text) outline-none transition-colors placeholder:text-(--pa-text-muted) focus:border-(--pa-accent) ${glass}`}
 						/>
 						{/* Honeypot: hidden from people, filled by bots. */}
 						<div className="absolute -left-[9999px] h-px w-px overflow-hidden" aria-hidden="true">
@@ -202,7 +194,7 @@ export function IosSheet({ onClose }) {
 						<button
 							type="submit"
 							disabled={status === "sending"}
-							className={`h-12 bg-(--pa-accent) text-[12px] font-semibold text-white transition-colors hover:bg-(--pa-ochre) hover:text-black disabled:cursor-wait disabled:opacity-70 ${mono}`}>
+							className={`${primary} disabled:cursor-wait disabled:opacity-70`}>
 							{status === "sending" ? "Adding you…" : "Notify me"}
 						</button>
 					</form>

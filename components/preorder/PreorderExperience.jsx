@@ -12,13 +12,14 @@ import { STATION_COUNT, createProgress, nearestStation, stationProgress, station
 import { Boot, Hud } from "./Hud";
 import { ClickSpark } from "./reactbits";
 import FormPanel from "./FormPanel";
-import { BuySheet, IosSheet, ShareSheet } from "./Sheets";
+import { IosSheet, ShareSheet } from "./Sheets";
 
 if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 
 const World = dynamic(() => import("./World"), { ssr: false, loading: () => null });
 
 const SCROLL_PER_STATION = 130; // vh of scrolling between two stations
+const IDLE_HINT_MS = 3500; // still this long, and the pointer says "scroll"
 
 // Shared with the 3D scene outside React state: GSAP writes, useFrame reads.
 const progress = createProgress(); // scroll, 0 → 1
@@ -85,11 +86,13 @@ export default function PreorderExperience() {
 	const [flash, setFlash] = useState(null);
 	const [station, setStation] = useState(0);
 	const [formVisible, setFormVisible] = useState(false);
-	const [sheet, setSheet] = useState(null); // null | "buy" | "ios"
+	const [sheet, setSheet] = useState(null); // null | "ios"
+	const [idle, setIdle] = useState(false); // not scrolled for a while: show the scroll hint
 	const [share, setShare] = useState(null); // the paid pre-order to share
 	const wrapper = useRef(null);
 	const content = useRef(null);
 	const percent = useRef(null);
+	const lastScroll = useRef(0);
 	const palette = THEMES[mode];
 
 	const loadCounts = useCallback(() => {
@@ -130,6 +133,8 @@ export default function PreorderExperience() {
 			onUpdate: (self) => {
 				const v = self.progress;
 				progress.value = v;
+				lastScroll.current = performance.now();
+				setIdle(false);
 				if (percent.current) percent.current.textContent = String(Math.round(v * 100)).padStart(3, "0");
 				const s = nearestStation(v);
 				setStation((prev) => (prev === s ? prev : s));
@@ -142,6 +147,16 @@ export default function PreorderExperience() {
 			st.kill();
 			smoother?.kill();
 		};
+	}, [webgl]);
+
+	// Anyone who stops short of the end is reminded to keep scrolling.
+	useEffect(() => {
+		if (!webgl) return;
+		lastScroll.current = performance.now();
+		const id = setInterval(() => {
+			setIdle(performance.now() - lastScroll.current > IDLE_HINT_MS && progress.value < 0.97);
+		}, 500);
+		return () => clearInterval(id);
 	}, [webgl]);
 
 	const startIntro = useCallback(() => {
@@ -175,9 +190,6 @@ export default function PreorderExperience() {
 
 	const sheets = (
 		<>
-			{sheet === "buy" && (
-				<BuySheet sites={PREORDER_SITES} price={price} selected={selected} onSelect={setSelected} onDone={onDone} onClose={closeSheet} />
-			)}
 			{sheet === "ios" && <IosSheet onClose={closeSheet} />}
 			{share && (
 				<ShareSheet
@@ -222,7 +234,7 @@ export default function PreorderExperience() {
 					flash={flash}
 					formVisible={formVisible}
 					heroActive={station === 0 && !sheet && !share}
-					onBuy={() => setSheet("buy")}
+					onEnter={() => scrollToStation(1)}
 				/>
 			</div>
 			<Hud
@@ -231,6 +243,7 @@ export default function PreorderExperience() {
 				onToggleTheme={toggleTheme}
 				onJump={scrollToStation}
 				onIos={() => setSheet("ios")}
+				scrollHint={idle && !sheet && !share}
 				percentRef={percent}
 			/>
 			{sheets}

@@ -103,7 +103,7 @@ function Scene(props) {
 					intro={intro}
 					active={props.heroActive}
 					priceLabel={formatPrice(props.price)}
-					onBuy={props.onBuy}
+					onEnter={props.onEnter}
 				/>
 			</Suspense>
 			<Suspense fallback={null}>
