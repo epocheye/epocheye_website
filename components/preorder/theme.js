@@ -5,27 +5,23 @@ import { createContext, useContext } from "react";
 export { THEME_KEY } from "./themeScript";
 
 // Colours for the 3D scene; the DOM reads the same palette from the CSS
-// variables in app/preorder/preorder.css. Night is the default; day swaps
-// the sky for parchment and the starlight for ink.
+// variables in app/preorder/preorder.css. Dark is the default: the temple is
+// drawn in soft white light on near-black, with electric blue for the scan.
 export const THEMES = {
 	dark: {
 		mode: "dark",
-		bg: "#14120d",
-		ink: "#efe9d9",
-		dim: "#8b8574",
-		glow: "#ffd9a0",
-		points: "#efe9d9",
-		accent: "#d9c7a0",
+		bg: "#0b0b0d",
+		points: "#e5e5ea",
+		accent: "#4c82ff",
+		line: "#ffffff",
 		additive: true,
 	},
 	light: {
 		mode: "light",
-		bg: "#efe9d9",
-		ink: "#1d1a14",
-		dim: "#7d7766",
-		glow: "#9a6a2a",
-		points: "#1d1a14",
-		accent: "#7a5f30",
+		bg: "#fafafa",
+		points: "#1c1c1e",
+		accent: "#2f6bff",
+		line: "#1c1c1e",
 		additive: false,
 	},
 };
