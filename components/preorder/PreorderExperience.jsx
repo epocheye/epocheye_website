@@ -413,7 +413,11 @@ export default function PreorderExperience() {
 				</div>
 				<div className="pa-live absolute inset-x-6 bottom-10 flex flex-col items-center gap-2 text-center">
 					<p className="pa-caps text-[9px] text-(--pa-text-muted)">
-						{leader && counts ? `Leading · ${leader.site.name} · ${leader.n} pre-order${leader.n === 1 ? "" : "s"}` : "The board · live"}
+						{!counts
+							? "The board · live"
+							: max > 0
+								? `Leading · ${leader.site.name} · ${leader.n} pre-order${leader.n === 1 ? "" : "s"}`
+								: "No pre-orders yet · be the first"}
 					</p>
 					<button type="button" onClick={() => setPanel("board")} className="pa-caps flex items-center gap-3 text-(--pa-text) hover:text-(--pa-accent)">
 						<span className="h-px w-8 bg-(--pa-line-strong)" />
