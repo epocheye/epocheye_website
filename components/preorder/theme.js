@@ -12,18 +12,18 @@ import { createContext, useContext } from "react";
 export const THEMES = {
 	light: {
 		mode: "light",
-		bg: "#f6e8dc",
-		paper: "#fbf3ec",
-		sand: "#e6cdb8",
+		bg: "#f3e4d5",
+		paper: "#fffaf4",
+		sand: "#dcbb9e",
 		ink: "#2a1c15",
 		accent: "#c4543a",
-		accentText: "#a8432c",
+		accentText: "#a13d27",
 		ochre: "#d99a2b",
 		ochreText: "#9a6510",
 		text: "#2a1c15",
-		textSoft: "#5b463b",
-		textMuted: "#8c7466",
-		points: "#5b3a2a",
+		textSoft: "#4a372d",
+		textMuted: "#735d50",
+		points: "#3a2117",
 		brick: "#c4543a",
 		brickAlt: "#b0472f",
 		error: "#b3261e",
@@ -84,10 +84,14 @@ export function cssVars(t) {
 		"--pa-line": mix(t.text, 18),
 		"--pa-error": t.error,
 		// Frosted glass for the DOM controls and panels over the scene.
-		"--pa-glass": mix(t.mode === "light" ? "#fffaf4" : "#2a1d16", t.mode === "light" ? 55 : 60),
-		"--pa-glass-strong": mix(t.mode === "light" ? "#fffaf4" : "#2a1d16", t.mode === "light" ? 78 : 82),
-		"--pa-glass-line": t.mode === "light" ? "rgba(255, 255, 255, 0.75)" : "rgba(255, 240, 228, 0.14)",
-		"--pa-glass-shadow": t.mode === "light" ? "0 10px 40px -12px rgba(90, 52, 30, 0.28)" : "0 10px 40px -12px rgba(0, 0, 0, 0.6)",
+		"--pa-glass": mix(t.mode === "light" ? "#fffaf4" : "#2a1d16", t.mode === "light" ? 72 : 60),
+		"--pa-glass-strong": mix(t.mode === "light" ? "#fffaf4" : "#2a1d16", t.mode === "light" ? 88 : 82),
+		// On the light peach ground a white rim vanishes, so light glass gets a warm edge and a deeper shadow.
+		"--pa-glass-line": t.mode === "light" ? "rgba(122, 74, 46, 0.2)" : "rgba(255, 240, 228, 0.14)",
+		"--pa-glass-shadow":
+			t.mode === "light"
+				? "0 12px 36px -10px rgba(90, 52, 30, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.9)"
+				: "0 10px 40px -12px rgba(0, 0, 0, 0.6)",
 		colorScheme: t.mode,
 	};
 }
