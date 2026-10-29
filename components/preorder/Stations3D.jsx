@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 import { RoundedBox, useTexture } from "@react-three/drei";
@@ -8,8 +8,8 @@ import { RoundedBox, useTexture } from "@react-three/drei";
 import { PLAY_STORE_URL } from "@/lib/site";
 import { usePalette } from "./theme";
 import { STATIONS, stationWeight } from "./stations";
-import { Gate, HoloRings, KonarkScan } from "./Holo";
-import { Extruded, T, easeOut, setCursor } from "./ui3d";
+import { Embers, Gate, HoloRings, KonarkScan, SunRays } from "./Holo";
+import { Extruded, Reveal, T, easeOut, setCursor } from "./ui3d";
 
 const Z = STATIONS.map((s) => s.look[2]);
 const sideOf = (t) => (t.mode === "light" ? "#d6b79c" : "#3d2b22");
@@ -23,51 +23,91 @@ export function Gates() {
 export function HeroStation({ portrait, progress, intro }) {
 	const t = usePalette();
 	const title = useRef(null);
+	const body = useRef(null);
+	const bar = useRef(null);
 	const scan = useRef(null);
+	const [small] = useState(() => window.matchMedia("(max-width: 767px)").matches);
+	// After the boot screen, in order: the sun rises, the temple is laid course by
+	// course, then the title lines rise out of their masks.
+	const at = (start, length) => () => Math.min(1, Math.max(0, (intro.get() - start) / length));
+	const sun = { get: at(0, 0.45) };
+	const build = { get: at(0.05, 0.75) };
 	// Points hold their shape at the hero and scatter as the camera leaves.
 	const assemble = { get: () => intro.get() * (0.35 + 0.65 * stationWeight(progress.get(), 0)) };
+	const lines = [at(0.3, 0.35), at(0.38, 0.4), at(0.48, 0.4)];
 	useFrame(() => {
 		// Skip drawing 90k points once the hero is well behind the camera.
 		if (scan.current) scan.current.visible = progress.get() < 0.3;
 		const g = title.current;
-		if (!g) return;
-		const k = easeOut(intro.get() * 1.3 - 0.2);
-		g.position.y = (portrait ? 0.9 : 3.5) - (1 - k) * 1.2;
-		g.rotation.x = (1 - k) * -0.6;
+		if (g) g.rotation.x = (1 - easeOut(intro.get() * 1.4)) * -0.35;
+		const k = easeOut(at(0.6, 0.35)());
+		if (bar.current) bar.current.scale.x = Math.max(1e-3, easeOut(at(0.55, 0.4)()));
+		body.current?.traverse((o) => {
+			if ("fillOpacity" in o) o.fillOpacity = k;
+		});
+		if (body.current) body.current.position.y = -1.0 - (1 - k) * 0.3;
 	});
 	const cloud = portrait ? { position: [0, 5.2, -1], scale: 3.1 } : { position: [4.3, 2.3, -1.5], scale: 3.7 };
 	const s = portrait ? 0.62 : 1;
+	const anchor = portrait ? "center" : "left";
 	return (
 		<>
+			<SunRays
+				rise={sun}
+				size={portrait ? 17 : 26}
+				position={portrait ? [0.6, 10.6, -10] : [6.4, 7.3, -10]}
+			/>
+			<Embers
+				count={small ? 70 : 150}
+				width={portrait ? 6 : 9}
+				depth={5}
+				height={7}
+				position={[cloud.position[0], 0, cloud.position[2]]}
+			/>
 			<group ref={scan}>
-				<KonarkScan assemble={assemble} interactive position={cloud.position} scale={cloud.scale} size={portrait ? 16 : 19} />
+				<KonarkScan assemble={assemble} build={build} interactive position={cloud.position} scale={cloud.scale} size={portrait ? 16 : 19} />
 			</group>
 			<HoloRings radius={portrait ? 2.4 : 3.4} position={[cloud.position[0], portrait ? 4.4 : 0.02, cloud.position[2]]} />
 			<T font="mono" fontSize={0.15} letterSpacing={0.22} color={t.accentText} position={[cloud.position[0], portrait ? 7.8 : 5.4, cloud.position[2]]}>
 				KONARK SUN TEMPLE · MOVE YOUR POINTER THROUGH IT
 			</T>
-			<group ref={title} position={[portrait ? 0 : -6.9, 3.5, 0.5]} scale={s}>
-				<T font="mono" fontSize={0.2} letterSpacing={0.3} color={t.accentText} anchorX={portrait ? "center" : "left"} position={[0, 2.05, 0]}>
-					EPOCHEYE · PRE-ORDER
-				</T>
-				<Extruded color={t.text} side={sideOf(t)} fontSize={0.95} letterSpacing={-0.02} anchorX={portrait ? "center" : "left"} position={[0, 1.15, 0]}>
-					PRE-ORDER
-				</Extruded>
-				<Extruded color={t.accent} side={sideOf(t)} fontSize={0.95} letterSpacing={-0.02} anchorX={portrait ? "center" : "left"} position={[0, 0.1, 0]}>
-					THE PAST.
-				</Extruded>
-				<T
-					fontSize={portrait ? 0.3 : 0.22}
-					lineHeight={1.45}
-					color={t.textSoft}
-					anchorX={portrait ? "center" : "left"}
-					anchorY="top"
-					textAlign={portrait ? "center" : "left"}
-					maxWidth={portrait ? 9 : 6.4}
-					position={[0, -0.7, 0]}>
-					Pick the heritage site you want in Epocheye next. Every pre-order lays a brick, and the tallest tower gets built
-					first.
-				</T>
+			<group ref={title} position={[portrait ? 0 : -6.9, portrait ? 0.9 : 3.3, 0.5]} scale={s}>
+				<Reveal progress={lines[0]} height={0.4} position-y={2.45}>
+					<T font="mono" fontSize={0.2} letterSpacing={0.3} color={t.accentText} anchorX={anchor}>
+						EPOCHEYE · PRE-ORDER
+					</T>
+				</Reveal>
+				<Reveal progress={lines[1]} height={1.55} position-y={1.4}>
+					<Extruded color={t.text} side={sideOf(t)} fontSize={1.15} letterSpacing={-0.02} anchorX={anchor}>
+						PRE-ORDER
+					</Extruded>
+				</Reveal>
+				<Reveal progress={lines[2]} height={1.55} position-y={0.05}>
+					<Extruded color={t.accent} side={sideOf(t)} fontSize={1.15} letterSpacing={-0.02} anchorX={anchor}>
+						THE PAST.
+					</Extruded>
+				</Reveal>
+				{/* An ochre rule draws itself under the title (from the left, or out from the centre on phones). */}
+				<group ref={bar} position={[portrait ? 0 : 0.05, -0.68, 0]} scale-x={0.001}>
+					<mesh position-x={portrait ? 0 : 2.3}>
+						<boxGeometry args={[4.6, 0.045, 0.02]} />
+						<meshBasicMaterial color={t.ochre} toneMapped={false} />
+					</mesh>
+				</group>
+				<group ref={body} position-y={-1.0}>
+					<T
+						fontSize={portrait ? 0.3 : 0.22}
+						lineHeight={1.45}
+						color={t.textSoft}
+						anchorX={anchor}
+						anchorY="top"
+						textAlign={portrait ? "center" : "left"}
+						maxWidth={portrait ? 9 : 6.4}
+						fillOpacity={0}>
+						Pick the heritage site you want in Epocheye next. Every pre-order lays a brick, and the tallest tower gets built
+						first.
+					</T>
+				</group>
 			</group>
 		</>
 	);

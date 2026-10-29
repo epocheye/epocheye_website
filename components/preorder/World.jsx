@@ -112,7 +112,8 @@ function Scene(props) {
 						selected={props.selected}
 						hovered={props.hovered}
 						onHover={props.onHover}
-						onSelect={props.onPick}
+						onSelect={props.onSelect}
+						onChoose={props.onPick}
 						flash={props.flash}
 					/>
 				</Near>
@@ -121,6 +122,7 @@ function Scene(props) {
 						position={[0, STATIONS[3].look[1], STATIONS[3].look[2]]}
 						scale={portrait ? 0.92 : 1}
 						visible={props.formVisible}
+						progress={progress}
 						sites={props.sites}
 						counts={props.counts}
 						price={props.price}

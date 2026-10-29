@@ -60,6 +60,7 @@ const CLOUD_VERT = /* glsl */ `
 	uniform float uPixelRatio;
 	uniform vec3 uPointer;
 	uniform float uRepel;
+	uniform float uBuild;
 	attribute vec3 aScatter;
 	attribute float aRand;
 	varying float vScan;
@@ -75,12 +76,18 @@ const CLOUD_VERT = /* glsl */ `
 		p += normalize(away + 1e-4) * near * 0.22;
 		vScan = 1.0 - smoothstep(0.0, 0.03, abs(position.y - uScan));
 		vAlpha = 0.35 + 0.65 * t;
+		// Built up course by course from the ground (the cloud spans y -0.65..0.65);
+		// the course just laid glows like fresh mortar.
+		float course = floor((position.y + 0.65) * 23.0) / 23.0 - 0.65;
+		float shown = step(course, uBuild);
+		vScan = max(vScan, shown * (1.0 - smoothstep(0.0, 0.1, uBuild - course)));
+		vAlpha *= shown;
 		vec4 mv = modelViewMatrix * vec4(p, 1.0);
 		float depth = -mv.z;
 		// Scattered points can drift right up to the camera: cap their size and
 		// fade them out there, or a few huge additive sprites flood the screen.
 		vAlpha *= smoothstep(0.8, 3.0, depth);
-		gl_PointSize = min(uSize * uPixelRatio * (1.0 + vScan * 0.7) / max(depth, 0.001), 10.0 * uPixelRatio);
+		gl_PointSize = shown * min(uSize * uPixelRatio * (1.0 + vScan * 0.7) / max(depth, 0.001), 10.0 * uPixelRatio);
 		gl_Position = projectionMatrix * mv;
 	}
 `;
@@ -103,12 +110,13 @@ const CLOUD_FRAG = /* glsl */ `
 /**
  * Konark's Jagamohana as a live hologram: points assemble out of a scattered
  * shell (driven by `assemble`, 0–1) while an ochre scan line sweeps the height.
+ * `build` (0–1, optional) raises it course by course from the ground.
  */
 const rayCaster = new THREE.Raycaster();
 const centre = new THREE.Vector3();
 const hitPoint = new THREE.Vector3();
 
-export function KonarkScan({ assemble, size = 26, interactive = false, ...props }) {
+export function KonarkScan({ assemble, build, size = 26, interactive = false, ...props }) {
 	const t = usePalette();
 	const geometry = usePointCloud();
 	const mat = useRef(null);
@@ -125,6 +133,7 @@ export function KonarkScan({ assemble, size = 26, interactive = false, ...props 
 			uOpacity: { value: 1 },
 			uPointer: { value: new THREE.Vector3(99, 99, 99) },
 			uRepel: { value: 0 },
+			uBuild: { value: 1 },
 		}),
 		[size]
 	);
@@ -137,6 +146,7 @@ export function KonarkScan({ assemble, size = 26, interactive = false, ...props 
 		u.uTime.value = time;
 		u.uPixelRatio.value = state.gl.getPixelRatio();
 		u.uAssemble.value = assemble?.get ? assemble.get() : 1;
+		u.uBuild.value = -0.7 + 1.45 * (build?.get ? build.get() : 1);
 		u.uScan.value = -0.7 + ((time * 0.28) % 1.6);
 		u.uColor.value.set(t.points);
 		u.uScanColor.value.set(t.accent);
@@ -389,6 +399,151 @@ export function Dust({ count, color, seed = 1 }) {
 				uniforms={uniforms}
 				vertexShader={DUST_VERT}
 				fragmentShader={DUST_FRAG}
+				transparent
+				depthWrite={false}
+				blending={t.additive ? THREE.AdditiveBlending : THREE.NormalBlending}
+			/>
+		</points>
+	);
+}
+
+/* ───────────────────────── Sunlight ───────────────────────── */
+
+const RAYS_FRAG = /* glsl */ `
+	uniform vec3 uColor;
+	uniform vec3 uCore;
+	uniform float uTime;
+	uniform float uOpacity;
+	varying vec2 vUv;
+	void main() {
+		vec2 p = vUv - 0.5;
+		float r = length(p) * 2.0;
+		float a = atan(p.y, p.x);
+		// Two sets of slowly turning shafts, beating against each other.
+		float shafts = pow(0.5 + 0.5 * sin(a * 9.0 + uTime * 0.12), 6.0) * 0.6
+			+ pow(0.5 + 0.5 * sin(a * 14.0 - uTime * 0.08 + 1.3), 10.0) * 0.5;
+		float fall = pow(clamp(1.0 - r, 0.0, 1.0), 1.6);
+		float disc = 1.0 - smoothstep(0.08, 0.2, r);
+		float glow = exp(-r * 5.0);
+		vec3 col = mix(uColor, uCore, clamp(disc + glow * 0.6, 0.0, 1.0));
+		float alpha = (shafts * fall * 0.55 + glow * 0.5 + disc * 0.7) * uOpacity;
+		gl_FragColor = vec4(col, clamp(alpha, 0.0, 1.0));
+	}
+`;
+
+/** A low sun behind the temple: a soft disc with slowly turning light shafts. `rise` 0–1 fades it in. */
+export function SunRays({ size = 24, rise, ...props }) {
+	const t = usePalette();
+	const mat = useRef(null);
+	const uniforms = useMemo(
+		() => ({ uColor: { value: new THREE.Color() }, uCore: { value: new THREE.Color() }, uTime: { value: 0 }, uOpacity: { value: 0 } }),
+		[]
+	);
+	useFrame((state) => {
+		const m = mat.current;
+		if (!m) return;
+		const u = m.uniforms;
+		u.uTime.value = state.clock.elapsedTime;
+		u.uColor.value.set(t.ochre);
+		u.uCore.value.set(t.mode === "light" ? "#fff3dc" : "#ffd9a0");
+		u.uOpacity.value = (t.mode === "light" ? 0.85 : 0.5) * (rise?.get ? rise.get() : 1);
+	});
+	return (
+		<mesh {...props}>
+			<planeGeometry args={[size, size]} />
+			<shaderMaterial
+				ref={mat}
+				uniforms={uniforms}
+				vertexShader={/* glsl */ `varying vec2 vUv; void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`}
+				fragmentShader={RAYS_FRAG}
+				transparent
+				depthWrite={false}
+				fog={false}
+				blending={t.additive ? THREE.AdditiveBlending : THREE.NormalBlending}
+			/>
+		</mesh>
+	);
+}
+
+const EMBER_VERT = /* glsl */ `
+	uniform float uTime;
+	uniform float uPixelRatio;
+	uniform float uHeight;
+	attribute float aRand;
+	varying float vAlpha;
+	varying float vHot;
+	void main() {
+		vec3 p = position;
+		// Rise, sway and loop: warm dust lifting off sun-baked stone.
+		float life = fract(uTime * (0.04 + aRand * 0.05) + aRand);
+		p.y += life * uHeight;
+		p.x += sin(uTime * 0.5 + aRand * 30.0) * 0.35 * life;
+		p.z += cos(uTime * 0.4 + aRand * 20.0) * 0.25 * life;
+		vec4 mv = modelViewMatrix * vec4(p, 1.0);
+		float depth = -mv.z;
+		vAlpha = smoothstep(0.0, 0.15, life) * (1.0 - smoothstep(0.6, 1.0, life)) * smoothstep(1.0, 4.0, depth);
+		vHot = aRand;
+		gl_PointSize = min((40.0 + aRand * 50.0) * uPixelRatio / max(depth, 0.001), 7.0 * uPixelRatio);
+		gl_Position = projectionMatrix * mv;
+	}
+`;
+const EMBER_FRAG = /* glsl */ `
+	uniform vec3 uColor;
+	uniform vec3 uHotColor;
+	varying float vAlpha;
+	varying float vHot;
+	void main() {
+		float d = length(gl_PointCoord - 0.5);
+		if (d > 0.5) discard;
+		vec3 col = mix(uColor, uHotColor, step(0.7, vHot));
+		gl_FragColor = vec4(col, pow(1.0 - d * 2.0, 1.5) * vAlpha);
+	}
+`;
+
+/** Warm motes rising from a width × depth patch of ground, looping. */
+export function Embers({ count = 120, width = 9, depth = 5, height = 7, ...props }) {
+	const t = usePalette();
+	const mat = useRef(null);
+	const geometry = useMemo(() => {
+		const pos = new Float32Array(count * 3);
+		const rand = new Float32Array(count);
+		for (let i = 0; i < count; i += 1) {
+			const k = (i + 1) * 5 + 4049;
+			pos[i * 3] = (hash01(k) - 0.5) * width;
+			pos[i * 3 + 1] = hash01(k + 1) * 0.6;
+			pos[i * 3 + 2] = (hash01(k + 2) - 0.5) * depth;
+			rand[i] = hash01(k + 3);
+		}
+		const g = new THREE.BufferGeometry();
+		g.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+		g.setAttribute("aRand", new THREE.BufferAttribute(rand, 1));
+		return g;
+	}, [count, width, depth]);
+	const uniforms = useMemo(
+		() => ({
+			uTime: { value: 0 },
+			uPixelRatio: { value: 1 },
+			uHeight: { value: height },
+			uColor: { value: new THREE.Color() },
+			uHotColor: { value: new THREE.Color() },
+		}),
+		[height]
+	);
+	useFrame((state) => {
+		const m = mat.current;
+		if (!m) return;
+		m.uniforms.uTime.value = state.clock.elapsedTime;
+		m.uniforms.uPixelRatio.value = state.gl.getPixelRatio();
+		m.uniforms.uColor.value.set(t.ochre);
+		m.uniforms.uHotColor.value.set(t.accent);
+	});
+	return (
+		<points geometry={geometry} frustumCulled={false} {...props}>
+			<shaderMaterial
+				ref={mat}
+				uniforms={uniforms}
+				vertexShader={EMBER_VERT}
+				fragmentShader={EMBER_FRAG}
 				transparent
 				depthWrite={false}
 				blending={t.additive ? THREE.AdditiveBlending : THREE.NormalBlending}
