@@ -128,10 +128,35 @@ function Ground() {
 	);
 }
 
+const MOTE_VERT = /* glsl */ `
+	uniform float uPixelRatio;
+	varying float vAlpha;
+	void main() {
+		vec4 mv = modelViewMatrix * vec4(position, 1.0);
+		float depth = max(-mv.z, 0.001);
+		// Round, capped in size, and faded out near the lens: a mote drifting
+		// past the camera never becomes a big square on screen.
+		vAlpha = smoothstep(2.0, 5.0, depth);
+		gl_PointSize = min(40.0 * uPixelRatio / depth, 3.0 * uPixelRatio);
+		gl_Position = projectionMatrix * mv;
+	}
+`;
+const MOTE_FRAG = /* glsl */ `
+	uniform vec3 uColor;
+	uniform float uOpacity;
+	varying float vAlpha;
+	void main() {
+		float d = length(gl_PointCoord - 0.5);
+		if (d > 0.5) discard;
+		gl_FragColor = vec4(uColor, (1.0 - d * 2.0) * vAlpha * uOpacity);
+	}
+`;
+
 /** A few slow motes of light around the model. */
 function Motes() {
 	const t = usePalette();
 	const ref = useRef(null);
+	const mat = useRef(null);
 	const geometry = useMemo(() => {
 		const n = 220;
 		const pos = new Float32Array(n * 3);
@@ -150,12 +175,18 @@ function Motes() {
 		g.setAttribute("position", new THREE.BufferAttribute(pos, 3));
 		return g;
 	}, []);
-	useFrame((_, delta) => {
+	const [uniforms] = useState(() => ({ uPixelRatio: { value: 1 }, uColor: { value: new THREE.Color() }, uOpacity: { value: 0 } }));
+	useFrame((state, delta) => {
 		if (ref.current) ref.current.rotation.y -= delta * 0.015;
+		const m = mat.current;
+		if (!m) return;
+		m.uniforms.uPixelRatio.value = state.gl.getPixelRatio();
+		m.uniforms.uColor.value.set(t.mode === "dark" ? "#ffffff" : t.accent);
+		m.uniforms.uOpacity.value = t.mode === "dark" ? 0.55 : 0.45;
 	});
 	return (
-		<points ref={ref} geometry={geometry}>
-			<pointsMaterial color={t.mode === "dark" ? "#ffffff" : t.accent} size={0.035} sizeAttenuation transparent opacity={t.mode === "dark" ? 0.45 : 0.35} depthWrite={false} />
+		<points ref={ref} geometry={geometry} frustumCulled={false}>
+			<shaderMaterial ref={mat} uniforms={uniforms} vertexShader={MOTE_VERT} fragmentShader={MOTE_FRAG} transparent depthWrite={false} />
 		</points>
 	);
 }
