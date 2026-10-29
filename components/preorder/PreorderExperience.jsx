@@ -40,7 +40,7 @@ function scrollToStation(i) {
 }
 
 /** Flat page for browsers without WebGL: same content, same form. */
-function Fallback({ sites, counts, selected, onSelect, onDone }) {
+function Fallback({ sites, counts, price, selected, onSelect, onDone }) {
 	const ranked = [...sites].sort((a, b) => (counts?.[b.slug] ?? 0) - (counts?.[a.slug] ?? 0));
 	return (
 		<div className="mx-auto max-w-3xl px-5 py-28 text-(--pa-text)">
@@ -62,7 +62,7 @@ function Fallback({ sites, counts, selected, onSelect, onDone }) {
 				))}
 			</ol>
 			<div className="mt-12 flex justify-center">
-				<FormPanel sites={sites} selected={selected} onSelect={onSelect} onDone={onDone} narrow />
+				<FormPanel sites={sites} price={price} selected={selected} onSelect={onSelect} onDone={onDone} narrow />
 			</div>
 		</div>
 	);
@@ -72,6 +72,7 @@ export default function PreorderExperience() {
 	const [webgl] = useState(hasWebGL);
 	const [mode, setMode] = useState(initialTheme);
 	const [counts, setCounts] = useState(null);
+	const [price, setPrice] = useState(null);
 	const [selected, setSelected] = useState(PREORDER_SITES[0].slug);
 	const [hovered, setHovered] = useState(null);
 	const [flash, setFlash] = useState(null);
@@ -86,7 +87,9 @@ export default function PreorderExperience() {
 		fetch("/api/preorder", { cache: "no-store" })
 			.then((r) => r.json())
 			.then((j) => {
-				if (j?.success) setCounts(j.data.counts);
+				if (!j?.success) return;
+				setCounts(j.data.counts);
+				setPrice(j.data.price);
 			})
 			.catch(() => {});
 	}, []);
@@ -154,7 +157,7 @@ export default function PreorderExperience() {
 	if (!webgl) {
 		return (
 			<main className="min-h-screen bg-(--pa-bg) font-(family-name:--font-pre-display) font-medium" style={cssVars(palette)}>
-				<Fallback sites={PREORDER_SITES} counts={counts} selected={selected} onSelect={setSelected} onDone={onDone} />
+				<Fallback sites={PREORDER_SITES} counts={counts} price={price} selected={selected} onSelect={setSelected} onDone={onDone} />
 			</main>
 		);
 	}
@@ -169,6 +172,7 @@ export default function PreorderExperience() {
 					intro={intro}
 					sites={PREORDER_SITES}
 					counts={counts}
+					price={price}
 					selected={selected}
 					hovered={hovered}
 					onHover={setHovered}
@@ -181,7 +185,7 @@ export default function PreorderExperience() {
 				/>
 			</div>
 			<Hud station={station} mode={mode} onToggleTheme={toggleTheme} onJump={scrollToStation} percentRef={percent} />
-			<ClickSpark color={palette.amber} />
+			<ClickSpark color={palette.ochre} />
 			{/* Scroll track: the page's only job is to give the camera distance to travel. */}
 			<div ref={wrapper} id="smooth-wrapper">
 				<div ref={content} id="smooth-content">

@@ -77,7 +77,7 @@ export function HeroStation({ portrait, progress, intro }) {
 
 const WORDS = [
 	["PICK.", "A heritage site that isn't in Epocheye yet, or your own."],
-	["PRE-ORDER.", "Your name and email on a ticket. Nothing to pay."],
+	["PRE-ORDER.", "Your name on a ticket, then stamp it to pay. Full refund if we don't build it."],
 	["SEE IT FIRST.", "The tallest tower is built first, and you're the first in."],
 ];
 

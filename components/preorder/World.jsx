@@ -123,6 +123,7 @@ function Scene(props) {
 						visible={props.formVisible}
 						sites={props.sites}
 						counts={props.counts}
+						price={props.price}
 						selected={props.selected}
 						onSelect={props.onSelect}
 						onDone={props.onDone}
