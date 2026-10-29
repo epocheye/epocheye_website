@@ -5,7 +5,7 @@
 // the payment in its own window, and the API verifies it.
 
 const CHECKOUT_SRC = "https://checkout.razorpay.com/v1/checkout.js";
-const BRAND = "#2f6bff";
+const BRAND = "#14120d";
 
 let loading = null;
 

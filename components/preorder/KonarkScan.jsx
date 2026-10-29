@@ -115,13 +115,13 @@ const CLOUD_FRAG = /* glsl */ `
  * shell (driven by `assemble`, 0–1) while an ochre scan line sweeps the height.
  * `build` (0–1, optional) raises it course by course from the ground.
  * `spread` and `source` shrink and lower the waiting cloud, e.g. so the points
- * stream up out of a phone screen.
+ * stream up out of a phone screen. `fade` (0–1, optional) dims the whole cloud.
  */
 const rayCaster = new THREE.Raycaster();
 const centre = new THREE.Vector3();
 const hitPoint = new THREE.Vector3();
 
-export function KonarkScan({ assemble, build, size = 26, spread = 1, source = 0, interactive = false, ...props }) {
+export function KonarkScan({ assemble, build, fade, size = 26, spread = 1, source = 0, interactive = false, ...props }) {
 	const t = usePalette();
 	const geometry = usePointCloud();
 	const mat = useRef(null);
@@ -157,7 +157,7 @@ export function KonarkScan({ assemble, build, size = 26, spread = 1, source = 0,
 		u.uScan.value = -0.7 + ((time * 0.28) % 1.6);
 		u.uColor.value.set(t.points);
 		u.uScanColor.value.set(t.accent);
-		u.uOpacity.value = t.mode === "dark" ? 0.85 : 0.8;
+		u.uOpacity.value = (t.mode === "dark" ? 0.85 : 0.8) * (fade?.get ? fade.get() : 1);
 		const g = group.current;
 		if (!g) return;
 		// Slow spin, steered a little by the pointer.

@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { animate, svg } from "animejs";
-import { Check, Plus } from "lucide-react";
 
 import { formatPrice } from "@/lib/preorder/price";
 import { OTHER_SITE } from "@/lib/preorder/sites";
@@ -12,35 +11,31 @@ import { payForPreorder } from "./checkout";
 const EMPTY = { name: "", email: "", suggestion: "", marketingOk: false, website: "" };
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
-const input =
-	"h-12 w-full rounded-xl border border-transparent bg-(--pa-surface-2) px-4 text-[16px] text-(--pa-text) outline-none transition placeholder:text-(--pa-text-muted) focus:border-(--pa-accent) focus:bg-(--pa-surface) focus:ring-4 focus:ring-(--pa-accent-soft)";
-const label = "mb-2 block text-[13px] font-medium text-(--pa-text-soft)";
-const step = "mb-4 text-[13px] font-semibold uppercase tracking-[0.12em] text-(--pa-text-muted)";
+const field =
+	"pa-serif w-full border-0 border-b border-(--pa-line-strong) bg-transparent pb-2 pt-1 text-[20px] font-light text-(--pa-text) outline-none transition-colors placeholder:text-(--pa-text-muted) focus:border-(--pa-text)";
+const label = "pa-caps mb-2 block text-(--pa-text-muted)";
+export const boxedButton =
+	"pa-caps inline-flex h-12 items-center justify-center border border-(--pa-line-strong) px-9 text-(--pa-text) transition-colors hover:border-(--pa-text) hover:bg-(--pa-text) hover:text-(--pa-bg) disabled:cursor-wait disabled:opacity-60";
 
-/** The tick draws itself once the pre-order is confirmed. */
+/** A ring that draws itself once the pre-order is confirmed. */
 function DoneMark() {
 	const ref = useRef(null);
 	useEffect(() => {
 		const el = ref.current;
 		if (!el || window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
-		const a = animate(svg.createDrawable(el.querySelectorAll("circle, path")), {
-			draw: ["0 0", "0 1"],
-			duration: 700,
-			delay: (_, i) => i * 350,
-			ease: "inOutQuad",
-		});
+		const a = animate(svg.createDrawable(el.querySelectorAll("circle")), { draw: ["0 0", "0 1"], duration: 1400, delay: (_, i) => i * 200, ease: "inOutQuad" });
 		return () => a.revert();
 	}, []);
 	return (
-		<svg ref={ref} width="64" height="64" viewBox="0 0 64 64" fill="none" stroke="var(--pa-accent)" strokeWidth="3" aria-hidden="true">
-			<circle cx="32" cy="32" r="29" />
-			<path d="M20 33l8 8 16-17" strokeLinecap="round" strokeLinejoin="round" />
+		<svg ref={ref} width="96" height="96" viewBox="0 0 96 96" fill="none" stroke="currentColor" aria-hidden="true" className="text-(--pa-text-soft)">
+			<circle cx="48" cy="48" r="46" strokeWidth="1" />
+			<circle cx="48" cy="48" r="38" strokeWidth="0.75" opacity="0.6" />
 		</svg>
 	);
 }
 
 /**
- * Checkout for one pre-order: pick a site, add your details, pay in Razorpay
+ * Checkout for one pre-order: choose a site, sign the ledger, pay in Razorpay
  * Checkout. Paid pre-orders count on the board straight away.
  */
 export default function PreorderForm({ sites, counts, price, selected, onSelect, onDone, onSeeBoard }) {
@@ -57,8 +52,8 @@ export default function PreorderForm({ sites, counts, price, selected, onSelect,
 	async function onSubmit(e) {
 		e.preventDefault();
 		if (status === "sending") return;
-		if (form.name.trim().length < 2) return setError("Please enter your name.");
-		if (!EMAIL_RE.test(form.email.trim())) return setError("Please enter a valid email address.");
+		if (form.name.trim().length < 2) return setError("Please write your name.");
+		if (!EMAIL_RE.test(form.email.trim())) return setError("That email doesn't look right.");
 		if (selected === OTHER_SITE && form.suggestion.trim().length < 3) return setError("Tell us which site you want.");
 		setStatus("sending");
 		setError("");
@@ -81,28 +76,33 @@ export default function PreorderForm({ sites, counts, price, selected, onSelect,
 
 	if (status === "done" && result) {
 		return (
-			<div role="status" className="flex flex-col items-center px-2 py-6 text-center">
-				<DoneMark />
-				<h3 className="mt-6 text-3xl font-semibold tracking-tight text-(--pa-text)">
-					{result.alreadyPaid ? "You already have this one." : "You're in."}
+			<div role="status" className="flex flex-col items-center py-6 text-center">
+				<div className="relative grid place-items-center">
+					<DoneMark />
+					<span className="pa-serif absolute text-[22px] font-light italic text-(--pa-text)">{result.alreadyPaid ? "kept" : "yours"}</span>
+				</div>
+				<h3 className="pa-serif mt-8 text-[44px] font-extralight leading-none tracking-[-0.01em] text-(--pa-text)">
+					{result.alreadyPaid ? (
+						<>
+							Already <em className="italic">yours.</em>
+						</>
+					) : (
+						<>
+							You&apos;re <em className="italic">in.</em>
+						</>
+					)}
 				</h3>
-				<p className="mt-3 max-w-md text-[17px] leading-relaxed text-(--pa-text-soft)">
-					{`Your pre-order for ${result.label} is confirmed. We'll email you the day it goes live, and if we don't build it, you get a full refund.`}
+				<p className="pa-serif mt-5 max-w-md text-[16px] font-light leading-relaxed text-(--pa-text-soft)">
+					{`Your pre-order for ${result.label} is confirmed. We'll write the day it opens, and if we don't build it, you get a full refund.`}
 				</p>
-				<p className="mt-6 text-[13px] font-medium uppercase tracking-[0.12em] text-(--pa-text-muted)">Reference</p>
-				<p className="mt-1 font-(family-name:--font-geist-mono) text-2xl tracking-[0.12em] text-(--pa-text)">{result.reference}</p>
-				<div className="mt-8 flex flex-wrap justify-center gap-3">
-					<button
-						type="button"
-						onClick={onSeeBoard}
-						className="h-12 rounded-full bg-(--pa-accent) px-6 text-[15px] font-medium text-(--pa-on-accent) transition hover:bg-(--pa-accent-hover)">
+				<p className="pa-caps mt-8 text-(--pa-text-muted)">Reference</p>
+				<p className="pa-caps mt-2 text-[13px] tracking-[0.4em] text-(--pa-text)">{result.reference}</p>
+				<div className="mt-10 flex flex-wrap justify-center gap-3">
+					<button type="button" onClick={onSeeBoard} className={boxedButton}>
 						See the most wanted
 					</button>
-					<button
-						type="button"
-						onClick={another}
-						className="h-12 rounded-full border border-(--pa-line) px-6 text-[15px] font-medium text-(--pa-text) transition hover:bg-(--pa-surface-2)">
-						Pre-order another site
+					<button type="button" onClick={another} className="pa-caps h-12 px-6 text-(--pa-text-muted) underline-offset-4 transition-colors hover:text-(--pa-text) hover:underline">
+						Pre-order another
 					</button>
 				</div>
 			</div>
@@ -111,68 +111,54 @@ export default function PreorderForm({ sites, counts, price, selected, onSelect,
 
 	return (
 		<form onSubmit={onSubmit} noValidate>
-			<p className={step}>1 · Choose a site</p>
-			<div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3" role="radiogroup" aria-label="Site to pre-order">
-				{sites.map((s) => {
-					const on = s.slug === selected;
-					const n = counts?.[s.slug];
+			<p className={label}>I · Choose a site</p>
+			<div className="mt-4 grid grid-cols-1 border-t border-(--pa-line) sm:grid-cols-2 sm:gap-x-8" role="radiogroup" aria-label="Site to pre-order">
+				{[...sites, null].map((s) => {
+					const slug = s ? s.slug : OTHER_SITE;
+					const on = slug === selected;
+					const n = s ? counts?.[s.slug] : null;
 					return (
 						<button
-							key={s.slug}
+							key={slug}
 							type="button"
 							role="radio"
 							aria-checked={on}
-							onClick={() => onSelect(s.slug)}
-							className={`rounded-2xl border px-4 py-3 text-left transition ${
-								on
-									? "border-(--pa-accent) bg-(--pa-accent-soft) ring-1 ring-(--pa-accent)"
-									: "border-(--pa-line) hover:border-(--pa-text-muted) hover:bg-(--pa-surface-2)"
-							}`}>
-							<span className="block text-[15px] font-medium leading-snug text-(--pa-text)">{s.name}</span>
-							<span className="mt-0.5 block text-[12px] text-(--pa-text-muted)">
-								{s.place}
-								{n ? ` · ${n} pre-order${n === 1 ? "" : "s"}` : ""}
+							onClick={() => onSelect(slug)}
+							className="group flex items-baseline justify-between gap-3 border-b border-(--pa-line) py-2.5 text-left">
+							<span className={`pa-serif text-[17px] font-light transition-colors ${on ? "text-(--pa-text)" : "text-(--pa-text-muted) group-hover:text-(--pa-text-soft)"}`}>
+								<span className={`mr-2 inline-block w-2 transition-opacity ${on ? "opacity-100" : "opacity-0"}`} aria-hidden="true">
+									·
+								</span>
+								{s ? s.name : <em className="italic">Another site</em>}
 							</span>
+							<span className="pa-caps shrink-0 text-[9px] text-(--pa-text-muted)">{s ? `${s.place}${n ? ` · ${n}` : ""}` : "your own"}</span>
 						</button>
 					);
 				})}
-				<button
-					type="button"
-					role="radio"
-					aria-checked={selected === OTHER_SITE}
-					onClick={() => onSelect(OTHER_SITE)}
-					className={`flex items-center gap-2 rounded-2xl border border-dashed px-4 py-3 text-left transition ${
-						selected === OTHER_SITE
-							? "border-(--pa-accent) bg-(--pa-accent-soft) text-(--pa-text)"
-							: "border-(--pa-line) text-(--pa-text-soft) hover:border-(--pa-text-muted)"
-					}`}>
-					<Plus className="h-4 w-4 shrink-0" aria-hidden="true" />
-					<span className="text-[15px] font-medium">Another site</span>
-				</button>
 			</div>
 
 			{selected === OTHER_SITE && (
-				<div className="mt-4">
+				<div className="mt-6">
 					<label htmlFor="po-suggestion" className={label}>
-						Which site?
+						Which site
 					</label>
-					<input id="po-suggestion" value={form.suggestion} onChange={set("suggestion")} placeholder="e.g. Chittorgarh Fort" className={input} />
+					<input id="po-suggestion" value={form.suggestion} onChange={set("suggestion")} placeholder="Chittorgarh Fort" className={field} />
 				</div>
 			)}
 
-			<p className={`${step} mt-10`}>2 · Your details</p>
-			<div className="grid gap-4 sm:grid-cols-2">
+			<p className={`${label} mt-10`}>II · Your name in the ledger</p>
+			<div className="mt-4 grid gap-6 sm:grid-cols-2">
 				<div>
-					<label htmlFor="po-name" className={label}>
+					<label htmlFor="po-name" className="sr-only">
 						Name
 					</label>
-					<input id="po-name" autoComplete="name" value={form.name} onChange={set("name")} className={input} />
+					<input id="po-name" autoComplete="name" value={form.name} onChange={set("name")} placeholder="Your name" className={field} />
 				</div>
 				<div>
-					<label htmlFor="po-email" className={label}>
+					<label htmlFor="po-email" className="sr-only">
 						Email
 					</label>
-					<input id="po-email" type="email" autoComplete="email" value={form.email} onChange={set("email")} className={input} />
+					<input id="po-email" type="email" autoComplete="email" value={form.email} onChange={set("email")} placeholder="you@example.com" className={field} />
 				</div>
 			</div>
 
@@ -182,41 +168,36 @@ export default function PreorderForm({ sites, counts, price, selected, onSelect,
 				<input id="po-website" tabIndex={-1} autoComplete="off" value={form.website} onChange={set("website")} />
 			</div>
 
-			<label className="mt-5 flex cursor-pointer items-center gap-3 text-[14px] text-(--pa-text-soft)">
-				<span className="relative grid h-5 w-5 shrink-0 place-items-center">
-					<input type="checkbox" checked={form.marketingOk} onChange={set("marketingOk")} className="peer absolute inset-0 cursor-pointer opacity-0" />
-					<span className="h-5 w-5 rounded-md border border-(--pa-line) bg-(--pa-surface-2) transition peer-checked:border-(--pa-accent) peer-checked:bg-(--pa-accent) peer-focus-visible:ring-4 peer-focus-visible:ring-(--pa-accent-soft)" />
-					<Check className="pointer-events-none absolute h-3.5 w-3.5 text-(--pa-on-accent) opacity-0 peer-checked:opacity-100" aria-hidden="true" />
-				</span>
-				Also email me when other sites open in Epocheye.
+			<label className="pa-serif mt-6 flex cursor-pointer items-center gap-3 text-[15px] font-light text-(--pa-text-soft)">
+				<input type="checkbox" checked={form.marketingOk} onChange={set("marketingOk")} className="peer sr-only" />
+				<span className="grid h-3.5 w-3.5 place-items-center border border-(--pa-line-strong) peer-checked:bg-(--pa-text) peer-focus-visible:outline peer-focus-visible:outline-1 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-(--pa-text)" />
+				Write to me when other sites open.
 			</label>
 
-			<div className="mt-10 flex items-baseline justify-between border-t border-(--pa-line) pt-6">
+			<div className="mt-10 flex items-end justify-between border-t border-(--pa-line) pt-6">
 				<div>
-					<p className="text-[13px] text-(--pa-text-muted)">Pre-order</p>
-					<p className="text-[17px] font-medium text-(--pa-text)">{siteLabel}</p>
+					<p className="pa-caps text-(--pa-text-muted)">III · The pre-order</p>
+					<p className="pa-serif mt-2 text-[22px] font-light text-(--pa-text)">{siteLabel}</p>
 				</div>
-				<p className="text-2xl font-semibold tracking-tight text-(--pa-text)">{priceLabel || "–"}</p>
+				<p className="pa-serif text-[34px] font-extralight leading-none text-(--pa-text)">{priceLabel || "—"}</p>
 			</div>
 
-			<p aria-live="polite" className="mt-4 min-h-[1.25rem] text-[14px] text-(--pa-error)">
+			<p aria-live="polite" className="pa-serif mt-4 min-h-[1.5rem] text-[15px] italic text-(--pa-error)">
 				{error}
 			</p>
 
-			<button
-				type="submit"
-				disabled={status === "sending"}
-				className="mt-2 h-14 w-full rounded-full bg-(--pa-accent) text-[17px] font-medium text-(--pa-on-accent) transition hover:bg-(--pa-accent-hover) active:scale-[0.99] disabled:cursor-wait disabled:opacity-70">
-				{status === "sending" ? "Opening secure payment…" : priceLabel ? `Pay ${priceLabel}` : "Continue to payment"}
-			</button>
-
-			<p className="mt-4 text-center text-[13px] leading-relaxed text-(--pa-text-muted)">
-				Full refund if we don&apos;t build it. Secure payment by Razorpay. We use your details only for this pre-order, as set out in our{" "}
-				<Link href="/privacy" className="underline underline-offset-2 hover:text-(--pa-text)">
-					privacy policy
-				</Link>
-				.
-			</p>
+			<div className="mt-4 flex flex-col items-center gap-4">
+				<button type="submit" disabled={status === "sending"} className={`${boxedButton} w-full sm:w-auto sm:min-w-[260px]`}>
+					{status === "sending" ? "Opening payment" : priceLabel ? `Pay ${priceLabel}` : "Continue to payment"}
+				</button>
+				<p className="pa-serif text-center text-[14px] font-light italic text-(--pa-text-muted)">
+					Full refund if we don&apos;t build it. Payment by Razorpay. Your details serve this pre-order only, per our{" "}
+					<Link href="/privacy" className="underline underline-offset-2 hover:text-(--pa-text)">
+						privacy policy
+					</Link>
+					.
+				</p>
+			</div>
 		</form>
 	);
 }
