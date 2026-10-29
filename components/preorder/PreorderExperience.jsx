@@ -87,15 +87,20 @@ export default function PreorderExperience() {
 		fetch("/api/preorder", { cache: "no-store" })
 			.then((r) => r.json())
 			.then((j) => {
-				if (!j?.success) return;
-				setCounts(j.data.counts);
-				setPrice(j.data.price);
+				if (j?.success) setCounts(j.data.counts);
 			})
 			.catch(() => {});
 	}, []);
 
 	useEffect(() => {
 		loadCounts();
+		// Per visitor (rupees in India), so it is never cached with the counts.
+		fetch("/api/preorder/price", { cache: "no-store" })
+			.then((r) => r.json())
+			.then((j) => {
+				if (j?.success) setPrice(j.data.price);
+			})
+			.catch(() => {});
 	}, [loadCounts]);
 
 	// GSAP owns scrolling: ScrollSmoother on desktop, native on touch, and one

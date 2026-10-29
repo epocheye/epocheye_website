@@ -8,7 +8,7 @@ import {
 	hashPreorderIp,
 	reservePreorder,
 } from "@/lib/server/preorderRepository";
-import { createPreorderOrder, preorderPrice, razorpayKeyId } from "@/lib/server/preorderPayment";
+import { createPreorderOrder, preorderPriceFor, razorpayKeyId, visitorCountry } from "@/lib/server/preorderPayment";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -23,13 +23,13 @@ function clean(value, max) {
 	return typeof value === "string" ? value.trim().replace(/\s+/g, " ").slice(0, max) : "";
 }
 
-// Public: the leaderboard on /preorder (paid pre-orders for the listed sites
-// only; "other" suggestions are never shown) and the price to show.
+// Public: the leaderboard on /preorder. Paid pre-orders for the listed sites
+// only; "other" suggestions are never shown. The price is /api/preorder/price.
 export async function GET() {
 	try {
 		const counts = await countPreordersBySlug(SLUGS);
 		return NextResponse.json(
-			{ success: true, data: { counts, price: preorderPrice() } },
+			{ success: true, data: { counts } },
 			{ headers: { "Cache-Control": "public, s-maxage=30, stale-while-revalidate=120" } }
 		);
 	} catch (err) {
@@ -87,7 +87,7 @@ export async function POST(request) {
 		// Already paid for this site with this email: never charge twice.
 		if (paid) return NextResponse.json({ success: true, data: { reference, alreadyPaid: true } });
 
-		const price = preorderPrice();
+		const price = await preorderPriceFor(visitorCountry(request));
 		const order = await createPreorderOrder({ reference, price, siteSlug, email });
 		await attachPreorderOrder({ reference, orderId: order.id, amount: order.amount, currency: order.currency });
 
