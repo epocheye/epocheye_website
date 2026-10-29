@@ -9,6 +9,7 @@ import {
 	reservePreorder,
 } from "@/lib/server/preorderRepository";
 import { createPreorderOrder, preorderPriceFor, razorpayKeyId, visitorCountry } from "@/lib/server/preorderPayment";
+import { razorpayEnv } from "@/lib/server/razorpay";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -102,6 +103,10 @@ export async function POST(request) {
 		});
 	} catch (err) {
 		console.error("[api/preorder] failed:", err?.error?.description ?? err?.message ?? err);
+		// Bad credentials: name the (public) key id so it can be checked against the dashboard.
+		if (err?.statusCode === 401) {
+			console.error(`[api/preorder] Razorpay rejected key id "${razorpayEnv("RAZORPAY_KEY_ID")}": it and RAZORPAY_KEY_SECRET must be one live pair`);
+		}
 		return fail(500, "We couldn't start your pre-order. Please try again in a moment.");
 	}
 }

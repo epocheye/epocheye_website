@@ -2,6 +2,7 @@ import { after, NextResponse } from "next/server";
 
 import { sendPreorderPaidEmails } from "@/lib/server/preorderEmails";
 import { confirmPreorderPayment, isValidWebhookSignature } from "@/lib/server/preorderPayment";
+import { razorpayEnv } from "@/lib/server/razorpay";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -10,7 +11,7 @@ export const dynamic = "force-dynamic";
 // reached /api/preorder/verify, e.g. the tab closed mid-payment. Webhooks are
 // account-wide, so orders from the app are acknowledged and ignored.
 export async function POST(request) {
-	if (!process.env.RAZORPAY_WEBHOOK_SECRET) {
+	if (!razorpayEnv("RAZORPAY_WEBHOOK_SECRET")) {
 		console.error("[api/preorder/webhook] RAZORPAY_WEBHOOK_SECRET is not set");
 		return NextResponse.json({ ok: false }, { status: 503 });
 	}
