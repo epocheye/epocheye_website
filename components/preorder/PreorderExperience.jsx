@@ -44,11 +44,11 @@ function Fallback({ sites, counts, selected, onSelect, onDone }) {
 	const ranked = [...sites].sort((a, b) => (counts?.[b.slug] ?? 0) - (counts?.[a.slug] ?? 0));
 	return (
 		<div className="mx-auto max-w-3xl px-5 py-28 text-(--pa-text)">
-			<h1 className="font-montserrat text-5xl font-semibold uppercase">
+			<h1 className="font-(family-name:--font-pre-display) text-5xl font-bold uppercase">
 				Pre-order <span className="text-(--pa-amber-text)">the past.</span>
 			</h1>
 			<p className="mt-4 text-(--pa-text-soft)">Pick the heritage site you want to see next. The most-wanted gets built first.</p>
-			<ol className="mt-10 space-y-2 font-mono">
+			<ol className="mt-10 space-y-2 font-(family-name:--font-pre-mono)">
 				{ranked.map((s, i) => (
 					<li key={s.slug}>
 						<button type="button" onClick={() => onSelect(s.slug)} className="flex w-full justify-between border-b border-(--pa-line) py-3 text-left">
@@ -153,14 +153,14 @@ export default function PreorderExperience() {
 
 	if (!webgl) {
 		return (
-			<main className="min-h-screen bg-(--pa-bg)" style={cssVars(palette)}>
+			<main className="min-h-screen bg-(--pa-bg) font-(family-name:--font-pre-display) font-medium" style={cssVars(palette)}>
 				<Fallback sites={PREORDER_SITES} counts={counts} selected={selected} onSelect={setSelected} onDone={onDone} />
 			</main>
 		);
 	}
 
 	return (
-		<main className="bg-(--pa-bg)" style={cssVars(palette)}>
+		<main className="bg-(--pa-bg) font-(family-name:--font-pre-display) font-medium" style={cssVars(palette)}>
 			<Boot onDone={startIntro} />
 			<div className="fixed inset-0 z-10">
 				<World

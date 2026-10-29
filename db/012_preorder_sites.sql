@@ -1,5 +1,6 @@
 -- Migration: pre-orders are now for sites not yet in the app (lib/preorder/sites.js).
--- Run manually after 011_preorders.sql, against the same DB.
+-- Optional: lib/server/preorderRepository.js adds the column itself on the
+-- first pre-order if it is missing. Kept here as the record of the change.
 --
 -- monument_slug now holds a site slug from that list, or 'other' with the
 -- visitor's own suggestion in the new column. Counts per slug feed the public

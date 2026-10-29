@@ -70,7 +70,11 @@ const CLOUD_VERT = /* glsl */ `
 		vScan = 1.0 - smoothstep(0.0, 0.03, abs(position.y - uScan));
 		vAlpha = 0.35 + 0.65 * t;
 		vec4 mv = modelViewMatrix * vec4(p, 1.0);
-		gl_PointSize = uSize * uPixelRatio * (1.0 + vScan * 0.7) / -mv.z;
+		float depth = -mv.z;
+		// Scattered points can drift right up to the camera: cap their size and
+		// fade them out there, or a few huge additive sprites flood the screen.
+		vAlpha *= smoothstep(0.8, 3.0, depth);
+		gl_PointSize = min(uSize * uPixelRatio * (1.0 + vScan * 0.7) / max(depth, 0.001), 10.0 * uPixelRatio);
 		gl_Position = projectionMatrix * mv;
 	}
 `;
@@ -296,7 +300,9 @@ const GRID_FRAG = /* glsl */ `
 	varying vec2 vWorld;
 	varying float vDepth;
 	float line(vec2 p, float s, float w) {
-		vec2 c = abs(fract(p / s - 0.5) - 0.5) / fwidth(p / s);
+		// +epsilon: the derivative can be 0 near the horizon, and the NaN it
+		// makes would be smeared across the whole frame by the bloom pass.
+		vec2 c = abs(fract(p / s - 0.5) - 0.5) / (fwidth(p / s) + 1e-5);
 		return 1.0 - min(min(c.x, c.y) / w, 1.0);
 	}
 	void main() {
@@ -305,7 +311,7 @@ const GRID_FRAG = /* glsl */ `
 		float pulse = smoothstep(0.96, 1.0, 1.0 - abs(fract(-vWorld.y * 0.015 - uTime * 0.08) - 0.5) * 2.0);
 		float fade = 1.0 - smoothstep(14.0, 46.0, vDepth);
 		vec3 col = mix(uColor, uAccent, pulse * major);
-		float a = (fine * 0.22 + major * (0.55 + pulse)) * fade;
+		float a = clamp((fine * 0.22 + major * (0.55 + pulse)) * fade, 0.0, 1.0);
 		gl_FragColor = vec4(col, a);
 	}
 `;
@@ -346,5 +352,87 @@ export function GridFloor() {
 				fragmentShader={GRID_FRAG}
 			/>
 		</mesh>
+	);
+}
+
+/* ───────────────────────── Dust ───────────────────────── */
+
+const DUST_VERT = /* glsl */ `
+	uniform float uTime;
+	uniform float uPixelRatio;
+	attribute float aRand;
+	varying float vAlpha;
+	void main() {
+		vec3 p = position;
+		p.y += sin(uTime * (0.2 + aRand * 0.4) + aRand * 20.0) * 0.6;
+		p.x += cos(uTime * (0.15 + aRand * 0.3) + aRand * 13.0) * 0.4;
+		vec4 mv = modelViewMatrix * vec4(p, 1.0);
+		float depth = -mv.z;
+		vAlpha = smoothstep(1.0, 4.0, depth) * (0.5 + 0.5 * sin(uTime * 2.0 + aRand * 40.0));
+		gl_PointSize = min(60.0 * uPixelRatio / max(depth, 0.001), 6.0 * uPixelRatio);
+		gl_Position = projectionMatrix * mv;
+	}
+`;
+const DUST_FRAG = /* glsl */ `
+	uniform vec3 uColor;
+	varying float vAlpha;
+	void main() {
+		float d = length(gl_PointCoord - 0.5);
+		if (d > 0.5) discard;
+		gl_FragColor = vec4(uColor, (1.0 - d * 2.0) * vAlpha * 0.8);
+	}
+`;
+
+/**
+ * Drifting motes along the corridor. Own shader rather than drei's Sparkles so
+ * motes that drift up to the camera stay small and fade out instead of
+ * becoming screen-sized sprites that blow the bloom pass out to white.
+ */
+const DUST_AREA = [30, 14, 160];
+const DUST_CENTER = [0, 6, -66];
+// Deterministic hash: render-pure, and the same motes on every visit.
+const hash01 = (n) => {
+	const x = Math.sin(n * 12.9898) * 43758.5453;
+	return x - Math.floor(x);
+};
+
+export function Dust({ count, color, seed = 1 }) {
+	const t = usePalette();
+	const mat = useRef(null);
+	const geometry = useMemo(() => {
+		const pos = new Float32Array(count * 3);
+		const rand = new Float32Array(count);
+		for (let i = 0; i < count; i += 1) {
+			const k = (i + 1) * 4 + seed * 7919;
+			pos[i * 3] = DUST_CENTER[0] + (hash01(k) - 0.5) * DUST_AREA[0];
+			pos[i * 3 + 1] = DUST_CENTER[1] + (hash01(k + 1) - 0.5) * DUST_AREA[1];
+			pos[i * 3 + 2] = DUST_CENTER[2] + (hash01(k + 2) - 0.5) * DUST_AREA[2];
+			rand[i] = hash01(k + 3);
+		}
+		const g = new THREE.BufferGeometry();
+		g.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+		g.setAttribute("aRand", new THREE.BufferAttribute(rand, 1));
+		return g;
+	}, [count, seed]);
+	const uniforms = useMemo(() => ({ uTime: { value: 0 }, uPixelRatio: { value: 1 }, uColor: { value: new THREE.Color() } }), []);
+	useFrame((state) => {
+		const m = mat.current;
+		if (!m) return;
+		m.uniforms.uTime.value = state.clock.elapsedTime;
+		m.uniforms.uPixelRatio.value = state.gl.getPixelRatio();
+		m.uniforms.uColor.value.set(color ?? t.blue);
+	});
+	return (
+		<points geometry={geometry} frustumCulled={false}>
+			<shaderMaterial
+				ref={mat}
+				uniforms={uniforms}
+				vertexShader={DUST_VERT}
+				fragmentShader={DUST_FRAG}
+				transparent
+				depthWrite={false}
+				blending={t.additive ? THREE.AdditiveBlending : THREE.NormalBlending}
+			/>
+		</points>
 	);
 }

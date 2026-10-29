@@ -3,12 +3,11 @@
 import { Suspense, useState } from "react";
 import * as THREE from "three";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { Sparkles } from "@react-three/drei";
 import { Bloom, ChromaticAberration, EffectComposer, Noise, Vignette } from "@react-three/postprocessing";
 
 import { ThemeContext, usePalette } from "./theme";
 import { STATIONS, isPortrait, smoothstep } from "./stations";
-import { GridFloor } from "./Holo";
+import { Dust, GridFloor } from "./Holo";
 import { AppStation, BoardStation, FormStation, Gates, HeroStation, HowStation } from "./Stations3D";
 
 const camA = new THREE.Vector3();
@@ -78,8 +77,8 @@ function Scene(props) {
 			<color attach="background" args={[t.bg]} />
 			<fog attach="fog" args={[t.bg, 24, 64]} />
 			<GridFloor />
-			<Sparkles count={small ? 120 : 280} scale={[30, 14, 160]} position={[0, 6, -66]} size={2.4} speed={0.35} color={t.blue} opacity={0.8} />
-			<Sparkles count={small ? 40 : 90} scale={[30, 14, 160]} position={[0, 6, -66]} size={3} speed={0.5} color={t.amber} opacity={0.8} />
+			<Dust count={small ? 160 : 360} color={t.blue} />
+			<Dust count={small ? 50 : 110} color={t.amber} seed={2} />
 			<Gates />
 
 			{/* Text fetches its font: suspend the stations, never the room. */}

@@ -1,6 +1,7 @@
 import PreorderClient from "@/components/preorder/PreorderClient";
 import { PREORDER_SITES } from "@/lib/preorder/sites";
 import { PLAY_STORE_URL, SITE_NAME } from "@/lib/site";
+import { rajdhani, shareTechMono } from "./fonts";
 
 const TITLE = "Pre-order the next Epocheye site";
 const DESCRIPTION =
@@ -40,7 +41,9 @@ export default function Page() {
 					<a href={PLAY_STORE_URL}>Get Epocheye on Google Play</a>.
 				</p>
 			</div>
-			<PreorderClient />
+			<div className={`${rajdhani.variable} ${shareTechMono.variable}`}>
+				<PreorderClient />
+			</div>
 		</>
 	);
 }

@@ -83,8 +83,14 @@ export function initialTheme() {
 	return window.matchMedia?.("(prefers-color-scheme: light)").matches ? "light" : "dark";
 }
 
+// 3D text (troika needs .woff). The DOM layer uses the same faces through
+// next/font in app/preorder/fonts.js.
 export const FONTS = {
-	display: "/fonts/preorder/montserrat-alternates-latin-600-normal.woff",
-	body: "/fonts/preorder/montserrat-alternates-latin-400-normal.woff",
-	mono: "/fonts/preorder/geist-mono-latin-400-normal.woff",
+	display: "/fonts/preorder/rajdhani-latin-700-normal.woff",
+	body: "/fonts/preorder/rajdhani-latin-500-normal.woff",
+	mono: "/fonts/preorder/share-tech-mono-latin-400-normal.woff",
 };
+
+// Rajdhani is narrow and sets small for its size; scale it up so layouts tuned
+// in world units keep their visual weight.
+export const FONT_SCALE = { display: 1.2, body: 1.15, mono: 1 };

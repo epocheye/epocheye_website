@@ -6,7 +6,7 @@ import { useFrame } from "@react-three/fiber";
 import { Html, Text } from "@react-three/drei";
 
 import { PLAY_STORE_URL } from "@/lib/site";
-import { FONTS, usePalette } from "./theme";
+import { FONTS, FONT_SCALE, usePalette } from "./theme";
 import { STATIONS, stationWeight } from "./stations";
 import { Gate, HoloPanel, HoloRings, KonarkScan } from "./Holo";
 import FormPanel from "./FormPanel";
@@ -14,9 +14,15 @@ import FormPanel from "./FormPanel";
 const Z = STATIONS.map((s) => s.look[2]);
 const easeOut = (t) => 1 - Math.pow(1 - Math.min(1, Math.max(0, t)), 4);
 
-function T({ font = "body", children, ...props }) {
+function T({ font = "body", fontSize, children, ...props }) {
 	return (
-		<Text font={FONTS[font]} anchorX="center" anchorY="middle" material-toneMapped={false} {...props}>
+		<Text
+			font={FONTS[font]}
+			fontSize={fontSize * FONT_SCALE[font]}
+			anchorX="center"
+			anchorY="middle"
+			material-toneMapped={false}
+			{...props}>
 			{children}
 		</Text>
 	);
@@ -42,9 +48,12 @@ export function Gates() {
 export function HeroStation({ portrait, progress, intro }) {
 	const t = usePalette();
 	const title = useRef(null);
+	const scan = useRef(null);
 	// Points hold their shape at the hero and scatter as the camera leaves.
 	const assemble = { get: () => intro.get() * (0.35 + 0.65 * stationWeight(progress.get(), 0)) };
 	useFrame(() => {
+		// Skip drawing 90k points once the hero is well behind the camera.
+		if (scan.current) scan.current.visible = progress.get() < 0.3;
 		const g = title.current;
 		if (!g) return;
 		const k = easeOut(intro.get() * 1.3 - 0.2);
@@ -54,7 +63,9 @@ export function HeroStation({ portrait, progress, intro }) {
 	const cloud = portrait ? { position: [0, 5.2, -1], scale: 3.1 } : { position: [4.3, 2.3, -1.5], scale: 3.7 };
 	return (
 		<>
-			<KonarkScan assemble={assemble} position={cloud.position} scale={cloud.scale} size={portrait ? 16 : 19} />
+			<group ref={scan}>
+				<KonarkScan assemble={assemble} position={cloud.position} scale={cloud.scale} size={portrait ? 16 : 19} />
+			</group>
 			<HoloRings radius={portrait ? 2.6 : 3.4} position={[cloud.position[0], 0.02, cloud.position[2]]} />
 			<group position={[cloud.position[0], 0, cloud.position[2]]}>
 				<T font="mono" fontSize={0.16} letterSpacing={0.2} color={t.amberText} position={[0, portrait ? 7.8 : 5.4, 0]}>

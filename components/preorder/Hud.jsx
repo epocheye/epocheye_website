@@ -58,7 +58,7 @@ export function Boot({ onDone }) {
 	return (
 		<div
 			ref={ref}
-			className="fixed inset-0 z-[90] flex flex-col justify-between bg-(--pa-bg) p-6 font-mono text-(--pa-text) sm:p-10"
+			className="fixed inset-0 z-[90] flex flex-col justify-between bg-(--pa-bg) p-6 font-(family-name:--font-pre-mono) text-(--pa-text) sm:p-10"
 			style={{ clipPath: "inset(0% 0% 0% 0%)" }}
 			aria-hidden="true">
 			<div className="space-y-2 text-[11px] uppercase tracking-[0.18em] sm:text-xs">
@@ -70,7 +70,7 @@ export function Boot({ onDone }) {
 				))}
 			</div>
 			<div className="flex items-end justify-between">
-				<span data-count className="font-montserrat text-[22vw] font-semibold leading-none tracking-tight sm:text-[13vw]">
+				<span data-count className="font-(family-name:--font-pre-display) text-[22vw] font-bold leading-none tracking-tight sm:text-[13vw]">
 					000
 				</span>
 				<span className="mb-4 text-[11px] uppercase tracking-[0.2em] text-(--pa-text-muted)">% LOADED</span>
@@ -173,7 +173,7 @@ export function Hud({ station, mode, onToggleTheme, onJump, percentRef }) {
 			<Corners />
 			<Reticle />
 			<header className="pointer-events-none fixed inset-x-0 top-0 z-40 flex items-center justify-between px-6 py-6 sm:px-11 sm:py-8">
-				<Link href="/" className="pointer-events-auto font-montserrat text-sm font-semibold tracking-[0.2em] text-(--pa-text)">
+				<Link href="/" className="pointer-events-auto font-(family-name:--font-pre-display) text-sm font-bold tracking-[0.2em] text-(--pa-text)">
 					EPOCHEYE
 				</Link>
 				<div className="pointer-events-auto flex items-center gap-2 sm:gap-3">
@@ -189,7 +189,7 @@ export function Hud({ station, mode, onToggleTheme, onJump, percentRef }) {
 							href={PLAY_STORE_URL}
 							target="_blank"
 							rel="noopener noreferrer"
-							className="block bg-(--pa-blue) px-4 py-2.5 font-mono text-[10px] uppercase tracking-[0.2em] text-white shadow-[0_0_30px_-6px_var(--pa-blue-glow)] sm:px-5 sm:py-3 sm:text-[11px]">
+							className="block bg-(--pa-blue) px-4 py-2.5 font-(family-name:--font-pre-mono) text-[10px] uppercase tracking-[0.2em] text-white shadow-[0_0_30px_-6px_var(--pa-blue-glow)] sm:px-5 sm:py-3 sm:text-[11px]">
 							Get the app ↗
 						</a>
 					</Magnet>
@@ -203,7 +203,7 @@ export function Hud({ station, mode, onToggleTheme, onJump, percentRef }) {
 						type="button"
 						onClick={() => onJump(i)}
 						aria-current={station === i ? "step" : undefined}
-						className={`group flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.22em] transition-colors ${
+						className={`group flex items-center gap-3 font-(family-name:--font-pre-mono) text-[10px] uppercase tracking-[0.22em] transition-colors ${
 							station === i ? "text-(--pa-amber-text)" : "text-(--pa-text-muted) hover:text-(--pa-text)"
 						}`}>
 						<span className="opacity-0 transition-opacity group-hover:opacity-100">{s.label}</span>
@@ -213,14 +213,14 @@ export function Hud({ station, mode, onToggleTheme, onJump, percentRef }) {
 				))}
 			</nav>
 
-			<div className="pointer-events-none fixed bottom-6 left-6 z-40 font-mono text-[10px] uppercase tracking-[0.22em] text-(--pa-text-muted) sm:bottom-8 sm:left-11 sm:text-[11px]">
+			<div className="pointer-events-none fixed bottom-6 left-6 z-40 font-(family-name:--font-pre-mono) text-[10px] uppercase tracking-[0.22em] text-(--pa-text-muted) sm:bottom-8 sm:left-11 sm:text-[11px]">
 				<div className="mb-1 text-(--pa-blue-text)">
 					SECTOR {String(station).padStart(2, "0")} / {String(STATION_COUNT - 1).padStart(2, "0")}
 				</div>
 				<ScrambleText text={STATIONS[station].label.toUpperCase()} className="text-(--pa-text)" />
 			</div>
 
-			<div className="pointer-events-none fixed bottom-6 right-6 z-40 flex items-center gap-4 font-mono text-[10px] uppercase tracking-[0.22em] text-(--pa-text-muted) sm:bottom-8 sm:right-11 sm:text-[11px]">
+			<div className="pointer-events-none fixed bottom-6 right-6 z-40 flex items-center gap-4 font-(family-name:--font-pre-mono) text-[10px] uppercase tracking-[0.22em] text-(--pa-text-muted) sm:bottom-8 sm:right-11 sm:text-[11px]">
 				<span className="hidden sm:inline">
 					<Clock />
 				</span>
