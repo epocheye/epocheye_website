@@ -83,6 +83,11 @@ export function cssVars(t) {
 		"--pa-text-muted": t.textMuted,
 		"--pa-line": mix(t.text, 18),
 		"--pa-error": t.error,
+		// Frosted glass for the DOM controls and panels over the scene.
+		"--pa-glass": mix(t.mode === "light" ? "#fffaf4" : "#2a1d16", t.mode === "light" ? 55 : 60),
+		"--pa-glass-strong": mix(t.mode === "light" ? "#fffaf4" : "#2a1d16", t.mode === "light" ? 78 : 82),
+		"--pa-glass-line": t.mode === "light" ? "rgba(255, 255, 255, 0.75)" : "rgba(255, 240, 228, 0.14)",
+		"--pa-glass-shadow": t.mode === "light" ? "0 10px 40px -12px rgba(90, 52, 30, 0.28)" : "0 10px 40px -12px rgba(0, 0, 0, 0.6)",
 		colorScheme: t.mode,
 	};
 }

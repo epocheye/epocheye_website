@@ -12,15 +12,11 @@ const EMPTY = { name: "", email: "", suggestion: "", marketingOk: false, website
 // Colours come from the CSS variables set by the page (theme.js cssVars), so
 // the form follows the light/dark switch even inside the 3D scene.
 const field =
-	"w-full border border-(--pa-line) bg-(--pa-bg)/60 px-4 py-3 font-(family-name:--font-pre-mono) text-[14px] text-(--pa-text) outline-none transition-colors placeholder:text-(--pa-text-muted) focus:border-(--pa-accent) focus:shadow-[0_0_0_3px_var(--pa-accent-glow)]";
+	"w-full rounded-2xl border border-(--pa-glass-line) bg-(--pa-glass) px-4 py-3 backdrop-blur-xl font-(family-name:--font-pre-mono) text-[14px] text-(--pa-text) outline-none transition-colors placeholder:text-(--pa-text-muted) focus:border-(--pa-accent) focus:shadow-[0_0_0_3px_var(--pa-accent-glow)]";
 const label = "mb-2 block font-(family-name:--font-pre-mono) text-[10px] uppercase tracking-[0.24em] text-(--pa-accent-text)";
 
-function Corner({ className }) {
-	return <span aria-hidden="true" className={`pointer-events-none absolute h-4 w-4 border-(--pa-ochre) ${className}`} />;
-}
-
 /**
- * The pre-order form, styled as a terminal. Rendered as real DOM: placed in the
+ * The pre-order form, on a frosted-glass panel. Rendered as real DOM: placed in the
  * 3D scene through drei's <Html transform>, or flat in the no-WebGL fallback.
  */
 export default function FormPanel({ sites, price, selected, onSelect, onDone, narrow = false }) {
@@ -58,15 +54,11 @@ export default function FormPanel({ sites, price, selected, onSelect, onDone, na
 
 	return (
 		<div
-			className={`${narrow ? "w-[340px] p-6" : "w-[440px] p-8"} relative border border-(--pa-accent)/40 bg-(--pa-panel)/90 text-(--pa-text) shadow-[0_0_80px_-16px_var(--pa-accent-glow)] backdrop-blur-md`}>
-			<Corner className="-left-px -top-px border-l-2 border-t-2" />
-			<Corner className="-right-px -top-px border-r-2 border-t-2" />
-			<Corner className="-bottom-px -left-px border-b-2 border-l-2" />
-			<Corner className="-bottom-px -right-px border-b-2 border-r-2" />
+			className={`${narrow ? "w-[340px] p-6" : "w-[440px] p-8"} relative rounded-[28px] border border-(--pa-glass-line) bg-(--pa-glass-strong) text-(--pa-text) shadow-(--pa-glass-shadow) backdrop-blur-2xl`}>
 			{status === "done" && result ? (
 				<div role="status">
 					<p className="mb-5 flex items-center gap-2 font-(family-name:--font-pre-mono) text-[10px] uppercase tracking-[0.24em] text-(--pa-ochre-text)">
-						<span className="h-1.5 w-1.5 bg-(--pa-ochre) shadow-[0_0_10px_var(--pa-ochre)]" />
+						<span className="h-1.5 w-1.5 rounded-full bg-(--pa-ochre) shadow-[0_0_10px_var(--pa-ochre)]" />
 						{result.alreadyPaid ? "Already pre-ordered" : "Pre-order paid"}
 					</p>
 					<h3 className="font-(family-name:--font-pre-display) text-2xl font-bold uppercase leading-tight">
@@ -81,7 +73,7 @@ export default function FormPanel({ sites, price, selected, onSelect, onDone, na
 					<button
 						type="button"
 						onClick={another}
-						className="mt-8 w-full border border-(--pa-accent) py-3 font-(family-name:--font-pre-mono) text-[11px] uppercase tracking-[0.22em] text-(--pa-accent-text) transition-colors hover:bg-(--pa-accent) hover:text-white">
+						className="mt-8 w-full rounded-full border border-(--pa-accent) py-3 font-(family-name:--font-pre-mono) text-[11px] uppercase tracking-[0.22em] text-(--pa-accent-text) transition-colors hover:bg-(--pa-accent) hover:text-white">
 						Pre-order another site
 					</button>
 				</div>
@@ -154,7 +146,7 @@ export default function FormPanel({ sites, price, selected, onSelect, onDone, na
 					<button
 						type="submit"
 						disabled={status === "sending"}
-						className="group relative h-14 overflow-hidden bg-(--pa-accent) font-(family-name:--font-pre-mono) text-[13px] font-semibold uppercase tracking-[0.18em] text-white shadow-[0_10px_40px_-8px_var(--pa-accent-glow)] disabled:cursor-wait disabled:opacity-70">
+						className="group relative h-14 overflow-hidden rounded-full bg-(--pa-accent) font-(family-name:--font-pre-mono) text-[13px] font-semibold uppercase tracking-[0.18em] text-white shadow-[0_10px_40px_-8px_var(--pa-accent-glow)] disabled:cursor-wait disabled:opacity-70">
 						<span className="absolute inset-0 origin-left scale-x-0 bg-(--pa-ochre) transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-x-100" />
 						<span className="relative transition-colors duration-500 group-hover:text-black">
 							{status === "sending"
