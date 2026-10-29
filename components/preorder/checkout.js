@@ -1,11 +1,11 @@
 "use client";
 
-// Paying for a pre-order (used by PreorderForm):
+// Paying for a pre-order, shared by the 3D ticket and the flat fallback form:
 // the API holds the place and opens a Razorpay order, Razorpay Checkout takes
 // the payment in its own window, and the API verifies it.
 
 const CHECKOUT_SRC = "https://checkout.razorpay.com/v1/checkout.js";
-const BRAND = "#2f6bff";
+const BRAND = "#c4543a";
 
 let loading = null;
 

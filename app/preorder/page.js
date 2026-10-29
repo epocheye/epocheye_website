@@ -1,7 +1,7 @@
-import PreorderExperience from "@/components/preorder/PreorderExperience";
-import { THEME_SCRIPT } from "@/components/preorder/themeScript";
-import { SITE_NAME } from "@/lib/site";
-import "./preorder.css";
+import PreorderClient from "@/components/preorder/PreorderClient";
+import { PREORDER_SITES } from "@/lib/preorder/sites";
+import { PLAY_STORE_URL, SITE_NAME } from "@/lib/site";
+import { rajdhani, shareTechMono } from "./fonts";
 
 const TITLE = "Pre-order the next Epocheye site";
 const DESCRIPTION =
@@ -24,9 +24,26 @@ export const metadata = {
 export default function Page() {
 	return (
 		<>
-			{/* Before first paint, so the page never flashes the wrong theme. */}
-			<script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
-			<PreorderExperience />
+			{/* Text version of the 3D page, for crawlers and screen readers. */}
+			<div className="sr-only">
+				<h1>Pre-order the next Epocheye site</h1>
+				<p>{DESCRIPTION}</p>
+				<h2>Sites you can pre-order</h2>
+				<ul>
+					{PREORDER_SITES.map((s) => (
+						<li key={s.slug}>
+							{s.name}, {s.place}
+						</li>
+					))}
+				</ul>
+				<p>
+					Epocheye is live today at four monuments in Bengaluru and Kolkata.{" "}
+					<a href={PLAY_STORE_URL}>Get Epocheye on Google Play</a>.
+				</p>
+			</div>
+			<div className={`${rajdhani.variable} ${shareTechMono.variable}`}>
+				<PreorderClient />
+			</div>
 		</>
 	);
 }
