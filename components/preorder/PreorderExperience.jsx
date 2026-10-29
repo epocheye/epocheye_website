@@ -6,12 +6,13 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
 
-import { OTHER_SITE, PREORDER_SITES } from "@/lib/preorder/sites";
+import { OTHER_SITE, PREORDER_SITES, SITE_BY_SLUG } from "@/lib/preorder/sites";
 import { THEMES, THEME_KEY, cssVars, initialTheme } from "./theme";
 import { STATION_COUNT, createProgress, nearestStation, stationProgress, stationWeight } from "./stations";
 import { Boot, Hud } from "./Hud";
 import { ClickSpark } from "./reactbits";
 import FormPanel from "./FormPanel";
+import { BuySheet, IosSheet, ShareSheet } from "./Sheets";
 
 if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 
@@ -32,6 +33,12 @@ function hasWebGL() {
 	}
 }
 
+/** A shared link (/preorder?site=hampi) opens with that site picked. */
+function initialSite() {
+	const slug = new URLSearchParams(window.location.search).get("site");
+	return SITE_BY_SLUG.has(slug) ? slug : PREORDER_SITES[0].slug;
+}
+
 function scrollToStation(i) {
 	const y = stationProgress(i) * ScrollTrigger.maxScroll(window);
 	const smoother = ScrollSmoother.get();
@@ -47,7 +54,7 @@ function Fallback({ sites, counts, price, selected, onSelect, onDone }) {
 			<h1 className="font-(family-name:--font-pre-display) text-5xl font-bold uppercase">
 				Pre-order <span className="text-(--pa-ochre-text)">the past.</span>
 			</h1>
-			<p className="mt-4 text-(--pa-text-soft)">Pick the heritage site you want to see next. The most-wanted gets built first.</p>
+			<p className="mt-4 text-(--pa-text-soft)">Pick the heritage site you want to see next. The most-wanted goes live for Diwali.</p>
 			<ol className="mt-10 space-y-2 font-(family-name:--font-pre-mono)">
 				{ranked.map((s, i) => (
 					<li key={s.slug}>
@@ -73,11 +80,13 @@ export default function PreorderExperience() {
 	const [mode, setMode] = useState(initialTheme);
 	const [counts, setCounts] = useState(null);
 	const [price, setPrice] = useState(null);
-	const [selected, setSelected] = useState(PREORDER_SITES[0].slug);
+	const [selected, setSelected] = useState(initialSite);
 	const [hovered, setHovered] = useState(null);
 	const [flash, setFlash] = useState(null);
 	const [station, setStation] = useState(0);
 	const [formVisible, setFormVisible] = useState(false);
+	const [sheet, setSheet] = useState(null); // null | "buy" | "ios"
+	const [share, setShare] = useState(null); // the paid pre-order to share
 	const wrapper = useRef(null);
 	const content = useRef(null);
 	const percent = useRef(null);
@@ -154,15 +163,40 @@ export default function PreorderExperience() {
 		scrollToStation(3);
 	};
 
-	const onDone = ({ slug }) => {
+	const onDone = ({ slug, label, reference, alreadyPaid }) => {
 		if (slug !== OTHER_SITE) setFlash({ slug, at: performance.now() });
 		loadCounts();
+		setSheet(null);
+		setShare({ slug, label, reference, alreadyPaid });
 	};
+
+	const closeSheet = useCallback(() => setSheet(null), []);
+	const closeShare = useCallback(() => setShare(null), []);
+
+	const sheets = (
+		<>
+			{sheet === "buy" && (
+				<BuySheet sites={PREORDER_SITES} price={price} selected={selected} onSelect={setSelected} onDone={onDone} onClose={closeSheet} />
+			)}
+			{sheet === "ios" && <IosSheet onClose={closeSheet} />}
+			{share && (
+				<ShareSheet
+					share={share}
+					onClose={closeShare}
+					onSeeBrick={() => {
+						setShare(null);
+						if (webgl) scrollToStation(2);
+					}}
+				/>
+			)}
+		</>
+	);
 
 	if (!webgl) {
 		return (
 			<main className="min-h-screen bg-(--pa-bg) font-(family-name:--font-pre-display) font-medium" style={cssVars(palette)}>
 				<Fallback sites={PREORDER_SITES} counts={counts} price={price} selected={selected} onSelect={setSelected} onDone={onDone} />
+				{sheets}
 			</main>
 		);
 	}
@@ -187,9 +221,19 @@ export default function PreorderExperience() {
 					onSeeBrick={() => scrollToStation(2)}
 					flash={flash}
 					formVisible={formVisible}
+					heroActive={station === 0 && !sheet && !share}
+					onBuy={() => setSheet("buy")}
 				/>
 			</div>
-			<Hud station={station} mode={mode} onToggleTheme={toggleTheme} onJump={scrollToStation} percentRef={percent} />
+			<Hud
+				station={station}
+				mode={mode}
+				onToggleTheme={toggleTheme}
+				onJump={scrollToStation}
+				onIos={() => setSheet("ios")}
+				percentRef={percent}
+			/>
+			{sheets}
 			<ClickSpark color={palette.ochre} />
 			{/* Scroll track: the page's only job is to give the camera distance to travel. */}
 			<div ref={wrapper} id="smooth-wrapper">

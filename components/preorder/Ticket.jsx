@@ -7,6 +7,7 @@ import { Html } from "@react-three/drei";
 import { gsap } from "gsap";
 
 import { formatPrice } from "@/lib/preorder/price";
+import { REFUND_BY } from "@/lib/preorder/promise";
 import { OTHER_SITE } from "@/lib/preorder/sites";
 import { usePalette } from "./theme";
 import { payForPreorder } from "./checkout";
@@ -146,7 +147,7 @@ export default function Ticket({ sites, counts, price, selected, onSelect, onDon
 			setStatus("done");
 			if (stamp.current) gsap.to(stamp.current.position, { z: 0.55, duration: 0.5, ease: "power3.out", delay: 0.05 });
 			if (imprint.current) gsap.fromTo(imprint.current.scale, { x: 1.6, y: 1.6, z: 1.6 }, { x: 1, y: 1, z: 1, duration: 0.45, ease: "power4.out" });
-			onDone?.({ slug: selected, ...paid });
+			onDone?.({ slug: selected, label, ...paid });
 		} catch (err) {
 			setError(err.message);
 			setStatus("idle");
@@ -253,7 +254,7 @@ export default function Ticket({ sites, counts, price, selected, onSelect, onDon
 							? result.alreadyPaid
 								? "ALREADY PAID FOR THIS SITE. WE'LL EMAIL YOU WHEN IT'S READY."
 								: "PAID. WE'LL EMAIL YOU WHEN IT'S READY."
-							: `${priceLabel || "PAY"} · FULL REFUND IF WE DON'T BUILD IT`}
+							: `${priceLabel || "PAY"} · FULL REFUND IF IT ISN'T LIVE BY ${REFUND_BY.toUpperCase()}`}
 					</T>
 					{done && (
 						<>

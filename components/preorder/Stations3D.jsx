@@ -3,8 +3,9 @@
 import { useRef } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
-import { RoundedBox, useTexture } from "@react-three/drei";
+import { Html, RoundedBox, useTexture } from "@react-three/drei";
 
+import { REFUND_BY } from "@/lib/preorder/promise";
 import { PLAY_STORE_URL } from "@/lib/site";
 import { usePalette } from "./theme";
 import { STATIONS, stationWeight } from "./stations";
@@ -20,7 +21,38 @@ export function Gates() {
 
 /* ───────────────────────── 00 · Hero ───────────────────────── */
 
-export function HeroStation({ portrait, progress, intro }) {
+/** "Lay a brick" in the hero: pay straight away, without scrolling to the ticket. */
+function HeroBuy({ portrait, active, priceLabel, onBuy }) {
+	return (
+		<Html
+			position={[0, portrait ? -2.75 : -1.75, 0]}
+			zIndexRange={[30, 0]}
+			style={{
+				opacity: active ? 1 : 0,
+				pointerEvents: active ? "auto" : "none",
+				transition: "opacity 0.4s",
+			}}>
+			{/* drei owns the wrapper's transform; centre on phones from inside it. */}
+			<div className={`flex w-max flex-col gap-2.5 ${portrait ? "-translate-x-1/2 items-center text-center" : "items-start"}`}>
+				<button
+					type="button"
+					onClick={onBuy}
+					tabIndex={active ? 0 : -1}
+					className="group relative h-14 overflow-hidden bg-(--pa-accent) px-7 font-(family-name:--font-pre-display) text-[19px] font-bold uppercase tracking-[0.08em] text-white shadow-[0_10px_40px_-8px_var(--pa-accent-glow)]">
+					<span className="absolute inset-0 origin-left scale-x-0 bg-(--pa-ochre) transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-x-100" />
+					<span className="relative transition-colors duration-500 group-hover:text-black">
+						{`Lay a brick${priceLabel ? ` · ${priceLabel}` : ""} →`}
+					</span>
+				</button>
+				<span className="font-(family-name:--font-pre-display) text-[14px] font-medium text-(--pa-text-soft)">
+					{`Full refund if your site isn't live by ${REFUND_BY}.`}
+				</span>
+			</div>
+		</Html>
+	);
+}
+
+export function HeroStation({ portrait, progress, intro, active, priceLabel, onBuy }) {
 	const t = usePalette();
 	const title = useRef(null);
 	const scan = useRef(null);
@@ -57,7 +89,7 @@ export function HeroStation({ portrait, progress, intro }) {
 					THE PAST.
 				</Extruded>
 				<T
-					fontSize={portrait ? 0.3 : 0.22}
+					fontSize={portrait ? 0.36 : 0.22}
 					lineHeight={1.45}
 					color={t.textSoft}
 					anchorX={portrait ? "center" : "left"}
@@ -65,9 +97,10 @@ export function HeroStation({ portrait, progress, intro }) {
 					textAlign={portrait ? "center" : "left"}
 					maxWidth={portrait ? 9 : 6.4}
 					position={[0, -0.7, 0]}>
-					Pick the heritage site you want in Epocheye next. Every pre-order lays a brick, and the tallest tower gets built
-					first.
+					Pick the heritage site you want in Epocheye next. Every pre-order lays a brick, and the tallest tower goes live
+					for Diwali.
 				</T>
+				<HeroBuy portrait={portrait} active={active} priceLabel={priceLabel} onBuy={onBuy} />
 			</group>
 		</>
 	);
@@ -77,8 +110,8 @@ export function HeroStation({ portrait, progress, intro }) {
 
 const WORDS = [
 	["PICK.", "A heritage site that isn't in Epocheye yet, or your own."],
-	["PRE-ORDER.", "Your name on a ticket, then stamp it to pay. Full refund if we don't build it."],
-	["SEE IT FIRST.", "The tallest tower is built first, and you're the first in."],
+	["PRE-ORDER.", "Your name on a ticket, then stamp it to pay. Full refund if your site isn't live by 31 Dec 2026."],
+	["SEE IT FIRST.", "The tallest tower goes live for Diwali, and you're the first in."],
 ];
 
 function KineticWord({ index, word, line, position, progress, portrait, last }) {

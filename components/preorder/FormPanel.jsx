@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import { formatPrice } from "@/lib/preorder/price";
+import { PROMISE, PROMISE_SHORT, REFUND_BY } from "@/lib/preorder/promise";
 import { OTHER_SITE } from "@/lib/preorder/sites";
 import { payForPreorder } from "./checkout";
 
@@ -42,7 +43,7 @@ export default function FormPanel({ sites, price, selected, onSelect, onDone, na
 			const paid = await payForPreorder({ form, site: selected, siteLabel: label });
 			setResult({ ...paid, label });
 			setStatus("done");
-			onDone?.({ slug: selected, ...paid });
+			onDone?.({ slug: selected, label, ...paid });
 		} catch (err) {
 			setError(err.message);
 			setStatus("idle");
@@ -73,8 +74,7 @@ export default function FormPanel({ sites, price, selected, onSelect, onDone, na
 						<span className="mt-1 block text-(--pa-ochre-text)">+1 on the board.</span>
 					</h3>
 					<p className="mt-4 text-sm leading-relaxed text-(--pa-text-soft)">
-						The most-wanted sites are built first, and we will email you when yours is ready so you can see it first. If
-						we don&apos;t build it, you get a full refund.
+						{`${PROMISE} We'll email you the day yours goes live so you can see it first.`}
 					</p>
 					<p className="mt-7 font-(family-name:--font-pre-mono) text-[10px] uppercase tracking-[0.24em] text-(--pa-accent-text)">Reference</p>
 					<p className="font-(family-name:--font-pre-mono) text-3xl tracking-[0.14em]">{result.reference}</p>
@@ -88,7 +88,7 @@ export default function FormPanel({ sites, price, selected, onSelect, onDone, na
 			) : (
 				<form onSubmit={onSubmit} noValidate className="flex flex-col gap-5">
 					<div>
-						<p className="font-(family-name:--font-pre-mono) text-[10px] uppercase tracking-[0.24em] text-(--pa-ochre-text)">{`> pre-order${priceLabel ? ` · ${priceLabel}` : ""} · full refund if we don't build it`}</p>
+						<p className="font-(family-name:--font-pre-mono) text-[10px] uppercase tracking-[0.24em] text-(--pa-ochre-text)">{`> pre-order${priceLabel ? ` · ${priceLabel}` : ""} · ${PROMISE_SHORT}`}</p>
 						<h3 className="mt-2 font-(family-name:--font-pre-display) text-2xl font-bold uppercase leading-tight">Which site do you want to see?</h3>
 					</div>
 
@@ -164,8 +164,7 @@ export default function FormPanel({ sites, price, selected, onSelect, onDone, na
 					</button>
 
 					<p className="text-[11px] leading-relaxed text-(--pa-text-muted)">
-						Payment by Razorpay. Full refund if we don&apos;t build the site. We use these details only for your pre-order, as
-						set out in our{" "}
+						{`Payment by Razorpay. Full refund if your site isn't live by ${REFUND_BY}. We use these details only for your pre-order, as set out in our `}
 						{/* Plain <a>: inside the 3D scene this renders in its own React root, outside the router. */}
 						<a href="/privacy" className="underline underline-offset-2 hover:text-(--pa-text)">
 							privacy policy

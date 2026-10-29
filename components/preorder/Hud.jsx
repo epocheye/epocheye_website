@@ -6,7 +6,7 @@ import Link from "next/link";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { animate, createTimeline, stagger, svg } from "animejs";
-import { Moon, Sun } from "lucide-react";
+import { Moon, Smartphone, Sun } from "lucide-react";
 
 import googlePlayBadge from "@/public/google-play-badge.png";
 import { PLAY_STORE_URL } from "@/lib/site";
@@ -168,7 +168,7 @@ function Reticle() {
 	);
 }
 
-export function Hud({ station, mode, onToggleTheme, onJump, percentRef }) {
+export function Hud({ station, mode, onToggleTheme, onJump, onIos, percentRef }) {
 	const light = mode === "light";
 	return (
 		<>
@@ -178,24 +178,34 @@ export function Hud({ station, mode, onToggleTheme, onJump, percentRef }) {
 				<Link href="/" className="pointer-events-auto font-(family-name:--font-pre-display) text-sm font-bold tracking-[0.2em] text-(--pa-text)">
 					EPOCHEYE
 				</Link>
-				<div className="pointer-events-auto flex items-center gap-2 sm:gap-3">
+				<div className="pointer-events-auto flex flex-col items-end gap-2">
+					<div className="flex items-center gap-2 sm:gap-3">
+						<button
+							type="button"
+							onClick={onToggleTheme}
+							aria-label={light ? "Switch to dark mode" : "Switch to light mode"}
+							className="grid h-9 w-9 place-items-center border border-(--pa-line) bg-(--pa-panel)/70 text-(--pa-text) backdrop-blur-sm transition-colors hover:border-(--pa-ochre) hover:text-(--pa-ochre-text) sm:h-10 sm:w-10">
+							{light ? <Moon className="h-4 w-4" aria-hidden="true" /> : <Sun className="h-4 w-4" aria-hidden="true" />}
+						</button>
+						<Magnet>
+							<a
+								href={PLAY_STORE_URL}
+								target="_blank"
+								rel="noopener noreferrer"
+								aria-label="Get Epocheye on Google Play"
+								className="block rounded-lg transition-transform hover:scale-[1.04]">
+								<Image src={googlePlayBadge} alt="Get it on Google Play" width={130} height={50} priority className="h-9 w-auto sm:h-11" />
+							</a>
+						</Magnet>
+					</div>
+					{/* Not on the App Store yet: iPhone visitors join a waitlist instead. */}
 					<button
 						type="button"
-						onClick={onToggleTheme}
-						aria-label={light ? "Switch to dark mode" : "Switch to light mode"}
-						className="grid h-9 w-9 place-items-center border border-(--pa-line) bg-(--pa-panel)/70 text-(--pa-text) backdrop-blur-sm transition-colors hover:border-(--pa-ochre) hover:text-(--pa-ochre-text) sm:h-10 sm:w-10">
-						{light ? <Moon className="h-4 w-4" aria-hidden="true" /> : <Sun className="h-4 w-4" aria-hidden="true" />}
+						onClick={onIos}
+						className="flex h-8 items-center gap-1.5 border border-(--pa-line) bg-(--pa-panel)/70 px-3 font-(family-name:--font-pre-mono) text-[10px] uppercase tracking-[0.16em] text-(--pa-text) backdrop-blur-sm transition-colors hover:border-(--pa-ochre) hover:text-(--pa-ochre-text)">
+						<Smartphone className="h-3.5 w-3.5" aria-hidden="true" />
+						iPhone? Get notified
 					</button>
-					<Magnet>
-						<a
-							href={PLAY_STORE_URL}
-							target="_blank"
-							rel="noopener noreferrer"
-							aria-label="Get Epocheye on Google Play"
-							className="block rounded-lg transition-transform hover:scale-[1.04]">
-							<Image src={googlePlayBadge} alt="Get it on Google Play" width={130} height={50} priority className="h-9 w-auto sm:h-11" />
-						</a>
-					</Magnet>
 				</div>
 			</header>
 

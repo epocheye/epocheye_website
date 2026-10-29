@@ -5,6 +5,7 @@ import * as THREE from "three";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Bloom, EffectComposer, Noise, Vignette } from "@react-three/postprocessing";
 
+import { formatPrice } from "@/lib/preorder/price";
 import { ThemeContext, usePalette } from "./theme";
 import { STATIONS, isPortrait, smoothstep, stationDistance } from "./stations";
 import { Dust, GridFloor } from "./Holo";
@@ -96,7 +97,14 @@ function Scene(props) {
 
 			{/* Text fetches its font: suspend the stations, never the room. */}
 			<Suspense fallback={null}>
-				<HeroStation portrait={portrait} progress={progress} intro={intro} />
+				<HeroStation
+					portrait={portrait}
+					progress={progress}
+					intro={intro}
+					active={props.heroActive}
+					priceLabel={formatPrice(props.price)}
+					onBuy={props.onBuy}
+				/>
 			</Suspense>
 			<Suspense fallback={null}>
 				<Near progress={progress} station={1}>
