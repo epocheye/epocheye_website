@@ -101,7 +101,9 @@ export function initialTheme() {
 }
 
 // 3D text (troika needs .woff). The DOM layer uses the same faces through
-// next/font in app/preorder/fonts.js.
+// next/font in app/preorder/fonts.js. The two Rajdhani files also carry ₹
+// (U+20B9, merged in from Rajdhani's Devanagari subset) for prices in India;
+// Share Tech Mono has no ₹, so prices are never set in mono.
 export const FONTS = {
 	display: "/fonts/preorder/rajdhani-latin-700-normal.woff",
 	body: "/fonts/preorder/rajdhani-latin-500-normal.woff",

@@ -248,7 +248,7 @@ export default function Ticket({ sites, counts, price, selected, onSelect, onDon
 					<T font="display" fontSize={0.3} color={INK} anchorX="left" position={[-2.3, -2.62, 0]}>
 						{done ? "YOU'RE ON THE WALL" : "PRE-ORDER"}
 					</T>
-					<T font="mono" fontSize={0.11} letterSpacing={0.14} color="#8c7466" anchorX="left" maxWidth={2.9} position={[-2.3, -2.98, 0]}>
+					<T font="body" fontSize={0.12} letterSpacing={0.08} color="#8c7466" anchorX="left" maxWidth={2.9} position={[-2.3, -2.98, 0]}>
 						{done
 							? result.alreadyPaid
 								? "ALREADY PAID FOR THIS SITE. WE'LL EMAIL YOU WHEN IT'S READY."
