@@ -9,11 +9,11 @@ const EMPTY = { name: "", email: "", suggestion: "", marketingOk: false, website
 // Colours come from the CSS variables set by the page (theme.js cssVars), so
 // the form follows the light/dark switch even inside the 3D scene.
 const field =
-	"w-full border border-(--pa-line) bg-(--pa-bg)/60 px-4 py-3 font-(family-name:--font-pre-mono) text-[14px] text-(--pa-text) outline-none transition-colors placeholder:text-(--pa-text-muted) focus:border-(--pa-blue) focus:shadow-[0_0_0_3px_var(--pa-blue-glow)]";
-const label = "mb-2 block font-(family-name:--font-pre-mono) text-[10px] uppercase tracking-[0.24em] text-(--pa-blue-text)";
+	"w-full border border-(--pa-line) bg-(--pa-bg)/60 px-4 py-3 font-(family-name:--font-pre-mono) text-[14px] text-(--pa-text) outline-none transition-colors placeholder:text-(--pa-text-muted) focus:border-(--pa-accent) focus:shadow-[0_0_0_3px_var(--pa-accent-glow)]";
+const label = "mb-2 block font-(family-name:--font-pre-mono) text-[10px] uppercase tracking-[0.24em] text-(--pa-accent-text)";
 
 function Corner({ className }) {
-	return <span aria-hidden="true" className={`pointer-events-none absolute h-4 w-4 border-(--pa-amber) ${className}`} />;
+	return <span aria-hidden="true" className={`pointer-events-none absolute h-4 w-4 border-(--pa-ochre) ${className}`} />;
 }
 
 /**
@@ -60,38 +60,38 @@ export default function FormPanel({ sites, selected, onSelect, onDone, narrow = 
 
 	return (
 		<div
-			className={`${narrow ? "w-[340px] p-6" : "w-[440px] p-8"} relative border border-(--pa-blue)/40 bg-(--pa-panel)/90 text-(--pa-text) shadow-[0_0_80px_-16px_var(--pa-blue-glow)] backdrop-blur-md`}>
+			className={`${narrow ? "w-[340px] p-6" : "w-[440px] p-8"} relative border border-(--pa-accent)/40 bg-(--pa-panel)/90 text-(--pa-text) shadow-[0_0_80px_-16px_var(--pa-accent-glow)] backdrop-blur-md`}>
 			<Corner className="-left-px -top-px border-l-2 border-t-2" />
 			<Corner className="-right-px -top-px border-r-2 border-t-2" />
 			<Corner className="-bottom-px -left-px border-b-2 border-l-2" />
 			<Corner className="-bottom-px -right-px border-b-2 border-r-2" />
 			{status === "done" && result ? (
 				<div role="status">
-					<p className="mb-5 flex items-center gap-2 font-(family-name:--font-pre-mono) text-[10px] uppercase tracking-[0.24em] text-(--pa-amber-text)">
-						<span className="h-1.5 w-1.5 bg-(--pa-amber) shadow-[0_0_10px_var(--pa-amber)]" />
+					<p className="mb-5 flex items-center gap-2 font-(family-name:--font-pre-mono) text-[10px] uppercase tracking-[0.24em] text-(--pa-ochre-text)">
+						<span className="h-1.5 w-1.5 bg-(--pa-ochre) shadow-[0_0_10px_var(--pa-ochre)]" />
 						{result.created ? "Pre-order logged" : "Already logged"}
 					</p>
 					<h3 className="font-(family-name:--font-pre-display) text-2xl font-bold uppercase leading-tight">
 						{result.label}
-						<span className="mt-1 block text-(--pa-amber-text)">+1 on the board.</span>
+						<span className="mt-1 block text-(--pa-ochre-text)">+1 on the board.</span>
 					</h3>
 					<p className="mt-4 text-sm leading-relaxed text-(--pa-text-soft)">
 						Nothing has been charged. The most-wanted sites are built first, and we will email you when yours is ready
 						so you can see it first.
 					</p>
-					<p className="mt-7 font-(family-name:--font-pre-mono) text-[10px] uppercase tracking-[0.24em] text-(--pa-blue-text)">Reference</p>
+					<p className="mt-7 font-(family-name:--font-pre-mono) text-[10px] uppercase tracking-[0.24em] text-(--pa-accent-text)">Reference</p>
 					<p className="font-(family-name:--font-pre-mono) text-3xl tracking-[0.14em]">{result.reference}</p>
 					<button
 						type="button"
 						onClick={another}
-						className="mt-8 w-full border border-(--pa-blue) py-3 font-(family-name:--font-pre-mono) text-[11px] uppercase tracking-[0.22em] text-(--pa-blue-text) transition-colors hover:bg-(--pa-blue) hover:text-white">
+						className="mt-8 w-full border border-(--pa-accent) py-3 font-(family-name:--font-pre-mono) text-[11px] uppercase tracking-[0.22em] text-(--pa-accent-text) transition-colors hover:bg-(--pa-accent) hover:text-white">
 						Pre-order another site
 					</button>
 				</div>
 			) : (
 				<form onSubmit={onSubmit} noValidate className="flex flex-col gap-5">
 					<div>
-						<p className="font-(family-name:--font-pre-mono) text-[10px] uppercase tracking-[0.24em] text-(--pa-amber-text)">{`> pre-order · nothing to pay`}</p>
+						<p className="font-(family-name:--font-pre-mono) text-[10px] uppercase tracking-[0.24em] text-(--pa-ochre-text)">{`> pre-order · nothing to pay`}</p>
 						<h3 className="mt-2 font-(family-name:--font-pre-display) text-2xl font-bold uppercase leading-tight">Which site do you want to see?</h3>
 					</div>
 
@@ -146,7 +146,7 @@ export default function FormPanel({ sites, selected, onSelect, onDone, narrow = 
 					</div>
 
 					<label className="flex cursor-pointer items-start gap-3 text-[13px] leading-snug text-(--pa-text-soft)">
-						<input type="checkbox" checked={form.marketingOk} onChange={set("marketingOk")} className="mt-0.5 h-4 w-4 shrink-0 accent-(--pa-blue)" />
+						<input type="checkbox" checked={form.marketingOk} onChange={set("marketingOk")} className="mt-0.5 h-4 w-4 shrink-0 accent-(--pa-accent)" />
 						Also email me when other sites open in Epocheye.
 					</label>
 
@@ -157,8 +157,8 @@ export default function FormPanel({ sites, selected, onSelect, onDone, narrow = 
 					<button
 						type="submit"
 						disabled={status === "sending"}
-						className="group relative h-14 overflow-hidden bg-(--pa-blue) font-(family-name:--font-pre-mono) text-[13px] font-semibold uppercase tracking-[0.18em] text-white shadow-[0_10px_40px_-8px_var(--pa-blue-glow)] disabled:cursor-wait disabled:opacity-70">
-						<span className="absolute inset-0 origin-left scale-x-0 bg-(--pa-amber) transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-x-100" />
+						className="group relative h-14 overflow-hidden bg-(--pa-accent) font-(family-name:--font-pre-mono) text-[13px] font-semibold uppercase tracking-[0.18em] text-white shadow-[0_10px_40px_-8px_var(--pa-accent-glow)] disabled:cursor-wait disabled:opacity-70">
+						<span className="absolute inset-0 origin-left scale-x-0 bg-(--pa-ochre) transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-x-100" />
 						<span className="relative transition-colors duration-500 group-hover:text-black">
 							{status === "sending" ? "Transmitting…" : `Pre-order ${site ? site.name : "this site"} →`}
 						</span>

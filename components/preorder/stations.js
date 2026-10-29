@@ -7,10 +7,10 @@
 // station, to clear what stands between them (default 0.8).
 export const STATIONS = [
 	{ id: "hero", label: "Pre-order", look: [0, 3.4, 0], lookPortrait: [0, 4.6, 0], from: [0, 0.12, 1], frame: [16.5, 10], framePortrait: [8, 13.5] },
-	{ id: "how", label: "How it works", look: [0, 3.6, -34], lookPortrait: [0, 6.2, -34], from: [0, 0.08, 1], frame: [17, 8], framePortrait: [6, 14], lift: 5, liftPortrait: 9 },
-	{ id: "board", label: "Most wanted", look: [0, 5.2, -68], from: [0, 0.1, 1], frame: [17.5, 12.6], framePortrait: [7.8, 13.6], lift: 7, liftPortrait: 9 },
-	{ id: "form", label: "Your pre-order", look: [0, 4.9, -102], from: [0, 0.05, 1], frame: [12, 12.2], framePortrait: [6.4, 12.4] },
-	{ id: "app", label: "Get the app", look: [0, 3.8, -134], from: [0, 0.08, 1], frame: [13, 9], framePortrait: [7.5, 11] },
+	{ id: "how", label: "How it works", look: [0, 3.8, -34], lookPortrait: [0, 6.4, -34], from: [0, 0.1, 1], frame: [17, 8.6], framePortrait: [7.4, 12.5], lift: 4, liftPortrait: 6 },
+	{ id: "board", label: "Most wanted", look: [0, 3.9, -68], lookPortrait: [0, 4.4, -68], from: [0, 0.2, 1], frame: [15, 9.6], framePortrait: [6.2, 11.5], lift: 6, liftPortrait: 7 },
+	{ id: "form", label: "Your pre-order", look: [0, 4.2, -102], from: [0, 0.04, 1], frame: [10, 8.8], framePortrait: [6.2, 8.8], lift: 5.5, liftPortrait: 5.5 },
+	{ id: "app", label: "Get the app", look: [0, 4, -134], from: [0, 0.08, 1], frame: [14, 9], framePortrait: [7.5, 11.5] },
 ];
 
 export const STATION_COUNT = STATIONS.length;
@@ -19,9 +19,13 @@ export const STATION_COUNT = STATIONS.length;
 export const stationProgress = (i) => i / (STATION_COUNT - 1);
 
 /** 1 at station i, falling to 0 a little before the neighbouring stations. */
+/** How many stations away the camera is from station i. */
+export function stationDistance(p, i) {
+	return Math.abs(p - stationProgress(i)) * (STATION_COUNT - 1);
+}
+
 export function stationWeight(p, i) {
-	const d = Math.abs(p - stationProgress(i)) * (STATION_COUNT - 1);
-	return 1 - smoothstep(0.25, 0.7, d);
+	return 1 - smoothstep(0.25, 0.7, stationDistance(p, i));
 }
 
 export function nearestStation(p) {

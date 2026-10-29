@@ -58,6 +58,8 @@ const CLOUD_VERT = /* glsl */ `
 	uniform float uScan;
 	uniform float uSize;
 	uniform float uPixelRatio;
+	uniform vec3 uPointer;
+	uniform float uRepel;
 	attribute vec3 aScatter;
 	attribute float aRand;
 	varying float vScan;
@@ -67,6 +69,10 @@ const CLOUD_VERT = /* glsl */ `
 		t = t * t * (3.0 - 2.0 * t);
 		vec3 p = mix(aScatter, position, t);
 		p += 0.004 * vec3(sin(uTime * 2.0 + aRand * 40.0), cos(uTime * 1.7 + aRand * 30.0), 0.0);
+		// Points part around the pointer like sand under a hand.
+		vec3 away = p - uPointer;
+		float near = exp(-dot(away, away) * 18.0) * uRepel;
+		p += normalize(away + 1e-4) * near * 0.22;
 		vScan = 1.0 - smoothstep(0.0, 0.03, abs(position.y - uScan));
 		vAlpha = 0.35 + 0.65 * t;
 		vec4 mv = modelViewMatrix * vec4(p, 1.0);
@@ -98,7 +104,11 @@ const CLOUD_FRAG = /* glsl */ `
  * Konark's Jagamohana as a live hologram: points assemble out of a scattered
  * shell (driven by `assemble`, 0–1) while an amber scan line sweeps the height.
  */
-export function KonarkScan({ assemble, size = 26, ...props }) {
+const rayCaster = new THREE.Raycaster();
+const centre = new THREE.Vector3();
+const hitPoint = new THREE.Vector3();
+
+export function KonarkScan({ assemble, size = 26, interactive = false, ...props }) {
 	const t = usePalette();
 	const geometry = usePointCloud();
 	const mat = useRef(null);
@@ -113,6 +123,8 @@ export function KonarkScan({ assemble, size = 26, ...props }) {
 			uColor: { value: new THREE.Color() },
 			uScanColor: { value: new THREE.Color() },
 			uOpacity: { value: 1 },
+			uPointer: { value: new THREE.Vector3(99, 99, 99) },
+			uRepel: { value: 0 },
 		}),
 		[size]
 	);
@@ -127,9 +139,21 @@ export function KonarkScan({ assemble, size = 26, ...props }) {
 		u.uAssemble.value = assemble?.get ? assemble.get() : 1;
 		u.uScan.value = -0.7 + ((time * 0.28) % 1.6);
 		u.uColor.value.set(t.points);
-		u.uScanColor.value.set(t.amber);
-		u.uOpacity.value = t.mode === "dark" ? 0.9 : 0.75;
-		if (group.current) group.current.rotation.y += delta * 0.12;
+		u.uScanColor.value.set(t.accent);
+		u.uOpacity.value = t.mode === "dark" ? 0.85 : 0.8;
+		const g = group.current;
+		if (!g) return;
+		// Slow spin, steered a little by the pointer.
+		g.rotation.y += delta * 0.1;
+		g.rotation.x = THREE.MathUtils.damp(g.rotation.x, state.pointer.y * 0.15, 3, delta);
+		// Pointer ray → the cloud's own space, for the repel.
+		rayCaster.setFromCamera(state.pointer, state.camera);
+		g.updateWorldMatrix(true, false);
+		g.getWorldPosition(centre);
+		const toCentre = rayCaster.ray.closestPointToPoint(centre, hitPoint);
+		g.worldToLocal(toCentre);
+		u.uPointer.value.lerp(toCentre, Math.min(1, delta * 8));
+		u.uRepel.value = THREE.MathUtils.damp(u.uRepel.value, interactive ? 1 : 0, 4, delta);
 	});
 
 	return (
@@ -150,70 +174,6 @@ export function KonarkScan({ assemble, size = 26, ...props }) {
 				)}
 			</group>
 		</group>
-	);
-}
-
-/* ───────────────────────── Holographic glass ───────────────────────── */
-
-const HOLO_VERT = /* glsl */ `
-	varying vec2 vUv;
-	void main() {
-		vUv = uv;
-		gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-	}
-`;
-// Glass with a lit border, moving scanlines and a faint flicker.
-const HOLO_FRAG = /* glsl */ `
-	uniform vec3 uColor;
-	uniform vec3 uEdge;
-	uniform float uTime;
-	uniform float uOpacity;
-	uniform float uGlow;
-	uniform vec2 uSize;
-	varying vec2 vUv;
-	void main() {
-		vec2 px = vUv * uSize;
-		float edge = min(min(px.x, uSize.x - px.x), min(px.y, uSize.y - px.y));
-		float border = 1.0 - smoothstep(0.0, 0.04, edge);
-		float halo = (1.0 - smoothstep(0.0, 0.35, edge)) * 0.35;
-		float scan = 0.5 + 0.5 * sin(px.y * 42.0 - uTime * 3.0);
-		float sweep = smoothstep(0.0, 0.25, 0.25 - abs(fract(vUv.y - uTime * 0.12) - 0.5) * 0.5);
-		float flicker = 0.94 + 0.06 * sin(uTime * 23.0);
-		vec3 col = uColor + uEdge * (border * 1.6 + halo + sweep * 0.25) * uGlow;
-		float a = (uOpacity * (0.8 + 0.2 * scan) + border * 0.9 + halo * 0.4 + sweep * 0.12) * flicker;
-		gl_FragColor = vec4(col, clamp(a, 0.0, 1.0));
-	}
-`;
-
-/** A glass plane, `width` × `height`, with a glowing edge in `edge` colour. */
-export function HoloPanel({ width, height, edge, glow = 1, opacity = 0.55, ...props }) {
-	const t = usePalette();
-	const mat = useRef(null);
-	const uniforms = useMemo(
-		() => ({
-			uColor: { value: new THREE.Color() },
-			uEdge: { value: new THREE.Color() },
-			uTime: { value: 0 },
-			uOpacity: { value: 0 },
-			uGlow: { value: 0 },
-			uSize: { value: new THREE.Vector2(width, height) },
-		}),
-		[width, height]
-	);
-	useFrame((state, delta) => {
-		const m = mat.current;
-		if (!m) return;
-		m.uniforms.uTime.value = state.clock.elapsedTime;
-		m.uniforms.uColor.value.set(t.panel);
-		m.uniforms.uEdge.value.set(edge ?? t.blue);
-		m.uniforms.uGlow.value = THREE.MathUtils.damp(m.uniforms.uGlow.value, glow, 6, delta);
-		m.uniforms.uOpacity.value = THREE.MathUtils.damp(m.uniforms.uOpacity.value, opacity * (t.mode === "dark" ? 1 : 1.3), 6, delta);
-	});
-	return (
-		<mesh {...props}>
-			<planeGeometry args={[width, height]} />
-			<shaderMaterial ref={mat} uniforms={uniforms} vertexShader={HOLO_VERT} fragmentShader={HOLO_FRAG} transparent depthWrite={false} />
-		</mesh>
 	);
 }
 
@@ -244,25 +204,25 @@ export function HoloRings({ radius = 3, ...props }) {
 			<group ref={a}>
 				<mesh rotation-x={-Math.PI / 2}>
 					<ringGeometry args={[radius - 0.02, radius + 0.02, 128]} />
-					<meshBasicMaterial color={t.blue} toneMapped={false} transparent opacity={0.9} />
+					<meshBasicMaterial color={t.ink} toneMapped={false} transparent opacity={0.55} />
 				</mesh>
 				<lineSegments geometry={ticks}>
-					<lineBasicMaterial color={t.blue} toneMapped={false} transparent opacity={0.7} />
+					<lineBasicMaterial color={t.ink} toneMapped={false} transparent opacity={0.4} />
 				</lineSegments>
 			</group>
 			<group ref={b}>
 				<mesh rotation-x={-Math.PI / 2}>
 					<ringGeometry args={[radius * 0.72, radius * 0.72 + 0.05, 96, 1, 0, Math.PI * 1.4]} />
-					<meshBasicMaterial color={t.amber} toneMapped={false} side={THREE.DoubleSide} />
+					<meshBasicMaterial color={t.accent} toneMapped={false} side={THREE.DoubleSide} />
 				</mesh>
 				<mesh rotation-x={-Math.PI / 2}>
 					<ringGeometry args={[radius * 1.18, radius * 1.18 + 0.015, 128, 1, 0, Math.PI * 0.6]} />
-					<meshBasicMaterial color={t.blueText} toneMapped={false} side={THREE.DoubleSide} />
+					<meshBasicMaterial color={t.ochre} toneMapped={false} side={THREE.DoubleSide} />
 				</mesh>
 			</group>
 			<mesh rotation-x={-Math.PI / 2} position-y={-0.01}>
 				<circleGeometry args={[radius, 64]} />
-				<meshBasicMaterial color={t.blue} transparent opacity={t.mode === "dark" ? 0.08 : 0.1} depthWrite={false} />
+				<meshBasicMaterial color={t.accent} transparent opacity={0.06} depthWrite={false} />
 			</mesh>
 		</group>
 	);
@@ -280,12 +240,12 @@ export function Gate({ z, radius = 7.5 }) {
 			<group ref={ref}>
 				<mesh>
 					<torusGeometry args={[radius, 0.03, 8, 160]} />
-					<meshBasicMaterial color={t.blue} toneMapped={false} />
+					<meshBasicMaterial color={t.ink} toneMapped={false} transparent opacity={0.35} />
 				</mesh>
 				{[0, 1, 2, 3].map((i) => (
 					<mesh key={i} rotation-z={(i * Math.PI) / 2}>
 						<torusGeometry args={[radius + 0.35, 0.06, 6, 40, Math.PI / 6]} />
-						<meshBasicMaterial color={t.amber} toneMapped={false} />
+						<meshBasicMaterial color={t.accent} toneMapped={false} />
 					</mesh>
 				))}
 			</group>
@@ -325,8 +285,8 @@ export function GridFloor() {
 		const m = mat.current;
 		if (!m) return;
 		m.uniforms.uTime.value = state.clock.elapsedTime;
-		m.uniforms.uColor.value.set(t.grid);
-		m.uniforms.uAccent.value.set(t.amber);
+		m.uniforms.uColor.value.set(t.sand);
+		m.uniforms.uAccent.value.set(t.accent);
 	});
 	return (
 		<mesh rotation-x={-Math.PI / 2} position={[0, 0, -66]}>
@@ -420,7 +380,7 @@ export function Dust({ count, color, seed = 1 }) {
 		if (!m) return;
 		m.uniforms.uTime.value = state.clock.elapsedTime;
 		m.uniforms.uPixelRatio.value = state.gl.getPixelRatio();
-		m.uniforms.uColor.value.set(color ?? t.blue);
+		m.uniforms.uColor.value.set(color ?? t.ochre);
 	});
 	return (
 		<points geometry={geometry} frustumCulled={false}>

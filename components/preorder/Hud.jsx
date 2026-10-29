@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect, useEffectEvent, useRef, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { animate, createTimeline, stagger, svg } from "animejs";
 import { Moon, Sun } from "lucide-react";
 
+import googlePlayBadge from "@/public/google-play-badge.png";
 import { PLAY_STORE_URL } from "@/lib/site";
 import { STATIONS, STATION_COUNT } from "./stations";
 import { Magnet, ScrambleText } from "./reactbits";
@@ -63,7 +65,7 @@ export function Boot({ onDone }) {
 			aria-hidden="true">
 			<div className="space-y-2 text-[11px] uppercase tracking-[0.18em] sm:text-xs">
 				{BOOT_LINES.map((l, i) => (
-					<p key={l} data-line className={`opacity-0 ${i === BOOT_LINES.length - 1 ? "text-(--pa-amber-text)" : "text-(--pa-blue-text)"}`}>
+					<p key={l} data-line className={`opacity-0 ${i === BOOT_LINES.length - 1 ? "text-(--pa-ochre-text)" : "text-(--pa-accent-text)"}`}>
 						<span className="mr-3 text-(--pa-text-muted)">{`>`}</span>
 						{l}
 					</p>
@@ -75,7 +77,7 @@ export function Boot({ onDone }) {
 				</span>
 				<span className="mb-4 text-[11px] uppercase tracking-[0.2em] text-(--pa-text-muted)">% LOADED</span>
 			</div>
-			<div className="h-px w-full origin-left scale-x-0 bg-gradient-to-r from-(--pa-blue) to-(--pa-amber)" data-bar />
+			<div className="h-px w-full origin-left scale-x-0 bg-gradient-to-r from-(--pa-accent) to-(--pa-ochre)" data-bar />
 		</div>
 	);
 }
@@ -94,7 +96,7 @@ function Corners() {
 	const L = 26;
 	return (
 		<svg ref={ref} className="pointer-events-none fixed inset-3 z-30 h-[calc(100%-1.5rem)] w-[calc(100%-1.5rem)] sm:inset-5 sm:h-[calc(100%-2.5rem)] sm:w-[calc(100%-2.5rem)]" aria-hidden="true">
-			<g fill="none" stroke="var(--pa-blue)" strokeWidth="1.5">
+			<g fill="none" stroke="var(--pa-accent)" strokeWidth="1.5">
 				<path d={`M0 ${L} V0 H${L}`} />
 				<path d={`M0 0 H${-L} V${L}`} style={{ transform: "translateX(100%)" }} />
 				<path d={`M0 ${-L} V0 H${L}`} style={{ transform: "translateY(100%)" }} />
@@ -122,7 +124,7 @@ function Waveform() {
 	return (
 		<span ref={ref} className="flex h-4 items-end gap-[3px]" aria-hidden="true">
 			{Array.from({ length: 14 }, (_, i) => (
-				<span key={i} className="block h-full w-[2px] origin-bottom scale-y-50 bg-(--pa-amber)" />
+				<span key={i} className="block h-full w-[2px] origin-bottom scale-y-50 bg-(--pa-ochre)" />
 			))}
 		</span>
 	);
@@ -157,7 +159,7 @@ function Reticle() {
 	return (
 		<div ref={ref} className="pointer-events-none fixed left-0 top-0 z-[70] opacity-0" aria-hidden="true">
 			<div className="-translate-x-1/2 -translate-y-1/2">
-				<svg width="34" height="34" viewBox="0 0 34 34" fill="none" stroke="var(--pa-amber)" strokeWidth="1.2">
+				<svg width="34" height="34" viewBox="0 0 34 34" fill="none" stroke="var(--pa-ochre)" strokeWidth="1.2">
 					<circle cx="17" cy="17" r="9" strokeDasharray="4 3" />
 					<path d="M17 0v6M17 28v6M0 17h6M28 17h6" />
 				</svg>
@@ -181,7 +183,7 @@ export function Hud({ station, mode, onToggleTheme, onJump, percentRef }) {
 						type="button"
 						onClick={onToggleTheme}
 						aria-label={light ? "Switch to dark mode" : "Switch to light mode"}
-						className="grid h-9 w-9 place-items-center border border-(--pa-line) bg-(--pa-panel)/70 text-(--pa-text) backdrop-blur-sm transition-colors hover:border-(--pa-amber) hover:text-(--pa-amber-text) sm:h-10 sm:w-10">
+						className="grid h-9 w-9 place-items-center border border-(--pa-line) bg-(--pa-panel)/70 text-(--pa-text) backdrop-blur-sm transition-colors hover:border-(--pa-ochre) hover:text-(--pa-ochre-text) sm:h-10 sm:w-10">
 						{light ? <Moon className="h-4 w-4" aria-hidden="true" /> : <Sun className="h-4 w-4" aria-hidden="true" />}
 					</button>
 					<Magnet>
@@ -189,8 +191,9 @@ export function Hud({ station, mode, onToggleTheme, onJump, percentRef }) {
 							href={PLAY_STORE_URL}
 							target="_blank"
 							rel="noopener noreferrer"
-							className="block bg-(--pa-blue) px-4 py-2.5 font-(family-name:--font-pre-mono) text-[10px] uppercase tracking-[0.2em] text-white shadow-[0_0_30px_-6px_var(--pa-blue-glow)] sm:px-5 sm:py-3 sm:text-[11px]">
-							Get the app ↗
+							aria-label="Get Epocheye on Google Play"
+							className="block rounded-lg transition-transform hover:scale-[1.04]">
+							<Image src={googlePlayBadge} alt="Get it on Google Play" width={130} height={50} priority className="h-9 w-auto sm:h-11" />
 						</a>
 					</Magnet>
 				</div>
@@ -204,17 +207,17 @@ export function Hud({ station, mode, onToggleTheme, onJump, percentRef }) {
 						onClick={() => onJump(i)}
 						aria-current={station === i ? "step" : undefined}
 						className={`group flex items-center gap-3 font-(family-name:--font-pre-mono) text-[10px] uppercase tracking-[0.22em] transition-colors ${
-							station === i ? "text-(--pa-amber-text)" : "text-(--pa-text-muted) hover:text-(--pa-text)"
+							station === i ? "text-(--pa-ochre-text)" : "text-(--pa-text-muted) hover:text-(--pa-text)"
 						}`}>
 						<span className="opacity-0 transition-opacity group-hover:opacity-100">{s.label}</span>
 						{String(i).padStart(2, "0")}
-						<span className={`h-px transition-all duration-500 ${station === i ? "w-8 bg-(--pa-amber)" : "w-3 bg-(--pa-text-muted)"}`} />
+						<span className={`h-px transition-all duration-500 ${station === i ? "w-8 bg-(--pa-ochre)" : "w-3 bg-(--pa-text-muted)"}`} />
 					</button>
 				))}
 			</nav>
 
 			<div className="pointer-events-none fixed bottom-6 left-6 z-40 font-(family-name:--font-pre-mono) text-[10px] uppercase tracking-[0.22em] text-(--pa-text-muted) sm:bottom-8 sm:left-11 sm:text-[11px]">
-				<div className="mb-1 text-(--pa-blue-text)">
+				<div className="mb-1 text-(--pa-accent-text)">
 					SECTOR {String(station).padStart(2, "0")} / {String(STATION_COUNT - 1).padStart(2, "0")}
 				</div>
 				<ScrambleText text={STATIONS[station].label.toUpperCase()} className="text-(--pa-text)" />
@@ -225,7 +228,7 @@ export function Hud({ station, mode, onToggleTheme, onJump, percentRef }) {
 					<Clock />
 				</span>
 				<span>
-					DEPTH <span ref={percentRef} className="text-(--pa-amber-text)">000</span>
+					DEPTH <span ref={percentRef} className="text-(--pa-ochre-text)">000</span>
 				</span>
 				<Waveform />
 			</div>
