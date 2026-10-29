@@ -298,6 +298,7 @@ function Orbit({ ranked, max, fade, onPick, labels }) {
 			})}
 			{labels &&
 				wide &&
+				max > 0 &&
 				ranked.slice(0, 3).map((r, i) => {
 					const a = angleOf(i);
 					return (
