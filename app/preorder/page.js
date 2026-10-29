@@ -1,7 +1,15 @@
-import PreorderClient from "@/components/preorder/PreorderClient";
-import { PREORDER_SITES } from "@/lib/preorder/sites";
-import { PLAY_STORE_URL, SITE_NAME } from "@/lib/site";
-import { rajdhani, shareTechMono } from "./fonts";
+import { Homemade_Apple, Inter, Newsreader } from "next/font/google";
+
+import PreorderExperience from "@/components/preorder/PreorderExperience";
+import { THEME_SCRIPT } from "@/components/preorder/themeScript";
+import { SITE_NAME } from "@/lib/site";
+import "./preorder.css";
+
+// Light editorial serif for display and body, tiny spaced sans capitals for
+// labels, and a hand for the sign-off.
+const serif = Newsreader({ subsets: ["latin"], weight: ["200", "300", "400"], style: ["normal", "italic"], variable: "--font-pa-serif" });
+const sans = Inter({ subsets: ["latin"], weight: ["500", "600"], variable: "--font-pa-sans" });
+const script = Homemade_Apple({ subsets: ["latin"], weight: "400", variable: "--font-pa-script" });
 
 const TITLE = "Pre-order the next Epocheye site";
 const DESCRIPTION =
@@ -24,25 +32,10 @@ export const metadata = {
 export default function Page() {
 	return (
 		<>
-			{/* Text version of the 3D page, for crawlers and screen readers. */}
-			<div className="sr-only">
-				<h1>Pre-order the next Epocheye site</h1>
-				<p>{DESCRIPTION}</p>
-				<h2>Sites you can pre-order</h2>
-				<ul>
-					{PREORDER_SITES.map((s) => (
-						<li key={s.slug}>
-							{s.name}, {s.place}
-						</li>
-					))}
-				</ul>
-				<p>
-					Epocheye is live today at four monuments in Bengaluru and Kolkata.{" "}
-					<a href={PLAY_STORE_URL}>Get Epocheye on Google Play</a>.
-				</p>
-			</div>
-			<div className={`${rajdhani.variable} ${shareTechMono.variable}`}>
-				<PreorderClient />
+			{/* Before first paint, so the page never flashes the wrong theme. */}
+			<script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+			<div className={`${serif.variable} ${sans.variable} ${script.variable}`}>
+				<PreorderExperience />
 			</div>
 		</>
 	);

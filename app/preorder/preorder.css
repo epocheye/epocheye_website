@@ -1,0 +1,53 @@
+/*
+ * /preorder: an unhurried, editorial night sky. Warm near-black ground,
+ * parchment type, hairline rules; light serif display with one italic word,
+ * tiny letter-spaced capitals for labels. "Day" swaps to parchment and ink.
+ * The theme is set on <html data-pa-theme> before first paint (see page.js).
+ */
+.pa-root {
+	--pa-bg: #14120d;
+	--pa-panel: rgba(20, 18, 13, 0.92);
+	--pa-text: #efe9d9;
+	--pa-text-soft: #b9b19f;
+	--pa-text-muted: #8b8574;
+	--pa-line: rgba(239, 233, 217, 0.16);
+	--pa-line-strong: rgba(239, 233, 217, 0.42);
+	--pa-accent: #d9c7a0;
+	--pa-error: #e8907a;
+	color-scheme: dark;
+}
+
+:root[data-pa-theme="light"] .pa-root {
+	--pa-bg: #efe9d9;
+	--pa-panel: rgba(239, 233, 217, 0.94);
+	--pa-text: #1d1a14;
+	--pa-text-soft: #4b453a;
+	--pa-text-muted: #7d7766;
+	--pa-line: rgba(29, 26, 20, 0.16);
+	--pa-line-strong: rgba(29, 26, 20, 0.42);
+	--pa-accent: #7a5f30;
+	--pa-error: #a8432c;
+	color-scheme: light;
+}
+
+/* Tiny letter-spaced capitals: every label, link and caption. */
+.pa-caps {
+	font-family: var(--font-pa-sans), system-ui, sans-serif;
+	font-size: 10px;
+	font-weight: 600;
+	letter-spacing: 0.26em;
+	text-transform: uppercase;
+}
+
+.pa-serif {
+	font-family: var(--font-pa-serif), Georgia, serif;
+}
+
+.pa-script {
+	font-family: var(--font-pa-script), cursive;
+}
+
+.pa-root ::selection {
+	background: var(--pa-text);
+	color: var(--pa-bg);
+}
