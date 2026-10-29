@@ -1,13 +1,13 @@
 import PreorderClient from "@/components/preorder/PreorderClient";
+import { PROMISE } from "@/lib/preorder/promise";
 import { PREORDER_SITES } from "@/lib/preorder/sites";
 import { PLAY_STORE_URL, SITE_NAME } from "@/lib/site";
 import { rajdhani, shareTechMono } from "./fonts";
 
 const TITLE = "Pre-order the next Epocheye site";
-const DESCRIPTION =
-	"Pick the heritage site you want to see in Epocheye next and pre-order it. The most-wanted sites get built first, and if we don't build yours, you get a full refund.";
+const DESCRIPTION = `Pick the heritage site you want to see in Epocheye next and pre-order it. ${PROMISE}`;
 
-// openGraph is replaced, not merged, when a page sets it, so repeat the layout's fields.
+// openGraph and twitter are replaced, not merged, when a page sets them, so repeat the layout's fields.
 export const metadata = {
 	title: TITLE,
 	description: DESCRIPTION,
@@ -16,6 +16,12 @@ export const metadata = {
 		type: "website",
 		siteName: SITE_NAME,
 		url: "/preorder",
+		title: TITLE,
+		description: DESCRIPTION,
+	},
+	twitter: {
+		card: "summary_large_image",
+		site: "@epocheyeinc",
 		title: TITLE,
 		description: DESCRIPTION,
 	},
