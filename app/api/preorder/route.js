@@ -25,7 +25,7 @@ function clean(value, max) {
 }
 
 // Public: the leaderboard on /preorder. Paid pre-orders for the listed sites
-// only; "other" suggestions are never shown. The price is /api/preorder/price.
+// only; "other" suggestions are never shown.
 export async function GET() {
 	try {
 		const counts = await countPreordersBySlug(SLUGS);

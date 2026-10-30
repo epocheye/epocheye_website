@@ -6,6 +6,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
 
+import { PREORDER_PRICE } from "@/lib/preorder/price";
 import { OTHER_SITE, PREORDER_SITES, SITE_BY_SLUG } from "@/lib/preorder/sites";
 import { THEMES, THEME_KEY, cssVars, initialTheme } from "./theme";
 import { STATION_COUNT, createProgress, nearestStation, stationProgress, stationWeight } from "./stations";
@@ -80,7 +81,6 @@ export default function PreorderExperience() {
 	const [webgl] = useState(hasWebGL);
 	const [mode, setMode] = useState(initialTheme);
 	const [counts, setCounts] = useState(null);
-	const [price, setPrice] = useState(null);
 	const [selected, setSelected] = useState(initialSite);
 	const [hovered, setHovered] = useState(null);
 	const [flash, setFlash] = useState(null);
@@ -106,13 +106,6 @@ export default function PreorderExperience() {
 
 	useEffect(() => {
 		loadCounts();
-		// Per visitor (rupees in India), so it is never cached with the counts.
-		fetch("/api/preorder/price", { cache: "no-store" })
-			.then((r) => r.json())
-			.then((j) => {
-				if (j?.success) setPrice(j.data.price);
-			})
-			.catch(() => {});
 	}, [loadCounts]);
 
 	// GSAP owns scrolling: ScrollSmoother on desktop, native on touch, and one
@@ -207,7 +200,7 @@ export default function PreorderExperience() {
 	if (!webgl) {
 		return (
 			<main className="min-h-screen bg-(--pa-bg) font-(family-name:--font-pre-display) font-medium" style={cssVars(palette)}>
-				<Fallback sites={PREORDER_SITES} counts={counts} price={price} selected={selected} onSelect={setSelected} onDone={onDone} />
+				<Fallback sites={PREORDER_SITES} counts={counts} price={PREORDER_PRICE} selected={selected} onSelect={setSelected} onDone={onDone} />
 				{sheets}
 			</main>
 		);
@@ -223,7 +216,7 @@ export default function PreorderExperience() {
 					intro={intro}
 					sites={PREORDER_SITES}
 					counts={counts}
-					price={price}
+					price={PREORDER_PRICE}
 					selected={selected}
 					hovered={hovered}
 					onHover={setHovered}
