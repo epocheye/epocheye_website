@@ -8,6 +8,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import { LIVE_MONUMENTS } from "@/lib/monuments/live";
+import { ScrambleText } from "@/components/preorder/reactbits";
 import logoStpi from "@/public/logo-stpi.png";
 import logoAws from "@/public/logo-aws.png";
 import logoDraper from "@/public/logo-draper.png";
@@ -32,7 +33,7 @@ const STEPS = [
 	{ shape: "video", side: "left" },
 	{ shape: "eras", side: "right" },
 	{ shape: "globe", side: "left" },
-	{ shape: "network", side: "full" },
+	{ shape: "network", side: "right" },
 	{ shape: "logo", side: "left" },
 ];
 
@@ -58,33 +59,49 @@ const subscribeWidth = (cb) => {
 const usePointCount = () =>
 	useSyncExternalStore(subscribeWidth, () => (window.matchMedia("(max-width: 767px)").matches ? 26000 : 56000), () => 56000);
 
-/* ───────────────────────── Text blocks ───────────────────────── */
+/* ───────────────────────── Text ───────────────────────── */
 
-const label = "mono-label text-[11px] text-signal";
+// No cards: the words sit straight on the scene, each headline rising word by
+// word out of its own line as it arrives, the rest fading in after it.
+
 const body = "font-mono text-sm leading-relaxed text-bone-muted";
 const headline = "font-serif text-bone leading-[0.95] kin-spaced";
 
+/** A section label with a short rule leading into it. */
+function Label({ children }) {
+	return (
+		<p className="mono-label flex items-center gap-3 text-[11px] text-signal" data-fade>
+			<span className="h-px w-8 bg-signal" aria-hidden="true" />
+			{children}
+		</p>
+	);
+}
+
+/** Words that rise one by one out of a mask as the step arrives. */
+function Words({ text, className = "" }) {
+	return text.split(" ").map((w, i) => (
+		<span key={i} className="inline-block overflow-hidden pb-[0.12em] align-bottom">
+			<span data-word className={`inline-block ${className}`}>
+				{w}
+				{" "}
+			</span>
+		</span>
+	));
+}
+
 /**
- * One scroll step: a full screen tall, its text on one side (wide screens) or
- * in a glass card at the bottom (phones), leaving the cloud room above.
+ * One scroll step, a screen tall. Wide screens: the text takes one side, the
+ * shape the other. Phones: the text sits low, the shape above it.
  */
-function Step({ index, side, id, children, wide = false, widest = false }) {
+function Step({ index, side, id, children, wide = false }) {
 	return (
 		<div
 			id={id}
 			data-step={index}
-			className={`relative flex min-h-svh w-full items-end px-4 pb-24 pt-[48svh] md:items-center md:px-10 md:py-24 ${
+			className={`relative flex min-h-svh w-full items-end px-5 pb-24 pt-[50svh] md:items-center md:px-12 md:py-24 ${
 				side === "right" ? "md:justify-end" : "md:justify-start"
 			}`}>
-			<div
-				data-reveal
-				className={`glass-panel relative w-full overflow-hidden rounded-[28px] p-6 md:rounded-[32px] md:p-9 ${
-					widest ? "md:max-w-[48rem]" : wide ? "md:max-w-[38rem]" : "md:max-w-[34rem]"
-				}`}>
-				{/* Light catching the top edge of the glass. */}
-				<span className="pointer-events-none absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-white/[0.08] to-transparent" aria-hidden="true" />
-				<div className="relative">{children}</div>
-			</div>
+			<div className={`w-full ${wide ? "md:max-w-[40rem]" : "md:max-w-[34rem]"}`}>{children}</div>
 		</div>
 	);
 }
@@ -92,19 +109,20 @@ function Step({ index, side, id, children, wide = false, widest = false }) {
 function Manifesto({ points }) {
 	return (
 		<>
-			<p className={label}>Epocheye — Est. 2026</p>
-			<h2 className={`${headline} mt-4`} style={{ fontSize: "clamp(56px, 9vw, 132px)" }}>
-				See
+			<Label>Epocheye — Est. 2026</Label>
+			<h2 className={`${headline} mt-5`} style={{ fontSize: "clamp(64px, 10vw, 150px)" }}>
+				<Words text="See" />
 				<br />
-				<em className="text-bone-muted">through</em>
+				<Words text="through" className="italic text-bone-muted" />
 				<br />
-				<span className="text-signal glow-signal">time.</span>
+				<Words text="time." className="text-signal glow-signal" />
 			</h2>
-			<p className={`${body} mt-6 max-w-md`}>
+			<p className={`${body} mt-6 max-w-md`} data-fade>
 				Historical intelligence for the physical world. Point your phone at a monument and see what the record says stood there.
 			</p>
-			<p className="mono-label mt-6 text-[10px] text-bone-faint">
-				{`Konark Sun Temple, as ${points.toLocaleString("en-IN")} points of light. Move through it.`}
+			<p className="mono-label mt-6 flex items-center gap-2 text-[10px] text-bone-muted" data-fade>
+				<span className="h-1.5 w-1.5 animate-pulse rounded-full bg-signal" aria-hidden="true" />
+				{`Konark Sun Temple · ${points.toLocaleString("en-IN")} points · move through it`}
 			</p>
 		</>
 	);
@@ -112,41 +130,43 @@ function Manifesto({ points }) {
 
 function Where() {
 	const cityIndex = (name) => CITIES.findIndex((c) => c.name === name);
+	const light = (m) => () => {
+		ui.city = cityIndex(m.city);
+	};
+	const dim = () => {
+		ui.city = -1;
+	};
 	return (
 		<>
-			<p className={label}>01 — Where it works</p>
-			<h2 className={`${headline} mt-4`} style={{ fontSize: "clamp(40px, 6vw, 84px)" }}>
-				Live at four monuments.
+			<Label>01 — Where it works</Label>
+			<h2 className={`${headline} mt-5`} style={{ fontSize: "clamp(44px, 6.5vw, 96px)" }}>
+				<Words text="Live at four monuments." />
 			</h2>
-			<ul className="mt-6 divide-y divide-rule border-y border-rule">
-				{LIVE_MONUMENTS.map((m) => (
+			{/* Point at a name: its city lights up on the map. */}
+			<ol className="mt-7 space-y-1" data-fade>
+				{LIVE_MONUMENTS.map((m, i) => (
 					<li key={m.slug}>
 						<Link
 							href={`/monuments/${m.slug}`}
-							onPointerEnter={() => {
-								ui.city = cityIndex(m.city);
-							}}
-							onPointerLeave={() => {
-								ui.city = -1;
-							}}
-							onFocus={() => {
-								ui.city = cityIndex(m.city);
-							}}
-							onBlur={() => {
-								ui.city = -1;
-							}}
-							className="group flex items-baseline justify-between gap-4 py-3 transition-colors">
-							<span className="font-serif text-2xl text-bone transition-colors group-hover:text-signal md:text-3xl">{m.name}</span>
-							<span className="mono-label shrink-0 text-[10px] text-bone-muted">{m.city} ↗</span>
+							onPointerEnter={light(m)}
+							onPointerLeave={dim}
+							onFocus={light(m)}
+							onBlur={dim}
+							className="group flex items-baseline gap-4 py-1">
+							<span className="mono-label w-6 shrink-0 text-[10px] text-bone-faint">{String(i + 1).padStart(2, "0")}</span>
+							<span className="link-sweep font-serif text-2xl text-bone transition-colors group-hover:text-signal md:text-[34px]">{m.name}</span>
+							<span className="mono-label text-[10px] text-bone-muted opacity-60 transition-all duration-500 group-hover:translate-x-1 group-hover:text-signal group-hover:opacity-100">
+								{m.city} ↗
+							</span>
 						</Link>
 					</li>
 				))}
-			</ul>
-			<div className="mt-6 flex items-center gap-5">
+			</ol>
+			<div className="mt-8 flex items-center gap-6" data-fade>
 				<span className="mono-label text-[10px] text-bone-faint">Backed by</span>
-				<Image src={logoStpi} alt="Software Technology Parks of India" width={200} height={200} className="h-8 w-auto" />
-				<Image src={logoAws} alt="Amazon Web Services" width={225} height={225} className="-mx-2 h-12 w-auto" />
-				<Image src={logoDraper} alt="Draper Startup House" width={653} height={382} className="h-6 w-auto" />
+				<Image src={logoStpi} alt="Software Technology Parks of India" width={200} height={200} className="h-8 w-auto opacity-80" />
+				<Image src={logoAws} alt="Amazon Web Services" width={225} height={225} className="-mx-2 h-12 w-auto opacity-80" />
+				<Image src={logoDraper} alt="Draper Startup House" width={653} height={382} className="h-6 w-auto opacity-80" />
 			</div>
 		</>
 	);
@@ -166,20 +186,35 @@ const STACK = [
 	},
 ];
 
-function Capability({ item, first }) {
+/** A capability: a huge outlined numeral behind its name, and three ticks for where you are in the three. */
+function Capability({ item, index }) {
 	return (
 		<>
-			<p className={label}>{first ? "02 — The stack" : `02 — The stack · ${item.n} / 03`}</p>
-			{first && (
-				<p className="mt-4 font-serif text-2xl leading-tight text-bone-muted md:text-3xl">Three systems. One impossible product.</p>
+			<Label>02 — The stack</Label>
+			{index === 0 && (
+				<p className="mt-5 font-serif text-2xl leading-tight text-bone-muted md:text-3xl" data-fade>
+					Three systems. One impossible product.
+				</p>
 			)}
-			<div className="mt-6 flex items-baseline gap-4">
-				<span className="font-serif text-5xl leading-none text-signal md:text-6xl">{item.n}</span>
-				<h3 className={headline} style={{ fontSize: "clamp(36px, 5vw, 68px)" }}>
-					{item.title}
+			<div className="relative mt-4">
+				<span
+					className="text-outline pointer-events-none absolute -left-2 -top-10 select-none font-serif leading-none md:-top-16"
+					style={{ fontSize: "clamp(120px, 16vw, 230px)" }}
+					aria-hidden="true">
+					{item.n}
+				</span>
+				<h3 className={`${headline} relative pt-16 md:pt-24`} style={{ fontSize: "clamp(42px, 6vw, 88px)" }}>
+					<Words text={item.title} />
 				</h3>
 			</div>
-			<p className={`${body} mt-5`}>{item.desc}</p>
+			<p className={`${body} mt-5 max-w-md`} data-fade>
+				{item.desc}
+			</p>
+			<div className="mt-7 flex gap-2" role="img" aria-label={`${index + 1} of 3`} data-fade>
+				{STACK.map((s, k) => (
+					<span key={s.n} className={`h-[3px] rounded-full transition-all duration-700 ${k === index ? "w-12 bg-signal" : "w-5 bg-white/20"}`} />
+				))}
+			</div>
 		</>
 	);
 }
@@ -191,25 +226,40 @@ const COLLECTION = [
 	{ name: "Taj Mahal", place: "Taj Mahal · India" },
 ];
 
-function Collection({ item, first }) {
+/** The roster runs past as a ticker; the one being rebuilt is lit. */
+function Ticker({ active }) {
+	const row = (dup) =>
+		ROSTER.map((r) => (
+			<span key={`${dup}${r}`} className={`flex items-center gap-6 font-serif text-3xl md:text-4xl ${r === active ? "text-signal" : "text-bone/25"}`}>
+				{r}
+				<span className="text-base text-bone/20">✦</span>
+			</span>
+		));
+	return (
+		<div className="mt-7 overflow-hidden [mask-image:linear-gradient(90deg,transparent,black_12%,black_88%,transparent)]" aria-hidden="true" data-fade>
+			<div className="ticker flex w-max gap-6">
+				{row("a")}
+				{row("b")}
+			</div>
+		</div>
+	);
+}
+
+function Collection({ item, index }) {
 	return (
 		<>
-			<p className={label}>{"// The collection"}</p>
-			{first ? (
-				<h2 className={`${headline} mt-4`} style={{ fontSize: "clamp(44px, 7vw, 104px)" }}>
-					A world, rebuilt.
-				</h2>
-			) : (
-				<p className="mt-4 font-serif text-3xl text-bone-muted">A world, rebuilt.</p>
-			)}
-			<p className={`${body} mt-5`}>{`Assembled across the ages, point by point. Now: ${item.place}.`}</p>
-			<ol className="mt-6 grid grid-cols-3 gap-x-4 gap-y-2">
-				{ROSTER.map((r, i) => (
-					<li key={r} className={`mono-label text-[10px] transition-colors ${r === item.name ? "text-signal" : "text-bone-faint"}`}>
-						{`${String(i + 1).padStart(2, "0")} ${r}`}
-					</li>
-				))}
-			</ol>
+			<Label>03 — The collection</Label>
+			<h2 className={`${headline} mt-5`} style={{ fontSize: index === 0 ? "clamp(48px, 7.5vw, 112px)" : "clamp(32px, 4vw, 56px)" }}>
+				<Words text="A world, rebuilt." className={index === 0 ? "" : "text-bone-muted"} />
+			</h2>
+			<p className="mono-label mt-6 text-[11px] text-bone-muted" data-fade>
+				Now rebuilding
+			</p>
+			<p className="mt-1 font-serif text-3xl text-bone md:text-4xl" data-fade>
+				<ScrambleText text={item.place} />
+			</p>
+			<p className="sr-only">{`The collection: ${ROSTER.join(", ")}.`}</p>
+			<Ticker active={item.name} />
 		</>
 	);
 }
@@ -217,25 +267,31 @@ function Collection({ item, first }) {
 function Field() {
 	return (
 		<>
-			<p className={label}>{"// In the field"}</p>
-			<h2 className={`${headline} mt-4`} style={{ fontSize: "clamp(44px, 7vw, 104px)" }}>
-				Heritage, <em className="text-signal">in motion.</em>
+			<Label>04 — In the field</Label>
+			<h2 className={`${headline} mt-5`} style={{ fontSize: "clamp(52px, 8vw, 124px)" }}>
+				<Words text="Heritage," />
+				<br />
+				<Words text="in motion." className="italic text-signal" />
 			</h2>
-			<p className={`${body} mt-5`}>
-				Real footage from the Epocheye AR prototype. Point, and the past renders in place. Every point here takes its colour from a pixel
-				of that clip, live.
+			<p className={`${body} mt-6 max-w-md`} data-fade>
+				Real footage from the Epocheye AR prototype. Point, and the past renders in place. Every point here takes its colour from a pixel of
+				that clip, live.
+			</p>
+			<p className="mono-label mt-5 flex items-center gap-2 text-[10px] text-bone-muted" data-fade>
+				<span className="h-2 w-2 animate-pulse rounded-full bg-red-500" aria-hidden="true" />
+				Playing · AR prototype
 			</p>
 		</>
 	);
 }
 
 const HOW = [
-	["01", "Point", "Aim your phone at any heritage monument in front of you."],
-	["02", "Scrub", "Drag the timeline to slide through centuries of its history."],
-	["03", "Travel", "Unlock stories and reconstructions verified by historians."],
+	["Point", "Aim your phone at any heritage monument in front of you."],
+	["Scrub", "Drag the timeline to slide through centuries of its history."],
+	["Travel", "Unlock stories and reconstructions verified by historians."],
 ];
 
-/** The timeline: drag it (or let it play) and the cloud rebuilds each era. */
+/** The timeline: a giant year you scrub (or let play), and the cloud rebuilds each era. */
 function Eras({ active }) {
 	const [era, setEra] = useState(0);
 	const [value, setValue] = useState(0);
@@ -270,65 +326,61 @@ function Eras({ active }) {
 	const hold = () => {
 		held.current = performance.now() + 9000;
 	};
+	const step = Math.min(era, 2);
 
 	return (
 		<>
-			<p className={label}>03 — How it works</p>
-			<h2 className={`${headline} mt-4`} style={{ fontSize: "clamp(40px, 6vw, 88px)" }}>
-				Point. Scrub. Travel.
-			</h2>
-			<div className="mt-7">
-				<div className="flex items-baseline justify-between">
-					<span className="font-serif text-4xl text-bone md:text-5xl">{ERAS[era].year}</span>
-					<span className="mono-label text-[10px] text-signal">{ERAS[era].label}</span>
-				</div>
-				<input
-					type="range"
-					min={0}
-					max={ERAS.length - 1}
-					step={0.01}
-					value={value}
-					aria-label="Timeline"
-					aria-valuetext={ERAS[era].year}
-					onPointerDown={() => {
-						hold();
-						tween.current?.kill();
-					}}
-					onChange={(e) => {
-						hold();
-						const v = Number(e.target.value);
-						ui.era = v;
-						setValue(v);
-						setEra(Math.round(v));
-					}}
-					onPointerUp={() => go(Math.round(ui.era))}
-					onKeyUp={() => go(Math.round(ui.era))}
-					className="era-range mt-4 w-full"
-				/>
-				<div className="mt-2 flex justify-between">
-					{ERAS.map((e, i) => (
-						<button
-							key={e.year}
-							type="button"
-							onClick={() => {
-								hold();
-								go(i);
-							}}
-							className={`mono-label text-[10px] transition-colors ${i === era ? "text-signal" : "text-bone-muted hover:text-bone"}`}>
-							{e.year}
-						</button>
-					))}
-				</div>
-			</div>
-			<ol className="mt-8 grid grid-cols-3 gap-4 border-t border-rule pt-5">
-				{HOW.map(([n, t, d], i) => (
-					<li key={n} className={`transition-opacity duration-500 ${Math.min(era, 2) === i ? "opacity-100" : "opacity-40"}`}>
-						<span className="font-serif text-2xl text-signal">{n}</span>
-						<p className="font-serif text-xl text-bone">{t}</p>
-						<p className="mt-1 hidden font-mono text-[11px] leading-relaxed text-bone-muted md:block">{d}</p>
-					</li>
+			<Label>05 — How it works</Label>
+			<h2 className="mt-5 flex flex-wrap gap-x-4 font-serif leading-none kin-spaced" style={{ fontSize: "clamp(40px, 5.5vw, 80px)" }}>
+				{HOW.map(([w], i) => (
+					<span key={w} className={`transition-colors duration-700 ${i === step ? "text-bone" : "text-bone/25"}`}>
+						{w}.
+					</span>
 				))}
-			</ol>
+			</h2>
+			<p className={`${body} mt-3 min-h-[3em] max-w-md`}>{HOW[step][1]}</p>
+			{/* The year, huge: it is what you are scrubbing. */}
+			<p className="mt-4 font-serif leading-[0.85] text-signal" style={{ fontSize: "clamp(84px, 12vw, 180px)" }} aria-live="polite">
+				<ScrambleText text={ERAS[era].year} />
+			</p>
+			<p className="mono-label mt-2 text-[10px] text-bone-muted">{ERAS[era].label}</p>
+			<input
+				type="range"
+				min={0}
+				max={ERAS.length - 1}
+				step={0.01}
+				value={value}
+				aria-label="Timeline"
+				aria-valuetext={ERAS[era].year}
+				onPointerDown={() => {
+					hold();
+					tween.current?.kill();
+				}}
+				onChange={(e) => {
+					hold();
+					const v = Number(e.target.value);
+					ui.era = v;
+					setValue(v);
+					setEra(Math.round(v));
+				}}
+				onPointerUp={() => go(Math.round(ui.era))}
+				onKeyUp={() => go(Math.round(ui.era))}
+				className="era-range mt-6 w-full"
+			/>
+			<div className="mt-3 flex justify-between">
+				{ERAS.map((e, i) => (
+					<button
+						key={e.year}
+						type="button"
+						onClick={() => {
+							hold();
+							go(i);
+						}}
+						className={`mono-label text-[10px] transition-colors ${i === era ? "text-signal" : "text-bone-muted hover:text-bone"}`}>
+						{e.year}
+					</button>
+				))}
+			</div>
 		</>
 	);
 }
@@ -340,7 +392,7 @@ function pickDestination(k, holdFor = 9000) {
 	return k;
 }
 
-/** The roster: point at a site and the globe turns to it; otherwise it tours them. */
+/** A departures board: point at a row and the globe turns to it; otherwise it tours them. */
 function Destinations({ active }) {
 	const [picked, setPicked] = useState(0);
 	const pick = (k) => setPicked(pickDestination(k));
@@ -352,159 +404,80 @@ function Destinations({ active }) {
 		}, 3200);
 		return () => clearInterval(id);
 	}, [active]);
+	const d = DESTINATIONS[picked];
 	return (
 		<>
-			<p className={label}>04 — Where we&apos;re headed</p>
-			<h2 className={`${headline} mt-4`} style={{ fontSize: "clamp(40px, 6vw, 88px)" }}>
-				We&apos;re coming to these.
+			<Label>06 — Where we&apos;re headed</Label>
+			<h2 className={`${headline} mt-5`} style={{ fontSize: "clamp(40px, 6vw, 88px)" }}>
+				<Words text="We're coming to these." />
 			</h2>
-			<p className={`${body} mt-4 hidden md:block`}>The world&apos;s monuments, rebuilt and narrated in AR. Five continents, launching 2026.</p>
-			<ul className="mt-6 grid grid-cols-2 gap-x-6 border-t border-rule pt-4">
-				{DESTINATIONS.map((d, k) => (
-					<li key={d.name}>
+			<p className="mt-6 font-serif text-4xl leading-none text-signal md:text-5xl" aria-live="polite">
+				<ScrambleText text={d.name} />
+			</p>
+			<p className="mono-label mt-2 text-[10px] text-bone-muted">{`${d.place} · ${d.coord} · Coming 2026`}</p>
+			<ol className="mt-6 font-mono text-[11px] uppercase tracking-[0.16em] md:text-xs" data-fade>
+				{DESTINATIONS.map((x, k) => (
+					<li key={x.name}>
 						<button
 							type="button"
 							onPointerEnter={() => pick(k)}
 							onFocus={() => pick(k)}
 							onClick={() => pick(k)}
-							className={`flex w-full items-baseline gap-2 py-1.5 text-left transition-colors ${k === picked ? "text-signal" : "text-bone-muted hover:text-bone"}`}>
-							<span className="mono-label text-[10px] opacity-60">{String(k + 1).padStart(2, "0")}</span>
-							<span className="font-serif text-lg md:text-xl">{d.name}</span>
+							className={`flex w-full items-baseline gap-3 py-[3px] text-left transition-colors ${k === picked ? "text-signal" : "text-bone-muted hover:text-bone"}`}>
+							<span className="w-5 opacity-50">{String(k + 1).padStart(2, "0")}</span>
+							<span className="shrink-0">{x.name}</span>
+							<span className="mb-[3px] flex-1 border-b border-dotted border-current opacity-30" aria-hidden="true" />
+							<span className="shrink-0">{x.place}</span>
 						</button>
 					</li>
 				))}
-			</ul>
-			<p className="mono-label mt-4 text-[10px] text-bone-faint">{`${DESTINATIONS[picked].place} · ${DESTINATIONS[picked].coord} · Coming 2026`}</p>
+			</ol>
 		</>
 	);
 }
 
-/**
- * Frosted glass that leans toward the pointer, with a soft signal light
- * following it across the surface. The cloud behind shows through the blur.
- */
-function GlassCard({ href, children, className = "" }) {
-	const move = (e) => {
-		const el = e.currentTarget;
-		const r = el.getBoundingClientRect();
-		const x = (e.clientX - r.left) / r.width;
-		const y = (e.clientY - r.top) / r.height;
-		el.style.setProperty("--mx", `${x * 100}%`);
-		el.style.setProperty("--my", `${y * 100}%`);
-		el.style.setProperty("--rx", `${(0.5 - y) * 8}deg`);
-		el.style.setProperty("--ry", `${(x - 0.5) * 10}deg`);
-	};
-	const leave = (e) => {
-		e.currentTarget.style.setProperty("--rx", "0deg");
-		e.currentTarget.style.setProperty("--ry", "0deg");
-	};
-	return (
-		<a
-			href={href}
-			target="_blank"
-			rel="noopener noreferrer"
-			onPointerMove={move}
-			onPointerLeave={leave}
-			className={`glass-card group relative flex flex-col overflow-hidden rounded-[28px] border border-white/[0.12] bg-[rgba(18,18,20,0.55)] p-6 shadow-[0_24px_70px_-24px_rgba(0,0,0,0.9),inset_0_1px_0_rgba(255,255,255,0.14)] backdrop-blur-2xl hover:border-signal/45 hover:shadow-[0_30px_80px_-24px_rgba(204,255,0,0.22),inset_0_1px_0_rgba(255,255,255,0.18)] ${className}`}>
-			{/* Light that follows the pointer, and a sheen across the top edge. */}
-			<span className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100 [background:radial-gradient(420px_circle_at_var(--mx,50%)_var(--my,0%),rgba(204,255,0,0.16),transparent_60%)]" />
-			<span className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-white/[0.09] to-transparent" />
-			<div className="relative flex flex-1 flex-col items-start">{children}</div>
-		</a>
-	);
-}
-
-function LivePill({ children }) {
-	return (
-		<span className="inline-flex items-center gap-2 rounded-full border border-signal/30 bg-signal/[0.08] px-3 py-1 font-mono text-[10px] uppercase tracking-[0.2em] text-signal">
-			<span className="relative flex h-1.5 w-1.5">
-				<span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-signal opacity-60" />
-				<span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-signal" />
-			</span>
-			{children}
-		</span>
-	);
-}
-
-function CardCta({ children }) {
-	return (
-		<span className="mt-auto inline-flex items-center gap-2 rounded-full border border-signal/40 bg-signal/[0.12] px-4 py-2 font-mono text-[11px] uppercase tracking-[0.18em] text-signal shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] transition-all duration-300 group-hover:bg-signal group-hover:text-ink">
-			{children}
-			<span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-		</span>
-	);
-}
-
-function CreatorsCard() {
-	return (
-		<GlassCard href="https://creators.epocheye.com">
-			<LivePill>Applications open</LivePill>
-			<p className="mt-4 font-serif text-[28px] leading-tight text-bone">Creators Program is live</p>
-			<p className="mt-2 font-mono text-xs leading-relaxed text-bone-muted">
-				Turn heritage storytelling into income. Apply, get verified, earn on every booking you drive.
-			</p>
-			{/* The three steps, as frosted chips joined by a line. */}
-			<ol className="mb-5 mt-5 flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.16em] text-bone">
-				{["Apply", "Get verified", "Earn"].map((s, i) => (
-					<li key={s} className="flex items-center gap-1.5">
-						{i > 0 && <span className="h-px w-3 bg-signal/50" aria-hidden="true" />}
-						<span className="rounded-full border border-white/[0.14] bg-white/[0.06] px-2.5 py-1">{s}</span>
-					</li>
-				))}
-			</ol>
-			<CardCta>Apply as a creator</CardCta>
-		</GlassCard>
-	);
-}
-
-/** A tiny live dashboard: a line that keeps drawing itself and three meters that breathe. */
-function PayoutsCard() {
-	return (
-		<GlassCard href="https://creators.epocheye.com">
-			<LivePill>Live dashboard</LivePill>
-			<p className="mt-4 font-serif text-[28px] leading-tight text-bone">Payout tracking, in real time</p>
-			<p className="mt-2 font-mono text-xs leading-relaxed text-bone-muted">
-				Watch clicks, conversions, and UPI payouts update live. Full transparency on every rupee you earn.
-			</p>
-			<div className="mb-5 mt-5 w-full rounded-2xl border border-white/[0.1] bg-black/30 p-4" aria-hidden="true">
-				<svg viewBox="0 0 240 56" className="h-12 w-full" fill="none">
-					<defs>
-						<linearGradient id="spark-fill" x1="0" x2="0" y1="0" y2="1">
-							<stop offset="0%" stopColor="#CCFF00" stopOpacity="0.28" />
-							<stop offset="100%" stopColor="#CCFF00" stopOpacity="0" />
-						</linearGradient>
-					</defs>
-					<path d="M0 46 L24 40 L48 43 L72 30 L96 34 L120 22 L144 26 L168 14 L192 18 L216 8 L240 10 L240 56 L0 56 Z" fill="url(#spark-fill)" />
-					<path className="glass-spark" d="M0 46 L24 40 L48 43 L72 30 L96 34 L120 22 L144 26 L168 14 L192 18 L216 8 L240 10" stroke="#CCFF00" strokeWidth="1.6" strokeLinejoin="round" />
-				</svg>
-				<div className="mt-3 space-y-2">
-					{["Clicks", "Conversions", "UPI payouts"].map((m, i) => (
-						<div key={m} className="flex items-center gap-3">
-							<span className="w-24 shrink-0 font-mono text-[10px] uppercase tracking-[0.14em] text-bone-muted">{m}</span>
-							<span className="h-1 flex-1 overflow-hidden rounded-full bg-white/[0.08]">
-								<span className="glass-meter block h-full rounded-full bg-signal" style={{ animationDelay: `${i * -1.3}s` }} />
-							</span>
-						</div>
-					))}
-				</div>
-			</div>
-			<CardCta>Creator login</CardCta>
-		</GlassCard>
-	);
-}
-
+/** Creators: how it works as three words joined by lines that draw themselves, then two plain links. */
 function Network() {
 	return (
 		<>
-			<p className={label}>05 — The network</p>
-			<h2 className={`${headline} mt-4`} style={{ fontSize: "clamp(36px, 5vw, 72px)" }}>
-				Built with the people who tell these stories.
+			<Label>07 — The network</Label>
+			<h2 className={`${headline} mt-5`} style={{ fontSize: "clamp(40px, 5.6vw, 84px)" }}>
+				<Words text="Built with the people who tell these stories." />
 			</h2>
-			<div className="mt-6 grid gap-4 lg:grid-cols-2">
-				<CreatorsCard />
-				<PayoutsCard />
+			<p className="mono-label mt-7 flex items-center gap-2 text-[10px] text-signal" data-fade>
+				<span className="h-1.5 w-1.5 animate-pulse rounded-full bg-signal" aria-hidden="true" />
+				Creators Program · applications open
+			</p>
+			<ol className="mt-4 flex flex-wrap items-center gap-3 font-serif text-3xl text-bone md:text-5xl" data-fade>
+				{["Apply", "Get verified", "Earn"].map((w, i) => (
+					<li key={w} className="flex items-center gap-3">
+						{i > 0 && <span data-draw className="block h-px w-6 origin-left bg-signal md:w-12" aria-hidden="true" />}
+						<span className={i === 2 ? "italic text-signal" : ""}>{w}</span>
+					</li>
+				))}
+			</ol>
+			<p className={`${body} mt-5 max-w-md`} data-fade>
+				Turn heritage storytelling into income, and earn on every booking you drive. Clicks, conversions and UPI payouts update live on
+				your dashboard: every rupee in the open.
+			</p>
+			<div className="mt-7 flex flex-wrap gap-x-8 gap-y-3" data-fade>
+				{[
+					["Apply as a creator", "https://creators.epocheye.com"],
+					["Creator login", "https://creators.epocheye.com"],
+				].map(([t, href], i) => (
+					<a
+						key={t}
+						href={href}
+						target="_blank"
+						rel="noopener noreferrer"
+						className={`link-sweep group font-serif text-2xl md:text-3xl ${i === 0 ? "text-signal" : "text-bone"}`}>
+						{t} <span className="inline-block transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1">↗</span>
+					</a>
+				))}
 			</div>
-			<p className="mono-label mt-5 text-[10px] text-bone-faint">Verified by historians / 100% accurate sources / Expert-curated content</p>
+			<p className="mono-label mt-8 text-[10px] text-bone-faint" data-fade>
+				Verified by historians / 100% accurate sources / Expert-curated content
+			</p>
 		</>
 	);
 }
@@ -512,29 +485,26 @@ function Network() {
 function Team() {
 	return (
 		<>
-			<p className={label}>06 — The team</p>
-			<h2 className={`${headline} mt-4`} style={{ fontSize: "clamp(44px, 7vw, 104px)" }}>
-				Operators, <em className="text-bone-muted">not tourists.</em>
+			<Label>08 — The team</Label>
+			<h2 className={`${headline} mt-5`} style={{ fontSize: "clamp(52px, 8vw, 124px)" }}>
+				<Words text="Operators," />
+				<br />
+				<Words text="not tourists." className="italic text-bone-muted" />
 			</h2>
-			<div className="mt-6 border-t border-rule pt-5">
-				<p className="font-serif text-3xl text-bone">Sambit Singha</p>
-				<p className="mono-label mt-1 text-[11px] text-signal">Founder &amp; CEO</p>
-				<p className={`${body} mt-3`}>
-					Full-stack engineer and product builder. Shipped at two startups before building the Epocheye AR prototype from scratch.
-				</p>
-			</div>
-			<div className="mt-6 border-t border-rule pt-5">
-				<p className="font-serif text-2xl leading-snug text-bone">Investor or partner? Let&apos;s build the future of heritage.</p>
-				<p className={`${body} mt-2`}>
-					We&apos;re raising to scale coverage across continents. If you back deep-tech with cultural impact, we should talk.
-				</p>
-				<a
-					href="mailto:sambit@epocheye.app"
-					className="mono-label mt-5 inline-flex items-center rounded-full bg-signal px-7 py-4 text-xs text-ink box-glow-signal transition-transform hover:scale-[1.03]">
-					Get in touch →
-				</a>
-			</div>
-			<p className="mono-label mt-8 flex flex-wrap gap-x-3 gap-y-1 text-[10px] text-bone-faint">
+			<p className="mt-7 font-serif text-2xl text-bone" data-fade>
+				Sambit Singha <span className="mono-label ml-2 align-middle text-[10px] text-signal">Founder &amp; CEO</span>
+			</p>
+			<p className={`${body} mt-2 max-w-md`} data-fade>
+				Full-stack engineer and product builder. Shipped at two startups before building the Epocheye AR prototype from scratch.
+			</p>
+			<p className="mt-7 max-w-md font-serif text-xl leading-snug text-bone-muted" data-fade>
+				Investor or partner? We&apos;re raising to scale coverage across continents. If you back deep-tech with cultural impact, we should
+				talk.
+			</p>
+			<a href="mailto:sambit@epocheye.app" className="link-sweep group mt-4 inline-block font-serif text-3xl text-signal md:text-4xl" data-fade>
+				Let&apos;s build the future of heritage <span className="inline-block transition-transform duration-300 group-hover:translate-x-2">→</span>
+			</a>
+			<p className="mono-label mt-10 flex flex-wrap gap-x-3 gap-y-1 text-[10px] text-bone-faint" data-fade>
 				<span>© 2026 Epocheye Private Limited</span>
 				<Link href="/privacy" className="hover:text-signal">
 					Privacy
@@ -601,18 +571,17 @@ export default function Journey() {
 		}
 		triggers.push(ScrollTrigger.create({ trigger: root, start: "top bottom", end: "bottom top", onUpdate: update, onRefresh: () => (measure(), update()) }));
 
-		// Each step's text rises in as it arrives.
+		// Each step arrives in order: its headline rises word by word out of
+		// its own line, then the rest fades up, and connecting lines draw in.
 		const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
 		const reveals = reduced
 			? []
 			: els.map((el) =>
-					gsap.from(el.querySelector("[data-reveal]"), {
-						opacity: 0,
-						y: 40,
-						duration: 0.9,
-						ease: "power3.out",
-						scrollTrigger: { trigger: el, start: "top 70%", toggleActions: "play none none reverse" },
-					})
+					gsap
+						.timeline({ scrollTrigger: { trigger: el, start: "top 65%", toggleActions: "play none none reverse" } })
+						.from(el.querySelectorAll("[data-word]"), { yPercent: 115, rotate: 4, duration: 0.9, ease: "power4.out", stagger: 0.05 })
+						.from(el.querySelectorAll("[data-fade]"), { opacity: 0, y: 18, duration: 0.7, ease: "power3.out", stagger: 0.08 }, "-=0.55")
+						.from(el.querySelectorAll("[data-draw]"), { scaleX: 0, duration: 0.6, ease: "power2.inOut", stagger: 0.25 }, "-=0.4")
 				);
 
 		const onMove = () => {
@@ -640,6 +609,17 @@ export default function Journey() {
 			{webgl && (
 				<div ref={stage} className="relative h-svh w-full overflow-hidden" aria-hidden="true">
 					<Particles track={track} active={active} eventSource={section} count={points} />
+					{/* A soft shade on the side the text is on, so words read without a card behind them. */}
+					<div
+						className={`pointer-events-none absolute inset-0 transition-opacity duration-700 max-md:bg-gradient-to-t max-md:from-[#04060a] max-md:via-[#04060a]/75 max-md:via-45% max-md:to-transparent max-md:to-70% md:bg-gradient-to-r md:from-[#04060a]/80 md:via-[#04060a]/30 md:via-35% md:to-transparent md:to-55% ${
+							STEPS[step].side === "left" ? "opacity-100" : "opacity-0"
+						}`}
+					/>
+					<div
+						className={`pointer-events-none absolute inset-0 transition-opacity duration-700 max-md:bg-gradient-to-t max-md:from-[#04060a] max-md:via-[#04060a]/75 max-md:via-45% max-md:to-transparent max-md:to-70% md:bg-gradient-to-l md:from-[#04060a]/80 md:via-[#04060a]/30 md:via-35% md:to-transparent md:to-55% ${
+							STEPS[step].side === "left" ? "opacity-0" : "opacity-100"
+						}`}
+					/>
 					{/* Labels pinned to points in the cloud (the frame loop places them). */}
 					{CITIES.map((c) => (
 						<span
@@ -663,7 +643,7 @@ export default function Journey() {
 							{d.name}
 						</span>
 					))}
-					<p className="glass-panel pointer-events-none absolute bottom-6 right-6 hidden rounded-2xl px-4 py-3 text-right font-mono text-[10px] uppercase tracking-[0.22em] text-bone-muted md:block">
+					<p className="pointer-events-none absolute bottom-7 right-10 hidden text-right font-mono text-[10px] uppercase tracking-[0.22em] text-bone-muted md:block">
 						<span className="text-signal">{`${points.toLocaleString("en-IN")} points`}</span>
 						<br />
 						{caption ?? "Drag the timeline"}
@@ -680,24 +660,24 @@ export default function Journey() {
 				</Step>
 				{STACK.map((item, k) => (
 					<Step key={item.n} index={2 + k} side="left" id={k === 0 ? "capabilities" : undefined}>
-						<Capability item={item} first={k === 0} />
+						<Capability item={item} index={k} />
 					</Step>
 				))}
 				{COLLECTION.map((item, k) => (
-					<Step key={item.name} index={5 + k} side="right" id={k === 0 ? "collection" : undefined}>
-						<Collection item={item} first={k === 0} />
+					<Step key={item.name} index={5 + k} side="right" id={k === 0 ? "collection" : undefined} wide>
+						<Collection item={item} index={k} />
 					</Step>
 				))}
 				<Step index={8} side="left" id="field">
 					<Field />
 				</Step>
-				<Step index={9} side="right" id="how-it-works" wide>
+				<Step index={9} side="right" id="how-it-works">
 					<Eras active={step === 9} />
 				</Step>
-				<Step index={10} side="left" id="destinations" wide>
+				<Step index={10} side="left" id="destinations">
 					<Destinations active={step === 10} />
 				</Step>
-				<Step index={11} side="right" id="creators" widest>
+				<Step index={11} side="right" id="creators" wide>
 					<Network />
 				</Step>
 				<Step index={12} side="left" id="team">
