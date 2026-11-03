@@ -128,6 +128,13 @@ function Manifesto({ points }) {
 	);
 }
 
+// Logo heights differ because each file carries different padding: these make the marks look the same size.
+const BACKERS = [
+	{ name: "STPI", logo: logoStpi, w: 200, h: 200, className: "h-16 md:h-20" },
+	{ name: "Amazon Web Services", logo: logoAws, w: 225, h: 225, className: "-my-4 h-24 md:-my-5 md:h-32" },
+	{ name: "Draper Startup House", logo: logoDraper, w: 653, h: 382, className: "h-11 md:h-14" },
+];
+
 function Where() {
 	const cityIndex = (name) => CITIES.findIndex((c) => c.name === name);
 	const light = (m) => () => {
@@ -162,11 +169,17 @@ function Where() {
 					</li>
 				))}
 			</ol>
-			<div className="mt-8 flex items-center gap-6" data-fade>
-				<span className="mono-label text-[10px] text-bone-faint">Backed by</span>
-				<Image src={logoStpi} alt="Software Technology Parks of India" width={200} height={200} className="h-8 w-auto opacity-80" />
-				<Image src={logoAws} alt="Amazon Web Services" width={225} height={225} className="-mx-2 h-12 w-auto opacity-80" />
-				<Image src={logoDraper} alt="Draper Startup House" width={653} height={382} className="h-6 w-auto opacity-80" />
+			{/* Who backs us, big and in white so it reads at a glance. */}
+			<div className="mt-10" data-fade>
+				<p className="mono-label text-[11px] text-signal">Backed by</p>
+				<div className="mt-4 flex flex-wrap items-center gap-x-10 gap-y-6">
+					{BACKERS.map((b) => (
+						<figure key={b.name} className="flex flex-col items-start gap-2">
+							<Image src={b.logo} alt={b.name} width={b.w} height={b.h} className={`w-auto brightness-0 invert ${b.className}`} />
+							<figcaption className="mono-label text-[10px] text-bone-muted">{b.name}</figcaption>
+						</figure>
+					))}
+				</div>
 			</div>
 		</>
 	);
@@ -611,12 +624,12 @@ export default function Journey() {
 					<Particles track={track} active={active} eventSource={section} count={points} />
 					{/* A soft shade on the side the text is on, so words read without a card behind them. */}
 					<div
-						className={`pointer-events-none absolute inset-0 transition-opacity duration-700 max-md:bg-gradient-to-t max-md:from-[#04060a] max-md:via-[#04060a]/75 max-md:via-45% max-md:to-transparent max-md:to-70% md:bg-gradient-to-r md:from-[#04060a]/80 md:via-[#04060a]/30 md:via-35% md:to-transparent md:to-55% ${
+						className={`pointer-events-none absolute inset-0 transition-opacity duration-700 max-md:bg-gradient-to-t max-md:from-[#0A0A0B] max-md:via-[#0A0A0B]/75 max-md:via-45% max-md:to-transparent max-md:to-70% md:bg-gradient-to-r md:from-[#0A0A0B]/80 md:via-[#0A0A0B]/30 md:via-35% md:to-transparent md:to-55% ${
 							STEPS[step].side === "left" ? "opacity-100" : "opacity-0"
 						}`}
 					/>
 					<div
-						className={`pointer-events-none absolute inset-0 transition-opacity duration-700 max-md:bg-gradient-to-t max-md:from-[#04060a] max-md:via-[#04060a]/75 max-md:via-45% max-md:to-transparent max-md:to-70% md:bg-gradient-to-l md:from-[#04060a]/80 md:via-[#04060a]/30 md:via-35% md:to-transparent md:to-55% ${
+						className={`pointer-events-none absolute inset-0 transition-opacity duration-700 max-md:bg-gradient-to-t max-md:from-[#0A0A0B] max-md:via-[#0A0A0B]/75 max-md:via-45% max-md:to-transparent max-md:to-70% md:bg-gradient-to-l md:from-[#0A0A0B]/80 md:via-[#0A0A0B]/30 md:via-35% md:to-transparent md:to-55% ${
 							STEPS[step].side === "left" ? "opacity-0" : "opacity-100"
 						}`}
 					/>

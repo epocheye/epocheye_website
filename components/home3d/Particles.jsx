@@ -3,11 +3,10 @@
 import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Bloom, EffectComposer, Noise, Vignette } from "@react-three/postprocessing";
+import { Bloom, EffectComposer, Vignette } from "@react-three/postprocessing";
 
 import { ERAS, SHAPES, labelEls, ui } from "./scenes";
 import { DESTINATIONS, VIDEO_SIZE } from "./shapes";
-import Atmosphere from "./Atmosphere";
 
 const SCAN_URL = "/preorder/konark-points.bin";
 const GEO_URL = "/home/globe.bin";
@@ -114,28 +113,6 @@ const FRAG = /* glsl */ `
 		if (d > 0.5) discard;
 		float core = 1.0 - smoothstep(0.05, 0.5, d);
 		gl_FragColor = vec4(vColor, core * vAlpha);
-	}
-`;
-
-// The ground behind everything: a deep night-blue gradient, lighter overhead,
-// like looking down into still water. No lights, no glow.
-const BACK_VERT = /* glsl */ `
-	varying vec2 vUv;
-	void main() {
-		vUv = uv;
-		gl_Position = vec4(position.xy, 0.9999, 1.0);
-	}
-`;
-const BACK_FRAG = /* glsl */ `
-	varying vec2 vUv;
-	void main() {
-		// Linear light: these small numbers come out as deep blue-black on screen.
-		vec3 top = vec3(0.0052, 0.0075, 0.0135);
-		vec3 bottom = vec3(0.0012, 0.0016, 0.0026);
-		vec3 col = mix(bottom, top, smoothstep(0.0, 1.0, vUv.y));
-		float d = length((vUv - vec2(0.5, 0.62)) * vec2(1.6, 1.0));
-		col *= 1.0 - 0.45 * smoothstep(0.3, 1.1, d);
-		gl_FragColor = vec4(col, 1.0);
 	}
 `;
 
@@ -434,10 +411,6 @@ function Cloud({ count, track }) {
 
 	return (
 		<>
-			<mesh renderOrder={-1} frustumCulled={false}>
-				<planeGeometry args={[2, 2]} />
-				<shaderMaterial vertexShader={BACK_VERT} fragmentShader={BACK_FRAG} depthTest={false} depthWrite={false} />
-			</mesh>
 			<group ref={group}>
 				<points ref={points} geometry={geometry} frustumCulled={false}>
 					<shaderMaterial uniforms={uniforms} vertexShader={VERT} fragmentShader={FRAG} transparent depthWrite={false} blending={THREE.AdditiveBlending} />
@@ -458,12 +431,10 @@ export default function Particles({ track, active, eventSource, count }) {
 			eventPrefix="client"
 			style={{ pointerEvents: "none" }}>
 			<color attach="background" args={["#0A0A0B"]} />
-			<Atmosphere track={track} small={count < 30000} />
 			<Cloud count={count} track={track} />
 			<EffectComposer multisampling={0}>
 				<Bloom intensity={0.55} luminanceThreshold={0.55} luminanceSmoothing={0.35} mipmapBlur />
-				<Noise opacity={0.045} />
-				<Vignette eskil={false} offset={0.3} darkness={0.55} />
+				<Vignette eskil={false} offset={0.25} darkness={0.7} />
 			</EffectComposer>
 		</Canvas>
 	);

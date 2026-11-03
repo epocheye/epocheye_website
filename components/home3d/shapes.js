@@ -586,88 +586,255 @@ export function colosseum(N, ruin = 1) {
 	);
 }
 
-/** The Taj Mahal: plinth, mausoleum with its great arches, the onion dome, chhatris and four minarets. */
+/**
+ * The Taj Mahal, to its real proportions (in world units, ~0.046 per metre):
+ * the 95 m plinth; the mausoleum's octagon (a 57 m square with chamfered
+ * corners), its tall central pishtaq arch framed and rising above the
+ * parapet, two storeys of smaller arches either side and on each chamfer;
+ * the onion dome on its drum with the finial; four chhatris on the roof; and
+ * four 40 m minarets at the plinth's corners, each ringed by three balconies
+ * and crowned by its own chhatri.
+ */
 export function taj(N) {
-	const P = 4.4; // plinth side
-	const M = 1.9; // mausoleum side
 	const base = -1.9;
-	const onion = (s) => {
-		// Bulb swelling past the drum, then the tapering finial.
-		if (s < 0.08) return 0.62;
-		const k = (s - 0.08) / 0.92;
-		return 0.62 + 0.18 * Math.sin(Math.min(1, k / 0.55) * Math.PI * 0.85) - Math.max(0, k - 0.45) * 1.25;
+	const P = 4.4; // plinth side
+	const PH = 0.32; // plinth height
+	const floor = base + PH;
+	const h = 1.32; // half the mausoleum's width
+	const c = 0.38; // chamfer
+	const hw = h - c; // half a main face
+	const WALL = 1.55; // to the parapet
+	const roof = floor + WALL;
+
+	// The octagon, counter-clockwise; even faces are the four main faces, odd the chamfers.
+	const V = [
+		[hw, h], [-hw, h], [-h, hw], [-h, -hw], [-hw, -h], [hw, -h], [h, -hw], [h, hw],
+	];
+	const faces = V.map((a, i) => {
+		const b = V[(i + 1) % 8];
+		const len = Math.hypot(b[0] - a[0], b[1] - a[1]);
+		const nx = (b[1] - a[1]) / len;
+		const nz = -(b[0] - a[0]) / len;
+		return { a, b, len, n: [nx, nz], main: i % 2 === 0 };
+	});
+	const totalLen = faces.reduce((s, f) => s + f.len, 0);
+
+	// Mughal arches are pointed: vertical jambs, then two arcs meeting in a point.
+	const archTop = (u, half, spring, rise) => spring + rise * Math.pow(Math.max(0, 1 - Math.abs(u) / half), 0.55);
+	// The arches cut into a face: [centre, half width, sill, spring, rise].
+	const openings = (main) =>
+		main
+			? [
+					[0, 0.3, 0, 0.82, 0.38], // the great pishtaq arch
+					[-0.66, 0.13, 0.08, 0.42, 0.16],
+					[0.66, 0.13, 0.08, 0.42, 0.16],
+					[-0.66, 0.13, 0.8, 1.14, 0.16],
+					[0.66, 0.13, 0.8, 1.14, 0.16],
+				]
+			: [
+					[0, 0.14, 0.08, 0.42, 0.16],
+					[0, 0.14, 0.8, 1.14, 0.16],
+				];
+	const inOpening = (main, u, y) =>
+		openings(main).some(([cu, half, sill, spring, rise]) => Math.abs(u - cu) < half && y > sill && y < archTop(u - cu, half, spring, rise));
+	const onFace = (f, u, along = 0) => {
+		const t = u / f.len + 0.5;
+		return [lerp(f.a[0], f.b[0], t) + f.n[0] * along, lerp(f.a[1], f.b[1], t) + f.n[1] * along];
 	};
+	const pickFace = (r) => {
+		let d = r() * totalLen;
+		for (const f of faces) {
+			if (d < f.len) return f;
+			d -= f.len;
+		}
+		return faces[0];
+	};
+
+	const DRUM_R = 0.44;
+	const DRUM_H = 0.32;
+	const DOME_H = 1.12;
+	const onion = (s) => {
+		// Swells past the drum, then draws in to the point with an ogee neck.
+		if (s < 0.32) return DRUM_R + 0.1 * Math.sin((s / 0.32) * (Math.PI / 2));
+		const k = (s - 0.32) / 0.68;
+		return (DRUM_R + 0.1) * Math.pow(Math.cos(k * (Math.PI / 2)), 1.25) * (1 - 0.12 * k);
+	};
+	const chhatri = (o, r, cx, cy, cz, rad, colH, domeH) => {
+		const s = r();
+		if (s < 0.4) {
+			// Eight slender columns.
+			const k = Math.floor(r() * 8);
+			const a = (k / 8) * TAU;
+			o.x = cx + Math.cos(a) * rad;
+			o.z = cz + Math.sin(a) * rad;
+			o.y = cy + r() * colH;
+		} else if (s < 0.5) {
+			// The eave.
+			const a = r() * TAU;
+			o.x = cx + Math.cos(a) * rad * 1.25;
+			o.z = cz + Math.sin(a) * rad * 1.25;
+			o.y = cy + colH;
+		} else {
+			onLathe(o, r, cx, cy + colH, cz, domeH, (k) => rad * 1.05 * Math.pow(Math.cos(k * (Math.PI / 2)), 0.9) * (k < 0.15 ? 1 : 1.1 - 0.1 * k));
+		}
+	};
+	const MIN_H = 1.85;
+	const minaretAt = (k) => [(k % 2 ? 1 : -1) * (P / 2 - 0.16), (k > 1 ? 1 : -1) * (P / 2 - 0.16)];
+
 	return build(
 		N,
 		[
-			// Plinth.
-			{ share: 0.14, fn: (o, r) => onBox(o, r, 0, base + 0.15, 0, P, 0.3, P) },
-			// Mausoleum walls with the iwan arches cut in.
+			// The plinth: its top in a fine grid, its sides arcaded.
 			{
-				share: 0.24,
+				share: 0.11,
 				fn: (o, r) => {
-					for (let tries = 0; tries < 30; tries += 1) {
-						onBox(o, r, 0, base + 0.3 + 0.75, 0, M, 1.5, M);
-						const across = Math.abs(o.z) > M / 2 - 1e-3 ? o.x : o.z;
-						const up = o.y - (base + 0.3);
-						const inArch = Math.abs(across) < 0.38 && up < 1.0 + Math.sqrt(Math.max(0, 0.38 * 0.38 - across * across)) * 0.6;
-						if (!inArch || Math.abs(o.y - (base + 1.8)) < 0.01) return;
+					if (r() < 0.45) {
+						o.x = Math.round(jitter(r, P) / 0.09) * 0.09;
+						o.z = Math.round(jitter(r, P) / 0.09) * 0.09;
+						o.y = floor;
+					} else {
+						onBox(o, r, 0, base + PH / 2, 0, P, PH, P, { top: false });
 					}
 				},
 			},
-			// Arch outlines, in signal.
+			// The mausoleum's walls, with every arch cut in.
+			{
+				share: 0.25,
+				fn: (o, r) => {
+					for (let tries = 0; tries < 40; tries += 1) {
+						const f = pickFace(r);
+						const u = (r() - 0.5) * f.len;
+						const y = r() * WALL;
+						if (inOpening(f.main, u, y)) continue;
+						[o.x, o.z] = onFace(f, u);
+						o.y = floor + y;
+						return;
+					}
+				},
+			},
+			// The arches' back walls, deep in shadow: the recesses read as depth.
 			{
 				share: 0.05,
 				fn: (o, r) => {
-					const face = Math.floor(r() * 4);
-					const t = r();
-					let a;
+					const f = pickFace(r);
+					const ops = openings(f.main);
+					const [cu, half, sill, spring, rise] = ops[Math.floor(r() * ops.length)];
+					const u = cu + (r() * 2 - 1) * half;
+					const y = sill + r() * (archTop(u - cu, half, spring, rise) - sill);
+					[o.x, o.z] = onFace(f, u, -0.18);
+					o.y = floor + y;
+					o.a = -0.6;
+				},
+			},
+			// Every arch traced in signal.
+			{
+				share: 0.07,
+				fn: (o, r) => {
+					const f = pickFace(r);
+					const ops = openings(f.main);
+					const [cu, half, sill, spring, rise] = ops[Math.floor(r() * ops.length)];
 					let u;
-					if (t < 0.5) {
-						u = (r() < 0.5 ? -1 : 1) * 0.38;
-						a = r() * 1.0;
+					let y;
+					if (r() < 0.45) {
+						u = cu + (r() < 0.5 ? -half : half);
+						y = sill + r() * (spring - sill);
 					} else {
-						const ang = r() * Math.PI;
-						u = Math.cos(ang) * 0.38;
-						a = 1.0 + Math.sin(ang) * 0.38 * 0.6;
+						u = cu + (r() * 2 - 1) * half;
+						y = archTop(u - cu, half, spring, rise);
 					}
-					const y = base + 0.3 + a;
-					const s = M / 2 + 0.01;
-					[o.x, o.z] = face === 0 ? [u, s] : face === 1 ? [u, -s] : face === 2 ? [s, u] : [-s, u];
-					o.y = y;
-					o.a = 0.8;
+					[o.x, o.z] = onFace(f, u, 0.012);
+					o.y = floor + y;
+					o.a = 0.85;
 				},
 			},
-			// Drum and onion dome.
-			{ share: 0.08, fn: (o, r) => onCylinder(o, r, 0, base + 1.8, 0, 0.62, 0.35) },
-			{ share: 0.22, fn: (o, r) => onLathe(o, r, 0, base + 2.15, 0, 1.55, onion) },
-			// Four chhatris on the roof.
+			// The pishtaq's frame, rising above the parapet, with its two guldasta pinnacles.
 			{
-				share: 0.06,
+				share: 0.04,
 				fn: (o, r) => {
-					const c = Math.floor(r() * 4);
-					const cx = (c % 2 ? 1 : -1) * 0.68;
-					const cz = (c > 1 ? 1 : -1) * 0.68;
-					onLathe(o, r, cx, base + 1.8, cz, 0.55, (s) => (s < 0.45 ? 0.17 : 0.2 * Math.cos(((s - 0.45) / 0.55) * Math.PI * 0.5)));
-				},
-			},
-			// Four minarets with their balconies.
-			{
-				share: 0.21,
-				fn: (o, r) => {
-					const c = Math.floor(r() * 4);
-					const cx = (c % 2 ? 1 : -1) * (P / 2 - 0.2);
-					const cz = (c > 1 ? 1 : -1) * (P / 2 - 0.2);
+					const f = faces[Math.floor(r() * 4) * 2];
 					const s = r();
-					if (s < 0.82) {
-						onCylinder(o, r, cx, base + 0.3, cz, 0.13 - s * 0.03, 2.9);
-						const band = (o.y - base - 0.3) / 2.9;
-						if ([0.33, 0.66, 0.97].some((b) => Math.abs(band - b) < 0.02)) {
-							o.x = cx + (o.x - cx) * 1.6;
-							o.z = cz + (o.z - cz) * 1.6;
-						}
+					if (s < 0.45) {
+						// The raised frame band above the parapet.
+						const u = (r() * 2 - 1) * 0.42;
+						[o.x, o.z] = onFace(f, u, 0.01);
+						o.y = roof + r() * 0.12;
+					} else if (s < 0.75) {
+						// The rectangular frame around the great arch.
+						const side = r() < 0.5 ? -0.42 : 0.42;
+						[o.x, o.z] = onFace(f, side, 0.015);
+						o.y = floor + r() * (WALL + 0.12);
+						o.a = 0.4;
 					} else {
-						onLathe(o, r, cx, base + 3.2, cz, 0.3, (k) => 0.16 * Math.cos(k * Math.PI * 0.5));
+						const side = r() < 0.5 ? -0.45 : 0.45;
+						[o.x, o.z] = onFace(f, side, 0.02);
+						o.y = roof + 0.12 + r() * 0.3;
+					}
+				},
+			},
+			// The roof and parapet line.
+			{
+				share: 0.03,
+				fn: (o, r) => {
+					const f = pickFace(r);
+					[o.x, o.z] = onFace(f, (r() - 0.5) * f.len, -r() * 0.5);
+					o.y = roof;
+				},
+			},
+			// Drum, the onion dome, and its finial.
+			{ share: 0.05, fn: (o, r) => onCylinder(o, r, 0, roof, 0, DRUM_R, DRUM_H) },
+			{
+				share: 0.18,
+				fn: (o, r) => {
+					onLathe(o, r, 0, roof + DRUM_H, 0, DOME_H, onion);
+					// The lotus collar where the dome meets the drum.
+					if (o.y < roof + DRUM_H + 0.06) o.a = 0.6;
+				},
+			},
+			{
+				share: 0.015,
+				fn: (o, r) => {
+					const t = r();
+					const bulb = [0.25, 0.5, 0.7].some((b) => Math.abs(t - b) < 0.05);
+					const rad = bulb ? 0.05 : 0.012;
+					const a = r() * TAU;
+					o.x = Math.cos(a) * rad;
+					o.z = Math.sin(a) * rad;
+					o.y = roof + DRUM_H + DOME_H - 0.05 + t * 0.5;
+					o.a = 1;
+				},
+			},
+			// Four chhatris around the dome.
+			{
+				share: 0.075,
+				fn: (o, r) => {
+					const k = Math.floor(r() * 4);
+					const d = 0.86;
+					chhatri(o, r, (k % 2 ? 1 : -1) * d * Math.SQRT1_2, roof, (k > 1 ? 1 : -1) * d * Math.SQRT1_2, 0.17, 0.26, 0.32);
+				},
+			},
+			// Four minarets: tapering shafts, three balconies, a chhatri on top.
+			{
+				share: 0.175,
+				fn: (o, r) => {
+					const [cx, cz] = minaretAt(Math.floor(r() * 4));
+					const s = r();
+					if (s < 0.68) {
+						const t = r();
+						const a = r() * TAU;
+						const rad = 0.115 - t * 0.03;
+						o.x = cx + Math.cos(a) * rad;
+						o.z = cz + Math.sin(a) * rad;
+						o.y = floor + t * MIN_H;
+					} else if (s < 0.84) {
+						const ring = [0.33, 0.62, 0.86][Math.floor(r() * 3)];
+						const a = r() * TAU;
+						const rad = 0.17 + r() * 0.03;
+						o.x = cx + Math.cos(a) * rad;
+						o.z = cz + Math.sin(a) * rad;
+						o.y = floor + ring * MIN_H;
+						o.a = 0.5;
+					} else {
+						chhatri(o, r, cx, floor + MIN_H, cz, 0.11, 0.14, 0.2);
 					}
 				},
 			},
