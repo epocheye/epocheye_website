@@ -1,17 +1,11 @@
 "use client";
 
-import React, { Suspense } from "react";
-import dynamic from "next/dynamic";
+import React from "react";
 
-// Above-the-fold (eager) — Hero stays untouched
+// Above the fold: the video hero
 import Hero from "@/components/sections/Hero";
 import SmoothScroll from "@/components/fx/SmoothScroll";
 import Journey from "@/components/home3d/Journey";
-
-const EndFrame = dynamic(() => import("@/components/sections/EndFrame"), {
-	loading: () => <div className="min-h-[60vh] bg-ink" />,
-	ssr: true,
-});
 
 const Home = () => {
 	return (
@@ -27,9 +21,6 @@ const Home = () => {
 				<Hero />
 				{/* Below the hero: one cloud of points that becomes each section. */}
 				<Journey />
-				<Suspense fallback={<div className="min-h-[60vh] bg-ink" />}>
-					<EndFrame />
-				</Suspense>
 			</SmoothScroll>
 		</main>
 	);

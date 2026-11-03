@@ -78,10 +78,12 @@ function Step({ index, side, id, children, wide = false, widest = false }) {
 			}`}>
 			<div
 				data-reveal
-				className={`w-full rounded-3xl border border-rule bg-ink/70 p-6 backdrop-blur-md md:rounded-none md:border-0 md:bg-transparent md:p-0 md:backdrop-blur-none ${
-					widest ? "md:max-w-[46rem]" : wide ? "md:max-w-[36rem]" : "md:max-w-[32rem]"
+				className={`glass-panel relative w-full overflow-hidden rounded-[28px] p-6 md:rounded-[32px] md:p-9 ${
+					widest ? "md:max-w-[48rem]" : wide ? "md:max-w-[38rem]" : "md:max-w-[34rem]"
 				}`}>
-				{children}
+				{/* Light catching the top edge of the glass. */}
+				<span className="pointer-events-none absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-white/[0.08] to-transparent" aria-hidden="true" />
+				<div className="relative">{children}</div>
 			</div>
 		</div>
 	);
@@ -532,6 +534,15 @@ function Team() {
 					Get in touch →
 				</a>
 			</div>
+			<p className="mono-label mt-8 flex flex-wrap gap-x-3 gap-y-1 text-[10px] text-bone-faint">
+				<span>© 2026 Epocheye Private Limited</span>
+				<Link href="/privacy" className="hover:text-signal">
+					Privacy
+				</Link>
+				<Link href="/terms" className="hover:text-signal">
+					Terms
+				</Link>
+			</p>
 		</>
 	);
 }
@@ -652,7 +663,7 @@ export default function Journey() {
 							{d.name}
 						</span>
 					))}
-					<p className="pointer-events-none absolute bottom-6 right-6 hidden text-right font-mono text-[10px] uppercase tracking-[0.22em] text-bone-muted md:block">
+					<p className="glass-panel pointer-events-none absolute bottom-6 right-6 hidden rounded-2xl px-4 py-3 text-right font-mono text-[10px] uppercase tracking-[0.22em] text-bone-muted md:block">
 						<span className="text-signal">{`${points.toLocaleString("en-IN")} points`}</span>
 						<br />
 						{caption ?? "Drag the timeline"}

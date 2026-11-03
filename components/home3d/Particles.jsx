@@ -7,6 +7,7 @@ import { Bloom, EffectComposer, Vignette } from "@react-three/postprocessing";
 
 import { ERAS, SHAPES, labelEls, ui } from "./scenes";
 import { DESTINATIONS, VIDEO_SIZE } from "./shapes";
+import GlassField from "./Glass";
 
 const SCAN_URL = "/preorder/konark-points.bin";
 const GEO_URL = "/home/globe.bin";
@@ -510,6 +511,7 @@ export default function Particles({ track, active, eventSource, count }) {
 			eventPrefix="client"
 			style={{ pointerEvents: "none" }}>
 			<color attach="background" args={["#0A0A0B"]} />
+			<GlassField track={track} count={count > 30000 ? 12 : 7} />
 			<Cloud count={count} track={track} />
 			<EffectComposer multisampling={0}>
 				<Bloom intensity={0.55} luminanceThreshold={0.55} luminanceSmoothing={0.35} mipmapBlur />
