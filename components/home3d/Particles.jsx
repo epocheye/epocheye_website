@@ -9,6 +9,28 @@ import { ERAS, SHAPES, labelEls, ui } from "./scenes";
 import { DESTINATIONS, VIDEO_SIZE } from "./shapes";
 
 const SCAN_URL = "/preorder/konark-points.bin";
+const GEO_URL = "/home/globe.bin";
+const LOGO_URL = "/logo-white.png";
+
+/** The logo's ink pixels as (x, y, isLetter) in [-1, 1]: the ring in bone, the letters inside it in signal. */
+function sampleLogo(img) {
+	const size = 200;
+	const c = document.createElement("canvas");
+	c.width = c.height = size;
+	const ctx = c.getContext("2d", { willReadFrequently: true });
+	ctx.drawImage(img, 0, 0, size, size);
+	const { data } = ctx.getImageData(0, 0, size, size);
+	const px = [];
+	for (let y = 0; y < size; y += 1) {
+		for (let x = 0; x < size; x += 1) {
+			if (data[(y * size + x) * 4 + 3] < 128) continue;
+			const u = (x / size) * 2 - 1;
+			const v = 1 - (y / size) * 2;
+			px.push(u, v, Math.hypot(u, v) < 0.82 ? 1 : 0);
+		}
+	}
+	return { px: new Float32Array(px), step: 2 / size };
+}
 const D2R = Math.PI / 180;
 
 const VERT = /* glsl */ `
@@ -114,7 +136,7 @@ const v3 = new THREE.Vector3();
 function Cloud({ count, track }) {
 	const points = useRef(null);
 	const group = useRef(null);
-	const scan = useRef(null);
+	const data = useRef({}); // scan, geo, mark: what some shapes wait on
 	const cache = useRef(new Map());
 	const shown = useRef({ a: null, b: null });
 	const motion = useRef({ spin: 0, globeX: 0, globeY: 0, x: 0, y: 0, s: 1, rx: 0, ry: 0 });
@@ -159,18 +181,33 @@ function Cloud({ count, track }) {
 		[video]
 	);
 
-	// The temple scan arrives over the network; until then its shapes stand in as dust.
+	const ready = (key) => (SHAPES[key].needs ?? []).every((n) => data.current[n]);
+
+	// The temple scan, the map and the logo arrive over the network; until each
+	// does, the shapes that need it stand in as dust.
 	useEffect(() => {
 		let alive = true;
+		const arrive = (name, value) => {
+			if (!alive) return;
+			data.current[name] = value;
+			for (const [key, s] of Object.entries(SHAPES)) if (s.needs?.includes(name)) cache.current.delete(key);
+			shown.current = { a: null, b: null };
+		};
 		fetch(SCAN_URL)
 			.then((r) => r.arrayBuffer())
+			.then((buf) => arrive("scan", new Int16Array(buf)))
+			.catch(() => {});
+		fetch(GEO_URL)
+			.then((r) => r.arrayBuffer())
 			.then((buf) => {
-				if (!alive) return;
-				scan.current = new Int16Array(buf);
-				for (const [key, s] of Object.entries(SHAPES)) if (s.needsScan) cache.current.delete(key);
-				shown.current = { a: null, b: null };
+				const borders = new DataView(buf).getUint32(0, true);
+				const maskBytes = (720 * 360) / 8;
+				arrive("geo", { mask: new Uint8Array(buf, 4, maskBytes), borders: new Int16Array(buf.slice(4 + maskBytes, 4 + maskBytes + borders * 4)) });
 			})
 			.catch(() => {});
+		const img = new Image();
+		img.onload = () => arrive("mark", sampleLogo(img));
+		img.src = LOGO_URL;
 		return () => {
 			alive = false;
 		};
@@ -186,9 +223,9 @@ function Cloud({ count, track }) {
 		const step = (deadline) => {
 			while (!cancelled && keys.length && deadline.timeRemaining() > 4) {
 				const key = keys.shift();
-				if (!cache.current.has(key) && (!SHAPES[key].needsScan || scan.current)) cache.current.set(key, SHAPES[key].make(count, scan.current));
-				else if (SHAPES[key].needsScan && !scan.current) keys.push(key);
-				if (keys.every((k) => SHAPES[k].needsScan) && !scan.current) break;
+				if (!ready(key)) keys.push(key);
+				else if (!cache.current.has(key)) cache.current.set(key, SHAPES[key].make(count, data.current));
+				if (keys.every((k) => !ready(k))) break;
 			}
 			if (!cancelled && keys.length) handle = idle(step);
 		};
@@ -202,10 +239,10 @@ function Cloud({ count, track }) {
 
 	const shape = (key) => {
 		const def = SHAPES[key];
-		if (def.needsScan && !scan.current) return shape("dust");
+		if (!ready(key)) return shape("dust");
 		let s = cache.current.get(key);
 		if (!s) {
-			s = def.make(count, scan.current);
+			s = def.make(count, data.current);
 			cache.current.set(key, s);
 		}
 		return s;
@@ -278,14 +315,16 @@ function Cloud({ count, track }) {
 		const place = (key, side) => {
 			const p = SHAPES[key].pose;
 			if (p.fixed) return { x: 0, y: 0, s: 1, rx: 0, ry: 0, spin: 0 };
-			const availW = portrait ? W * 0.94 : W * 0.46;
-			const availH = portrait ? H * 0.42 : H * 0.74;
+			// "full": the shape spreads behind the whole page, so the glass cards over it have something to frost.
+			const full = side === "full" && !portrait;
+			const availW = portrait ? W * 0.94 : full ? W * 0.98 : W * 0.46;
+			const availH = portrait ? H * 0.42 : full ? H * 0.9 : H * 0.74;
 			return {
-				x: portrait ? 0 : (side === "right" ? -1 : 1) * W * 0.235,
+				x: portrait || full ? 0 : (side === "right" ? -1 : 1) * W * 0.235,
 				y: portrait ? H * 0.22 : -H * 0.02,
 				s: Math.min(availW / p.w, availH / p.h),
 				rx: p.globe ? m.globeX : p.rx,
-				ry: p.globe ? m.globeY : p.ry,
+				ry: (p.globe ? m.globeY : p.ry) + Math.sin(state.clock.elapsedTime * 0.5) * (p.sway ?? 0),
 				spin: p.spin ?? 0,
 			};
 		};

@@ -908,3 +908,31 @@ html.lenis body {
   outline: 2px solid var(--color-bone);
   outline-offset: 3px;
 }
+
+/* Homepage creator cards (components/home3d/Journey.jsx) */
+.glass-card {
+  transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition-property: transform, border-color, box-shadow;
+  transition-duration: 0.35s, 0.5s, 0.5s;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+.glass-spark {
+  stroke-dasharray: 300;
+  animation: glass-spark 4.5s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+@keyframes glass-spark {
+  0% { stroke-dashoffset: 300; }
+  60%, 100% { stroke-dashoffset: 0; }
+}
+.glass-meter {
+  transform-origin: left;
+  animation: glass-meter 3.9s ease-in-out infinite;
+}
+@keyframes glass-meter {
+  0%, 100% { transform: scaleX(0.35); }
+  50% { transform: scaleX(0.92); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .glass-spark, .glass-meter { animation: none; }
+}

@@ -32,8 +32,8 @@ const STEPS = [
 	{ shape: "video", side: "left" },
 	{ shape: "eras", side: "right" },
 	{ shape: "globe", side: "left" },
-	{ shape: "network", side: "right" },
-	{ shape: "eye", side: "left" },
+	{ shape: "network", side: "full" },
+	{ shape: "logo", side: "left" },
 ];
 
 // Shared with the scene outside React state: scroll writes, the frame loop reads.
@@ -68,7 +68,7 @@ const headline = "font-serif text-bone leading-[0.95] kin-spaced";
  * One scroll step: a full screen tall, its text on one side (wide screens) or
  * in a glass card at the bottom (phones), leaving the cloud room above.
  */
-function Step({ index, side, id, children, wide = false }) {
+function Step({ index, side, id, children, wide = false, widest = false }) {
 	return (
 		<div
 			id={id}
@@ -79,7 +79,7 @@ function Step({ index, side, id, children, wide = false }) {
 			<div
 				data-reveal
 				className={`w-full rounded-3xl border border-rule bg-ink/70 p-6 backdrop-blur-md md:rounded-none md:border-0 md:bg-transparent md:p-0 md:backdrop-blur-none ${
-					wide ? "md:max-w-[36rem]" : "md:max-w-[32rem]"
+					widest ? "md:max-w-[46rem]" : wide ? "md:max-w-[36rem]" : "md:max-w-[32rem]"
 				}`}>
 				{children}
 			</div>
@@ -377,20 +377,119 @@ function Destinations({ active }) {
 	);
 }
 
-const CREATOR_CARDS = [
-	{
-		tag: "// Applications open",
-		title: "Creators Program is live",
-		desc: "Turn heritage storytelling into income. Apply, get verified, earn on every booking you drive.",
-		cta: "Apply as a creator →",
-	},
-	{
-		tag: "// Live dashboard",
-		title: "Payout tracking, in real time",
-		desc: "Watch clicks, conversions, and UPI payouts update live. Full transparency on every rupee you earn.",
-		cta: "Creator login →",
-	},
-];
+/**
+ * Frosted glass that leans toward the pointer, with a soft signal light
+ * following it across the surface. The cloud behind shows through the blur.
+ */
+function GlassCard({ href, children, className = "" }) {
+	const move = (e) => {
+		const el = e.currentTarget;
+		const r = el.getBoundingClientRect();
+		const x = (e.clientX - r.left) / r.width;
+		const y = (e.clientY - r.top) / r.height;
+		el.style.setProperty("--mx", `${x * 100}%`);
+		el.style.setProperty("--my", `${y * 100}%`);
+		el.style.setProperty("--rx", `${(0.5 - y) * 8}deg`);
+		el.style.setProperty("--ry", `${(x - 0.5) * 10}deg`);
+	};
+	const leave = (e) => {
+		e.currentTarget.style.setProperty("--rx", "0deg");
+		e.currentTarget.style.setProperty("--ry", "0deg");
+	};
+	return (
+		<a
+			href={href}
+			target="_blank"
+			rel="noopener noreferrer"
+			onPointerMove={move}
+			onPointerLeave={leave}
+			className={`glass-card group relative flex flex-col overflow-hidden rounded-[28px] border border-white/[0.12] bg-[rgba(18,18,20,0.55)] p-6 shadow-[0_24px_70px_-24px_rgba(0,0,0,0.9),inset_0_1px_0_rgba(255,255,255,0.14)] backdrop-blur-2xl hover:border-signal/45 hover:shadow-[0_30px_80px_-24px_rgba(204,255,0,0.22),inset_0_1px_0_rgba(255,255,255,0.18)] ${className}`}>
+			{/* Light that follows the pointer, and a sheen across the top edge. */}
+			<span className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100 [background:radial-gradient(420px_circle_at_var(--mx,50%)_var(--my,0%),rgba(204,255,0,0.16),transparent_60%)]" />
+			<span className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-white/[0.09] to-transparent" />
+			<div className="relative flex flex-1 flex-col items-start">{children}</div>
+		</a>
+	);
+}
+
+function LivePill({ children }) {
+	return (
+		<span className="inline-flex items-center gap-2 rounded-full border border-signal/30 bg-signal/[0.08] px-3 py-1 font-mono text-[10px] uppercase tracking-[0.2em] text-signal">
+			<span className="relative flex h-1.5 w-1.5">
+				<span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-signal opacity-60" />
+				<span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-signal" />
+			</span>
+			{children}
+		</span>
+	);
+}
+
+function CardCta({ children }) {
+	return (
+		<span className="mt-auto inline-flex items-center gap-2 rounded-full border border-signal/40 bg-signal/[0.12] px-4 py-2 font-mono text-[11px] uppercase tracking-[0.18em] text-signal shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] transition-all duration-300 group-hover:bg-signal group-hover:text-ink">
+			{children}
+			<span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+		</span>
+	);
+}
+
+function CreatorsCard() {
+	return (
+		<GlassCard href="https://creators.epocheye.com">
+			<LivePill>Applications open</LivePill>
+			<p className="mt-4 font-serif text-[28px] leading-tight text-bone">Creators Program is live</p>
+			<p className="mt-2 font-mono text-xs leading-relaxed text-bone-muted">
+				Turn heritage storytelling into income. Apply, get verified, earn on every booking you drive.
+			</p>
+			{/* The three steps, as frosted chips joined by a line. */}
+			<ol className="mb-5 mt-5 flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.16em] text-bone">
+				{["Apply", "Get verified", "Earn"].map((s, i) => (
+					<li key={s} className="flex items-center gap-1.5">
+						{i > 0 && <span className="h-px w-3 bg-signal/50" aria-hidden="true" />}
+						<span className="rounded-full border border-white/[0.14] bg-white/[0.06] px-2.5 py-1">{s}</span>
+					</li>
+				))}
+			</ol>
+			<CardCta>Apply as a creator</CardCta>
+		</GlassCard>
+	);
+}
+
+/** A tiny live dashboard: a line that keeps drawing itself and three meters that breathe. */
+function PayoutsCard() {
+	return (
+		<GlassCard href="https://creators.epocheye.com">
+			<LivePill>Live dashboard</LivePill>
+			<p className="mt-4 font-serif text-[28px] leading-tight text-bone">Payout tracking, in real time</p>
+			<p className="mt-2 font-mono text-xs leading-relaxed text-bone-muted">
+				Watch clicks, conversions, and UPI payouts update live. Full transparency on every rupee you earn.
+			</p>
+			<div className="mb-5 mt-5 w-full rounded-2xl border border-white/[0.1] bg-black/30 p-4" aria-hidden="true">
+				<svg viewBox="0 0 240 56" className="h-12 w-full" fill="none">
+					<defs>
+						<linearGradient id="spark-fill" x1="0" x2="0" y1="0" y2="1">
+							<stop offset="0%" stopColor="#CCFF00" stopOpacity="0.28" />
+							<stop offset="100%" stopColor="#CCFF00" stopOpacity="0" />
+						</linearGradient>
+					</defs>
+					<path d="M0 46 L24 40 L48 43 L72 30 L96 34 L120 22 L144 26 L168 14 L192 18 L216 8 L240 10 L240 56 L0 56 Z" fill="url(#spark-fill)" />
+					<path className="glass-spark" d="M0 46 L24 40 L48 43 L72 30 L96 34 L120 22 L144 26 L168 14 L192 18 L216 8 L240 10" stroke="#CCFF00" strokeWidth="1.6" strokeLinejoin="round" />
+				</svg>
+				<div className="mt-3 space-y-2">
+					{["Clicks", "Conversions", "UPI payouts"].map((m, i) => (
+						<div key={m} className="flex items-center gap-3">
+							<span className="w-24 shrink-0 font-mono text-[10px] uppercase tracking-[0.14em] text-bone-muted">{m}</span>
+							<span className="h-1 flex-1 overflow-hidden rounded-full bg-white/[0.08]">
+								<span className="glass-meter block h-full rounded-full bg-signal" style={{ animationDelay: `${i * -1.3}s` }} />
+							</span>
+						</div>
+					))}
+				</div>
+			</div>
+			<CardCta>Creator login</CardCta>
+		</GlassCard>
+	);
+}
 
 function Network() {
 	return (
@@ -399,20 +498,9 @@ function Network() {
 			<h2 className={`${headline} mt-4`} style={{ fontSize: "clamp(36px, 5vw, 72px)" }}>
 				Built with the people who tell these stories.
 			</h2>
-			<div className="mt-6 grid gap-3">
-				{CREATOR_CARDS.map((c) => (
-					<a
-						key={c.title}
-						href="https://creators.epocheye.com"
-						target="_blank"
-						rel="noopener noreferrer"
-						className="group block rounded-2xl border border-rule bg-white/[0.03] p-5 transition-colors hover:border-signal/60">
-						<span className="mono-label text-[10px] text-signal">{c.tag}</span>
-						<p className="mt-1 font-serif text-2xl text-bone">{c.title}</p>
-						<p className="mt-1 hidden font-mono text-xs leading-relaxed text-bone-muted md:block">{c.desc}</p>
-						<span className="mono-label mt-3 inline-block text-[11px] text-signal transition-transform group-hover:translate-x-1">{c.cta}</span>
-					</a>
-				))}
+			<div className="mt-6 grid gap-4 lg:grid-cols-2">
+				<CreatorsCard />
+				<PayoutsCard />
 			</div>
 			<p className="mono-label mt-5 text-[10px] text-bone-faint">Verified by historians / 100% accurate sources / Expert-curated content</p>
 		</>
@@ -598,7 +686,7 @@ export default function Journey() {
 				<Step index={10} side="left" id="destinations" wide>
 					<Destinations active={step === 10} />
 				</Step>
-				<Step index={11} side="right" id="creators">
+				<Step index={11} side="right" id="creators" widest>
 					<Network />
 				</Step>
 				<Step index={12} side="left" id="team">

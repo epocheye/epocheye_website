@@ -2,7 +2,7 @@
 // shape. Each generator here returns N points (shuffled, so any two shapes
 // pair up point for point at random and the morph between them reads as dust
 // reassembling) plus a vec4 of per-point meta:
-//   x  accent   0–1, drawn in the signal colour
+//   x  accent   0–1, drawn in the signal colour; below 0 dims the point
 //   y  wave     1 = rides the animated voice surface
 //   z  pin      destination index on the globe (100 + city on the map), else -1
 //   w  video    1 = coloured and lifted by the AR footage
@@ -843,42 +843,66 @@ function slerp(a, b, t) {
 	return [a[0] * ka + b[0] * kb, a[1] * ka + b[1] * kb, a[2] * ka + b[2] * kb];
 }
 
-export function globe(N) {
+/**
+ * The earth: land as a dense field of dots, the oceans faint, every coastline
+ * and border traced, and routes from home to each site. `geo` is the baked
+ * land mask and border points (scripts/build-home-globe.mjs).
+ */
+export function globe(N, geo) {
 	const home = onGlobe(HOME.lat, HOME.lon);
 	const pins = DESTINATIONS.map((d) => onGlobe(d.lat, d.lon));
-	const golden = Math.PI * (3 - Math.sqrt(5));
+	const { mask, borders } = geo;
+	const isLand = (lat, lon) => {
+		const y = Math.min(359, Math.max(0, Math.floor((90 - lat) * 2)));
+		const x = Math.min(719, Math.max(0, Math.floor((lon + 180) * 2)));
+		const i = y * 720 + x;
+		return (mask[i >> 3] >> (i & 7)) & 1;
+	};
+	// A random point on the sphere, area-uniform.
+	const anywhere = (r) => [Math.asin(2 * r() - 1) / D2R, r() * 360 - 180];
+	const borderCount = borders.length / 2;
 	return build(
 		N,
 		[
-			// The sphere, as an even field of dots.
+			// Land: dense dots, snapped to a fine lat/lon lattice so continents read as printed maps do.
 			{
-				share: 0.56,
-				fn: (o, r, j, n) => {
-					const y = 1 - (j / (n - 1)) * 2;
-					const ring = Math.sqrt(1 - y * y);
-					const th = golden * j;
-					o.x = Math.cos(th) * ring * GLOBE_R;
-					o.y = y * GLOBE_R;
-					o.z = Math.sin(th) * ring * GLOBE_R;
+				share: 0.5,
+				fn: (o, r) => {
+					for (let tries = 0; tries < 40; tries += 1) {
+						const [lat, lon] = anywhere(r);
+						if (!isLand(lat, lon)) continue;
+						const snapLat = Math.round(lat / 0.9) * 0.9;
+						const snapLon = Math.round(lon / (0.9 / Math.max(0.2, Math.cos(lat * D2R)))) * (0.9 / Math.max(0.2, Math.cos(lat * D2R)));
+						[o.x, o.y, o.z] = onGlobe(snapLat + jitter(r, 0.2), snapLon + jitter(r, 0.2));
+						return;
+					}
 				},
 			},
-			// Graticule: meridians and parallels every 30°.
+			// Coastlines and country borders, bright and a hair above the land.
 			{
-				share: 0.14,
+				share: 0.2,
 				fn: (o, r) => {
-					if (r() < 0.5) {
-						const lon = Math.floor(r() * 12) * 30;
-						[o.x, o.y, o.z] = onGlobe(r() * 180 - 90, lon, GLOBE_R * 1.004);
-					} else {
-						const lat = (Math.floor(r() * 5) - 2) * 30;
-						[o.x, o.y, o.z] = onGlobe(lat, r() * 360, GLOBE_R * 1.004);
+					const k = Math.floor(r() * borderCount) * 2;
+					[o.x, o.y, o.z] = onGlobe(borders[k] / 100 + jitter(r, 0.08), borders[k + 1] / 100 + jitter(r, 0.08), GLOBE_R * 1.006);
+					o.a = 0.18;
+				},
+			},
+			// Oceans: a faint, even field, so the sphere still reads as round.
+			{
+				share: 0.08,
+				fn: (o, r) => {
+					for (let tries = 0; tries < 20; tries += 1) {
+						const [lat, lon] = anywhere(r);
+						if (isLand(lat, lon)) continue;
+						[o.x, o.y, o.z] = onGlobe(lat, lon, GLOBE_R * 0.995);
+						o.a = -0.9; // below zero dims a point
+						return;
 					}
-					o.a = 0.12;
 				},
 			},
 			// Routes from home to each site, lifted off the surface.
 			{
-				share: 0.22,
+				share: 0.16,
 				fn: (o, r) => {
 					const k = Math.floor(r() * pins.length);
 					const t = r();
@@ -893,7 +917,7 @@ export function globe(N) {
 			},
 			// The pins.
 			{
-				share: 0.08,
+				share: 0.06,
 				fn: (o, r) => {
 					const k = Math.floor(r() * (pins.length + 1));
 					const c = k === pins.length ? home : pins[k];
@@ -972,74 +996,41 @@ export function network(N) {
 	);
 }
 
-/* ───────────────────────── The team: the eye ───────────────────────── */
+/* ───────────────────────── The team: the Epocheye mark ───────────────────────── */
 
-export function eye(N) {
-	const W = 2.8; // half width
-	const Hh = 1.25; // lid height
-	const lid = (x) => Hh * Math.pow(1 - Math.pow(Math.abs(x) / W, 2), 0.9);
+/**
+ * The logo as a solid slab of points. `mark.px` holds the logo's ink pixels as
+ * (x, y, isLetter) in [-1, 1], sampled from /logo-white.png in the browser;
+ * `mark.step` is one pixel's width, for jitter.
+ */
+export function logo(N, mark) {
+	const S = 2.2;
+	const count = mark.px.length / 3;
 	return build(
 		N,
 		[
-			// Upper and lower lids.
 			{
-				share: 0.26,
+				share: 0.88,
 				fn: (o, r) => {
-					const x = (r() * 2 - 1) * W;
-					const upper = r() < 0.55;
-					const thick = upper ? 0.08 : 0.04;
-					o.x = x;
-					o.y = (upper ? 1 : -0.85) * lid(x) + jitter(r, thick);
-					o.z = jitter(r, 0.1) + (lid(x) / Hh) * 0.3;
+					const k = Math.floor(r() * count) * 3;
+					o.x = (mark.px[k] + jitter(r, mark.step)) * S;
+					o.y = (mark.px[k + 1] + jitter(r, mark.step)) * S;
+					// Mostly on the front and back faces, the rest through the edge: it reads as cut from solid.
+					const face = r();
+					o.z = face < 0.45 ? 0.16 : face < 0.8 ? -0.16 : jitter(r, 0.32);
+					o.a = mark.px[k + 2]; // the letters in signal, the ring in bone
 				},
 			},
-			// Iris: radial fibres.
+			// A slow halo of dust around the mark.
 			{
-				share: 0.42,
+				share: 0.12,
 				fn: (o, r) => {
 					const t = r() * TAU;
-					const rad = 0.42 + Math.pow(r(), 0.8) * 0.78;
+					const rad = S * (1.15 + Math.pow(r(), 2) * 0.45);
 					o.x = Math.cos(t) * rad;
 					o.y = Math.sin(t) * rad;
-					o.z = 0.35 - rad * 0.12;
-					o.a = rad < 0.75 ? 1 : 0.55;
-				},
-			},
-			// Iris rim and the inner ring.
-			{
-				share: 0.14,
-				fn: (o, r) => {
-					const t = r() * TAU;
-					const rad = r() < 0.6 ? 1.22 : 0.44;
-					o.x = Math.cos(t) * rad;
-					o.y = Math.sin(t) * rad;
-					o.z = 0.3;
-					o.a = 1;
-				},
-			},
-			// The catchlight.
-			{
-				share: 0.03,
-				fn: (o, r) => {
-					const t = r() * TAU;
-					const rad = Math.sqrt(r()) * 0.16;
-					o.x = 0.32 + Math.cos(t) * rad;
-					o.y = 0.3 + Math.sin(t) * rad;
-					o.z = 0.6;
-				},
-			},
-			// Lashes.
-			{
-				share: 0.15,
-				fn: (o, r) => {
-					const k = Math.floor(r() * 23);
-					const x = (k / 22 - 0.5) * 2 * W * 0.86;
-					const len = 0.25 + 0.2 * (1 - Math.abs(x) / W);
-					const t = r();
-					const ang = Math.PI / 2 + (x / W) * 0.7;
-					o.x = x + Math.cos(ang) * len * t;
-					o.y = lid(x) + Math.sin(ang) * len * t;
-					o.z = 0.3;
+					o.z = jitter(r, 0.8);
+					o.a = r() < 0.12 ? 0.6 : -0.6;
 				},
 			},
 		],
