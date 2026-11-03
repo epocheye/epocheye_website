@@ -182,7 +182,7 @@ export function KonarkScan({ assemble, size = 26, interactive = false, color, ..
 /* ───────────────────────── Rings, gates, floor ───────────────────────── */
 
 /** Concentric pedestal rings with tick marks, counter-rotating. */
-export function HoloRings({ radius = 3, fill = 0.06, ...props }) {
+export function HoloRings({ radius = 3, ...props }) {
 	const t = usePalette();
 	const a = useRef(null);
 	const b = useRef(null);
@@ -224,7 +224,7 @@ export function HoloRings({ radius = 3, fill = 0.06, ...props }) {
 			</group>
 			<mesh rotation-x={-Math.PI / 2} position-y={-0.01}>
 				<circleGeometry args={[radius, 64]} />
-				<meshBasicMaterial color={t.accent} transparent opacity={fill} depthWrite={false} />
+				<meshBasicMaterial color={t.accent} transparent opacity={0.06} depthWrite={false} />
 			</mesh>
 		</group>
 	);
@@ -279,7 +279,7 @@ const GRID_FRAG = /* glsl */ `
 `;
 
 /** Endless techy floor grid with a pulse running down the corridor. */
-export function GridFloor({ z = -66, length = 260 }) {
+export function GridFloor() {
 	const t = usePalette();
 	const mat = useRef(null);
 	const uniforms = useMemo(() => ({ uColor: { value: new THREE.Color() }, uAccent: { value: new THREE.Color() }, uTime: { value: 0 } }), []);
@@ -291,8 +291,8 @@ export function GridFloor({ z = -66, length = 260 }) {
 		m.uniforms.uAccent.value.set(t.accent);
 	});
 	return (
-		<mesh rotation-x={-Math.PI / 2} position={[0, 0, z]}>
-			<planeGeometry args={[140, length]} />
+		<mesh rotation-x={-Math.PI / 2} position={[0, 0, -66]}>
+			<planeGeometry args={[140, 260]} />
 			<shaderMaterial
 				ref={mat}
 				uniforms={uniforms}
@@ -358,7 +358,7 @@ const hash01 = (n) => {
 	return x - Math.floor(x);
 };
 
-export function Dust({ count, color, seed = 1, center = DUST_CENTER, area = DUST_AREA }) {
+export function Dust({ count, color, seed = 1 }) {
 	const t = usePalette();
 	const mat = useRef(null);
 	const geometry = useMemo(() => {
@@ -366,16 +366,16 @@ export function Dust({ count, color, seed = 1, center = DUST_CENTER, area = DUST
 		const rand = new Float32Array(count);
 		for (let i = 0; i < count; i += 1) {
 			const k = (i + 1) * 4 + seed * 7919;
-			pos[i * 3] = center[0] + (hash01(k) - 0.5) * area[0];
-			pos[i * 3 + 1] = center[1] + (hash01(k + 1) - 0.5) * area[1];
-			pos[i * 3 + 2] = center[2] + (hash01(k + 2) - 0.5) * area[2];
+			pos[i * 3] = DUST_CENTER[0] + (hash01(k) - 0.5) * DUST_AREA[0];
+			pos[i * 3 + 1] = DUST_CENTER[1] + (hash01(k + 1) - 0.5) * DUST_AREA[1];
+			pos[i * 3 + 2] = DUST_CENTER[2] + (hash01(k + 2) - 0.5) * DUST_AREA[2];
 			rand[i] = hash01(k + 3);
 		}
 		const g = new THREE.BufferGeometry();
 		g.setAttribute("position", new THREE.BufferAttribute(pos, 3));
 		g.setAttribute("aRand", new THREE.BufferAttribute(rand, 1));
 		return g;
-	}, [count, seed, center, area]);
+	}, [count, seed]);
 	const uniforms = useMemo(() => ({ uTime: { value: 0 }, uPixelRatio: { value: 1 }, uColor: { value: new THREE.Color() } }), []);
 	useFrame((state) => {
 		const m = mat.current;
