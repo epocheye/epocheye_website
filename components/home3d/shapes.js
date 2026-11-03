@@ -178,32 +178,9 @@ export function temple(N, cloud) {
 
 /* ───────────────────────── India, with the live cities ───────────────────────── */
 
-// India's outline, simplified: [lat, lon], clockwise from the Rann of Kutch.
-const INDIA = [
-	[23.7, 68.2], [22.4, 68.9], [21.2, 69.9], [20.8, 70.9], [21.6, 72.4], [22.3, 72.6], [21.1, 72.7], [20.3, 72.8],
-	[19.0, 72.8], [17.4, 73.2], [15.8, 73.6], [14.6, 74.3], [12.9, 74.8], [11.3, 75.7], [10.0, 76.2], [8.6, 76.9],
-	[8.1, 77.5], [8.9, 78.2], [9.3, 79.0], [10.3, 79.8], [11.6, 79.8], [13.1, 80.3], [14.6, 80.2], [15.7, 80.8],
-	[16.4, 81.8], [17.7, 83.4], [19.2, 84.9], [20.2, 86.5], [21.4, 87.1], [21.7, 88.1], [21.9, 89.0], [23.0, 88.8],
-	[24.2, 88.1], [25.1, 88.5], [25.4, 89.7], [25.2, 92.0], [24.2, 91.9], [23.4, 91.3], [22.6, 92.6], [23.8, 93.4],
-	[25.3, 94.6], [26.6, 95.2], [27.4, 96.9], [28.2, 97.3], [29.4, 96.3], [28.4, 94.3], [27.9, 92.4], [26.9, 91.8],
-	[26.8, 89.8], [26.4, 88.4], [26.7, 87.0], [27.0, 85.0], [27.4, 83.4], [28.1, 81.3], [29.7, 80.3], [30.3, 81.0],
-	[31.4, 78.8], [32.6, 78.4], [32.9, 79.6], [34.3, 78.9], [35.6, 77.8], [35.3, 76.2], [34.6, 75.1], [34.4, 73.8],
-	[33.2, 74.3], [32.4, 75.0], [31.1, 74.6], [30.1, 73.9], [29.0, 73.0], [27.8, 71.4], [27.0, 70.1], [25.8, 70.2],
-	[24.6, 71.1], [24.3, 69.5],
-];
 const INDIA_K = 0.17; // world units per degree
-const MAP_C = [22.5, 82.0]; // lat, lon at the origin
+const MAP_C = [22.5, 82.5]; // lat, lon at the origin
 const toMap = (lat, lon) => [(lon - MAP_C[1]) * INDIA_K, (lat - MAP_C[0]) * INDIA_K];
-
-function insidePolygon(x, y, poly) {
-	let inside = false;
-	for (let i = 0, j = poly.length - 1; i < poly.length; j = i, i += 1) {
-		const [xi, yi] = poly[i];
-		const [xj, yj] = poly[j];
-		if (yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi) inside = !inside;
-	}
-	return inside;
-}
 
 // The live monuments, by city.
 export const CITIES = [
@@ -212,53 +189,38 @@ export const CITIES = [
 ];
 const BEAM = 1.9;
 
-export function india(N) {
-	const poly = INDIA.map(([lat, lon]) => toMap(lat, lon));
-	const xs = poly.map((p) => p[0]);
-	const ys = poly.map((p) => p[1]);
-	const box = [Math.min(...xs), Math.max(...xs), Math.min(...ys), Math.max(...ys)];
-	// Perimeter, for evenly spaced coastline points.
-	const seg = poly.map((p, i) => {
-		const q = poly[(i + 1) % poly.length];
-		return Math.hypot(q[0] - p[0], q[1] - p[1]);
-	});
-	const perim = seg.reduce((s, l) => s + l, 0);
+/**
+ * India from Natural Earth as seen from India (official boundary, all of
+ * Jammu & Kashmir and Ladakh): `map` is the baked land mask and coastline /
+ * border points (scripts/build-home-globe.mjs, public/home/india.bin).
+ */
+export function india(N, map) {
+	const { latMax, lonMin, cols, rows, mask, borders } = map;
+	const cell = (latMax - map.latMin) / rows;
+	const land = [];
+	for (let i = 0; i < cols * rows; i += 1) if ((mask[i >> 3] >> (i & 7)) & 1) land.push(i);
+	const borderCount = borders.length / 2;
 	const cities = CITIES.map((c) => toMap(c.lat, c.lon));
 	return build(
 		N,
 		[
-			// The land, as a dot grid with a little relief.
+			// The land, one dot per cell of the map grid, with the Himalaya rising a little.
 			{
 				share: 0.62,
 				fn: (o, r) => {
-					for (let tries = 0; tries < 60; tries += 1) {
-						const x = lerp(box[0], box[1], r());
-						const y = lerp(box[2], box[3], r());
-						if (insidePolygon(x, y, poly)) {
-							// Snap to a fine grid: reads as a map, not noise.
-							o.x = Math.round(x / 0.06) * 0.06 + jitter(r, 0.012);
-							o.y = Math.round(y / 0.06) * 0.06 + jitter(r, 0.012);
-							o.z = jitter(r, 0.04) + Math.max(0, y - 2.2) * 0.12 * r();
-							return;
-						}
-					}
+					const i = land[Math.floor(r() * land.length)];
+					const lat = latMax - (Math.floor(i / cols) + 0.5) * cell;
+					const lon = lonMin + ((i % cols) + 0.5) * cell;
+					[o.x, o.y] = toMap(lat + jitter(r, cell * 0.3), lon + jitter(r, cell * 0.3));
+					o.z = jitter(r, 0.03) + Math.max(0, lat - 29) * 0.03 * r();
 				},
 			},
 			// The coastline and borders, bright.
 			{
 				share: 0.18,
 				fn: (o, r) => {
-					let d = r() * perim;
-					let i = 0;
-					while (d > seg[i]) {
-						d -= seg[i];
-						i += 1;
-					}
-					const p = poly[i];
-					const q = poly[(i + 1) % poly.length];
-					const t = d / seg[i];
-					o.x = lerp(p[0], q[0], t) + jitter(r, 0.02);
-					o.y = lerp(p[1], q[1], t) + jitter(r, 0.02);
+					const k = Math.floor(r() * borderCount) * 2;
+					[o.x, o.y] = toMap(borders[k] / 100 + jitter(r, 0.03), borders[k + 1] / 100 + jitter(r, 0.03));
 					o.z = jitter(r, 0.02);
 					o.a = 0.35;
 				},

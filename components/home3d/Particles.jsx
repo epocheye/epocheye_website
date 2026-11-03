@@ -10,6 +10,7 @@ import { DESTINATIONS, VIDEO_SIZE } from "./shapes";
 
 const SCAN_URL = "/preorder/konark-points.bin";
 const GEO_URL = "/home/globe.bin";
+const INDIA_URL = "/home/india.bin";
 const LOGO_URL = "/logo-white.png";
 
 /** The logo's ink pixels as (x, y, isLetter) in [-1, 1]: the ring in bone, the letters inside it in signal. */
@@ -115,6 +116,59 @@ const FRAG = /* glsl */ `
 	}
 `;
 
+// The room behind the cloud: a charcoal ground that is never flat black, a
+// slow drifting haze, and a pool of light behind the shape tinted to suit it
+// (sandstone for the monuments, sea-blue for the globe, and so on).
+const BACK_VERT = /* glsl */ `
+	varying vec2 vUv;
+	void main() {
+		vUv = uv;
+		gl_Position = vec4(position.xy, 0.9999, 1.0);
+	}
+`;
+const BACK_FRAG = /* glsl */ `
+	uniform float uTime;
+	uniform float uAspect;
+	uniform vec2 uGlow;
+	uniform vec3 uTint;
+	varying vec2 vUv;
+	float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+	float noise(vec2 p) {
+		vec2 i = floor(p);
+		vec2 f = fract(p);
+		vec2 u = f * f * (3.0 - 2.0 * f);
+		return mix(mix(hash(i), hash(i + vec2(1.0, 0.0)), u.x), mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), u.x), u.y);
+	}
+	float fbm(vec2 p) {
+		float v = 0.0;
+		float a = 0.5;
+		for (int i = 0; i < 5; i++) {
+			v += a * noise(p);
+			p *= 2.03;
+			a *= 0.5;
+		}
+		return v;
+	}
+	void main() {
+		vec2 p = vUv * 2.0 - 1.0;
+		p.x *= uAspect;
+		vec2 g = uGlow;
+		g.x *= uAspect;
+		// Linear light: these small numbers come out as deep charcoal on screen.
+		// Charcoal, lifting toward the top like a lit room.
+		vec3 col = mix(vec3(0.0032, 0.0034, 0.0036), vec3(0.0075, 0.0078, 0.008), smoothstep(-0.2, 1.2, vUv.y));
+		float d = length(p - g);
+		float pool = exp(-d * d * 0.6);
+		float haze = fbm(p * 1.3 + vec2(uTime * 0.025, -uTime * 0.018));
+		float wisps = fbm(p * 3.2 - vec2(uTime * 0.04, uTime * 0.01));
+		col += uTint * (pool * 0.55 + haze * 0.18);
+		col += vec3(0.0035) * wisps * haze;
+		// A faint horizon band low on the screen, so the space has a floor.
+		col += uTint * 0.12 * exp(-pow((vUv.y - 0.18) * 7.0, 2.0));
+		gl_FragColor = vec4(col, 1.0);
+	}
+`;
+
 const smooth = (a, b, x) => {
 	const t = Math.min(1, Math.max(0, (x - a) / (b - a)));
 	return t * t * (3 - 2 * t);
@@ -127,6 +181,8 @@ const rayCaster = new THREE.Raycaster();
 const centre = new THREE.Vector3();
 const hit = new THREE.Vector3();
 const v3 = new THREE.Vector3();
+const c1 = new THREE.Color();
+const c2 = new THREE.Color();
 
 /**
  * The cloud. `track.f` is the scroll position in steps (−1 = scattered dust
@@ -139,6 +195,8 @@ function Cloud({ count, track }) {
 	const data = useRef({}); // scan, geo, mark: what some shapes wait on
 	const cache = useRef(new Map());
 	const shown = useRef({ a: null, b: null });
+	const backdrop = useRef(null);
+	const tint = useRef(new THREE.Color("#1a1a1a"));
 	const motion = useRef({ spin: 0, globeX: 0, globeY: 0, x: 0, y: 0, s: 1, rx: 0, ry: 0 });
 
 	const { geometry, video } = useMemo(() => {
@@ -183,7 +241,12 @@ function Cloud({ count, track }) {
 
 	const ready = (key) => (SHAPES[key].needs ?? []).every((n) => data.current[n]);
 
-	// The temple scan, the map and the logo arrive over the network; until each
+	const backUniforms = useMemo(
+		() => ({ uTime: { value: 0 }, uAspect: { value: 1 }, uGlow: { value: new THREE.Vector2() }, uTint: { value: new THREE.Color("#1a1a1a") } }),
+		[]
+	);
+
+	// The temple scan, the two maps and the logo arrive over the network; until each
 	// does, the shapes that need it stand in as dust.
 	useEffect(() => {
 		let alive = true;
@@ -203,6 +266,25 @@ function Cloud({ count, track }) {
 				const borders = new DataView(buf).getUint32(0, true);
 				const maskBytes = (720 * 360) / 8;
 				arrive("geo", { mask: new Uint8Array(buf, 4, maskBytes), borders: new Int16Array(buf.slice(4 + maskBytes, 4 + maskBytes + borders * 4)) });
+			})
+			.catch(() => {});
+		fetch(INDIA_URL)
+			.then((r) => r.arrayBuffer())
+			.then((buf) => {
+				const head = new DataView(buf);
+				const [latMin, latMax, lonMin, lonMax] = [0, 4, 8, 12].map((o) => head.getFloat32(o, true));
+				const [cols, rows, borders] = [16, 20, 24].map((o) => head.getUint32(o, true));
+				const maskBytes = Math.ceil((cols * rows) / 8);
+				arrive("india", {
+					latMin,
+					latMax,
+					lonMin,
+					lonMax,
+					cols,
+					rows,
+					mask: new Uint8Array(buf, 28, maskBytes),
+					borders: new Int16Array(buf.slice(28 + maskBytes, 28 + maskBytes + borders * 4)),
+				});
 			})
 			.catch(() => {});
 		const img = new Image();
@@ -345,6 +427,19 @@ function Cloud({ count, track }) {
 		g.scale.setScalar(m.s);
 		g.rotation.set(m.rx - state.pointer.y * 0.12, m.ry + m.spin + state.pointer.x * 0.3, 0);
 
+		// The backdrop: its light pools behind the shape and takes the shape's tint.
+		const bu = backdrop.current?.material.uniforms;
+		if (bu) {
+			v3.set(m.x, m.y, 0).project(state.camera);
+			bu.uGlow.value.set(v3.x, v3.y);
+			bu.uAspect.value = state.size.width / state.size.height;
+			bu.uTime.value = state.clock.elapsedTime;
+			const ta = SHAPES[a].tint ?? "#1a1a1a";
+			const tb = SHAPES[b].tint ?? "#1a1a1a";
+			tint.current.lerp(c1.set(ta).lerp(c2.set(tb), t), Math.min(1, delta * 3));
+			bu.uTint.value.copy(tint.current);
+		}
+
 		const time = state.clock.elapsedTime;
 		u.uT.value = t;
 		u.uTime.value = time;
@@ -390,11 +485,17 @@ function Cloud({ count, track }) {
 	});
 
 	return (
-		<group ref={group}>
-			<points ref={points} geometry={geometry} frustumCulled={false}>
-				<shaderMaterial uniforms={uniforms} vertexShader={VERT} fragmentShader={FRAG} transparent depthWrite={false} blending={THREE.AdditiveBlending} />
-			</points>
-		</group>
+		<>
+			<mesh ref={backdrop} renderOrder={-1} frustumCulled={false}>
+				<planeGeometry args={[2, 2]} />
+				<shaderMaterial uniforms={backUniforms} vertexShader={BACK_VERT} fragmentShader={BACK_FRAG} depthTest={false} depthWrite={false} />
+			</mesh>
+			<group ref={group}>
+				<points ref={points} geometry={geometry} frustumCulled={false}>
+					<shaderMaterial uniforms={uniforms} vertexShader={VERT} fragmentShader={FRAG} transparent depthWrite={false} blending={THREE.AdditiveBlending} />
+				</points>
+			</group>
+		</>
 	);
 }
 
@@ -412,7 +513,7 @@ export default function Particles({ track, active, eventSource, count }) {
 			<Cloud count={count} track={track} />
 			<EffectComposer multisampling={0}>
 				<Bloom intensity={0.55} luminanceThreshold={0.55} luminanceSmoothing={0.35} mipmapBlur />
-				<Vignette eskil={false} offset={0.25} darkness={0.7} />
+				<Vignette eskil={false} offset={0.3} darkness={0.45} />
 			</EffectComposer>
 		</Canvas>
 	);
