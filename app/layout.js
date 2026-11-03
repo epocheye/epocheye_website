@@ -89,7 +89,6 @@ export const metadata = {
 };
 
 import Script from "next/script";
-import AnnouncementBanner from "@/components/layout/AnnouncementBanner";
 import { Analytics } from "@vercel/analytics/next";
 
 export default function RootLayout({ children }) {
@@ -99,7 +98,6 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} ${montserratAlternates.variable} ${instrumentSans.variable} ${instrumentSerif.variable} antialiased`}
       >
         <JsonLd data={[organization(), website()]} />
-        <AnnouncementBanner />
         {children}
         <Script 
           src="https://tally.so/widgets/embed.js" 
