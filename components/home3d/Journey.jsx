@@ -24,6 +24,7 @@ const Particles = dynamic(() => import("./Particles"), { ssr: false, loading: ()
 const STEPS = [
 	{ shape: "temple", side: "left" },
 	{ shape: "india", side: "right" },
+	{ shape: "dust", side: "center" }, // the cloud scatters to a starfield behind the backers
 	{ shape: "phone", side: "left" },
 	{ shape: "wave", side: "left" },
 	{ shape: "cards", side: "left" },
@@ -98,10 +99,10 @@ function Step({ index, side, id, children, wide = false }) {
 		<div
 			id={id}
 			data-step={index}
-			className={`relative flex min-h-svh w-full items-end px-5 pb-24 pt-[50svh] md:items-center md:px-12 md:py-24 ${
-				side === "right" ? "md:justify-end" : "md:justify-start"
-			}`}>
-			<div className={`w-full ${wide ? "md:max-w-[40rem]" : "md:max-w-[34rem]"}`}>{children}</div>
+			className={`relative flex min-h-svh w-full px-5 md:items-center md:px-12 md:py-24 ${
+				side === "center" ? "items-center justify-center py-24" : "items-end pb-24 pt-[50svh]"
+			} ${side === "right" ? "md:justify-end" : side === "center" ? "" : "md:justify-start"}`}>
+			<div className={`w-full ${side === "center" ? "max-w-5xl" : wide ? "md:max-w-[40rem]" : "md:max-w-[34rem]"}`}>{children}</div>
 		</div>
 	);
 }
@@ -130,9 +131,9 @@ function Manifesto({ points }) {
 
 // Logo heights differ because each file carries different padding: these make the marks look the same size.
 const BACKERS = [
-	{ name: "STPI", logo: logoStpi, w: 200, h: 200, className: "h-16 md:h-20" },
-	{ name: "Amazon Web Services", logo: logoAws, w: 225, h: 225, className: "-my-4 h-24 md:-my-5 md:h-32" },
-	{ name: "Draper Startup House", logo: logoDraper, w: 653, h: 382, className: "h-11 md:h-14" },
+	{ name: "STPI", role: "Software Technology Parks of India", logo: logoStpi, w: 200, h: 200, className: "h-28 md:h-48" },
+	{ name: "AWS", role: "Amazon Web Services", logo: logoAws, w: 225, h: 225, className: "h-36 md:h-64" },
+	{ name: "Draper Startup House", role: "Draper network", logo: logoDraper, w: 653, h: 382, className: "h-20 md:h-32" },
 ];
 
 function Where() {
@@ -169,19 +170,34 @@ function Where() {
 					</li>
 				))}
 			</ol>
-			{/* Who backs us, big and in white so it reads at a glance. */}
-			<div className="mt-10" data-fade>
-				<p className="mono-label text-[11px] text-signal">Backed by</p>
-				<div className="mt-4 flex flex-wrap items-center gap-x-10 gap-y-6">
-					{BACKERS.map((b) => (
-						<figure key={b.name} className="flex flex-col items-start gap-2">
-							<Image src={b.logo} alt={b.name} width={b.w} height={b.h} className={`w-auto brightness-0 invert ${b.className}`} />
-							<figcaption className="mono-label text-[10px] text-bone-muted">{b.name}</figcaption>
-						</figure>
-					))}
-				</div>
-			</div>
 		</>
+	);
+}
+
+/** Who backs us, on a screen of its own: the logos large and in white, named underneath. */
+function Backers() {
+	return (
+		<div className="text-center">
+			<p className="mono-label flex items-center justify-center gap-3 text-sm text-signal" data-fade>
+				<span className="h-px w-8 bg-signal" aria-hidden="true" />
+				Backed by
+				<span className="h-px w-8 bg-signal" aria-hidden="true" />
+			</p>
+			<h2 className={`${headline} mt-5`} style={{ fontSize: "clamp(40px, 6vw, 92px)" }}>
+				<Words text="In good company." />
+			</h2>
+			<ul className="mt-12 flex flex-col items-center justify-center gap-12 md:mt-16 md:flex-row md:gap-24">
+				{BACKERS.map((b) => (
+					<li key={b.name} className="flex flex-col items-center gap-4" data-fade>
+						<span className="flex h-32 items-center md:h-56">
+							<Image src={b.logo} alt={b.name} width={b.w} height={b.h} className={`w-auto brightness-0 invert ${b.className}`} />
+						</span>
+						<span className="font-serif text-3xl text-bone md:text-4xl">{b.name}</span>
+						<span className="mono-label text-[11px] text-bone-muted">{b.role}</span>
+					</li>
+				))}
+			</ul>
+		</div>
 	);
 }
 
@@ -615,7 +631,7 @@ export default function Journey() {
 	}, [webgl]);
 
 	const current = STEPS[step].shape;
-	const caption = current === "eras" ? null : SHAPES[current]?.caption;
+	const caption = current === "eras" ? "Drag the timeline" : SHAPES[current]?.caption;
 
 	return (
 		<section id="main-content" ref={section} aria-label="What Epocheye does" className="relative bg-ink">
@@ -630,7 +646,7 @@ export default function Journey() {
 					/>
 					<div
 						className={`pointer-events-none absolute inset-0 transition-opacity duration-700 max-md:bg-gradient-to-t max-md:from-[#0A0A0B] max-md:via-[#0A0A0B]/75 max-md:via-45% max-md:to-transparent max-md:to-70% md:bg-gradient-to-l md:from-[#0A0A0B]/80 md:via-[#0A0A0B]/30 md:via-35% md:to-transparent md:to-55% ${
-							STEPS[step].side === "left" ? "opacity-0" : "opacity-100"
+							STEPS[step].side === "right" ? "opacity-100" : "opacity-0"
 						}`}
 					/>
 					{/* Labels pinned to points in the cloud (the frame loop places them). */}
@@ -659,7 +675,7 @@ export default function Journey() {
 					<p className="pointer-events-none absolute bottom-7 right-10 hidden text-right font-mono text-[10px] uppercase tracking-[0.22em] text-bone-muted md:block">
 						<span className="text-signal">{`${points.toLocaleString("en-IN")} points`}</span>
 						<br />
-						{caption ?? "Drag the timeline"}
+						{caption}
 					</p>
 				</div>
 			)}
@@ -671,29 +687,32 @@ export default function Journey() {
 				<Step index={1} side="right" id="where">
 					<Where />
 				</Step>
+				<Step index={2} side="center" id="backers">
+					<Backers />
+				</Step>
 				{STACK.map((item, k) => (
-					<Step key={item.n} index={2 + k} side="left" id={k === 0 ? "capabilities" : undefined}>
+					<Step key={item.n} index={3 + k} side="left" id={k === 0 ? "capabilities" : undefined}>
 						<Capability item={item} index={k} />
 					</Step>
 				))}
 				{COLLECTION.map((item, k) => (
-					<Step key={item.name} index={5 + k} side="right" id={k === 0 ? "collection" : undefined} wide>
+					<Step key={item.name} index={6 + k} side="right" id={k === 0 ? "collection" : undefined} wide>
 						<Collection item={item} index={k} />
 					</Step>
 				))}
-				<Step index={8} side="left" id="field">
+				<Step index={9} side="left" id="field">
 					<Field />
 				</Step>
-				<Step index={9} side="right" id="how-it-works">
-					<Eras active={step === 9} />
+				<Step index={10} side="right" id="how-it-works">
+					<Eras active={step === 10} />
 				</Step>
-				<Step index={10} side="left" id="destinations">
-					<Destinations active={step === 10} />
+				<Step index={11} side="left" id="destinations">
+					<Destinations active={step === 11} />
 				</Step>
-				<Step index={11} side="right" id="creators" wide>
+				<Step index={12} side="right" id="creators" wide>
 					<Network />
 				</Step>
-				<Step index={12} side="left" id="team">
+				<Step index={13} side="left" id="team">
 					<Team />
 				</Step>
 			</div>
