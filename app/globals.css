@@ -878,3 +878,60 @@ html.lenis body {
     scroll-behavior: auto;
   }
 }
+/* Homepage timeline scrubber (components/home3d/Journey.jsx) */
+.era-range {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 2px;
+  background: var(--color-rule);
+  outline: none;
+  cursor: pointer;
+}
+.era-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 9999px;
+  background: var(--color-signal);
+  box-shadow: 0 0 18px rgba(204, 255, 0, 0.55);
+}
+.era-range::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border: 0;
+  border-radius: 9999px;
+  background: var(--color-signal);
+  box-shadow: 0 0 18px rgba(204, 255, 0, 0.55);
+}
+.era-range:focus-visible::-webkit-slider-thumb {
+  outline: 2px solid var(--color-bone);
+  outline-offset: 3px;
+}
+
+
+/* Homepage type (components/home3d/Journey.jsx) */
+.text-outline {
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(242, 239, 230, 0.5);
+}
+.link-sweep {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  transition: background-size 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.link-sweep:hover,
+.link-sweep:focus-visible {
+  background-size: 100% 1px;
+}
+@keyframes ticker {
+  to { transform: translateX(-50%); }
+}
+.ticker {
+  animation: ticker 38s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ticker { animation: none; }
+}

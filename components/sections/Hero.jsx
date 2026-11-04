@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
+import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
 import Navbar from "./Navbar";
 import ShinyText from "../ShinyText";
-import HeroOffer from "./HeroOffer";
 import googlePlayBadge from "../../public/google-play-badge.png";
+import { PREORDER_PRICE, formatPrice } from "@/lib/preorder/price";
 
 const Hero = () => {
 	const [showScrollIndicator, setShowScrollIndicator] = useState(false);
@@ -188,18 +189,7 @@ const Hero = () => {
 					Historical intelligence for the physical world
 				</motion.p>
 
-				{/* Bangalore launch offer — first 500 free */}
-				<motion.div
-					initial={{ opacity: 0, y: 20 }}
-					animate={{
-						opacity: introPhase === "complete" ? 1 : 0,
-						y: introPhase === "complete" ? 0 : 20,
-					}}
-					transition={{ duration: 1, delay: 0.85, ease: [0.22, 1, 0.36, 1] }}>
-					<HeroOffer />
-				</motion.div>
-
-				{/* CTA — live on Google Play */}
+				{/* CTA — live on Google Play, and pre-orders for the next site */}
 				<motion.div
 					initial={{ opacity: 0, y: 20 }}
 					animate={{
@@ -222,6 +212,16 @@ const Hero = () => {
 							className="h-[64px] w-auto sm:h-[76px]"
 						/>
 					</a>
+					{/* Pre-orders: vote with a ticket for the next site we build. */}
+					<Link
+						href="/preorder"
+						className="group pointer-events-auto inline-flex items-center gap-3 whitespace-nowrap rounded-full border border-white/30 bg-white/[0.06] py-2.5 pl-3 pr-5 text-[13px] font-medium text-white backdrop-blur-md transition-colors duration-300 hover:border-[#CCFF00]/70 focus:outline-none focus:ring-2 focus:ring-white/50 sm:text-base">
+						<span className="rounded-full bg-[#CCFF00] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-black">New</span>
+						{`Pre-order the next site · ${formatPrice(PREORDER_PRICE)}`}
+						<span className="transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">
+							→
+						</span>
+					</Link>
 				</motion.div>
 			</motion.div>
 
