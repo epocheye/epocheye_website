@@ -12,6 +12,9 @@ import { ScrambleText } from "@/components/preorder/reactbits";
 import logoStpi from "@/public/logo-stpi.png";
 import logoAws from "@/public/logo-aws.png";
 import logoDraper from "@/public/logo-draper.png";
+import logoFounderStartupHouse from "@/public/home/backers/founder-startup-house.png";
+import logoGoogleForStartups from "@/public/home/backers/google-for-startups.png";
+import logoNvidia from "@/public/home/backers/nvidia.png";
 import { DESTINATIONS, ERAS, SHAPES, eraStore, labelEls, ui } from "./scenes";
 import { CITIES } from "./shapes";
 
@@ -138,15 +141,16 @@ function Manifesto({ points }) {
 }
 
 // Logo heights differ because each file carries different padding: these make the marks look the same size.
-// Those without a logo file yet are set as a wordmark in the logo's place.
+// Every mark is shown in white. India 2047 Ventures has no standalone logo
+// (only banners), so it is set as a wordmark in the logo's place.
 const BACKERS = [
-	{ name: "Software Technology Parks of India", logo: logoStpi, w: 200, h: 200, className: "h-20 md:h-36" },
-	{ name: "Amazon Web Services", logo: logoAws, w: 225, h: 225, className: "h-28 md:h-52" },
-	{ name: "Draper Startup House", logo: logoDraper, w: 653, h: 382, className: "h-14 md:h-28" },
-	{ name: "Founder Startup House" },
+	{ name: "Software Technology Parks of India", logo: logoStpi, className: "h-20 w-auto md:h-36" },
+	{ name: "Amazon Web Services", logo: logoAws, className: "h-28 w-auto md:h-52" },
+	{ name: "Draper Startup House", logo: logoDraper, className: "h-14 w-auto md:h-28" },
+	{ name: "Founder Startup House", logo: logoFounderStartupHouse, className: "h-auto w-36 md:w-56" },
 	{ name: "India 2047 Ventures" },
-	{ name: "Google for Startups" },
-	{ name: "NVIDIA Inception Program" },
+	{ name: "Google for Startups", logo: logoGoogleForStartups, className: "h-auto w-40 md:w-60" },
+	{ name: "NVIDIA Inception Program", logo: logoNvidia, className: "h-auto w-32 md:w-52" },
 ];
 
 function Where() {
@@ -204,12 +208,16 @@ function Backers() {
 					<li key={b.name} className="flex w-[46%] flex-col items-center gap-3 md:w-[22%]" data-fade>
 						<span className="flex h-24 items-center justify-center md:h-40">
 							{b.logo ? (
-								<Image src={b.logo} alt={b.name} width={b.w} height={b.h} className={`w-auto brightness-0 invert ${b.className}`} />
+								<Image src={b.logo} alt={b.name} className={`brightness-0 invert ${b.className}`} />
 							) : (
-								<span className="font-serif text-[26px] leading-[1.05] text-bone md:text-[40px]">{b.name}</span>
+								<span className="font-montserrat text-[22px] font-bold uppercase leading-[1.05] tracking-[0.06em] text-white md:text-[34px]">
+									India <span className="text-signal">2047</span>
+									<br />
+									Ventures
+								</span>
 							)}
 						</span>
-						{b.logo && <span className="font-serif text-lg leading-tight text-bone md:text-2xl">{b.name}</span>}
+						<span className="font-serif text-lg leading-tight text-bone md:text-2xl">{b.name}</span>
 					</li>
 				))}
 			</ul>
