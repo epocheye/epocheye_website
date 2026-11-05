@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useEffectEvent, useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
@@ -12,7 +12,7 @@ import { ScrambleText } from "@/components/preorder/reactbits";
 import logoStpi from "@/public/logo-stpi.png";
 import logoAws from "@/public/logo-aws.png";
 import logoDraper from "@/public/logo-draper.png";
-import { DESTINATIONS, ERAS, SHAPES, labelEls, ui } from "./scenes";
+import { DESTINATIONS, ERAS, SHAPES, eraStore, labelEls, ui } from "./scenes";
 import { CITIES } from "./shapes";
 
 if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger);
@@ -94,15 +94,23 @@ function Words({ text, className = "" }) {
  * One scroll step, a screen tall. Wide screens: the text takes one side, the
  * shape the other. Phones: the text sits low, the shape above it.
  */
-function Step({ index, side, id, children, wide = false }) {
+function Step({ index, side, id, children, wide = false, hold = 0 }) {
+	const layout = `relative flex w-full px-5 md:items-center md:px-12 md:py-24 ${
+		side === "center" ? "items-center justify-center py-24" : `items-end pb-24 ${hold ? "pt-[40svh]" : "pt-[50svh]"}`
+	} ${side === "right" ? "md:justify-end" : side === "center" ? "" : "md:justify-start"}`;
+	const content = <div className={`w-full ${side === "center" ? "max-w-6xl" : wide ? "md:max-w-[40rem]" : "md:max-w-[34rem]"}`}>{children}</div>;
+	// A held step is `hold` screens tall; its content stays pinned on screen while you scroll through it.
+	if (hold)
+		return (
+			<div id={id} data-step={index} data-hold={hold} className="relative w-full" style={{ height: `${hold * 100}svh` }}>
+				<div data-pin className={`${layout} h-svh`}>
+					{content}
+				</div>
+			</div>
+		);
 	return (
-		<div
-			id={id}
-			data-step={index}
-			className={`relative flex min-h-svh w-full px-5 md:items-center md:px-12 md:py-24 ${
-				side === "center" ? "items-center justify-center py-24" : "items-end pb-24 pt-[50svh]"
-			} ${side === "right" ? "md:justify-end" : side === "center" ? "" : "md:justify-start"}`}>
-			<div className={`w-full ${side === "center" ? "max-w-5xl" : wide ? "md:max-w-[40rem]" : "md:max-w-[34rem]"}`}>{children}</div>
+		<div id={id} data-step={index} className={`${layout} min-h-svh`}>
+			{content}
 		</div>
 	);
 }
@@ -130,10 +138,15 @@ function Manifesto({ points }) {
 }
 
 // Logo heights differ because each file carries different padding: these make the marks look the same size.
+// Those without a logo file yet are set as a wordmark in the logo's place.
 const BACKERS = [
-	{ name: "STPI", role: "Software Technology Parks of India", logo: logoStpi, w: 200, h: 200, className: "h-28 md:h-48" },
-	{ name: "AWS", role: "Amazon Web Services", logo: logoAws, w: 225, h: 225, className: "h-36 md:h-64" },
-	{ name: "Draper Startup House", role: "Draper network", logo: logoDraper, w: 653, h: 382, className: "h-20 md:h-32" },
+	{ name: "Software Technology Parks of India", logo: logoStpi, w: 200, h: 200, className: "h-20 md:h-36" },
+	{ name: "Amazon Web Services", logo: logoAws, w: 225, h: 225, className: "h-28 md:h-52" },
+	{ name: "Draper Startup House", logo: logoDraper, w: 653, h: 382, className: "h-14 md:h-28" },
+	{ name: "Founder Startup House" },
+	{ name: "India 2047 Ventures" },
+	{ name: "Google for Startups" },
+	{ name: "NVIDIA Inception Program" },
 ];
 
 function Where() {
@@ -183,17 +196,20 @@ function Backers() {
 				Backed by
 				<span className="h-px w-8 bg-signal" aria-hidden="true" />
 			</p>
-			<h2 className={`${headline} mt-5`} style={{ fontSize: "clamp(40px, 6vw, 92px)" }}>
+			<h2 className={`${headline} mt-4`} style={{ fontSize: "clamp(40px, 5vw, 80px)" }}>
 				<Words text="In good company." />
 			</h2>
-			<ul className="mt-12 flex flex-col items-center justify-center gap-12 md:mt-16 md:flex-row md:gap-24">
+			<ul className="mt-10 flex flex-wrap items-start justify-center gap-x-4 gap-y-10 md:mt-12 md:gap-x-6 md:gap-y-10">
 				{BACKERS.map((b) => (
-					<li key={b.name} className="flex flex-col items-center gap-4" data-fade>
-						<span className="flex h-32 items-center md:h-56">
-							<Image src={b.logo} alt={b.name} width={b.w} height={b.h} className={`w-auto brightness-0 invert ${b.className}`} />
+					<li key={b.name} className="flex w-[46%] flex-col items-center gap-3 md:w-[22%]" data-fade>
+						<span className="flex h-24 items-center justify-center md:h-40">
+							{b.logo ? (
+								<Image src={b.logo} alt={b.name} width={b.w} height={b.h} className={`w-auto brightness-0 invert ${b.className}`} />
+							) : (
+								<span className="font-serif text-[26px] leading-[1.05] text-bone md:text-[40px]">{b.name}</span>
+							)}
 						</span>
-						<span className="font-serif text-3xl text-bone md:text-4xl">{b.name}</span>
-						<span className="mono-label text-[11px] text-bone-muted">{b.role}</span>
+						{b.logo && <span className="font-serif text-lg leading-tight text-bone md:text-2xl">{b.name}</span>}
 					</li>
 				))}
 			</ul>
@@ -320,43 +336,15 @@ const HOW = [
 	["Travel", "Unlock stories and reconstructions verified by historians."],
 ];
 
-/** The timeline: a giant year you scrub (or let play), and the cloud rebuilds each era. */
-function Eras({ active }) {
-	const [era, setEra] = useState(0);
-	const [value, setValue] = useState(0);
-	const held = useRef(0);
-	const tween = useRef(null);
-
-	const go = (target) => {
-		tween.current?.kill();
-		tween.current = gsap.to(ui, {
-			era: target,
-			duration: 1.6,
-			ease: "power2.inOut",
-			onUpdate: () => {
-				setValue(ui.era);
-				setEra(Math.round(ui.era));
-			},
-		});
-	};
-
-	// Plays through the eras while it is on screen and nobody is dragging.
-	const tick = useEffectEvent(() => {
-		if (performance.now() < held.current) return;
-		go((Math.round(ui.era) + 1) % ERAS.length);
-	});
-	useEffect(() => {
-		if (!active) return;
-		const id = setInterval(tick, 3800);
-		return () => clearInterval(id);
-	}, [active]);
-	useEffect(() => () => tween.current?.kill(), []);
-
-	const hold = () => {
-		held.current = performance.now() + 9000;
-	};
+/**
+ * The timeline: the step holds while you scroll through all four eras (and the
+ * cloud rebuilds each one), then lets you go. Dragging the slider or picking a
+ * year scrolls the page to that era.
+ */
+function Eras() {
+	const value = useSyncExternalStore(eraStore.subscribe, eraStore.get, () => 0);
+	const era = Math.round(value);
 	const step = Math.min(era, 2);
-
 	return (
 		<>
 			<Label>05 — How it works</Label>
@@ -381,19 +369,7 @@ function Eras({ active }) {
 				value={value}
 				aria-label="Timeline"
 				aria-valuetext={ERAS[era].year}
-				onPointerDown={() => {
-					hold();
-					tween.current?.kill();
-				}}
-				onChange={(e) => {
-					hold();
-					const v = Number(e.target.value);
-					ui.era = v;
-					setValue(v);
-					setEra(Math.round(v));
-				}}
-				onPointerUp={() => go(Math.round(ui.era))}
-				onKeyUp={() => go(Math.round(ui.era))}
+				onChange={(e) => eraStore.scrollTo?.(Number(e.target.value), true)}
 				className="era-range mt-6 w-full"
 			/>
 			<div className="mt-3 flex justify-between">
@@ -401,15 +377,15 @@ function Eras({ active }) {
 					<button
 						key={e.year}
 						type="button"
-						onClick={() => {
-							hold();
-							go(i);
-						}}
+						onClick={() => eraStore.scrollTo?.(i)}
 						className={`mono-label text-[10px] transition-colors ${i === era ? "text-signal" : "text-bone-muted hover:text-bone"}`}>
 						{e.year}
 					</button>
 				))}
 			</div>
+			<p className="mono-label mt-6 flex items-center gap-2 text-[10px] text-bone-faint">
+				<span className={`transition-opacity duration-500 ${era < ERAS.length - 1 ? "opacity-100" : "opacity-0"}`}>Keep scrolling to travel through time ↓</span>
+			</p>
 		</>
 	);
 }
@@ -564,25 +540,41 @@ export default function Journey() {
 	useEffect(() => {
 		const root = section.current;
 		const els = [...root.querySelectorAll("[data-step]")];
-		let centres = [];
+		// Where each step holds, in page coordinates of the viewport's middle: an
+		// ordinary step at its centre, a held step over its whole pinned stretch.
+		let holds = [];
 		const measure = () => {
-			centres = els.map((el) => {
+			const vh = window.innerHeight;
+			holds = els.map((el) => {
 				const r = el.getBoundingClientRect();
-				return r.top + window.scrollY + r.height / 2;
+				const top = r.top + window.scrollY;
+				return el.dataset.hold ? [top + vh / 2, top + r.height - vh / 2] : [top + r.height / 2, top + r.height / 2];
 			});
 		};
+		const timeline = els.findIndex((el) => el.querySelector("input[type=range]"));
+		// Dragging the timeline or picking a year scrolls to that point of the held stretch.
+		eraStore.scrollTo = (v, instant = false) => {
+			const [a, b] = holds[timeline] ?? [0, 0];
+			const y = a + ((b - a) * v) / (ERAS.length - 1) - window.innerHeight / 2;
+			if (window.__lenis) window.__lenis.scrollTo(y, instant ? { immediate: true } : { duration: 1.4 });
+			else window.scrollTo({ top: y, behavior: instant ? "auto" : "smooth" });
+		};
 		const update = () => {
-			if (!centres.length) return;
+			if (!holds.length) return;
 			const mid = window.scrollY + window.innerHeight / 2;
-			const first = centres[0] - window.innerHeight;
 			let f;
-			if (mid <= centres[0]) f = Math.max(-1, -1 + (mid - first) / (centres[0] - first));
+			if (mid <= holds[0][0]) f = Math.max(-1, -1 + (mid - (holds[0][0] - window.innerHeight)) / window.innerHeight);
 			else {
 				let i = 0;
-				while (i < centres.length - 1 && mid > centres[i + 1]) i += 1;
-				f = i === centres.length - 1 ? i : i + (mid - centres[i]) / (centres[i + 1] - centres[i]);
+				while (i < holds.length - 1 && mid >= holds[i + 1][0]) i += 1;
+				const [, end] = holds[i];
+				f = mid <= end || i === holds.length - 1 ? i : i + (mid - end) / (holds[i + 1][0] - end);
 			}
 			track.f = f;
+			if (timeline >= 0) {
+				const [a, b] = holds[timeline];
+				eraStore.set(Math.min(1, Math.max(0, (mid - a) / (b - a))) * (ERAS.length - 1));
+			}
 			const s = Math.max(0, Math.min(STEPS.length - 1, Math.round(f)));
 			setStep((prev) => (prev === s ? prev : s));
 		};
@@ -598,6 +590,10 @@ export default function Journey() {
 				ScrollTrigger.create({ trigger: root, start: "top bottom", end: "bottom top", onToggle: (self) => setActive(self.isActive) })
 			);
 		}
+		// Held steps keep their content on screen for their whole stretch.
+		els.forEach((el) => {
+			if (el.dataset.hold) triggers.push(ScrollTrigger.create({ trigger: el, start: "top top", end: "bottom bottom", pin: el.querySelector("[data-pin]"), pinSpacing: false }));
+		});
 		triggers.push(ScrollTrigger.create({ trigger: root, start: "top bottom", end: "bottom top", onUpdate: update, onRefresh: () => (measure(), update()) }));
 
 		// Each step arrives in order: its headline rises word by word out of
@@ -627,11 +623,12 @@ export default function Journey() {
 			reveals.forEach((t) => t.scrollTrigger?.kill() || t.kill());
 			root.removeEventListener("pointermove", onMove);
 			root.removeEventListener("pointerleave", onLeave);
+			eraStore.scrollTo = null;
 		};
 	}, [webgl]);
 
 	const current = STEPS[step].shape;
-	const caption = current === "eras" ? "Drag the timeline" : SHAPES[current]?.caption;
+	const caption = current === "eras" ? "Scroll or drag the timeline" : SHAPES[current]?.caption;
 
 	return (
 		<section id="main-content" ref={section} aria-label="What Epocheye does" className="relative bg-ink">
@@ -703,8 +700,8 @@ export default function Journey() {
 				<Step index={9} side="left" id="field">
 					<Field />
 				</Step>
-				<Step index={10} side="right" id="how-it-works">
-					<Eras active={step === 10} />
+				<Step index={10} side="right" id="how-it-works" hold={4}>
+					<Eras />
 				</Step>
 				<Step index={11} side="left" id="destinations">
 					<Destinations active={step === 11} />
