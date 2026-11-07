@@ -8,7 +8,7 @@ import { Bloom, EffectComposer, Vignette } from "@react-three/postprocessing";
 import { ERAS, SHAPES, labelEls, ui } from "./scenes";
 import { DESTINATIONS, VIDEO_SIZE } from "./shapes";
 
-const SCAN_URL = "/preorder/konark-points.bin";
+const SCAN_URL = "/home/konark-points.bin";
 const GEO_URL = "/home/globe.bin";
 const INDIA_URL = "/home/india.bin";
 const LOGO_URL = "/logo-white.png";
