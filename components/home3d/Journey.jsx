@@ -8,7 +8,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import { LIVE_MONUMENTS } from "@/lib/monuments/live";
-import { ScrambleText } from "@/components/preorder/reactbits";
+import { ScrambleText } from "./ScrambleText";
 import logoStpi from "@/public/logo-stpi.png";
 import logoAws from "@/public/logo-aws.png";
 import logoDraper from "@/public/logo-draper.png";

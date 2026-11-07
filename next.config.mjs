@@ -36,6 +36,12 @@ const nextConfig = {
         destination: 'https://creators.epocheye.com/:path*',
         permanent: true,
       },
+      // Pre-orders are closed: old and shared /preorder links land on the homepage.
+      {
+        source: '/preorder',
+        destination: '/',
+        permanent: false,
+      },
     ];
   },
 

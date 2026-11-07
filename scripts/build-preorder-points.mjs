@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 /**
- * Bakes the Konark Jagamohana model into a point cloud for the /preorder hero.
+ * Bakes the Konark Jagamohana model into a point cloud for the homepage.
  *
  * Reads public/models/jagamohana.glb (Draco-compressed), samples points on its
  * surface weighted by triangle area, and writes them as little-endian Int16
  * x,y,z triplets normalised to [-32767, 32767] (the model is unit-scaled):
- *   public/preorder/konark-points.bin
+ *   public/home/konark-points.bin
  * Re-run with: node scripts/build-preorder-points.mjs [count]
  */
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -91,8 +91,8 @@ for (let i = 0; i < COUNT; i += 1) {
 }
 for (let i = 0; i < pts.length; i += 1) out[i] = Math.round((pts[i] / maxAbs) * 32767);
 
-mkdirSync(path.join(root, "public/preorder"), { recursive: true });
-writeFileSync(path.join(root, "public/preorder/konark-points.bin"), Buffer.from(out.buffer));
+mkdirSync(path.join(root, "public/home"), { recursive: true });
+writeFileSync(path.join(root, "public/home/konark-points.bin"), Buffer.from(out.buffer));
 console.log(`konark-points.bin: ${COUNT} points from ${nFaces} faces, scale ${maxAbs.toFixed(4)}`);
 
 decoderModule.destroy(posArr);
