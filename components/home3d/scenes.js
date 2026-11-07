@@ -24,7 +24,7 @@ import {
 } from "./shapes";
 
 export const SHAPES = {
-	dust: { make: (N) => dust(N), pose: { fixed: true }, caption: "STPI · AWS · Draper Startup House" },
+	dust: { make: (N) => dust(N), pose: { fixed: true }, caption: "Backed by 7 partners and programmes" },
 	temple: { make: (N, d) => temple(N, d.scan), needs: ["scan"], pose: { rx: 0.2, ry: 0.6, spin: 0.12, w: 6.6, h: 3.8 }, caption: "Konark Sun Temple · laser scan" },
 	india: { make: (N, d) => india(N, d.india), needs: ["india"], pose: { rx: -0.95, ry: 0, w: 5.4, h: 4.6 }, caption: "India · 2 cities · 4 monuments live", anchors: INDIA_ANCHORS },
 	phone: { make: (N, d) => phone(N, d.scan), needs: ["scan"], pose: { rx: 0.06, ry: -0.5, w: 3.4, h: 5 }, caption: "AR time travel" },
@@ -58,6 +58,23 @@ export { DESTINATIONS };
  * picked destination, the hovered city.
  */
 export const ui = { era: 0, destination: 0, city: -1, heldUntil: 0 };
+
+// The timeline position is driven by scroll; the timeline UI subscribes to it.
+const eraListeners = new Set();
+export const eraStore = {
+	subscribe: (cb) => {
+		eraListeners.add(cb);
+		return () => eraListeners.delete(cb);
+	},
+	get: () => ui.era,
+	set: (v) => {
+		if (v === ui.era) return;
+		ui.era = v;
+		eraListeners.forEach((cb) => cb());
+	},
+	/** Set by the page: scrolls to the point where the timeline reads `v` (0–3). */
+	scrollTo: null,
+};
 
 /** DOM labels pinned to points in the cloud, by anchor id; the frame loop positions them. */
 export const labelEls = {};
