@@ -12,16 +12,26 @@
   --font-instrument-sans: var(--font-instrument-sans);
   --font-instrument-serif: var(--font-instrument-serif);
   --color-accent: #D4AF37;
+  /* Section tone tokens (60/30/10, see the palette block below) */
+  --color-page: var(--t-bg);
+  --color-type: var(--t-fg);
+  --color-type-muted: var(--t-muted);
+  --color-type-faint: var(--t-faint);
+  --color-hair: var(--t-line);
+  --color-plate: var(--t-surface);
+  --color-c10: var(--c10);
+  --color-on-c10: var(--on-c10);
   /* ── Editorial Brutalist + 3D redesign tokens ── */
-  --color-ink: #0A0A0B;        /* page canvas */
-  --color-ink-2: #0E0E10;      /* alt section */
-  --color-ink-3: #060606;      /* deepest (hero seam) */
-  --color-bone: #F2EFE6;       /* editorial type */
-  --color-signal: #CCFF00;     /* single electric accent (swappable) */
-  --color-rule: rgba(242, 239, 230, 0.14); /* hairline rules / frames */
-  --color-bone-muted: #8A887F; /* mono labels / secondary */
-  --color-bone-faint: #55534B; /* faintest mono */
-  --color-ghost: #1B1B19;      /* oversized ghost numerals */
+  /* Palette tokens: set per palette on <html data-palette> (see lib/palettes.js). */
+  --color-ink: var(--pal-ink);               /* page canvas */
+  --color-ink-2: var(--pal-ink-2);           /* alt section */
+  --color-ink-3: var(--pal-ink-3);           /* deepest (hero seam) */
+  --color-bone: var(--pal-bone);             /* editorial type */
+  --color-signal: var(--pal-signal);         /* single accent */
+  --color-rule: var(--pal-rule);             /* hairline rules / frames */
+  --color-bone-muted: var(--pal-bone-muted); /* mono labels / secondary */
+  --color-bone-faint: var(--pal-bone-faint); /* faintest mono */
+  --color-ghost: var(--pal-ghost);           /* oversized ghost numerals */
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -125,6 +135,59 @@
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
 }
+
+
+/* ── Site palettes (60 / 30 / 10) ──
+   --c60 dominant (backgrounds), --c30 secondary (type, models, inverted slabs),
+   --c10 accent (buttons, highlights). The default is the first palette in
+   lib/palettes.js; the others apply when <html data-palette="…"> names them. */
+:root {
+  --c60: #1E1E1C;
+  --c30: #D8CBB3;
+  --c10: #2F6BFF;
+  --on-c10: #FFFFFF;
+}
+:root[data-palette="navy-white-pink"] { --c60: #0F1B3D; --c30: #FFFFFF; --c10: #FF3D8B; --on-c10: #FFFFFF; }
+:root[data-palette="cream-ink-orange"] { --c60: #F3EEE3; --c30: #111111; --c10: #D9541E; --on-c10: #FFFFFF; }
+:root[data-palette="navy-cream-coral"] { --c60: #14213D; --c30: #F4EDE0; --c10: #FF6B5B; --on-c10: #14213D; }
+:root[data-palette="midnight-white-lime"] { --c60: #0B0B0C; --c30: #FFFFFF; --c10: #C6F432; --on-c10: #0B0B0C; }
+
+/* Section tone: a normal section is 60 with 30 type; .tone-invert flips it. */
+:root, .tone-normal {
+  --t-bg: var(--c60);
+  --t-fg: var(--c30);
+}
+.tone-invert {
+  --t-bg: var(--c30);
+  --t-fg: var(--c60);
+}
+:root, .tone-normal, .tone-invert {
+  --t-muted: color-mix(in oklab, var(--t-fg) 62%, var(--t-bg));
+  --t-faint: color-mix(in oklab, var(--t-fg) 38%, var(--t-bg));
+  --t-line: color-mix(in oklab, var(--t-fg) 16%, transparent);
+  --t-surface: color-mix(in oklab, var(--t-fg) 6%, var(--t-bg));
+}
+
+/* The older pages keep their names for the same three colours. */
+:root {
+  --pal-ink: var(--c60);
+  --pal-bone: var(--c30);
+  --pal-signal: var(--c10);
+  --pal-ink-2: color-mix(in oklab, var(--pal-ink) 96%, var(--pal-bone));
+  --pal-ink-3: color-mix(in oklab, var(--pal-ink) 94%, #000);
+  --pal-bone-muted: color-mix(in oklab, var(--pal-bone) 58%, var(--pal-ink));
+  --pal-bone-faint: color-mix(in oklab, var(--pal-bone) 34%, var(--pal-ink));
+  --pal-rule: color-mix(in oklab, var(--pal-bone) 14%, transparent);
+  --pal-ghost: color-mix(in oklab, var(--pal-bone) 8%, var(--pal-ink));
+  --pal-glow: color-mix(in oklab, var(--pal-signal) 45%, transparent);
+}
+:root[data-tone="light"] { --pal-glow: transparent; }
+
+/* Partner logos are drawn in the section's type colour. */
+.logo-mark { filter: brightness(0) invert(1); }
+:root[data-tone="light"] .logo-mark { filter: brightness(0); }
+:root[data-tone="light"] .tone-invert .logo-mark { filter: brightness(0) invert(1); }
+:root:not([data-tone="light"]) .tone-invert .logo-mark { filter: brightness(0); }
 
 @layer base {
   * {
@@ -775,8 +838,8 @@ html.lenis body {
   top: 38%;
   bottom: -90%;
   background-image:
-    linear-gradient(to bottom, transparent 0 calc(100% - 1px), rgba(204, 255, 0, 0.5) calc(100% - 1px) 100%),
-    linear-gradient(to right, transparent 0 calc(100% - 1px), rgba(204, 255, 0, 0.28) calc(100% - 1px) 100%);
+    linear-gradient(to bottom, transparent 0 calc(100% - 1px), color-mix(in oklab, var(--pal-signal) 50%, transparent) calc(100% - 1px) 100%),
+    linear-gradient(to right, transparent 0 calc(100% - 1px), color-mix(in oklab, var(--pal-signal) 28%, transparent) calc(100% - 1px) 100%);
   background-size: 64px 64px;
   transform: rotateX(72deg);
   transform-origin: top center;
@@ -799,8 +862,8 @@ html.lenis body {
   mix-blend-mode: screen;
   background: radial-gradient(
     560px circle at var(--sx, 50%) var(--sy, 50%),
-    rgba(204, 255, 0, 0.07),
-    rgba(82, 39, 255, 0.05) 30%,
+    color-mix(in oklab, var(--pal-signal) 7%, transparent),
+    color-mix(in oklab, var(--pal-signal) 3%, transparent) 30%,
     transparent 58%
   );
 }
@@ -817,10 +880,10 @@ html.lenis body {
 
 /* Neon glow for acid-lime accents */
 .glow-signal {
-  text-shadow: 0 0 28px rgba(204, 255, 0, 0.45), 0 0 6px rgba(204, 255, 0, 0.35);
+  text-shadow: 0 0 28px var(--pal-glow), 0 0 6px var(--pal-glow);
 }
 .box-glow-signal {
-  box-shadow: 0 0 44px -6px rgba(204, 255, 0, 0.55), 0 14px 40px -18px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 44px -6px var(--pal-glow), 0 14px 40px -18px rgba(0, 0, 0, 0.8);
 }
 
 /* Idle 3D float for hero card */
@@ -894,7 +957,7 @@ html.lenis body {
   height: 22px;
   border-radius: 9999px;
   background: var(--color-signal);
-  box-shadow: 0 0 18px rgba(204, 255, 0, 0.55);
+  box-shadow: 0 0 18px var(--pal-glow);
 }
 .era-range::-moz-range-thumb {
   width: 22px;
@@ -902,7 +965,7 @@ html.lenis body {
   border: 0;
   border-radius: 9999px;
   background: var(--color-signal);
-  box-shadow: 0 0 18px rgba(204, 255, 0, 0.55);
+  box-shadow: 0 0 18px var(--pal-glow);
 }
 .era-range:focus-visible::-webkit-slider-thumb {
   outline: 2px solid var(--color-bone);
@@ -913,7 +976,7 @@ html.lenis body {
 /* Homepage type (components/home3d/Journey.jsx) */
 .text-outline {
   color: transparent;
-  -webkit-text-stroke: 1px rgba(242, 239, 230, 0.5);
+  -webkit-text-stroke: 1px color-mix(in oklab, var(--pal-bone) 50%, transparent);
 }
 .link-sweep {
   background-image: linear-gradient(currentColor, currentColor);
@@ -934,4 +997,36 @@ html.lenis body {
 }
 @media (prefers-reduced-motion: reduce) {
   .ticker { animation: none; }
+}
+
+/* Homepage timeline (components/maquette/Home.jsx): filled in the accent up to the thumb. */
+.tl-range {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, var(--c10) var(--fill, 0%), var(--t-line) var(--fill, 0%));
+  outline: none;
+  cursor: pointer;
+}
+.tl-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 9999px;
+  background: var(--c10);
+  border: 3px solid var(--t-bg);
+  box-shadow: 0 0 0 1px var(--c10);
+}
+.tl-range::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 9999px;
+  background: var(--c10);
+  border: 3px solid var(--t-bg);
+}
+.tl-range:focus-visible::-webkit-slider-thumb {
+  outline: 2px solid var(--t-fg);
+  outline-offset: 3px;
 }

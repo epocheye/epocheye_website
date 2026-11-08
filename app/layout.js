@@ -46,6 +46,7 @@ const instrumentSans = Instrument_Sans({
 const instrumentSerif = Instrument_Serif({
   subsets: ["latin"],
   weight: ["400"],
+  style: ["normal", "italic"],
   display: "swap",
   variable: "--font-instrument-serif",
   preload: true,
@@ -90,10 +91,16 @@ export const metadata = {
 
 import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
+import { PALETTE_BOOT } from "@/lib/palettes";
+import PaletteSwitcher from "@/components/fx/PaletteSwitcher";
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* Preview only: applies a ?palette= colour palette before first paint. */}
+        <script dangerouslySetInnerHTML={{ __html: PALETTE_BOOT }} />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${montserratAlternates.variable} ${instrumentSans.variable} ${instrumentSerif.variable} antialiased`}
       >
@@ -103,6 +110,7 @@ export default function RootLayout({ children }) {
           src="https://tally.so/widgets/embed.js" 
           strategy="lazyOnload"
         />
+        <PaletteSwitcher />
         <Analytics />
       </body>
     </html>

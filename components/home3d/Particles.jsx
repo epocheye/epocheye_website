@@ -1,12 +1,17 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useSyncExternalStore } from "react";
 import * as THREE from "three";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Bloom, EffectComposer, Vignette } from "@react-three/postprocessing";
 
 import { ERAS, SHAPES, labelEls, ui } from "./scenes";
 import { DESTINATIONS, VIDEO_SIZE } from "./shapes";
+import { paletteStore } from "@/lib/palettes";
+
+// The cloud is drawn in the palette's type colour, accents in its signal colour.
+const paletteColors = {};
+const colorsOf = (p) => (paletteColors[p.id] ??= { bone: new THREE.Color(p.c30), signal: new THREE.Color(p.c10) });
 
 const SCAN_URL = "/home/konark-points.bin";
 const GEO_URL = "/home/globe.bin";
@@ -50,11 +55,11 @@ const VERT = /* glsl */ `
 	attribute vec4 aFromMeta;
 	attribute vec4 aToMeta;
 	attribute float aRand;
+	uniform vec3 uBone;
+	uniform vec3 uSignal;
+	uniform float uAlphaGain;
 	varying vec3 vColor;
 	varying float vAlpha;
-
-	const vec3 BONE = vec3(0.949, 0.937, 0.902);
-	const vec3 SIGNAL = vec3(0.80, 1.0, 0.0);
 
 	void main() {
 		// Each point leaves and lands at its own moment, so shapes dissolve and re-form like dust.
@@ -94,13 +99,13 @@ const VERT = /* glsl */ `
 
 		float sel = (pin >= 0.0 && abs(pin - uPinSel) < 0.5) ? 1.0 : 0.0;
 		float scan = (1.0 - smoothstep(0.0, 0.06, abs(p.y - uScan))) * (1.0 - meta.w);
-		vColor = mix(BONE, SIGNAL, clamp(meta.x + sel, 0.0, 1.0));
+		vColor = mix(uBone, uSignal, clamp(meta.x + sel, 0.0, 1.0));
 		vColor = mix(vColor, pixel * 1.25 + 0.04, meta.w);
-		vColor += SIGNAL * scan * 0.45;
+		vColor = mix(vColor, uSignal, scan * 0.45);
 
 		float size = uSize * (0.65 + aRand * 0.7) * (1.0 + meta.x * 0.35 + sel * 0.9 + scan * 0.4 + meta.w * 0.25);
 		gl_PointSize = min(size * uPixelRatio / max(depth, 0.001), 9.0 * uPixelRatio);
-		vAlpha = (0.42 + 0.3 * meta.x + 0.4 * sel + 0.25 * meta.w) * smoothstep(3.0, 7.0, depth) * (1.0 - 0.35 * flight);
+		vAlpha = uAlphaGain * (0.42 + 0.3 * meta.x + 0.4 * sel + 0.25 * meta.w) * smoothstep(3.0, 7.0, depth) * (1.0 - 0.35 * flight);
 		gl_Position = projectionMatrix * mv;
 	}
 `;
@@ -134,7 +139,7 @@ const v3 = new THREE.Vector3();
  * before the first step, 0 = first step, 0.5 = halfway to the second …) and
  * `track.steps` lists each step's shape and which side its text sits on.
  */
-function Cloud({ count, track }) {
+function Cloud({ light, count, track }) {
 	const points = useRef(null);
 	const group = useRef(null);
 	const data = useRef({}); // scan, geo, mark: what some shapes wait on
@@ -178,6 +183,9 @@ function Cloud({ count, track }) {
 			uRepel: { value: 0 },
 			uVideo: { value: video },
 			uVideoSize: { value: new THREE.Vector2(...VIDEO_SIZE) },
+			uBone: { value: new THREE.Color() },
+			uSignal: { value: new THREE.Color() },
+			uAlphaGain: { value: 1 },
 		}),
 		[video]
 	);
@@ -273,6 +281,11 @@ function Cloud({ count, track }) {
 		const g = group.current;
 		if (!pts || !g) return;
 		const u = pts.material.uniforms;
+		const colors = colorsOf(paletteStore.get());
+		u.uBone.value.copy(colors.bone);
+		u.uSignal.value.copy(colors.signal);
+		// Dark points over a light page need more ink to read as strongly as light ones glow.
+		u.uAlphaGain.value = light ? 1.7 : 1;
 		const m = motion.current;
 		const { steps } = track;
 		const n = steps.length;
@@ -414,7 +427,7 @@ function Cloud({ count, track }) {
 		<>
 			<group ref={group}>
 				<points ref={points} geometry={geometry} frustumCulled={false}>
-					<shaderMaterial uniforms={uniforms} vertexShader={VERT} fragmentShader={FRAG} transparent depthWrite={false} blending={THREE.AdditiveBlending} />
+					<shaderMaterial uniforms={uniforms} vertexShader={VERT} fragmentShader={FRAG} transparent depthWrite={false} blending={light ? THREE.NormalBlending : THREE.AdditiveBlending} />
 				</points>
 			</group>
 		</>
@@ -422,6 +435,9 @@ function Cloud({ count, track }) {
 }
 
 export default function Particles({ track, active, eventSource, count }) {
+	const palette = useSyncExternalStore(paletteStore.subscribe, paletteStore.get, paletteStore.getServer);
+	// Light pages draw dark points over the page: no glow, and only a faint vignette.
+	const light = palette.tone === "light";
 	return (
 		<Canvas
 			dpr={[1, 1.75]}
@@ -431,12 +447,18 @@ export default function Particles({ track, active, eventSource, count }) {
 			eventSource={eventSource}
 			eventPrefix="client"
 			style={{ pointerEvents: "none" }}>
-			<color attach="background" args={["#0A0A0B"]} />
-			<Cloud count={count} track={track} />
-			<EffectComposer multisampling={0}>
-				<Bloom intensity={0.55} luminanceThreshold={0.55} luminanceSmoothing={0.35} mipmapBlur />
-				<Vignette eskil={false} offset={0.25} darkness={0.7} />
-			</EffectComposer>
+			<color key={palette.c60} attach="background" args={[palette.c60]} />
+			<Cloud light={light} count={count} track={track} />
+			{light ? (
+				<EffectComposer key="light" multisampling={0}>
+					<Vignette eskil={false} offset={0.3} darkness={0.18} />
+				</EffectComposer>
+			) : (
+				<EffectComposer key="dark" multisampling={0}>
+					<Bloom intensity={0.55} luminanceThreshold={0.55} luminanceSmoothing={0.35} mipmapBlur />
+					<Vignette eskil={false} offset={0.25} darkness={0.7} />
+				</EffectComposer>
+			)}
 		</Canvas>
 	);
 }
