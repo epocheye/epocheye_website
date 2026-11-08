@@ -141,7 +141,7 @@ function Manifesto({ points }) {
 }
 
 // Logo heights differ because each file carries different padding: these make the marks look the same size.
-// Every mark is shown in white. India 2047 Ventures has no standalone logo
+// Every mark is drawn in the type colour (.logo-mark). India 2047 Ventures has no standalone logo
 // (only banners), so it is set as a wordmark in the logo's place.
 const BACKERS = [
 	{ name: "Software Technology Parks of India", logo: logoStpi, className: "h-20 w-auto md:h-36" },
@@ -191,7 +191,7 @@ function Where() {
 	);
 }
 
-/** Who backs us, on a screen of its own: the logos large and in white, named underneath. */
+/** Who backs us, on a screen of its own: the logos large and in the type colour, named underneath. */
 function Backers() {
 	return (
 		<div className="text-center">
@@ -208,9 +208,9 @@ function Backers() {
 					<li key={b.name} className="flex w-[46%] flex-col items-center gap-3 md:w-[22%]" data-fade>
 						<span className="flex h-24 items-center justify-center md:h-40">
 							{b.logo ? (
-								<Image src={b.logo} alt={b.name} className={`brightness-0 invert ${b.className}`} />
+								<Image src={b.logo} alt={b.name} className={`logo-mark ${b.className}`} />
 							) : (
-								<span className="font-montserrat text-[22px] font-bold uppercase leading-[1.05] tracking-[0.06em] text-white md:text-[34px]">
+								<span className="font-montserrat text-[22px] font-bold uppercase leading-[1.05] tracking-[0.06em] text-bone md:text-[34px]">
 									India <span className="text-signal">2047</span>
 									<br />
 									Ventures
@@ -265,7 +265,7 @@ function Capability({ item, index }) {
 			</p>
 			<div className="mt-7 flex gap-2" role="img" aria-label={`${index + 1} of 3`} data-fade>
 				{STACK.map((s, k) => (
-					<span key={s.n} className={`h-[3px] rounded-full transition-all duration-700 ${k === index ? "w-12 bg-signal" : "w-5 bg-white/20"}`} />
+					<span key={s.n} className={`h-[3px] rounded-full transition-all duration-700 ${k === index ? "w-12 bg-signal" : "w-5 bg-bone/20"}`} />
 				))}
 			</div>
 		</>
@@ -645,12 +645,12 @@ export default function Journey() {
 					<Particles track={track} active={active} eventSource={section} count={points} />
 					{/* A soft shade on the side the text is on, so words read without a card behind them. */}
 					<div
-						className={`pointer-events-none absolute inset-0 transition-opacity duration-700 max-md:bg-gradient-to-t max-md:from-[#0A0A0B] max-md:via-[#0A0A0B]/75 max-md:via-45% max-md:to-transparent max-md:to-70% md:bg-gradient-to-r md:from-[#0A0A0B]/80 md:via-[#0A0A0B]/30 md:via-35% md:to-transparent md:to-55% ${
+						className={`pointer-events-none absolute inset-0 transition-opacity duration-700 max-md:bg-gradient-to-t max-md:from-ink max-md:via-ink/75 max-md:via-45% max-md:to-transparent max-md:to-70% md:bg-gradient-to-r md:from-ink/80 md:via-ink/30 md:via-35% md:to-transparent md:to-55% ${
 							STEPS[step].side === "left" ? "opacity-100" : "opacity-0"
 						}`}
 					/>
 					<div
-						className={`pointer-events-none absolute inset-0 transition-opacity duration-700 max-md:bg-gradient-to-t max-md:from-[#0A0A0B] max-md:via-[#0A0A0B]/75 max-md:via-45% max-md:to-transparent max-md:to-70% md:bg-gradient-to-l md:from-[#0A0A0B]/80 md:via-[#0A0A0B]/30 md:via-35% md:to-transparent md:to-55% ${
+						className={`pointer-events-none absolute inset-0 transition-opacity duration-700 max-md:bg-gradient-to-t max-md:from-ink max-md:via-ink/75 max-md:via-45% max-md:to-transparent max-md:to-70% md:bg-gradient-to-l md:from-ink/80 md:via-ink/30 md:via-35% md:to-transparent md:to-55% ${
 							STEPS[step].side === "right" ? "opacity-100" : "opacity-0"
 						}`}
 					/>
