@@ -1,6 +1,6 @@
 "use client";
 
-import Home from "@/components/maquette/Home";
+import Home from "@/components/diorama/Home";
 
 export default function HomePage() {
 	return (
