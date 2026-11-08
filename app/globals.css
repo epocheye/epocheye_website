@@ -12,6 +12,15 @@
   --font-instrument-sans: var(--font-instrument-sans);
   --font-instrument-serif: var(--font-instrument-serif);
   --color-accent: #D4AF37;
+  /* Section tone tokens (60/30/10, see the palette block below) */
+  --color-page: var(--t-bg);
+  --color-type: var(--t-fg);
+  --color-type-muted: var(--t-muted);
+  --color-type-faint: var(--t-faint);
+  --color-hair: var(--t-line);
+  --color-plate: var(--t-surface);
+  --color-c10: var(--c10);
+  --color-on-c10: var(--on-c10);
   /* ── Editorial Brutalist + 3D redesign tokens ── */
   /* Palette tokens: set per palette on <html data-palette> (see lib/palettes.js). */
   --color-ink: var(--pal-ink);               /* page canvas */
@@ -128,30 +137,57 @@
 }
 
 
-/* ── Site palettes ──
-   Three colours per palette; the rest is mixed from them. The default is the
-   first block; the others apply when <html data-palette="…"> names them. */
+/* ── Site palettes (60 / 30 / 10) ──
+   --c60 dominant (backgrounds), --c30 secondary (type, models, inverted slabs),
+   --c10 accent (buttons, highlights). The default is the first palette in
+   lib/palettes.js; the others apply when <html data-palette="…"> names them. */
 :root {
-  --pal-ink: #0A0A0B;
-  --pal-bone: #F2EFE6;
-  --pal-signal: #CCFF00;
+  --c60: #1E1E1C;
+  --c30: #D8CBB3;
+  --c10: #2F6BFF;
+  --on-c10: #FFFFFF;
+}
+:root[data-palette="navy-white-pink"] { --c60: #0F1B3D; --c30: #FFFFFF; --c10: #FF3D8B; --on-c10: #FFFFFF; }
+:root[data-palette="cream-ink-orange"] { --c60: #F3EEE3; --c30: #111111; --c10: #D9541E; --on-c10: #FFFFFF; }
+:root[data-palette="navy-cream-coral"] { --c60: #14213D; --c30: #F4EDE0; --c10: #FF6B5B; --on-c10: #14213D; }
+:root[data-palette="midnight-white-lime"] { --c60: #0B0B0C; --c30: #FFFFFF; --c10: #C6F432; --on-c10: #0B0B0C; }
+
+/* Section tone: a normal section is 60 with 30 type; .tone-invert flips it. */
+:root, .tone-normal {
+  --t-bg: var(--c60);
+  --t-fg: var(--c30);
+}
+.tone-invert {
+  --t-bg: var(--c30);
+  --t-fg: var(--c60);
+}
+:root, .tone-normal, .tone-invert {
+  --t-muted: color-mix(in oklab, var(--t-fg) 62%, var(--t-bg));
+  --t-faint: color-mix(in oklab, var(--t-fg) 38%, var(--t-bg));
+  --t-line: color-mix(in oklab, var(--t-fg) 16%, transparent);
+  --t-surface: color-mix(in oklab, var(--t-fg) 6%, var(--t-bg));
+}
+
+/* The older pages keep their names for the same three colours. */
+:root {
+  --pal-ink: var(--c60);
+  --pal-bone: var(--c30);
+  --pal-signal: var(--c10);
   --pal-ink-2: color-mix(in oklab, var(--pal-ink) 96%, var(--pal-bone));
   --pal-ink-3: color-mix(in oklab, var(--pal-ink) 94%, #000);
-  --pal-bone-muted: color-mix(in oklab, var(--pal-bone) 56%, var(--pal-ink));
+  --pal-bone-muted: color-mix(in oklab, var(--pal-bone) 58%, var(--pal-ink));
   --pal-bone-faint: color-mix(in oklab, var(--pal-bone) 34%, var(--pal-ink));
   --pal-rule: color-mix(in oklab, var(--pal-bone) 14%, transparent);
   --pal-ghost: color-mix(in oklab, var(--pal-bone) 8%, var(--pal-ink));
   --pal-glow: color-mix(in oklab, var(--pal-signal) 45%, transparent);
 }
-:root[data-palette="charcoal-sand-blue"] { --pal-ink: #1E1E1C; --pal-bone: #D8CBB3; --pal-signal: #2F6BFF; }
-:root[data-palette="navy-white-pink"] { --pal-ink: #0F1B3D; --pal-bone: #FFFFFF; --pal-signal: #FF3D8B; }
-:root[data-palette="cream-ink-orange"] { --pal-ink: #F3EEE3; --pal-bone: #111111; --pal-signal: #D9541E; --pal-ink-3: color-mix(in oklab, var(--pal-ink) 94%, #000); --pal-bone-muted: color-mix(in oklab, var(--pal-bone) 64%, var(--pal-ink)); --pal-glow: transparent; }
-:root[data-palette="navy-cream-coral"] { --pal-ink: #14213D; --pal-bone: #F4EDE0; --pal-signal: #FF6B5B; }
-:root[data-palette="midnight-white-lime"] { --pal-ink: #0B0B0C; --pal-bone: #FFFFFF; --pal-signal: #C6F432; }
+:root[data-tone="light"] { --pal-glow: transparent; }
 
-/* Partner logos are drawn in the type colour: white on dark palettes, black on light ones. */
+/* Partner logos are drawn in the section's type colour. */
 .logo-mark { filter: brightness(0) invert(1); }
 :root[data-tone="light"] .logo-mark { filter: brightness(0); }
+:root[data-tone="light"] .tone-invert .logo-mark { filter: brightness(0) invert(1); }
+:root:not([data-tone="light"]) .tone-invert .logo-mark { filter: brightness(0); }
 
 @layer base {
   * {
@@ -961,4 +997,36 @@ html.lenis body {
 }
 @media (prefers-reduced-motion: reduce) {
   .ticker { animation: none; }
+}
+
+/* Homepage timeline (components/maquette/Home.jsx): filled in the accent up to the thumb. */
+.tl-range {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, var(--c10) var(--fill, 0%), var(--t-line) var(--fill, 0%));
+  outline: none;
+  cursor: pointer;
+}
+.tl-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 9999px;
+  background: var(--c10);
+  border: 3px solid var(--t-bg);
+  box-shadow: 0 0 0 1px var(--c10);
+}
+.tl-range::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 9999px;
+  background: var(--c10);
+  border: 3px solid var(--t-bg);
+}
+.tl-range:focus-visible::-webkit-slider-thumb {
+  outline: 2px solid var(--t-fg);
+  outline-offset: 3px;
 }

@@ -11,7 +11,7 @@ import { paletteStore } from "@/lib/palettes";
 
 // The cloud is drawn in the palette's type colour, accents in its signal colour.
 const paletteColors = {};
-const colorsOf = (p) => (paletteColors[p.id] ??= { bone: new THREE.Color(p.bone), signal: new THREE.Color(p.signal) });
+const colorsOf = (p) => (paletteColors[p.id] ??= { bone: new THREE.Color(p.c30), signal: new THREE.Color(p.c10) });
 
 const SCAN_URL = "/home/konark-points.bin";
 const GEO_URL = "/home/globe.bin";
@@ -447,7 +447,7 @@ export default function Particles({ track, active, eventSource, count }) {
 			eventSource={eventSource}
 			eventPrefix="client"
 			style={{ pointerEvents: "none" }}>
-			<color key={palette.ink} attach="background" args={[palette.ink]} />
+			<color key={palette.c60} attach="background" args={[palette.c60]} />
 			<Cloud light={light} count={count} track={track} />
 			{light ? (
 				<EffectComposer key="light" multisampling={0}>

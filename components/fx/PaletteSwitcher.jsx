@@ -22,7 +22,7 @@ export default function PaletteSwitcher() {
 	return (
 		<div className="fixed bottom-3 left-3 z-[10001] rounded-xl border border-white/15 bg-black/85 px-2.5 py-2 font-mono text-[10px] text-white shadow-2xl backdrop-blur-md">
 			<p className="mb-1.5 max-w-[15rem] truncate uppercase tracking-[0.14em] text-white/70">
-				{index}. {palette.name}
+				{index + 1}. {palette.name} · 60/30/10
 			</p>
 			<div className="flex gap-1.5" role="group" aria-label="Colour palette">
 				{PALETTES.map((p, i) => (
@@ -31,13 +31,18 @@ export default function PaletteSwitcher() {
 						type="button"
 						onClick={() => paletteStore.set(p.id)}
 						aria-pressed={palette.id === p.id}
-						aria-label={`${i}. ${p.name}`}
-						title={`${i}. ${p.name}`}
+						aria-label={`${i + 1}. ${p.name}`}
+						title={`${i + 1}. ${p.name}`}
 						className={`relative flex overflow-hidden rounded-md border-2 transition-transform ${palette.id === p.id ? "scale-110 border-white" : "border-white/20 hover:border-white/60"}`}>
-						{[p.ink, p.bone, p.signal].map((c) => (
-							<span key={c} className="h-6 w-2.5" style={{ background: c }} />
+						{/* The palette at its proportions: 60 / 30 / 10. */}
+						{[
+							[p.c60, 18],
+							[p.c30, 9],
+							[p.c10, 4],
+						].map(([c, w]) => (
+							<span key={c} className="h-7" style={{ background: c, width: w }} />
 						))}
-						<span className="absolute inset-x-0 bottom-0 bg-black/60 text-center text-[8px] leading-3">{i}</span>
+						<span className="absolute inset-x-0 bottom-0 bg-black/60 text-center text-[8px] leading-3">{i + 1}</span>
 					</button>
 				))}
 			</div>
