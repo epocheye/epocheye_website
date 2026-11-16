@@ -1,6 +1,6 @@
 # Epocheye Play: status
 
-**GATE 1: waiting for the owner.** Phase 1 (vertical slice) is built on branch `feat/play`. Nothing further happens until you answer the gate.
+**WAITING.** GATE 1 was shown on 2026-11-16 and has not been answered. Phase 1 (vertical slice) is built on branch `feat/play`. Nothing further happens until you answer the gate.
 
 ## Preview
 
