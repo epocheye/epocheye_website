@@ -14,9 +14,14 @@
 4. Analytics: cookieless `@vercel/analytics`. No queryable event store for the website, so Play adds its own.
 5. 3D and legal: `/virtual` loads one GLB with meshopt and KTX2 through drei; `/journeys` loads Draco GLBs. Both serve from `public/`, no CDN. Legal pages are `/privacy`, `/terms`, `/refunds` (draft).
 
-## In progress
-- Palace audit: `tools/play/AUDIT.md`.
-- Story check: `docs/play/STORY_CHECK.md`.
+## Phase 0 results
+- `tools/play/AUDIT.md`: verdict NEEDS WORK. THEN renders well. There is no NOW state, and building an honest one is two to three days of work.
+- `docs/play/STORY_CHECK.md`: 18 facts checked. 11 corrected, 1 cut, 2 added. Chapter 1 has no restoration.
+- Exporter core written: `tools/play/export_pack.py` (estimate, render, assemble, publish) and `tools/play/blender/`.
+- Story validator written: `scripts/play/validate-story.mjs`. Story engine reducer: `lib/play/story/engine.js`.
+
+## Waiting on the owner
+- **NOW state**: how to build it (AUDIT.md section 3). Asked 2026-11-16.
 
 ## Next
-- Phase 1 vertical slice (Prologue and Chapter 1), then GATE 1.
+- Phase 1 vertical slice: story.json for the Prologue and Chapter 1, panorama viewer, narration bake-off, then GATE 1.

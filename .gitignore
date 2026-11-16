@@ -68,3 +68,7 @@ crowd_model.pkl
 # Python bytecode
 __pycache__/
 *.pyc
+
+# Play exporter scratch output
+tools/play/out/
+tools/play/voice/.venv/

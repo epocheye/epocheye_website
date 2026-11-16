@@ -10,3 +10,11 @@ Choices made outside the gates, newest last. Each has a date and a reason.
 | 2026-11-16 | Play is built on `feat/play`, the one temporary branch, merged and deleted at GATE 3. | Owner's answer. Keeps production untouched until launch. |
 | 2026-11-16 | Linked the repo to the Vercel project `epocheye-website` and pulled env to `.env.local` (gitignored). | Needed to read Neon and, later, to run the Play migration. |
 | 2026-11-16 | Palace project folder: `E:\heritage_assets\tipu-summer-palace-bengaluru`, scene `output/blend/TSP_period_world.blend`. | Owner confirmed. |
+| 2026-11-16 | Exporter renders the six cube faces directly instead of an equirect that is then cut into faces. | Same pixels, about a quarter less GPU time on the GTX 1650, and no resampling blur. |
+| 2026-11-16 | GPU guard: no render while `E:\konark\locks\gpu.lock` exists, or GPU utilisation is above 25 percent, or more than half its memory is held. | The lock is the Konark rule; the other two catch jobs that do not write a lock. |
+| 2026-11-16 | Panoramas hide the tiger throne, the inferred furnishings and the inferred people. | Throne and furnishings are on the brief's never-use list; the palace files say the throne never stood here. People are sprites in the pack format, not baked into panoramas. |
+| 2026-11-16 | No palace figures in the slice. | Named figures' lines are first-person inventions, which the brief bars. The two role-figure captions with a confirmed source match no fact in section 8. |
+| 2026-11-16 | Chapter 1 is evidence only (slot S1 empty). The slice also carries the S2 restoration step as a labelled preview. | Nothing structural is lost, and the brief forbids modelling a loss to fill a slot. GATE 1 still needs a restoration to judge. |
+| 2026-11-16 | F09 (Bangalore returned in 1792) cut. | It is on the palace files' do-not-say list, and palace files win, even though Rice 1897 supports it. Flagged in STORY_CHECK.md for the owner. |
+| 2026-11-16 | Masks are a strip of six cube faces per restoration per viewpoint, 1024 px a face, greyscale webp. | One request per mask, lines up with the panorama faces with no reprojection. |
+| 2026-11-16 | Packs are served from `public/play/packs/<slug>/v<N>/`. | The site has no CDN today; versioned paths make long caching safe. |
