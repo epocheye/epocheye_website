@@ -1,6 +1,6 @@
 # Epocheye Play: status
 
-**WAITING.** GATE 1 was shown on 2026-11-16 and has not been answered. Phase 1 (vertical slice) is built on branch `feat/play`. Nothing further happens until you answer the gate.
+**Phase 2 in progress.** GATE 1 answered on 2026-11-16: the voice is Kokoro. The other GATE 1 rulings were not given, so Phase 2 uses the proposals in STORY_CHECK.md and they come back at GATE 2. The sections below are the GATE 1 record.
 
 ## Preview
 
