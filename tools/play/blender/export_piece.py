@@ -26,9 +26,11 @@ for o in col.all_objects:
 if not picked:
     C.report("PIECE", {"error": "nothing matched", "restoration": r["id"]}); sys.exit(1)
 
-# Copy into a clean scene so only the piece is exported, recentred on its base.
-scn = bpy.data.scenes.new("PLAY_piece")
-bpy.context.window.scene = scn
+# Background mode has no window, so the scene cannot be switched. Export from the current scene:
+# clear its selection, add recentred copies, select only those.
+scn = bpy.context.scene
+for o in bpy.context.view_layer.objects:
+    o.select_set(False)
 lo = Vector((1e9, 1e9, 1e9)); hi = Vector((-1e9, -1e9, -1e9))
 copies = []
 for o in picked:
@@ -40,9 +42,15 @@ origin = Vector(((lo.x + hi.x) / 2, (lo.y + hi.y) / 2, lo.z))
 tris = 0
 for c in copies:
     c.matrix_world.translation = c.matrix_world.translation - origin
-    c.select_set(True)
     tris += sum(len(p.vertices) - 2 for p in c.data.polygons)
+bpy.context.view_layer.update()
+for c in copies:
+    c.hide_viewport = False; c.hide_select = False; c.hide_render = False
+    c.hide_set(False)          # hidden objects cannot be selected, and the originals may be hidden
+    c.select_set(True)
 bpy.context.view_layer.objects.active = copies[0]
+selected = [o.name for o in bpy.context.view_layer.objects if o.select_get()]
+assert set(selected) == {c.name for c in copies}, f"unexpected selection: {selected[:6]}"
 os.makedirs(os.path.dirname(a["out"]), exist_ok=True)
 bpy.ops.export_scene.gltf(filepath=a["out"], export_format="GLB", use_selection=True, export_apply=True,
                           export_yup=True, export_materials="EXPORT", export_image_format="WEBP",

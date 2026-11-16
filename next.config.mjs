@@ -71,6 +71,16 @@ const nextConfig = {
           },
         ],
       },
+      // Play site packs live on versioned paths, so they can be cached for good.
+      {
+        source: '/play/packs/:slug/:version(v\\d+)/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
       {
         source: '/api/creator/:path*',
         headers: [

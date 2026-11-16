@@ -143,10 +143,11 @@ def cmd_render(site, a):
             g = [w for w in group if w in what]
             if not g:
                 continue
-            busy = gpu_busy()
+            busy = None if a.device == "CPU" else gpu_busy()
             if busy:
-                sys.exit(f"Stopping before node {n['id']}: {busy}. Finished faces are kept; run again to resume.")
-            args = ["--site", site["_path"], "--node", n["id"], "--out", str(raw), "--what", ",".join(g)]
+                sys.exit(f"Stopping before node {n['id']}: {busy}. Finished faces are kept; run again to resume, "
+                         f"or add --device CPU to render slowly without the GPU.")
+            args = ["--site", site["_path"], "--node", n["id"], "--out", str(raw), "--what", ",".join(g), "--device", a.device]
             if a.face:
                 args += ["--face", str(a.face)]
             if a.force:
@@ -255,9 +256,11 @@ def cmd_publish(site, a):
     dst = ROOT / "public" / "play" / "packs" / site["slug"] / f"v{site['version']}"
     if not (src / "site.json").exists():
         sys.exit("Nothing assembled yet.")
-    if dst.exists():
-        shutil.rmtree(dst)
-    shutil.copytree(src, dst)
+    # Replace only what the exporter owns. audio/ is written by tools/play/voice and must survive.
+    for owned in ("pano", "mask", "tier", "pieces", "options", "evidence", "sprites", "share"):
+        if (dst / owned).exists():
+            shutil.rmtree(dst / owned)
+    shutil.copytree(src, dst, dirs_exist_ok=True)
     print("published", dst)
 
 
@@ -270,5 +273,6 @@ if __name__ == "__main__":
     ap.add_argument("--face", type=int, default=0)
     ap.add_argument("--yes", action="store_true")
     ap.add_argument("--force", action="store_true")
+    ap.add_argument("--device", default="GPU", choices=["GPU", "CPU"])
     a = ap.parse_args()
     {"estimate": cmd_estimate, "render": cmd_render, "pieces": cmd_pieces, "assemble": cmd_assemble, "publish": cmd_publish}[a.cmd](load_site(a.slug), a)
