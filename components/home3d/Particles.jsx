@@ -301,7 +301,8 @@ function Cloud({ count, track }) {
 			const e = ui.era;
 			a = ERAS[Math.floor(e)].shape;
 			b = ERAS[Math.min(ERAS.length - 1, Math.ceil(e))].shape;
-			t = smooth(0, 1, e - Math.floor(e));
+			// Each era holds a moment before the next one forms.
+			t = smooth(0.2, 0.8, e - Math.floor(e));
 			sideA = sideB = steps[erasAt].side;
 		}
 
