@@ -6,10 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint && node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-monument-claims.mjs",
+    "lint": "eslint && node scripts/check-monument-claims.mjs && node scripts/play/validate-story.mjs",
     "check:claims": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-monument-claims.mjs",
     "seed:crowd": "node scripts/seedFromCsv.mjs",
-    "models:optimize": "node scripts/optimize-models.mjs"
+    "models:optimize": "node scripts/optimize-models.mjs",
+    "play:validate": "node scripts/play/validate-story.mjs"
   },
   "dependencies": {
     "@clerk/nextjs": "^7.9.4",

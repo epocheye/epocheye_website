@@ -8,6 +8,7 @@ Read-only on the .blend: every change below is in memory and is never saved.
 Output: <out>/<node>/<state>_<face>.png (px,nx,py,ny,pz,nz), mask_<restoration>_<face>.png, tier_<face>.png
 """
 import bpy, os, sys, json, math, re
+from fnmatch import fnmatchcase
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import common as C
 
@@ -45,6 +46,10 @@ scene.render.image_settings.file_format = "PNG"
 scene.render.image_settings.color_mode = "RGB"
 scene.render.image_settings.color_depth = "8"
 scene.render.use_border = False
+# The scene's lens finish (vignette, glare) is made for single frames. On cube faces it would
+# darken every edge and show as seams, so compositing is off for pack renders.
+scene.render.use_compositing = False
+scene.render.use_sequencer = False
 
 
 def apply_state(name):
@@ -55,7 +60,12 @@ def apply_state(name):
         for o in bpy.data.objects:
             if o.name.startswith(prefixes):
                 o.hide_render = True
+    for name, spec in st.get("materials", {}).items():
+        if not bpy.data.materials.get(name):
+            C.make_pbr(name, spec)
     C.swap_materials(st.get("matswap", {}))
+    if st.get("haze") and not bpy.data.objects.get("PLAY_haze"):
+        C.add_haze(st["haze"])
 
 
 def render_faces(prefix):
@@ -98,10 +108,10 @@ def selected(o, slot_mat, sel):
     if slot_mat and slot_mat in sel.get("materials", []):
         return True
     t = TIER.search(nm)
-    if t and t.group(1) in sel.get("object_tiers", []):
-        return True
+    if t and any(fnmatchcase(t.group(1), pat) for pat in sel.get("object_tiers", [])):
+        return not any(nm.startswith(p) for p in sel.get("except_prefixes", []))
     tm = TIER.search(slot_mat or "")
-    if tm and tm.group(1) in sel.get("material_tiers", []):
+    if tm and any(fnmatchcase(tm.group(1), pat) for pat in sel.get("material_tiers", [])):
         return True
     return False
 
@@ -120,7 +130,7 @@ if "masks" in what or "tier" in what:
         scene.world.use_nodes = True
         scene.world.node_tree.nodes["Background"].inputs[0].default_value = (0, 0, 0, 1)
     originals = {}
-    meshes = [o for o in bpy.data.objects if o.type in {"MESH", "CURVE", "SURFACE", "FONT"}]
+    meshes = [o for o in bpy.data.objects if o.type in {"MESH", "CURVE", "SURFACE", "FONT"} and not o.name.startswith("PLAY_")]
     for o in meshes:
         originals[o.name] = [s.material.name if s.material else None for s in o.material_slots]
 
@@ -130,9 +140,33 @@ if "masks" in what or "tier" in what:
             if not names:
                 continue
             for i, s in enumerate(o.material_slots):
-                if s.link == "DATA" and o.data.users > 1:
-                    s.link = "OBJECT"
-                s.material = WHITE if selected(o, names[i], sel) else BLACK
+                try:
+                    if s.link == "DATA" and o.data.users > 1:
+                        s.link = "OBJECT"
+                    s.material = WHITE if selected(o, names[i], sel) else BLACK
+                except AttributeError:
+                    pass   # linked library data is read-only; it renders black (no lights, black world)
+
+    def collection_pass(name, cols):
+        """White wherever the named collections are visible, with everything else as a holdout.
+        Used for linked libraries, whose materials cannot be repainted."""
+        vl = bpy.context.view_layer
+        lcs = C._layer_collections(vl.layer_collection)
+        prev = {k: lc.holdout for k, lc in lcs.items()}
+        for k, lc in lcs.items():
+            if lc.collection is scene.collection:
+                continue
+            lc.holdout = k not in cols and not any(k in [c.name for c in bpy.data.collections[x].children_recursive] for x in cols if bpy.data.collections.get(x))
+        vl.material_override = WHITE
+        scene.render.film_transparent = True
+        scene.render.image_settings.color_mode = "RGBA"
+        secs = render_faces(name + "_col")
+        scene.render.film_transparent = False
+        scene.render.image_settings.color_mode = "RGB"
+        vl.material_override = None
+        for k, lc in lcs.items():
+            lc.holdout = prev[k]
+        return secs
 
     jobs = []
     if "masks" in what:
@@ -142,6 +176,8 @@ if "masks" in what or "tier" in what:
     for name, sel in jobs:
         paint(sel)
         times[name] = render_faces(name)
+        if sel.get("collections"):
+            times[name + "_col"] = collection_pass(name, sel["collections"])
 
 if "now" in what:
     # Fresh material state is needed for NOW; the orchestrator runs NOW in its own Blender process.

@@ -26,6 +26,7 @@ function texts(value) {
 export function validateStory(story, file = "story.json") {
 	const errors = [];
 	const warn = [];
+	const placeholders = [];
 	const err = (m) => errors.push(`${file}: ${m}`);
 	const facts = new Map((story.facts || []).map((f) => [f.id, f]));
 	const witnesses = new Set((story.witnesses || []).map((w) => w.id));
@@ -38,6 +39,7 @@ export function validateStory(story, file = "story.json") {
 		if (!TIERS.has(f.tier)) err(`fact ${f.id} has unknown tier "${f.tier}"`);
 		if (f.status !== "verified") err(`fact ${f.id} has status "${f.status}". Only "verified" facts can ship.`);
 		if (f.tier !== "unknown" && !f.source) err(`fact ${f.id} has no source`);
+		if (/\[SAMBIT/.test(f.source || "")) placeholders.push(`fact ${f.id}: ${f.source}`);
 	}
 
 	const checkFacts = (ids, where) => {
@@ -68,6 +70,7 @@ export function validateStory(story, file = "story.json") {
 		if (!b.id) return err(`${where} has a beat with no id`);
 		const at = `${where} beat ${b.id}`;
 		if (beatIds.has(b.id)) err(`${at}: duplicate beat id`);
+		if (b.placeholder) placeholders.push(`${at}: "${texts(b.text)[0]}"`);
 		beatIds.add(b.id);
 		if (!BEAT_TYPES.has(b.type)) err(`${at}: unknown type "${b.type}"`);
 		checkCopy(b.text, at);
@@ -113,12 +116,13 @@ export function validateStory(story, file = "story.json") {
 		for (const item of story.ending.unknown || []) checkCopy(item.text, "ending unknown");
 		for (const b of story.ending.beats || []) checkBeat(b, "ending");
 	}
-	return { errors, warn, counts: { facts: facts.size, beats: beatIds.size, clips: clipIds.size } };
+	return { errors, warn, placeholders, counts: { facts: facts.size, beats: beatIds.size, clips: clipIds.size } };
 }
 
 const isMain = process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1];
 if (isMain) {
-	let files = process.argv.slice(2);
+	const ship = process.argv.includes("--ship");
+	let files = process.argv.slice(2).filter((a) => !a.startsWith("--"));
 	if (files.length === 0) {
 		const base = join(ROOT, "content", "play");
 		files = existsSync(base)
@@ -128,8 +132,13 @@ if (isMain) {
 	let bad = 0;
 	for (const file of files) {
 		const story = JSON.parse(readFileSync(file, "utf8"));
-		const { errors, counts } = validateStory(story, file.replace(ROOT, "").replace(/\\/g, "/"));
+		const { errors, counts, placeholders } = validateStory(story, file.replace(ROOT, "").replace(/\\/g, "/"));
 		for (const e of errors) console.error("  ✖ " + e);
+		for (const p of placeholders) console.log("  [SAMBIT] " + p);
+		if (ship && placeholders.length) {
+			console.error(`  ✖ ${placeholders.length} placeholder(s) cannot ship`);
+			bad += placeholders.length;
+		}
 		bad += errors.length;
 		console.log(`validate-story: ${file.replace(ROOT, "").replace(/\\/g, "/")}: ${counts.facts} facts, ${counts.beats} beats, ${counts.clips} clips, ${errors.length} error(s)`);
 	}

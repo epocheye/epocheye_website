@@ -135,7 +135,7 @@ def cmd_render(site, a):
     if not a.yes:
         sys.exit("Refusing to render without --yes. Run estimate first and read the hours.")
     wd = work_dir(site)
-    raw = wd / "raw"
+    raw = wd / f"raw{a.face or site.get('face_px', 2048)}"   # one folder per face size, so sizes never mix
     what = a.what.split(",")
     for n in pick_nodes(site, a):
         for group in (["then", "masks", "tier"], ["now"]):
@@ -155,9 +155,9 @@ def cmd_render(site, a):
 
 
 def cmd_assemble(site, a):
-    from PIL import Image
+    from PIL import Image, ImageChops
     wd = work_dir(site)
-    raw = wd / "raw"
+    raws = sorted((d for d in wd.glob("raw*") if d.is_dir()), key=lambda d: int(d.name[3:] or 0), reverse=True)
     pack = wd / "pack"
     sizes = site.get("sizes", [512, 1024, 2048])
     quality = site.get("webp_quality", 90)
@@ -165,10 +165,13 @@ def cmd_assemble(site, a):
     node_out = []
     top = 0
     for n in site["nodes"]:
-        nd = raw / n["id"]
-        if not nd.exists():
+        # largest face size that has this node complete in both states, else the largest with anything
+        done = [d / n["id"] for d in raws if all((d / n["id"] / f"{st}_{f}.png").exists() for st in ("then", "now") for f in FACES)]
+        some = [d / n["id"] for d in raws if (d / n["id"]).exists()]
+        if not (done or some):
             print("skip (not rendered):", n["id"])
             continue
+        nd = (done or some)[0]
         have = []
         for state in ("then", "now"):
             if not all((nd / f"{state}_{f}.png").exists() for f in FACES):
@@ -190,6 +193,10 @@ def cmd_assemble(site, a):
             sheet = Image.new("L", (mask_px * 6, mask_px))
             for i, f in enumerate(FACES):
                 face = Image.open(nd / f"{prefix}_{f}.png").convert("L").resize((mask_px, mask_px), Image.LANCZOS)
+                extra = nd / f"{prefix}_col_{f}.png"
+                if extra.exists():   # collection pass (linked libraries): alpha is the coverage
+                    alpha = Image.open(extra).convert("RGBA").getchannel("A").resize((mask_px, mask_px), Image.LANCZOS)
+                    face = ImageChops.lighter(face, alpha)
                 sheet.paste(face, (i * mask_px, 0))
             if sheet.getextrema()[1] <= 8:
                 return False      # not visible from this node

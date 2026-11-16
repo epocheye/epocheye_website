@@ -1,0 +1,276 @@
+{
+ "slug": "tipu-summer-palace-bengaluru",
+ "name": "Tipu Sultan's Summer Palace",
+ "place": "Bengaluru",
+ "version": 1,
+ "blend": "E:/heritage_assets/tipu-summer-palace-bengaluru/output/blend/TSP_period_world.blend",
+ "search_dirs": [
+  "E:/heritage_assets/bangalore-fort/output"
+ ],
+ "face_px": 2048,
+ "sizes": [
+  512,
+  1024,
+  2048
+ ],
+ "mask_px": 1024,
+ "webp_quality": 90,
+ "samples": 128,
+ "mask_samples": 8,
+ "start_node": "forecourt",
+ "base": {
+  "hide": [
+   "TSP_INFERRED_people",
+   "TSP_INFERRED_people_walking",
+   "TSP_Throne_rebuilt",
+   "Throne__COURT_1791"
+  ],
+  "objhide": [
+   "Furnish_"
+  ]
+ },
+ "states": {
+  "then": {},
+  "now": {
+   "_note": "Derived in memory from present-state materials and own-photo textures. The .blend is never edited. Surroundings beyond the garden are not modelled: a haze shell hides them.",
+   "hide": [
+    "TSP_R3_fort_mackenzie_1791",
+    "TSP_INFERRED_life_props",
+    "TSP_INFERRED_planting"
+   ],
+   "show": [
+    "TSP_OFF_present_state"
+   ],
+   "objhide": [
+    "TSP_tree_platform",
+    "TSP_court_packed",
+    "TSP_verge_scatter"
+   ],
+   "materials": {
+    "PLAY_NOW_lawn": {
+     "color": "E:/heritage_assets/tipu-summer-palace-bengaluru/output/tex/own_grass.jpg",
+     "normal": "E:/heritage_assets/tipu-summer-palace-bengaluru/output/tex/own_grass_n.jpg",
+     "orm": "E:/heritage_assets/tipu-summer-palace-bengaluru/output/tex/own_grass_orm.jpg",
+     "scale": 0.5
+    },
+    "PLAY_NOW_hedge": {
+     "color": "E:/heritage_assets/tipu-summer-palace-bengaluru/output/tex/own_hedge.jpg",
+     "normal": "E:/heritage_assets/tipu-summer-palace-bengaluru/output/tex/own_hedge_n.jpg",
+     "orm": "E:/heritage_assets/tipu-summer-palace-bengaluru/output/tex/own_hedge_orm.jpg",
+     "scale": 0.8
+    },
+    "PLAY_NOW_brick": {
+     "color": "C:/Users/Sambit/Claude/Projects/Epocheye/blender-photoreal/assets/textures/red_bricks_04/red_bricks_04_diff_2k.jpg",
+     "normal": "C:/Users/Sambit/Claude/Projects/Epocheye/blender-photoreal/assets/textures/red_bricks_04/red_bricks_04_nor_gl_2k.jpg",
+     "rough": "C:/Users/Sambit/Claude/Projects/Epocheye/blender-photoreal/assets/textures/red_bricks_04/red_bricks_04_rough_2k.jpg",
+     "scale": 0.6
+    },
+    "PLAY_NOW_plaster": {
+     "color": "E:/heritage_assets/tipu-summer-palace-bengaluru/output/tex/own_plaster_clean.jpg",
+     "roughness": 0.85,
+     "scale": 0.35
+    }
+   },
+   "matswap": {
+    "SITE_LAWN": "PLAY_NOW_lawn",
+    "SITE_HEDGE": "PLAY_NOW_hedge",
+    "SITE_BRICK": "PLAY_NOW_brick",
+    "WALL_EXT_HUNTER1792__DECORATION-RECONSTRUCTED": "PLAY_NOW_plaster",
+    "WALL_INT_MADDER__DECORATION-RECONSTRUCTED": "PLAY_NOW_plaster",
+    "TSP_MAT_palace_lime_fresh": "PLAY_NOW_plaster",
+    "CEILING_PAINTED__PATTERN-CONFIRMED": "CEILING_TIMBER__CONFIRMED",
+    "SHAFT_EXT_HUNTER1792__CONFIRMED-FOR-1792": "PILLAR_SHAFT_TIMBER__CONFIRMED",
+    "SHAFT_EXT_GOLD_HUNTER1792__CONFIRMED-FOR-1792": "PILLAR_SHAFT_TIMBER__CONFIRMED",
+    "ARCH_EXT_HUNTER1792__CONFIRMED-FOR-1792": "ENTABLATURE_TIMBER__CONFIRMED",
+    "BASE_EXT_HUNTER1792__CONFIRMED-FOR-1792": "PILLAR_STONE_CARVED__CONFIRMED",
+    "CAP_EXT_HUNTER1792__CONFIRMED-FOR-1792": "PILLAR_STONE_CARVED__CONFIRMED",
+    "TSP_MAT_eave_fringe_madder": "ENTABLATURE_TIMBER__CONFIRMED"
+   },
+   "haze": {
+    "center": [
+     -4,
+     -15
+    ],
+    "radius": 62,
+    "height": 70,
+    "base_z": -3,
+    "color": [
+     0.74,
+     0.8,
+     0.88
+    ],
+    "solid_to": 0.07,
+    "clear_at": 0.34,
+    "strength": 4.5
+   }
+  }
+ },
+ "nodes": [
+  {
+   "id": "forecourt",
+   "name": "Forecourt",
+   "kind": "exterior",
+   "loc": [
+    0.0,
+    -14.0,
+    0.9
+   ],
+   "look": [
+    0,
+    1,
+    0.15
+   ],
+   "samples": 128,
+   "links": [
+    "colonnade"
+   ]
+  },
+  {
+   "id": "colonnade",
+   "name": "Ground colonnade",
+   "kind": "interior",
+   "loc": [
+    0.0,
+    1.9,
+    1.6
+   ],
+   "look": [
+    0.6,
+    1,
+    0
+   ],
+   "samples": 256,
+   "exposure": {
+    "then": -1.9,
+    "now": -1.9
+   },
+   "links": [
+    "forecourt",
+    "colonnade-end"
+   ]
+  },
+  {
+   "id": "colonnade-end",
+   "name": "End of the colonnade",
+   "kind": "interior",
+   "loc": [
+    7.5,
+    1.9,
+    1.6
+   ],
+   "look": [
+    -1,
+    0,
+    0
+   ],
+   "samples": 256,
+   "exposure": {
+    "then": -1.9,
+    "now": -1.9
+   },
+   "links": [
+    "colonnade"
+   ]
+  }
+ ],
+ "restorations": [
+  {
+   "id": "exterior-colour",
+   "name": "The colours of the front",
+   "chapter": "ch2",
+   "slot": "S2",
+   "tier": "reconstruction",
+   "nodes": [
+    "forecourt",
+    "colonnade",
+    "colonnade-end"
+   ],
+   "target": [
+    0.0,
+    0.0,
+    4.2
+   ],
+   "piece": "pieces/exterior-colour.glb",
+   "evidence": [
+    "Hunter watercolour, February 1792, Yale Center for British Art B1974.12.1168"
+   ],
+   "select": {
+    "materials": [
+     "WALL_EXT_HUNTER1792__DECORATION-RECONSTRUCTED",
+     "ARCH_EXT_HUNTER1792__CONFIRMED-FOR-1792",
+     "SHAFT_EXT_HUNTER1792__CONFIRMED-FOR-1792",
+     "SHAFT_EXT_GOLD_HUNTER1792__CONFIRMED-FOR-1792",
+     "BASE_EXT_HUNTER1792__CONFIRMED-FOR-1792",
+     "CAP_EXT_HUNTER1792__CONFIRMED-FOR-1792",
+     "TSP_MAT_eave_fringe_madder"
+    ]
+   }
+  }
+ ],
+ "tier": {
+  "reconstruction": {
+   "material_tiers": [
+    "DECORATION-RECONSTRUCTED",
+    "PATTERN-CONFIRMED",
+    "*INFERRED*",
+    "CONFIRMED-FOR-1792",
+    "DESCRIBED*"
+   ],
+   "object_tiers": [
+    "DECORATION-RECONSTRUCTED",
+    "PATTERN-CONFIRMED",
+    "*INFERRED*",
+    "*UNRECORDED*",
+    "CONFIRMED-FOR-1792",
+    "FORM-CONFIRMED-FOR-1792",
+    "DESCRIBED*",
+    "MACKENZIE-1791",
+    "MUD",
+    "TIMBER",
+    "THATCH"
+   ],
+   "materials": [
+    "TSP_MAT_eave_fringe_madder",
+    "TSP_MAT_court_packed"
+   ],
+   "collections": [
+    "TSP_R3_fort_mackenzie_1791",
+    "TSP_INFERRED_planting",
+    "TSP_INFERRED_life_props"
+   ]
+  }
+ },
+ "figures": [],
+ "credits": [
+  "Reconstruction and renders: Epocheye.",
+  "Exterior colours after James Hunter, watercolour of the north front, February 1792. Yale Center for British Art, Paul Mellon Collection, B1974.12.1168. Public domain (CC0).",
+  "Interior wall texture derived from a photograph by Mike Prince, CC BY 2.0. https://commons.wikimedia.org/wiki/File:Tipu_Sultan%27s_Summer_Palace_(16414465309).jpg",
+  "Present-day surfaces from Epocheye's own photographs, September 2026.",
+  "Textures and sky: Poly Haven, CC0.",
+  "Today's surroundings beyond the palace garden are not modelled and are shown as haze.",
+  "Narration: synthetic voice."
+ ],
+ "licenses": [
+  {
+   "asset": "Hunter watercolour B1974.12.1168",
+   "holder": "Yale Center for British Art",
+   "licence": "CC0"
+  },
+  {
+   "asset": "interior_madder_photo.jpg",
+   "holder": "Mike Prince",
+   "licence": "CC BY 2.0",
+   "attribution_required": true
+  },
+  {
+   "asset": "own_*.jpg textures",
+   "holder": "Epocheye",
+   "licence": "own work"
+  },
+  {
+   "asset": "Poly Haven textures, models and sky",
+   "holder": "Poly Haven",
+   "licence": "CC0"
+  }
+ ]
+}
