@@ -204,6 +204,18 @@
      "CAP_EXT_HUNTER1792__CONFIRMED-FOR-1792",
      "TSP_MAT_eave_fringe_madder"
     ]
+   },
+   "piece_source": {
+    "collection": "TSP_Palace_rebuilt",
+    "object_prefixes": [
+     "Pillar_outer_"
+    ],
+    "near": [
+     1.9,
+     0.0,
+     0.0
+    ],
+    "radius": 0.8
    }
   }
  ],

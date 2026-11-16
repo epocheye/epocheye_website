@@ -20,8 +20,17 @@
 - Exporter core written: `tools/play/export_pack.py` (estimate, render, assemble, publish) and `tools/play/blender/`.
 - Story validator written: `scripts/play/validate-story.mjs`. Story engine reducer: `lib/play/story/engine.js`.
 
-## Waiting on the owner
-- **NOW state**: how to build it (AUDIT.md section 3). Asked 2026-11-16.
+## Phase 1 in progress (2026-11-16)
+- Owner chose: NOW derived by the exporter, haze beyond the garden.
+- `content/play/tipu-summer-palace-bengaluru/story.json`: Prologue, Chapter 1 and the S2 restoration preview. Validates with 0 errors and 1 placeholder.
+- Site config and NOW recipe written. Render estimate printed: 7.2 GPU hours for three viewpoints at 2048 px (small probes overstate it).
+- Rendering now: three viewpoints at 1024 px faces. 2048 px follows.
+- Piece exported: `pieces/exterior-colour.glb`, 1.5 MB.
+- Being built in parallel: the panorama viewer and level UI; the narration pipeline and three-voice bake-off.
+
+## Known issues
+- Upper-floor viewpoints render near black. Needs an interior lighting pass before Phase 2.
+- The GLB piece carries the scene's materials as exported, not baked textures.
 
 ## Next
-- Phase 1 vertical slice: story.json for the Prologue and Chapter 1, panorama viewer, narration bake-off, then GATE 1.
+- Integrate pack, engine and audio. Check on a phone-sized screen. Push `feat/play` for a preview URL. GATE 1.

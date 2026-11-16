@@ -7,6 +7,7 @@ window or its connector, and never saves the site's .blend.
 
   python tools/play/export_pack.py <slug> estimate          # render hours, no final rendering
   python tools/play/export_pack.py <slug> render [--nodes a,b] [--what then,now,masks,tier] --yes
+  python tools/play/export_pack.py <slug> pieces            # the 3D piece of each restoration, as GLB
   python tools/play/export_pack.py <slug> assemble          # faces to webp sizes, site.json, credits
   python tools/play/export_pack.py <slug> publish           # copy to public/play/packs/<slug>/v<N>/
 
@@ -154,6 +155,18 @@ def cmd_render(site, a):
             print(f"{n['id']:16s} {','.join(g):16s} {wall / 60:5.1f} min", [r.get("seconds") for r in rep if "seconds" in r], flush=True)
 
 
+def cmd_pieces(site, a):
+    """Export each restoration's handled piece as a GLB (CPU only, no rendering)."""
+    wd = work_dir(site)
+    for r in site["restorations"]:
+        if not r.get("piece_source"):
+            continue
+        out = wd / "pack" / r["piece"]
+        rep, wall, rc = run_blender(site, "export_piece.py",
+                                    ["--site", site["_path"], "--restoration", r["id"], "--out", str(out)], wd / "export.log")
+        print(r["id"], rep or f"failed (see {wd / 'export.log'})")
+
+
 def cmd_assemble(site, a):
     from PIL import Image, ImageChops
     wd = work_dir(site)
@@ -251,11 +264,11 @@ def cmd_publish(site, a):
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("slug")
-    ap.add_argument("cmd", choices=["estimate", "render", "assemble", "publish"])
+    ap.add_argument("cmd", choices=["estimate", "render", "pieces", "assemble", "publish"])
     ap.add_argument("--nodes", default="")
     ap.add_argument("--what", default="then,now,masks,tier")
     ap.add_argument("--face", type=int, default=0)
     ap.add_argument("--yes", action="store_true")
     ap.add_argument("--force", action="store_true")
     a = ap.parse_args()
-    {"estimate": cmd_estimate, "render": cmd_render, "assemble": cmd_assemble, "publish": cmd_publish}[a.cmd](load_site(a.slug), a)
+    {"estimate": cmd_estimate, "render": cmd_render, "pieces": cmd_pieces, "assemble": cmd_assemble, "publish": cmd_publish}[a.cmd](load_site(a.slug), a)
