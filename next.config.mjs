@@ -71,9 +71,11 @@ const nextConfig = {
           },
         ],
       },
-      // Play site packs live on versioned paths, so they can be cached for good.
+      // Play site packs: only the big pictures (panorama faces, masks, tier masks) are cached
+      // for good. site.json, audio and pieces are republished in place under the same version,
+      // so they keep the default and are checked with the server on every load.
       {
-        source: '/play/packs/:slug/:version(v\\d+)/:path*',
+        source: '/play/packs/:slug/:version(v\\d+)/:kind(pano|mask|tier)/:path*',
         headers: [
           {
             key: 'Cache-Control',

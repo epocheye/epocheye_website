@@ -27,6 +27,7 @@ export function validateStory(story, file = "story.json") {
 	const errors = [];
 	const warn = [];
 	const placeholders = [];
+	const long = []; // lines that will not fit in two lines on a 375 px wide phone
 	const err = (m) => errors.push(`${file}: ${m}`);
 	const facts = new Map((story.facts || []).map((f) => [f.id, f]));
 	const witnesses = new Set((story.witnesses || []).map((w) => w.id));
@@ -74,6 +75,7 @@ export function validateStory(story, file = "story.json") {
 		beatIds.add(b.id);
 		if (!BEAT_TYPES.has(b.type)) err(`${at}: unknown type "${b.type}"`);
 		checkCopy(b.text, at);
+		for (const t of texts(b.text)) if (t.length > 92 && !b.ui) long.push(`${at}: ${t.length} characters`);
 		// Lines that state nothing about the past (framing, questions, method) carry "frame": true
 		// and still need a fact list, which may point at the method note M-facts.
 		if (texts(b.text).length && !b.ui) checkFacts(b.facts, at);
@@ -116,7 +118,7 @@ export function validateStory(story, file = "story.json") {
 		for (const item of story.ending.unknown || []) checkCopy(item.text, "ending unknown");
 		for (const b of story.ending.beats || []) checkBeat(b, "ending");
 	}
-	return { errors, warn, placeholders, counts: { facts: facts.size, beats: beatIds.size, clips: clipIds.size } };
+	return { errors, warn, placeholders, long, counts: { facts: facts.size, beats: beatIds.size, clips: clipIds.size } };
 }
 
 const isMain = process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1];
@@ -132,9 +134,10 @@ if (isMain) {
 	let bad = 0;
 	for (const file of files) {
 		const story = JSON.parse(readFileSync(file, "utf8"));
-		const { errors, counts, placeholders } = validateStory(story, file.replace(ROOT, "").replace(/\\/g, "/"));
+		const { errors, counts, placeholders, long } = validateStory(story, file.replace(ROOT, "").replace(/\\/g, "/"));
 		for (const e of errors) console.error("  ✖ " + e);
 		for (const p of placeholders) console.log("  [SAMBIT] " + p);
+		for (const l of long) console.log("  [long line] " + l);
 		if (ship && placeholders.length) {
 			console.error(`  ✖ ${placeholders.length} placeholder(s) cannot ship`);
 			bad += placeholders.length;

@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import { Icon } from "@/components/play/ui";
 
 const HOTSPOT_SHAPES = { move: "is-move", evidence: "is-evidence", restore: "is-restore" };
+const NO_HOTSPOTS = [];
 
 export default function PanoViewer({
 	site,            // site.json "site" block
@@ -31,7 +32,7 @@ export default function PanoViewer({
 	const coreRef = useRef(null);
 	const applied = useRef(new Set());
 	const [env, setEnv] = useState({ ready: false, failed: false, canGyro: false });
-	const [status, setStatus] = useState({ loading: true, error: null });
+	const [status, setStatus] = useState({ loading: true, error: null, shown: null }); // shown: the node whose picture is up
 	const [gyro, setGyro] = useState("off"); // off | asking | on | denied | unsupported
 
 	// Create the engine once, on the client.
@@ -70,7 +71,7 @@ export default function PanoViewer({
 					onFrame: place,
 					onStatus: (s) => {
 						if (cancelled) return;
-						setStatus({ loading: !!s.loading, error: s.error || null });
+						setStatus({ loading: !!s.loading, error: s.error || null, shown: s.shown || null });
 						if (s.first) {
 							// A mark for performance checks: the first picture is on screen.
 							try {
@@ -105,6 +106,8 @@ export default function PanoViewer({
 		if (!env.ready || !core || !node) return;
 		const sameNode = core.node && core.node.id === node.id && (core.primary === state || !(node.states || []).includes(state));
 		if (sameNode) {
+			// Back on the node that is showing: a move that was still loading must not land.
+			core.stay();
 			if (view?.look) core.lookAlong(view.look);
 		} else {
 			core.setNode(node, { state, look: view?.look || null });
@@ -148,10 +151,15 @@ export default function PanoViewer({
 		if (env.ready) coreRef.current?.setPreloadThen(preloadThen);
 	}, [env.ready, preloadThen]);
 
+	// Markers belong to one viewpoint. While another picture is still up (loading, or a load
+	// that failed), none are drawn: they would point at nothing in it.
+	const shownHere = !!node && status.shown === node.id;
+	const live = shownHere ? hotspots : NO_HOTSPOTS;
+
 	// Hotspots changed without the camera moving: place them again.
 	useEffect(() => {
 		if (env.ready) coreRef.current?.invalidate();
-	}, [env.ready, hotspots, debug]);
+	}, [env.ready, hotspots, shownHere, debug]);
 
 	const nudge = (dyaw, dpitch) => coreRef.current?.nudge(dyaw, dpitch);
 	const zoom = (d) => coreRef.current?.zoomBy(d);
@@ -171,14 +179,32 @@ export default function PanoViewer({
 
 	const toggleGyro = async () => {
 		const core = coreRef.current;
-		if (!core) return;
+		if (!core || gyro === "asking") return;
 		if (gyro === "on") {
 			core.disableGyro();
 			setGyro("off");
 			return;
 		}
 		setGyro("asking");
-		setGyro(await core.enableGyro());
+		const result = await core.enableGyro();
+		setGyro(result);
+		// The refusal is said once, then cleared.
+		if (result === "denied") setTimeout(() => setGyro((cur) => (cur === "denied" ? "off" : cur)), 6000);
+	};
+
+	const retry = () => coreRef.current?.setNode(node, { state, look: view?.look || null });
+
+	// A marker in front of the camera can still be off the edge of the screen. When focus reaches
+	// one (Tab, or a screen reader swipe), turn to it.
+	const onHotspotFocus = (h) => {
+		const core = coreRef.current;
+		const p = core?.project(h.dir);
+		if (core && (!p || !p.inView)) core.lookAlong(h.dir);
+	};
+	// Older browsers treat a hidden-overflow layer as scrollable by focus. Never let it stay scrolled.
+	const onLayerScroll = (e) => {
+		e.currentTarget.scrollLeft = 0;
+		e.currentTarget.scrollTop = 0;
 	};
 
 	return (
@@ -191,8 +217,8 @@ export default function PanoViewer({
 				aria-label={`${node?.name || "View"}. A panorama. Use the arrow keys to look around, plus and minus to zoom.`}
 				onKeyDown={onKeyDown}
 			/>
-			<div ref={layer} className="play-hotspots">
-				{hotspots.map((h) => (
+			<div ref={layer} className="play-hotspots" onScroll={onLayerScroll}>
+				{live.map((h) => (
 					<button
 						key={h.id}
 						type="button"
@@ -200,6 +226,7 @@ export default function PanoViewer({
 						data-dir={h.dir.join(",")}
 						aria-label={h.label}
 						onClick={() => onHotspot?.(h)}
+						onFocus={() => onHotspotFocus(h)}
 					>
 						<span className="play-hotspot-mark" aria-hidden="true">
 							{h.kind === "move" ? <Icon name="up" size={16} /> : h.done ? <Icon name="check" size={14} /> : null}
@@ -229,11 +256,18 @@ export default function PanoViewer({
 				) : null}
 			</div>
 
-			<div className="play-pano-status" role="status" aria-live="polite">
-				{env.failed ? "This browser cannot show the panorama. The story still works from the lists." : null}
-				{!env.failed && status.error ? "This view did not load. Check the connection and try again." : null}
-				{!env.failed && !status.error && status.loading ? "Loading the view" : null}
-				{gyro === "denied" ? "Motion access was not allowed. Drag or use the buttons to look." : null}
+			<div className="play-pano-status">
+				<div className="play-pano-status-text" role="status" aria-live="polite">
+					{env.failed ? <p>This browser cannot show the panorama. The story still works from the lists.</p> : null}
+					{!env.failed && status.error ? <p>This view did not load. Check the connection and try again.</p> : null}
+					{!env.failed && !status.error && status.loading ? <p>Loading the view</p> : null}
+					{gyro === "denied" ? <p>Motion access was not allowed. Drag or use the buttons to look.</p> : null}
+				</div>
+				{!env.failed && status.error ? (
+					<button type="button" className="play-pill is-small" onClick={retry}>
+						Try again
+					</button>
+				) : null}
 			</div>
 			{debug ? <div ref={readout} className="play-pano-readout" aria-hidden="true" /> : null}
 		</div>

@@ -49,6 +49,32 @@ for c in copies:
     c.hide_set(False)          # hidden objects cannot be selected, and the originals may be hidden
     c.select_set(True)
 bpy.context.view_layer.objects.active = copies[0]
+
+# The scene's materials are node graphs, which glTF cannot carry. Each one keeps its intended flat
+# colour as the Principled Base Color value (the graph only multiplies ambient occlusion and texture
+# detail into it), so the piece is exported with plain materials of that colour.
+baked = 0
+plain = {}
+for c in copies:
+    for slot in c.material_slots:
+        src_mat = slot.material
+        if not src_mat:
+            continue
+        if src_mat.name not in plain:
+            bs = next((n for n in src_mat.node_tree.nodes if n.type == "BSDF_PRINCIPLED"), None) if src_mat.node_tree else None
+            m = bpy.data.materials.new("piece_" + src_mat.name.split("__")[0])
+            m.use_nodes = True
+            dst = next(n for n in m.node_tree.nodes if n.type == "BSDF_PRINCIPLED")
+            if bs:
+                dst.inputs["Base Color"].default_value = tuple(bs.inputs["Base Color"].default_value)
+                dst.inputs["Roughness"].default_value = bs.inputs["Roughness"].default_value
+                dst.inputs["Metallic"].default_value = bs.inputs["Metallic"].default_value
+            plain[src_mat.name] = m
+            baked += 1
+        slot.material = plain[src_mat.name]
+for c in copies:
+    c.select_set(True)
+bpy.context.view_layer.objects.active = copies[0]
 selected = [o.name for o in bpy.context.view_layer.objects if o.select_get()]
 assert set(selected) == {c.name for c in copies}, f"unexpected selection: {selected[:6]}"
 os.makedirs(os.path.dirname(a["out"]), exist_ok=True)
@@ -56,5 +82,5 @@ bpy.ops.export_scene.gltf(filepath=a["out"], export_format="GLB", use_selection=
                           export_yup=True, export_materials="EXPORT", export_image_format="WEBP",
                           export_draco_mesh_compression_enable=False)
 C.report("PIECE", {"restoration": r["id"], "objects": [o.name for o in picked], "tris": tris,
-                   "size_m": [round(v, 2) for v in (hi - lo)], "bytes": os.path.getsize(a["out"]),
+                   "size_m": [round(v, 2) for v in (hi - lo)], "bytes": os.path.getsize(a["out"]), "baked": baked,
                    "materials": sorted({s.material.name for o in picked for s in o.material_slots if s.material})})

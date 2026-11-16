@@ -6,7 +6,7 @@
 
 import { useEffect, useState } from "react";
 import { expandSpoken } from "@/lib/play/story/engine";
-import { createNarrator, discoverVoices } from "@/lib/play/audio";
+import { clipUsable, createNarrator, discoverVoices } from "@/lib/play/audio";
 import { loadSite, packUrls } from "@/lib/play/pack";
 import { Pill } from "@/components/play/ui";
 
@@ -90,6 +90,8 @@ export default function VoiceReview({ sites }) {
 	const redo = (voiceId && data.redo[voiceId]) || [];
 	const known = (id) => (voice?.manifest ? voice.clips.has(id) : null);
 	const missing = voice?.manifest ? rows.filter((r) => !voice.clips.has(r.id)).length : null;
+	// Clips whose words no longer match the story. The game does not play them.
+	const stale = voice?.manifest ? rows.filter((r) => voice.clips.has(r.id) && !clipUsable(voice.clips.get(r.id))).length : 0;
 
 	const seg = (r, pause) => ({ text: r.text, clip: r.id, pause_after_ms: pause });
 	const stop = () => {
@@ -158,10 +160,11 @@ export default function VoiceReview({ sites }) {
 			{data.error && data.slug === slug ? <p role="alert">{data.error}</p> : null}
 			{!loaded && !data.error ? <p role="status">Loading the pack</p> : null}
 			{loaded && data.voices.length === 0 ? (
-				<p className="play-note">No voice folders were found in this pack. Lines play as silent reading time until audio is published.</p>
-			) : null}
-			{loaded && data.voices.length > 0 && !data.listed ? (
-				<p className="play-note">audio/voices.json is not in the pack. Showing the folders that have a manifest.</p>
+				<p className="play-note">
+					{data.listed
+						? "audio/voices.json lists no voice. Lines play as silent reading time until audio is published."
+						: "audio/voices.json is not in the pack, so no voice can be found. Lines play as silent reading time until it is published."}
+				</p>
 			) : null}
 
 			{loaded ? (
@@ -172,7 +175,7 @@ export default function VoiceReview({ sites }) {
 						</Pill>
 						<Pill onClick={stop}>Stop</Pill>
 						<span className="play-note" role="status" aria-live="polite">
-							{playing ? `Playing ${playing}` : `${rows.length} spoken lines${missing ? `, ${missing} without a clip` : ""}`}
+							{playing ? `Playing ${playing}` : `${rows.length} spoken lines${missing ? `, ${missing} without a clip` : ""}${stale ? `, ${stale} stale` : ""}`}
 						</span>
 					</div>
 
@@ -193,7 +196,7 @@ export default function VoiceReview({ sites }) {
 									const has = known(r.id);
 									const meta = voice?.clips.get(r.id);
 									return (
-										<tr key={r.id} className={`play-review-row${playing === r.id ? " is-playing" : ""}${has === false ? " is-missing" : ""}`}>
+										<tr key={r.id} className={`play-review-row${playing === r.id ? " is-playing" : ""}${has === false || meta?.stale ? " is-missing" : ""}`}>
 											<td>
 												<Pill small onClick={() => playRows([r], false)} aria-label={`Play ${r.id}`}>
 													Play
@@ -203,6 +206,7 @@ export default function VoiceReview({ sites }) {
 												<code>{r.id}</code>
 												<div className="play-dim">{r.parent ? `${r.chapter}, after ${r.parent}` : `${r.chapter}, ${r.type}${r.role ? `, ${r.role}` : ""}`}</div>
 												{has === false ? <div>No clip</div> : null}
+												{meta?.stale ? <div>Stale: the line has changed since this clip was made. Render it again.</div> : null}
 											</td>
 											<td className="play-review-text">{r.text}</td>
 											<td>

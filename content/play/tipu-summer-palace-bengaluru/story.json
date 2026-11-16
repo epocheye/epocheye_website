@@ -1,281 +1,1046 @@
 {
-  "slug": "tipu-summer-palace-bengaluru",
-  "title": "Envy of Heaven",
-  "logline": "A palace called itself the Envy of Heaven. It was a finished palace for about eight years. Find out what it was, what happened to it, and put it back, using only what you can prove.",
-  "question": "What did this building look like on the day it earned its name, and where did that go?",
-  "default_lens": "traveller",
-  "lenses": [
-    { "id": "traveller", "name": "Traveller", "blurb": "What you would have seen standing there." },
-    { "id": "builder", "name": "Builder", "blurb": "How it was made." },
-    { "id": "scribe", "name": "Scribe", "blurb": "Who wrote it down, and how we read it." },
-    { "id": "child", "name": "Child", "blurb": "The same facts in short words." }
-  ],
-  "tiers": {
-    "record": "From the record",
-    "reconstruction": "Our reconstruction",
-    "legend": "Legend",
-    "unknown": "Not known",
-    "reading": "Our reading"
+ "slug": "tipu-summer-palace-bengaluru",
+ "title": "Envy of Heaven",
+ "logline": "A palace called itself the Envy of Heaven. It was a finished palace for about eight years. Find out what it was, what happened to it, and put it back, using only what you can prove.",
+ "question": "What did this building look like on the day it earned its name, and where did that go?",
+ "default_lens": "traveller",
+ "lenses": [
+  {
+   "id": "traveller",
+   "name": "Traveller",
+   "blurb": "What you would have seen standing there."
   },
-  "facts": [
-    { "id": "F01", "tier": "record", "status": "verified",
-      "claim": "The palace inscription gives two dates, 1781 and 1791. Rice reads them as begun in Hyder Ali's time and completed under Tipu Sultan. The ASI board at the entrance gives 1778 to 1789. The palace stood inside Bangalore Fort.",
-      "source": "B. L. Rice, Epigraphia Carnatica IX (1905), Bangalore no. 7 and introduction p. 27; Mackenzie's survey of Bangalore, March 1791, key 14; palace research file palace-dimensions.json (dates tiered disputed)" },
-    { "id": "F01b", "tier": "reading", "status": "verified",
-      "claim": "From its completion in 1791 to the death of Tipu Sultan in 1799 is about eight years.",
-      "source": "Arithmetic on F01 and F10" },
-    { "id": "F02", "tier": "record", "status": "verified",
-      "claim": "Bangalore Fort: a mud fort said to date from 1537 under Kempe Gowda I; rebuilt in stone in 1761, the first year of Hyder Ali's reign.",
-      "source": "B. L. Rice, Mysore Gazetteer (1897), vol. II p. 46" },
-    { "id": "F03", "tier": "record", "status": "verified",
-      "claim": "The Venkataramana temple in the fort was built under Chikka Devaraja Wadiyar and immediately adjoins the palace on the north-east. No year of building is recorded.",
-      "source": "Epigraphia Carnatica IX, Bangalore no. 118 and introduction p. 27" },
-    { "id": "F04", "tier": "record", "status": "verified",
-      "claim": "Teak framing and pillars, stone pillar bases and stone platform; the outer walls of mud.",
-      "source": "Palace research file palace-dimensions.json (materials, confirmed); ASI display board as recorded in photos_own/MANIFEST.md; Rice, Mysore Gazetteer (1897) II p. 47" },
-    { "id": "F05", "tier": "record", "status": "verified",
-      "claim": "Francis Buchanan, 10 May 1800: the palace \"is composed of mud\", yet \"not without some degree of magnificence\".",
-      "source": "Francis Buchanan, A Journey from Madras through the Countries of Mysore, Canara, and Malabar (1807), vol. 1 p. 45" },
-    { "id": "F06", "tier": "record", "status": "verified",
-      "claim": "A Persian inscription on a stone in the palace opens with the laying of the foundation and gives its two dates as phrases meaning Abode of Happiness and Envy of Heaven. The first is computed in a letter-number system devised by Tipu Sultan.",
-      "source": "B. L. Rice, Epigraphia Carnatica IX (1905), Bangalore no. 7, with his note on the Zar system; Rice, Mysore Gazetteer (1897) II p. 47 note" },
-    { "id": "F07", "tier": "record", "status": "verified",
-      "claim": "On 21 March 1791 an East India Company army under Cornwallis stormed Bangalore Fort through a breach beside the Delhi Gate.",
-      "source": "Mark Wilks, Historical Sketches of the South of India, vol. III (1817), pp. 127 to 129; the tablet at the breach" },
-    { "id": "F08", "tier": "record", "status": "verified",
-      "claim": "James Hunter, Lieutenant in the Royal Artillery, painted the north front of the palace in February 1792.",
-      "source": "Yale Center for British Art, B1974.12.1168, inscribed on the back \"A View of Tippoos Palace at Bangalore Feby. 92\"; title page of Picturesque Scenery in the Kingdom of Mysore (Orme, 1805)" },
-    { "id": "F10", "tier": "record", "status": "verified",
-      "claim": "Tipu Sultan was killed at Srirangapatna on 4 May 1799.",
-      "source": "B. L. Rice, Mysore Gazetteer (1897), vol. I pp. 414 to 415" },
-    { "id": "F17", "tier": "record", "status": "verified",
-      "claim": "Almost all of the painted decoration is gone. What is left are fragments, and they are faint.",
-      "source": "Palace narration (seed 105); own photographs 37 and 41, September 2026" },
-    { "id": "F18", "tier": "record", "status": "verified",
-      "claim": "Today the timber is dark and polished, and faded floral painting survives in places on walls, ceilings and niches.",
-      "source": "Palace research file palace-measurements.md; own photographs 37 and 41, September 2026" },
-    { "id": "F24", "tier": "record", "status": "verified",
-      "claim": "Robert Home's engraving \"Inside View of the Palace at Bangalore\", published 1 February 1794, shows the timber colonnade.",
-      "source": "Robert Home, Select Views in Mysore (1794); palace research file palace-measurements.md" },
-    { "id": "F25", "tier": "record", "status": "verified",
-      "claim": "The hall's columns rise the full height of the building, as high as the roof of the upper storey.",
-      "source": "Buchanan (1807), vol. 1 p. 45; palace research file palace_viewpoints.json, viewpoint P6" },
-    { "id": "M1", "tier": "reading", "status": "verified",
-      "claim": "The rule of this game and of our reconstructions: use only what the evidence supports, and label the rest.",
-      "source": "Epocheye method" },
-    { "id": "M2", "tier": "reconstruction", "status": "verified",
-      "claim": "The exterior colours in our model follow Hunter's watercolour of February 1792. Hunter painted a different front from the one modelled, so their placement here is our reconstruction.",
-      "source": "Palace research files palace-measurements.md and TSP_period_assumptions.md" },
-    { "id": "O1", "tier": "reading", "status": "verified",
-      "claim": "Most visitors photograph the front, call it nice and old, and leave.",
-      "source": "[SAMBIT: your gate observation. Keep or cut.]" }
-  ],
-  "witnesses": [
-    { "id": "you", "name": "You", "who": "A visitor, today", "record_date": "today", "source": "" },
-    { "id": "building", "name": "The building and its inscription", "who": "The palace itself, and the Persian verse on a stone in its wall", "record_date": "1781 to 1791", "source": "Epigraphia Carnatica IX, Bangalore no. 7" },
-    { "id": "buchanan", "name": "Francis Buchanan", "who": "A Scottish doctor sent to survey Mysore", "record_date": "10 May 1800", "source": "A Journey from Madras (1807), vol. 1 pp. 44 to 46" },
-    { "id": "hunter", "name": "James Hunter", "who": "Lieutenant in the Royal Artillery, and an artist", "record_date": "February 1792", "source": "Yale Center for British Art, B1974.12.1168" }
-  ],
-  "evidence": [
-    { "id": "e-wood", "title": "Wood", "facts": ["F04"],
-      "caption": "Pillars, arches, beams and ceilings. The palace's own files record the timber as teak." },
-    { "id": "e-stone", "title": "Stone", "facts": ["F04"],
-      "caption": "Each pillar stands on a carved stone base. The platform under the whole building is stone." },
-    { "id": "e-mud", "title": "Mud", "facts": ["F04"],
-      "caption": "The outer walls are mud, under plaster." },
-    { "id": "e-buchanan", "title": "Francis Buchanan, 1800", "facts": ["F05"], "witness": "buchanan",
-      "quote": "Although this is composed of mud, it is not without some degree of magnificence.",
-      "caption": "Written after he walked through the palace on 10 May 1800. Printed in London in 1807.",
-      "credit": "A Journey from Madras through the Countries of Mysore, Canara, and Malabar, vol. 1 p. 45. Public domain." },
-    { "id": "e-inscription", "title": "The inscription", "facts": ["F06"], "witness": "building",
-      "quote": "As soon as the foundation of this palace was laid, its head was raised to heaven with joy.",
-      "caption": "A Persian verse on a stone set into the wall. Its two dates are hidden in two phrases: a house of happiness, and envied by heaven. The first is worked out in a letter and number system Tipu Sultan devised himself.",
-      "credit": "Translation: B. L. Rice, Epigraphia Carnatica IX, Bangalore no. 7. Public domain." }
-  ],
-  "chapters": [
+  {
+   "id": "builder",
+   "name": "Builder",
+   "blurb": "How it was made."
+  },
+  {
+   "id": "scribe",
+   "name": "Scribe",
+   "blurb": "Who wrote it down, and how we read it."
+  },
+  {
+   "id": "child",
+   "name": "Child",
+   "blurb": "The same facts in short words."
+  }
+ ],
+ "tiers": {
+  "record": "From the record",
+  "reconstruction": "Our reconstruction",
+  "legend": "Legend",
+  "unknown": "Not known",
+  "reading": "Our reading"
+ },
+ "facts": [
+  {
+   "id": "F01",
+   "tier": "record",
+   "status": "verified",
+   "claim": "The palace inscription gives two dates, 1781 and 1791. Rice reads them as begun in Hyder Ali's time and completed under Tipu Sultan. The ASI board at the entrance gives 1778 to 1789. The palace stood inside Bangalore Fort.",
+   "source": "B. L. Rice, Epigraphia Carnatica IX (1905), Bangalore no. 7 and introduction p. 27; Mackenzie's survey of Bangalore, March 1791, key 14; palace research file palace-dimensions.json (dates tiered disputed)"
+  },
+  {
+   "id": "F01b",
+   "tier": "reading",
+   "status": "verified",
+   "claim": "From its completion in 1791 to the death of Tipu Sultan in 1799 is about eight years.",
+   "source": "Arithmetic on F01 and F10"
+  },
+  {
+   "id": "F02",
+   "tier": "record",
+   "status": "verified",
+   "claim": "Bangalore Fort: a mud fort said to date from 1537 under Kempe Gowda I; rebuilt in stone in 1761, the first year of Hyder Ali's reign.",
+   "source": "B. L. Rice, Mysore Gazetteer (1897), vol. II p. 46"
+  },
+  {
+   "id": "F03",
+   "tier": "record",
+   "status": "verified",
+   "claim": "The Venkataramana temple in the fort was built under Chikka Devaraja Wadiyar and immediately adjoins the palace on the north-east. No year of building is recorded.",
+   "source": "Epigraphia Carnatica IX, Bangalore no. 118 and introduction p. 27"
+  },
+  {
+   "id": "F04",
+   "tier": "record",
+   "status": "verified",
+   "claim": "Teak framing and pillars, stone pillar bases and stone platform; the outer walls of mud.",
+   "source": "Palace research file palace-dimensions.json (materials, confirmed); ASI display board as recorded in photos_own/MANIFEST.md; Rice, Mysore Gazetteer (1897) II p. 47"
+  },
+  {
+   "id": "F05",
+   "tier": "record",
+   "status": "verified",
+   "claim": "Francis Buchanan, 10 May 1800: the palace \"is composed of mud\", yet \"not without some degree of magnificence\".",
+   "source": "Francis Buchanan, A Journey from Madras through the Countries of Mysore, Canara, and Malabar (1807), vol. 1 p. 45"
+  },
+  {
+   "id": "F06",
+   "tier": "record",
+   "status": "verified",
+   "claim": "A Persian inscription on a stone in the palace opens with the laying of the foundation and gives its two dates as phrases meaning Abode of Happiness and Envy of Heaven. The first is computed in a letter-number system devised by Tipu Sultan.",
+   "source": "B. L. Rice, Epigraphia Carnatica IX (1905), Bangalore no. 7, with his note on the Zar system; Rice, Mysore Gazetteer (1897) II p. 47 note"
+  },
+  {
+   "id": "F07",
+   "tier": "record",
+   "status": "verified",
+   "claim": "On 21 March 1791 an East India Company army under Cornwallis stormed Bangalore Fort through a breach beside the Delhi Gate.",
+   "source": "Mark Wilks, Historical Sketches of the South of India, vol. III (1817), pp. 127 to 129; the tablet at the breach"
+  },
+  {
+   "id": "F08",
+   "tier": "record",
+   "status": "verified",
+   "claim": "James Hunter, Lieutenant in the Royal Artillery, painted the north front of the palace in February 1792.",
+   "source": "Yale Center for British Art, B1974.12.1168, inscribed on the back \"A View of Tippoos Palace at Bangalore Feby. 92\"; title page of Picturesque Scenery in the Kingdom of Mysore (Orme, 1805)"
+  },
+  {
+   "id": "F10",
+   "tier": "record",
+   "status": "verified",
+   "claim": "Tipu Sultan was killed at Srirangapatna on 4 May 1799.",
+   "source": "B. L. Rice, Mysore Gazetteer (1897), vol. I pp. 414 to 415"
+  },
+  {
+   "id": "F17",
+   "tier": "record",
+   "status": "verified",
+   "claim": "Almost all of the painted decoration is gone. What is left are fragments, and they are faint.",
+   "source": "Palace narration (seed 105); own photographs 37 and 41, September 2026"
+  },
+  {
+   "id": "F18",
+   "tier": "record",
+   "status": "verified",
+   "claim": "Today the timber is dark and polished, and faded floral painting survives in places on walls, ceilings and niches.",
+   "source": "Palace research file palace-measurements.md; own photographs 37 and 41, September 2026"
+  },
+  {
+   "id": "F24",
+   "tier": "record",
+   "status": "verified",
+   "claim": "Robert Home's engraving \"Inside View of the Palace at Bangalore\", published 1 February 1794, shows the timber colonnade.",
+   "source": "Robert Home, Select Views in Mysore (1794); palace research file palace-measurements.md"
+  },
+  {
+   "id": "F25",
+   "tier": "record",
+   "status": "verified",
+   "claim": "The hall's columns rise the full height of the building, as high as the roof of the upper storey.",
+   "source": "Buchanan (1807), vol. 1 p. 45; palace research file palace_viewpoints.json, viewpoint P6"
+  },
+  {
+   "id": "M1",
+   "tier": "reading",
+   "status": "verified",
+   "claim": "The rule of this game and of our reconstructions: use only what the evidence supports, and label the rest.",
+   "source": "Epocheye method"
+  },
+  {
+   "id": "M2",
+   "tier": "reconstruction",
+   "status": "verified",
+   "claim": "The exterior colours in our model follow Hunter's watercolour of February 1792. Hunter painted a different front from the one modelled, so their placement here is our reconstruction.",
+   "source": "Palace research files palace-measurements.md and TSP_period_assumptions.md"
+  },
+  {
+   "id": "O1",
+   "tier": "reading",
+   "status": "verified",
+   "claim": "Most visitors photograph the front, call it nice and old, and leave.",
+   "source": "[SAMBIT: your gate observation. Keep or cut.]"
+  }
+ ],
+ "witnesses": [
+  {
+   "id": "you",
+   "name": "You",
+   "who": "A visitor, today",
+   "record_date": "today",
+   "source": ""
+  },
+  {
+   "id": "building",
+   "name": "The building and its inscription",
+   "who": "The palace itself, and the Persian verse on a stone in its wall",
+   "record_date": "1781 to 1791",
+   "source": "Epigraphia Carnatica IX, Bangalore no. 7"
+  },
+  {
+   "id": "buchanan",
+   "name": "Francis Buchanan",
+   "who": "A Scottish doctor sent to survey Mysore",
+   "record_date": "10 May 1800",
+   "source": "A Journey from Madras (1807), vol. 1 pp. 44 to 46"
+  },
+  {
+   "id": "hunter",
+   "name": "James Hunter",
+   "who": "Lieutenant in the Royal Artillery, and an artist",
+   "record_date": "February 1792",
+   "source": "Yale Center for British Art, B1974.12.1168"
+  }
+ ],
+ "evidence": [
+  {
+   "id": "e-wood",
+   "title": "Wood",
+   "facts": [
+    "F04"
+   ],
+   "caption": "Pillars, arches, beams and ceilings. The palace's own files record the timber as teak."
+  },
+  {
+   "id": "e-stone",
+   "title": "Stone",
+   "facts": [
+    "F04"
+   ],
+   "caption": "Each pillar stands on a carved stone base. The platform under the whole building is stone."
+  },
+  {
+   "id": "e-mud",
+   "title": "Mud",
+   "facts": [
+    "F04"
+   ],
+   "caption": "The outer walls are mud, under plaster."
+  },
+  {
+   "id": "e-buchanan",
+   "title": "Francis Buchanan, 1800",
+   "facts": [
+    "F05"
+   ],
+   "witness": "buchanan",
+   "quote": "Although this is composed of mud, it is not without some degree of magnificence.",
+   "caption": "Written after he walked through the palace on 10 May 1800. Printed in London in 1807.",
+   "credit": "A Journey from Madras through the Countries of Mysore, Canara, and Malabar, vol. 1 p. 45. Public domain."
+  },
+  {
+   "id": "e-inscription",
+   "title": "The inscription",
+   "facts": [
+    "F06"
+   ],
+   "witness": "building",
+   "quote": "As soon as the foundation of this palace was laid, its head was raised to heaven with joy.",
+   "caption": "A Persian verse on a stone set into the wall. Its two dates are hidden in two phrases: a house of happiness, and envied by heaven. The first is worked out in a letter and number system Tipu Sultan devised himself.",
+   "credit": "Translation: B. L. Rice, Epigraphia Carnatica IX, Bangalore no. 7. Public domain."
+  }
+ ],
+ "chapters": [
+  {
+   "id": "prologue",
+   "n": 0,
+   "title": "Nice. Old.",
+   "years": "today",
+   "witness": "you",
+   "state": "now",
+   "nodes": [
+    "forecourt"
+   ],
+   "start_node": "forecourt",
+   "beats": [
     {
-      "id": "prologue", "n": 0, "title": "Nice. Old.", "years": "today", "witness": "you",
-      "state": "now", "nodes": ["forecourt"], "start_node": "forecourt",
-      "beats": [
-        { "id": "p-01", "type": "line", "facts": ["F01"], "pace": "steady", "pause_after_ms": 600,
-          "text": { "traveller": "This is Tipu Sultan's Summer Palace, in Bangalore.", "child": "This is Tipu Sultan's Summer Palace. It is in Bangalore." },
-          "say": "This is Tipu Sultan's Summer Palace, in Bangalore." },
-        { "id": "p-02", "type": "line", "facts": ["O1"], "placeholder": true, "pace": "steady", "pause_after_ms": 600,
-          "text": { "traveller": "Most visitors photograph the front, call it nice and old, and leave.", "child": "Most people take a photo. They say it is nice and old. Then they go." },
-          "say": "Most visitors photograph the front, call it nice and old, and leave." },
-        { "id": "p-03", "type": "line", "facts": ["F01", "F06"], "pace": "slow", "pause_after_ms": 1100,
-          "text": { "traveller": "Here is what the front does not tell you.", "child": "The front does not tell you everything." },
-          "say": "Here is what the front does not tell you." },
-        { "id": "p-04", "type": "line", "facts": ["F01"], "pace": "steady", "pause_after_ms": 600,
-          "text": { "traveller": "By its own inscription, it took ten years to build.", "child": "The writing on its wall says it took ten years to build." },
-          "say": "By its own inscription, it took ten years to build." },
-        { "id": "p-05", "type": "line", "facts": ["F01b"], "pace": "steady", "pause_after_ms": 1100,
-          "text": { "traveller": "It was a finished palace for about eight.", "child": "It was a finished palace for about eight years." },
-          "say": "It was a finished palace for about eight." },
-        { "id": "p-06", "type": "line", "facts": ["F06"], "pace": "slow", "pause_after_ms": 1100,
-          "text": { "traveller": "A line of writing on its wall calls it the Abode of Happiness and the Envy of Heaven.", "child": "Writing on its wall gives it two names. The Abode of Happiness. The Envy of Heaven." },
-          "say": "A line of writing on its wall calls it the Abode of Happiness, and the Envy of Heaven." },
-        { "id": "p-07", "type": "line", "facts": ["F17", "F18"],
-          "text": { "traveller": "Look around. Dark wood. Faded walls.", "child": "Look around. The wood is dark. The walls are faded." },
-          "say": [
-            { "text": "Look around.", "pace": "steady", "pause_after_ms": 600 },
-            { "text": "Dark wood.", "pace": "steady", "pause_after_ms": 250 },
-            { "text": "Faded walls.", "pace": "steady", "pause_after_ms": 1100 }
-          ] },
-        { "id": "p-08", "type": "line", "role": "question", "facts": ["F06"], "pace": "slow", "pause_after_ms": 2000,
-          "text": { "traveller": "So what was there to envy?", "child": "So what was there to envy?" },
-          "say": "So what was there to envy?" },
-        { "id": "p-09", "type": "line", "facts": ["M1"], "pace": "steady", "pause_after_ms": 600,
-          "text": { "traveller": "That is the case.", "child": "That is the puzzle." },
-          "say": "That is the case." },
-        { "id": "p-10", "type": "line", "facts": ["M1"], "pace": "steady", "pause_after_ms": 600,
-          "text": { "traveller": "You are going to put this building back.", "child": "You are going to put this building back." },
-          "say": "You are going to put this building back." },
-        { "id": "p-11", "type": "line", "facts": ["M1"], "pace": "slow", "pause_after_ms": 2000,
-          "text": { "traveller": "You may only use what you can prove.", "child": "You may only use what you can prove." },
-          "say": "You may only use what you can prove." },
-        { "id": "p-lens", "type": "lens", "ui": true,
-          "text": { "traveller": "Choose how the story is told to you. The facts are the same in all four." } }
-      ]
+     "id": "p-01",
+     "type": "line",
+     "facts": [
+      "F01"
+     ],
+     "pace": "steady",
+     "pause_after_ms": 600,
+     "text": {
+      "traveller": "This is Tipu Sultan's Summer Palace, in Bangalore.",
+      "child": "This is Tipu Sultan's Summer Palace. It is in Bangalore."
+     },
+     "say": "This is Tipu Sultan's Summer Palace, in Bangalore."
     },
     {
-      "id": "ch1", "n": 1, "title": "Ten Years", "years": "1781 to 1791", "witness": "building",
-      "state": "now", "nodes": ["colonnade", "colonnade-end"], "start_node": "colonnade",
-      "side_notes": {
-        "builder": { "facts": ["F25"], "text": "The pillars do not stop at the gallery. They run straight past it to the roof. That is why the hall reads as one tall room and not two floors." }
+     "id": "p-02",
+     "type": "line",
+     "facts": [
+      "O1"
+     ],
+     "placeholder": true,
+     "pace": "steady",
+     "pause_after_ms": 600,
+     "text": {
+      "traveller": "Most visitors photograph the front, call it nice and old, and leave.",
+      "child": "Most people take a photo. They say it is nice and old. Then they go."
+     },
+     "say": "Most visitors photograph the front, call it nice and old, and leave."
+    },
+    {
+     "id": "p-03",
+     "type": "line",
+     "facts": [
+      "F01",
+      "F06"
+     ],
+     "pace": "slow",
+     "pause_after_ms": 1100,
+     "text": {
+      "traveller": "Here is what the front does not tell you.",
+      "child": "The front does not tell you everything."
+     },
+     "say": "Here is what the front does not tell you."
+    },
+    {
+     "id": "p-04",
+     "type": "line",
+     "facts": [
+      "F01"
+     ],
+     "pace": "steady",
+     "pause_after_ms": 600,
+     "text": {
+      "traveller": "By its own inscription, it took ten years to build.",
+      "child": "The writing on its wall says it took ten years to build."
+     },
+     "say": "By its own inscription, it took ten years to build."
+    },
+    {
+     "id": "p-05",
+     "type": "line",
+     "facts": [
+      "F01b"
+     ],
+     "pace": "steady",
+     "pause_after_ms": 1100,
+     "text": {
+      "traveller": "It was a finished palace for about eight.",
+      "child": "It was a finished palace for about eight years."
+     },
+     "say": "It was a finished palace for about eight."
+    },
+    {
+     "id": "p-06",
+     "type": "line",
+     "facts": [
+      "F06"
+     ],
+     "pace": "slow",
+     "pause_after_ms": 1100,
+     "text": {
+      "traveller": "A line of writing on its wall calls it the Abode of Happiness and the Envy of Heaven.",
+      "child": "Writing on its wall gives it two names. The Abode of Happiness. The Envy of Heaven."
+     },
+     "say": "A line of writing on its wall calls it the Abode of Happiness, and the Envy of Heaven."
+    },
+    {
+     "id": "p-07",
+     "type": "line",
+     "facts": [
+      "F17",
+      "F18"
+     ],
+     "text": {
+      "traveller": "Look around. Dark wood. Faded walls.",
+      "child": "Look around. The wood is dark. The walls are faded."
+     },
+     "say": [
+      {
+       "text": "Look around.",
+       "pace": "steady",
+       "pause_after_ms": 600
       },
-      "beats": [
-        { "id": "c1-01", "type": "line", "facts": ["F01"],
-          "text": { "traveller": "Its inscription gives two dates. 1781, in Hyder Ali's time. 1791, in the time of his son, Tipu Sultan.", "child": "The writing gives two years. 1781, in Hyder Ali's time. 1791, in the time of his son, Tipu Sultan." },
-          "say": [
-            { "text": "Its inscription gives two dates.", "pace": "steady", "pause_after_ms": 600 },
-            { "text": "Seventeen eighty one, in Hyder Ali's time.", "pace": "slow", "pause_after_ms": 1100 },
-            { "text": "Seventeen ninety one, in the time of his son, Tipu Sultan.", "pace": "slow", "pause_after_ms": 1100 }
-          ] },
-        { "id": "c1-02", "type": "line", "facts": ["F01"], "pace": "steady", "pause_after_ms": 600,
-          "text": { "traveller": "The board at the entrance carries the work back to the 1770s.", "child": "The board at the gate gives older years, in the 1770s." },
-          "say": "The board at the entrance carries the work back to the seventeen seventies." },
-        { "id": "c1-03", "type": "line", "facts": ["F01", "F02"], "pace": "steady", "pause_after_ms": 600,
-          "text": { "traveller": "The site was inside Bangalore Fort.", "child": "The palace stood inside Bangalore Fort." },
-          "say": "The site was inside Bangalore Fort." },
-        { "id": "c1-04", "type": "line", "facts": ["F03"],
-          "text": { "traveller": "The temple next door was already there. An earlier king of Mysore, Chikka Devaraja Wadiyar, had it built.", "child": "The temple next door was already there. An older king of Mysore had it built." },
-          "say": [
-            { "text": "The temple next door was already there.", "pace": "steady", "pause_after_ms": 600 },
-            { "text": "An earlier king of Mysore, Chikka Devaraja Wadiyar, had it built.", "pace": "steady", "pause_after_ms": 1100 }
-          ] },
-        { "id": "c1-q", "type": "line", "role": "question", "facts": ["F04"], "pace": "slow", "pause_after_ms": 2000,
-          "text": { "traveller": "What is this palace made of?", "child": "What is this palace made of?" },
-          "say": "What is this palace made of?" },
-        { "id": "c1-05", "type": "line", "facts": ["F04", "F05"],
-          "text": { "traveller": "Every guidebook says teak. A surveyor who walked through it in 1800 said mud.", "child": "The guidebooks say teak wood. A man who walked through it in 1800 said mud." },
-          "say": [
-            { "text": "Every guidebook says teak.", "pace": "steady", "pause_after_ms": 600 },
-            { "text": "A surveyor who walked through it in eighteen hundred said something else.", "pace": "steady", "pause_after_ms": 250 },
-            { "text": "He said mud.", "pace": "slow", "pause_after_ms": 1100 }
-          ] },
-        { "id": "c1-e1", "type": "evidence", "evidence": "e-wood", "facts": ["F04"], "pace": "steady", "pause_after_ms": 600,
-          "at": { "node": "colonnade-end", "target": [-2.0, 0.2, 3.4] },
-          "text": { "traveller": "The pillars, arches, beams and ceilings: wood.", "child": "The pillars, arches, beams and ceilings are wood." },
-          "say": "The pillars, arches, beams and ceilings. Wood." },
-        { "id": "c1-e2", "type": "evidence", "evidence": "e-stone", "facts": ["F04"], "pace": "steady", "pause_after_ms": 600,
-          "at": { "node": "colonnade", "target": [1.9, 0.0, 0.3] },
-          "text": { "traveller": "The pillar bases and the platform: stone.", "child": "The feet of the pillars are stone. So is the platform." },
-          "say": "The pillar bases and the platform. Stone." },
-        { "id": "c1-e3", "type": "evidence", "evidence": "e-mud", "facts": ["F04"], "pace": "steady", "pause_after_ms": 600,
-          "at": { "node": "colonnade-end", "target": [9.0, 3.2, 1.8] },
-          "text": { "traveller": "The walls: mud.", "child": "The walls are mud." },
-          "say": "The walls. Mud." },
-        { "id": "c1-e4", "type": "evidence", "evidence": "e-buchanan", "facts": ["F05"],
-          "text": { "traveller": "Francis Buchanan, 1800: the palace is \"composed of mud\".", "child": "Francis Buchanan wrote in 1800 that the palace is \"composed of mud\"." },
-          "say": [
-            { "text": "Francis Buchanan, eighteen hundred. He wrote that the palace is this.", "pace": "steady", "pause_after_ms": 600 },
-            { "text": "Composed of mud.", "pace": "slow", "pause_after_ms": 600 }
-          ] },
-        { "id": "c1-e5", "type": "evidence", "evidence": "e-inscription", "facts": ["F06"],
-          "text": { "traveller": "The inscription, on a stone set into the wall. It opens with the laying of the foundation.", "child": "The writing is on a stone in the wall. It starts with the first stone being laid." },
-          "say": [
-            { "text": "The inscription, on a stone set into the wall.", "pace": "steady", "pause_after_ms": 600 },
-            { "text": "It opens with the laying of the foundation.", "pace": "steady", "pause_after_ms": 600 },
-            { "text": "Its two dates are hidden in two phrases.", "pace": "steady", "pause_after_ms": 250 },
-            { "text": "The first is worked out in a number system Tipu Sultan devised himself.", "pace": "steady", "pause_after_ms": 1100 }
-          ] },
-        { "id": "c1-choice", "type": "choice", "facts": ["F04", "F05"], "pace": "slow", "pause_after_ms": 1800,
-          "text": { "traveller": "Who is right?", "child": "Who is right?" },
-          "say": "Who is right?",
-          "options": [
-            { "id": "A", "accepted": false,
-              "text": { "traveller": "Teak. Buchanan was careless.", "child": "Teak. The man in 1800 got it wrong." },
-              "record": "You first trusted the guidebooks over the surveyor.",
-              "after": [
-                { "id": "c1-A-1", "facts": ["F04", "F05"], "pace": "steady", "pause_after_ms": 600,
-                  "text": { "traveller": "Not careless. The outer walls are mud. He was right about that.", "child": "He did not get it wrong. The outer walls are mud." },
-                  "say": "Not careless. The outer walls are mud. He was right about that." }
-              ] },
-            { "id": "B", "accepted": false,
-              "text": { "traveller": "Mud. The teak is later repair.", "child": "Mud. The teak was added later." },
-              "record": "You first trusted the surveyor over the building.",
-              "after": [
-                { "id": "c1-B-1", "facts": ["F24"], "pace": "steady", "pause_after_ms": 600,
-                  "text": { "traveller": "Not repair. A view engraved in 1794 already shows these wooden pillars.", "child": "It was not added later. A picture from 1794 shows these wooden pillars." },
-                  "say": "Not repair. A view engraved in seventeen ninety four already shows these wooden pillars." }
-              ] },
-            { "id": "C", "accepted": true,
-              "text": { "traveller": "Both.", "child": "Both." },
-              "record": "You said both witnesses were right.",
-              "after": [
-                { "id": "c1-C-1", "facts": ["F04"],
-                  "text": { "traveller": "Stone below. Mud in the walls. Wood for everything that holds the building up and everything you look at.", "child": "Stone at the bottom. Mud in the walls. Wood holds the building up. Wood is what you see." },
-                  "say": [
-                    { "text": "Stone below.", "pace": "brisk", "pause_after_ms": 200 },
-                    { "text": "Mud in the walls.", "pace": "brisk", "pause_after_ms": 200 },
-                    { "text": "Wood for everything that holds the building up, and everything you look at.", "pace": "steady", "pause_after_ms": 1100 }
-                  ] },
-                { "id": "c1-C-2", "role": "turn", "facts": ["F04", "F05"],
-                  "text": { "traveller": "The mud is in the walls. You are looking at pillars.", "child": "The mud is in the walls. You are looking at pillars." },
-                  "say": [
-                    { "text": "The mud is in the walls.", "pace": "slow", "pause_after_ms": 250 },
-                    { "text": "You are looking at pillars.", "pace": "slow", "pause_after_ms": 1100 }
-                  ] },
-                { "id": "c1-C-3", "facts": ["F04", "F05"],
-                  "text": { "traveller": "Two honest witnesses can describe two different buildings. Keep that in mind. You will need it.", "child": "Two honest people can describe the same place differently. Keep that in mind. You will need it." },
-                  "say": [
-                    { "text": "Two honest witnesses can describe two different buildings.", "pace": "steady", "pause_after_ms": 600 },
-                    { "text": "Keep that in mind. You will need it.", "pace": "slow", "pause_after_ms": 1100 }
-                  ] }
-              ] }
-          ] },
-        { "id": "c1-answer", "type": "answer", "facts": ["F01", "F03", "F04"], "pace": "steady", "pause_after_ms": 600,
-          "text": { "traveller": "Stone, mud and teak, ten years in the making by its own account, inside a fort, beside an older temple.", "child": "Stone, mud and teak. Ten years to build, by its own writing. Inside a fort, beside an older temple." },
-          "say": "Stone, mud and teak. Ten years in the making, by its own account. Inside a fort, beside an older temple." },
-        { "id": "c1-know", "type": "know", "facts": ["F01", "F06"], "pace": "slow", "pause_after_ms": 1100,
-          "text": { "traveller": "Its inscription dates this palace 1781 to 1791, and calls it the Envy of Heaven.", "child": "Its own writing dates this palace 1781 to 1791. It calls it the Envy of Heaven." },
-          "say": "Its inscription dates this palace seventeen eighty one to seventeen ninety one, and calls it the Envy of Heaven." },
-        { "id": "c1-hook", "type": "hook", "facts": ["F01", "F07"],
-          "text": { "traveller": "It was finished in 1791. In 1791 something else happened to the fort around it.", "child": "It was finished in 1791. That year, something else happened to the fort around it." },
-          "say": [
-            { "text": "It was finished in seventeen ninety one.", "pace": "steady", "pause_after_ms": 600 },
-            { "text": "In seventeen ninety one, something else happened to the fort around it.", "pace": "slow", "pause_after_ms": 1800 }
-          ] }
-      ]
+      {
+       "text": "Dark wood.",
+       "pace": "steady",
+       "pause_after_ms": 250
+      },
+      {
+       "text": "Faded walls.",
+       "pace": "steady",
+       "pause_after_ms": 1100
+      }
+     ]
     },
     {
-      "id": "ch2-preview", "n": 2, "preview": true, "title": "Preview: The Outside", "years": "February 1792", "witness": "hunter",
-      "state": "now", "nodes": ["forecourt"], "start_node": "forecourt",
-      "beats": [
-        { "id": "pv-01", "type": "line", "facts": ["F08"], "silent": true,
-          "text": { "traveller": "A preview from Chapter 2. In February 1792 a soldier named James Hunter painted this palace in colour.", "child": "A look ahead at Chapter 2. In 1792 a soldier named James Hunter painted this palace in colour." } },
-        { "id": "pv-restore", "type": "restore", "restoration": "exterior-colour", "ui": true,
-          "text": { "traveller": "Turn the pillar until it stands the way Hunter painted it. Then set it in place." } },
-        { "id": "pv-02", "type": "line", "tier": "reconstruction", "facts": ["F08", "M2"],
-          "text": { "traveller": "This part is our reconstruction. It is the best reading of the evidence. It is not a photograph.", "child": "This part is our best reading of the evidence. It is not a photograph." },
-          "say": [
-            { "text": "This part is our reconstruction.", "pace": "steady", "pause_after_ms": 600 },
-            { "text": "It is the best reading of the evidence.", "pace": "steady", "pause_after_ms": 600 },
-            { "text": "It is not a photograph.", "pace": "slow", "pause_after_ms": 1100 }
-          ] }
-      ]
+     "id": "p-08",
+     "type": "line",
+     "role": "question",
+     "facts": [
+      "F06"
+     ],
+     "pace": "slow",
+     "pause_after_ms": 2000,
+     "text": {
+      "traveller": "So what was there to envy?",
+      "child": "So what was there to envy?"
+     },
+     "say": "So what was there to envy?"
+    },
+    {
+     "id": "p-09",
+     "type": "line",
+     "facts": [
+      "M1"
+     ],
+     "pace": "steady",
+     "pause_after_ms": 600,
+     "text": {
+      "traveller": "That is the case.",
+      "child": "That is the puzzle."
+     },
+     "say": "That is the case."
+    },
+    {
+     "id": "p-10",
+     "type": "line",
+     "facts": [
+      "M1"
+     ],
+     "pace": "steady",
+     "pause_after_ms": 600,
+     "text": {
+      "traveller": "You are going to put this building back.",
+      "child": "You are going to put this building back."
+     },
+     "say": "You are going to put this building back."
+    },
+    {
+     "id": "p-11",
+     "type": "line",
+     "facts": [
+      "M1"
+     ],
+     "pace": "slow",
+     "pause_after_ms": 2000,
+     "text": {
+      "traveller": "You may only use what you can prove.",
+      "child": "You may only use what you can prove."
+     },
+     "say": "You may only use what you can prove."
+    },
+    {
+     "id": "p-lens",
+     "type": "lens",
+     "ui": true,
+     "text": {
+      "traveller": "Choose how the story is told to you. The facts are the same in all four."
+     }
     }
-  ],
-  "ending": null
+   ]
+  },
+  {
+   "id": "ch1",
+   "n": 1,
+   "title": "Ten Years",
+   "years": "1781 to 1791",
+   "witness": "building",
+   "state": "now",
+   "nodes": [
+    "colonnade",
+    "colonnade-end"
+   ],
+   "start_node": "colonnade",
+   "side_notes": {
+    "builder": {
+     "facts": [
+      "F25"
+     ],
+     "text": "The pillars do not stop at the gallery. They run straight past it to the roof. That is why the hall reads as one tall room and not two floors."
+    }
+   },
+   "beats": [
+    {
+     "id": "c1-01",
+     "type": "line",
+     "facts": [
+      "F01"
+     ],
+     "pace": "steady",
+     "pause_after_ms": 600,
+     "text": {
+      "traveller": "Its inscription gives two dates.",
+      "child": "The writing gives two years."
+     },
+     "say": "Its inscription gives two dates."
+    },
+    {
+     "id": "c1-01-2",
+     "type": "line",
+     "facts": [
+      "F01"
+     ],
+     "pace": "slow",
+     "pause_after_ms": 1100,
+     "text": {
+      "traveller": "1781, in Hyder Ali's time.",
+      "child": "1781, in Hyder Ali's time."
+     },
+     "say": "Seventeen eighty one, in Hyder Ali's time."
+    },
+    {
+     "id": "c1-01-3",
+     "type": "line",
+     "facts": [
+      "F01"
+     ],
+     "pace": "slow",
+     "pause_after_ms": 1100,
+     "text": {
+      "traveller": "1791, in the time of his son, Tipu Sultan.",
+      "child": "1791, in the time of his son, Tipu Sultan."
+     },
+     "say": "Seventeen ninety one, in the time of his son, Tipu Sultan."
+    },
+    {
+     "id": "c1-02",
+     "type": "line",
+     "facts": [
+      "F01"
+     ],
+     "pace": "steady",
+     "pause_after_ms": 600,
+     "text": {
+      "traveller": "The board at the entrance carries the work back to the 1770s.",
+      "child": "The board at the gate gives older years, in the 1770s."
+     },
+     "say": "The board at the entrance carries the work back to the seventeen seventies."
+    },
+    {
+     "id": "c1-03",
+     "type": "line",
+     "facts": [
+      "F01",
+      "F02"
+     ],
+     "pace": "steady",
+     "pause_after_ms": 600,
+     "text": {
+      "traveller": "The site was inside Bangalore Fort.",
+      "child": "The palace stood inside Bangalore Fort."
+     },
+     "say": "The site was inside Bangalore Fort."
+    },
+    {
+     "id": "c1-04",
+     "type": "line",
+     "facts": [
+      "F03"
+     ],
+     "pace": "steady",
+     "pause_after_ms": 600,
+     "text": {
+      "traveller": "The temple next door was already there.",
+      "child": "The temple next door was already there."
+     },
+     "say": "The temple next door was already there."
+    },
+    {
+     "id": "c1-04-2",
+     "type": "line",
+     "facts": [
+      "F03"
+     ],
+     "pace": "steady",
+     "pause_after_ms": 1100,
+     "text": {
+      "traveller": "An earlier king of Mysore, Chikka Devaraja Wadiyar, had it built.",
+      "child": "An older king of Mysore had it built."
+     },
+     "say": "An earlier king of Mysore, Chikka Devaraja Wadiyar, had it built."
+    },
+    {
+     "id": "c1-q",
+     "type": "line",
+     "role": "question",
+     "facts": [
+      "F04"
+     ],
+     "pace": "slow",
+     "pause_after_ms": 2000,
+     "text": {
+      "traveller": "What is this palace made of?",
+      "child": "What is this palace made of?"
+     },
+     "say": "What is this palace made of?"
+    },
+    {
+     "id": "c1-05",
+     "type": "line",
+     "facts": [
+      "F04",
+      "F05"
+     ],
+     "text": {
+      "traveller": "Every guidebook says teak. A surveyor who walked through it in 1800 said mud.",
+      "child": "The guidebooks say teak wood. A man who walked through it in 1800 said mud."
+     },
+     "say": [
+      {
+       "text": "Every guidebook says teak.",
+       "pace": "steady",
+       "pause_after_ms": 600
+      },
+      {
+       "text": "A surveyor who walked through it in eighteen hundred said something else.",
+       "pace": "steady",
+       "pause_after_ms": 250
+      },
+      {
+       "text": "He said mud.",
+       "pace": "slow",
+       "pause_after_ms": 1100
+      }
+     ]
+    },
+    {
+     "id": "c1-e1",
+     "type": "evidence",
+     "evidence": "e-wood",
+     "facts": [
+      "F04"
+     ],
+     "pace": "steady",
+     "pause_after_ms": 600,
+     "at": {
+      "node": "colonnade-end",
+      "target": [
+       -2.0,
+       0.2,
+       3.4
+      ]
+     },
+     "text": {
+      "traveller": "The pillars, arches, beams and ceilings: wood.",
+      "child": "The pillars, arches, beams and ceilings are wood."
+     },
+     "say": "The pillars, arches, beams and ceilings. Wood."
+    },
+    {
+     "id": "c1-e2",
+     "type": "evidence",
+     "evidence": "e-stone",
+     "facts": [
+      "F04"
+     ],
+     "pace": "steady",
+     "pause_after_ms": 600,
+     "at": {
+      "node": "colonnade",
+      "target": [
+       1.9,
+       0.0,
+       0.3
+      ]
+     },
+     "text": {
+      "traveller": "The pillar bases and the platform: stone.",
+      "child": "The feet of the pillars are stone. So is the platform."
+     },
+     "say": "The pillar bases and the platform. Stone."
+    },
+    {
+     "id": "c1-e3",
+     "type": "evidence",
+     "evidence": "e-mud",
+     "facts": [
+      "F04"
+     ],
+     "pace": "steady",
+     "pause_after_ms": 600,
+     "at": {
+      "node": "colonnade-end",
+      "target": [
+       9.0,
+       3.2,
+       1.8
+      ]
+     },
+     "text": {
+      "traveller": "The walls: mud.",
+      "child": "The walls are mud."
+     },
+     "say": "The walls. Mud."
+    },
+    {
+     "id": "c1-e4",
+     "type": "evidence",
+     "evidence": "e-buchanan",
+     "facts": [
+      "F05"
+     ],
+     "text": {
+      "traveller": "Francis Buchanan, 1800: the palace is \"composed of mud\".",
+      "child": "Francis Buchanan wrote in 1800 that the palace is \"composed of mud\"."
+     },
+     "say": [
+      {
+       "text": "Francis Buchanan, eighteen hundred. He wrote that the palace is this.",
+       "pace": "steady",
+       "pause_after_ms": 600
+      },
+      {
+       "text": "Composed of mud.",
+       "pace": "slow",
+       "pause_after_ms": 600
+      }
+     ]
+    },
+    {
+     "id": "c1-e5",
+     "type": "evidence",
+     "evidence": "e-inscription",
+     "facts": [
+      "F06"
+     ],
+     "text": {
+      "traveller": "The inscription, on a stone set into the wall. It opens with the laying of the foundation.",
+      "child": "The writing is on a stone in the wall. It starts with the first stone being laid."
+     },
+     "say": [
+      {
+       "text": "The inscription, on a stone set into the wall.",
+       "pace": "steady",
+       "pause_after_ms": 600
+      },
+      {
+       "text": "It opens with the laying of the foundation.",
+       "pace": "steady",
+       "pause_after_ms": 600
+      },
+      {
+       "text": "Its two dates are hidden in two phrases.",
+       "pace": "steady",
+       "pause_after_ms": 250
+      },
+      {
+       "text": "The first is worked out in a number system Tipu Sultan devised himself.",
+       "pace": "steady",
+       "pause_after_ms": 1100
+      }
+     ]
+    },
+    {
+     "id": "c1-choice",
+     "type": "choice",
+     "facts": [
+      "F04",
+      "F05"
+     ],
+     "pace": "slow",
+     "pause_after_ms": 1800,
+     "text": {
+      "traveller": "Who is right?",
+      "child": "Who is right?"
+     },
+     "say": "Who is right?",
+     "options": [
+      {
+       "id": "A",
+       "accepted": false,
+       "text": {
+        "traveller": "Teak. Buchanan was careless.",
+        "child": "Teak. The man in 1800 got it wrong."
+       },
+       "record": "You first trusted the guidebooks over the surveyor.",
+       "after": [
+        {
+         "id": "c1-A-1",
+         "facts": [
+          "F04",
+          "F05"
+         ],
+         "pace": "steady",
+         "pause_after_ms": 600,
+         "text": {
+          "traveller": "Not careless. The outer walls are mud. He was right about that.",
+          "child": "He did not get it wrong. The outer walls are mud."
+         },
+         "say": "Not careless. The outer walls are mud. He was right about that."
+        }
+       ]
+      },
+      {
+       "id": "B",
+       "accepted": false,
+       "text": {
+        "traveller": "Mud. The teak is later repair.",
+        "child": "Mud. The teak was added later."
+       },
+       "record": "You first trusted the surveyor over the building.",
+       "after": [
+        {
+         "id": "c1-B-1",
+         "facts": [
+          "F24"
+         ],
+         "pace": "steady",
+         "pause_after_ms": 600,
+         "text": {
+          "traveller": "Not repair. A view engraved in 1794 already shows these wooden pillars.",
+          "child": "It was not added later. A picture from 1794 shows these wooden pillars."
+         },
+         "say": "Not repair. A view engraved in seventeen ninety four already shows these wooden pillars."
+        }
+       ]
+      },
+      {
+       "id": "C",
+       "accepted": true,
+       "text": {
+        "traveller": "Both.",
+        "child": "Both."
+       },
+       "record": "You said both witnesses were right.",
+       "after": [
+        {
+         "id": "c1-C-1",
+         "facts": [
+          "F04"
+         ],
+         "text": {
+          "traveller": "Stone below. Mud in the walls. Wood for everything that holds the building up and everything you look at.",
+          "child": "Stone at the bottom. Mud in the walls. Wood holds the building up. Wood is what you see."
+         },
+         "say": [
+          {
+           "text": "Stone below.",
+           "pace": "brisk",
+           "pause_after_ms": 200
+          },
+          {
+           "text": "Mud in the walls.",
+           "pace": "brisk",
+           "pause_after_ms": 200
+          },
+          {
+           "text": "Wood for everything that holds the building up, and everything you look at.",
+           "pace": "steady",
+           "pause_after_ms": 1100
+          }
+         ]
+        },
+        {
+         "id": "c1-C-2",
+         "role": "turn",
+         "facts": [
+          "F04",
+          "F05"
+         ],
+         "text": {
+          "traveller": "The mud is in the walls. You are looking at pillars.",
+          "child": "The mud is in the walls. You are looking at pillars."
+         },
+         "say": [
+          {
+           "text": "The mud is in the walls.",
+           "pace": "slow",
+           "pause_after_ms": 250
+          },
+          {
+           "text": "You are looking at pillars.",
+           "pace": "slow",
+           "pause_after_ms": 1100
+          }
+         ]
+        },
+        {
+         "id": "c1-C-3",
+         "facts": [
+          "F04",
+          "F05"
+         ],
+         "pace": "steady",
+         "pause_after_ms": 600,
+         "text": {
+          "traveller": "Two honest witnesses can describe two different buildings.",
+          "child": "Two honest people can describe the same place differently."
+         },
+         "say": "Two honest witnesses can describe two different buildings."
+        },
+        {
+         "id": "c1-C-3-2",
+         "facts": [
+          "F04",
+          "F05"
+         ],
+         "pace": "slow",
+         "pause_after_ms": 1100,
+         "text": {
+          "traveller": "Keep that in mind. You will need it.",
+          "child": "Keep that in mind. You will need it."
+         },
+         "say": "Keep that in mind. You will need it."
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "c1-answer",
+     "type": "answer",
+     "facts": [
+      "F01",
+      "F04"
+     ],
+     "pace": "steady",
+     "pause_after_ms": 600,
+     "text": {
+      "traveller": "Stone, mud and teak. Ten years in the making, by its own account.",
+      "child": "Stone, mud and teak. Ten years to build, by its own writing."
+     },
+     "say": "Stone, mud and teak. Ten years in the making, by its own account."
+    },
+    {
+     "id": "c1-answer-2",
+     "type": "answer",
+     "facts": [
+      "F01",
+      "F03"
+     ],
+     "pace": "steady",
+     "pause_after_ms": 600,
+     "text": {
+      "traveller": "Inside a fort, beside an older temple.",
+      "child": "Inside a fort, beside an older temple."
+     },
+     "say": "Inside a fort, beside an older temple."
+    },
+    {
+     "id": "c1-know",
+     "type": "know",
+     "facts": [
+      "F01",
+      "F06"
+     ],
+     "pace": "slow",
+     "pause_after_ms": 1100,
+     "text": {
+      "traveller": "Its inscription dates this palace 1781 to 1791, and calls it the Envy of Heaven.",
+      "child": "Its own writing dates this palace 1781 to 1791. It calls it the Envy of Heaven."
+     },
+     "say": "Its inscription dates this palace seventeen eighty one to seventeen ninety one, and calls it the Envy of Heaven."
+    },
+    {
+     "id": "c1-hook",
+     "type": "hook",
+     "facts": [
+      "F01",
+      "F07"
+     ],
+     "text": {
+      "traveller": "It was finished in 1791. In 1791 something else happened to the fort around it.",
+      "child": "It was finished in 1791. That year, something else happened to the fort around it."
+     },
+     "say": [
+      {
+       "text": "It was finished in seventeen ninety one.",
+       "pace": "steady",
+       "pause_after_ms": 600
+      },
+      {
+       "text": "In seventeen ninety one, something else happened to the fort around it.",
+       "pace": "slow",
+       "pause_after_ms": 1800
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "ch2-preview",
+   "n": 2,
+   "preview": true,
+   "title": "Preview: The Outside",
+   "years": "February 1792",
+   "witness": "hunter",
+   "state": "now",
+   "nodes": [
+    "forecourt"
+   ],
+   "start_node": "forecourt",
+   "beats": [
+    {
+     "id": "pv-01",
+     "type": "line",
+     "facts": [
+      "F08"
+     ],
+     "silent": true,
+     "text": {
+      "traveller": "A preview from Chapter 2.",
+      "child": "A look ahead at Chapter 2."
+     }
+    },
+    {
+     "id": "pv-01-2",
+     "type": "line",
+     "facts": [
+      "F08"
+     ],
+     "silent": true,
+     "text": {
+      "traveller": "In February 1792 a soldier named James Hunter painted this palace in colour.",
+      "child": "In 1792 a soldier named James Hunter painted this palace in colour."
+     }
+    },
+    {
+     "id": "pv-restore",
+     "type": "restore",
+     "restoration": "exterior-colour",
+     "ui": true,
+     "text": {
+      "traveller": "Turn the pillar until it matches the outline. Then set it in place."
+     }
+    },
+    {
+     "id": "pv-02",
+     "type": "line",
+     "tier": "reconstruction",
+     "facts": [
+      "F08",
+      "M2"
+     ],
+     "pace": "steady",
+     "pause_after_ms": 600,
+     "text": {
+      "traveller": "This part is our reconstruction.",
+      "child": "This part is our reconstruction."
+     },
+     "say": "This part is our reconstruction."
+    },
+    {
+     "id": "pv-02-2",
+     "type": "line",
+     "tier": "reconstruction",
+     "facts": [
+      "F08",
+      "M2"
+     ],
+     "pace": "steady",
+     "pause_after_ms": 600,
+     "text": {
+      "traveller": "It is the best reading of the evidence.",
+      "child": "It is the best reading of the evidence."
+     },
+     "say": "It is the best reading of the evidence."
+    },
+    {
+     "id": "pv-02-3",
+     "type": "line",
+     "tier": "reconstruction",
+     "facts": [
+      "F08",
+      "M2"
+     ],
+     "pace": "slow",
+     "pause_after_ms": 1100,
+     "text": {
+      "traveller": "It is not a photograph.",
+      "child": "It is not a photograph."
+     },
+     "say": "It is not a photograph."
+    }
+   ]
+  }
+ ],
+ "ending": null
 }

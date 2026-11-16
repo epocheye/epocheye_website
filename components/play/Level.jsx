@@ -10,7 +10,7 @@ import { useEffect, useReducer, useState } from "react";
 import {
 	currentStep, initialState, reduce, restore as restoreSave, restoredBefore, saveKey, serialise, spokenFor, textFor,
 } from "@/lib/play/story/engine";
-import { createNarrator, discoverVoices } from "@/lib/play/audio";
+import { clipUsable, createNarrator, discoverVoices } from "@/lib/play/audio";
 import { directionFrom, nodeById } from "@/lib/play/pack";
 import { Icon, Pill } from "@/components/play/ui";
 import StoryPanel from "@/components/play/StoryPanel";
@@ -27,24 +27,33 @@ function startView(site, chapter, n) {
 function init({ slug, site, chapters, startChapter }) {
 	let game = initialState();
 	let screen = "play";
+	let held = null;
 	try {
 		const saved = restoreSave(window.localStorage.getItem(saveKey(slug)), chapters);
-		if (saved) {
-			game = saved;
-			if (saved.complete) screen = "done";
-		}
+		if (saved) game = saved;
 	} catch {
 		// Private mode or storage disabled: play without a save.
 	}
 	if (startChapter != null && chapters[startChapter]) {
+		// A ?ch link: start that chapter, with what came before it restored.
 		game = reduce(game, { type: "jump", chapter: startChapter }, chapters);
-		screen = "play";
+		game = { ...game, restored: restoredBefore(chapters, game.chapter) };
+		held = game;
+	} else if (game.complete) {
+		// Finished: the end screen, with everything the level restored still in place.
+		screen = "done";
+		game = { ...game, restored: restoredBefore(chapters, chapters.length) };
+	} else {
+		// The stop before a preview is kept across a reload: the same rule as in the reducer below.
+		const before = chapters[game.chapter - 1];
+		if (chapters[game.chapter].preview && before && !before.preview && game.chaptersDone.includes(before.id)) screen = "done";
+		game = { ...game, restored: restoredBefore(chapters, game.chapter) };
 	}
-	game = { ...game, restored: restoredBefore(chapters, game.chapter) };
 	return {
 		ctx: { site, chapters },
 		game,
 		screen,
+		held, // the state a ?ch link opened with: it is not saved until the player does something
 		view: startView(site, chapters[game.chapter], 0),
 		open: null,      // evidence beat whose card is open in a Look step
 		tried: {},       // choice beat id -> option ids already tried
@@ -141,10 +150,13 @@ function unitKey(s) {
 	if (step.kind === "choice") {
 		return g.picked ? `${base}|after|${g.picked}|${g.afterIndex}` : `${base}|q|${(s.tried[step.beat.id] || []).length}`;
 	}
+	// Once the piece is set in place the picture changes, and nothing is said over that (brief 8.11
+	// rule 1). The key goes empty, which also stops a line that was still being spoken.
+	if (step.kind === "restore" && g.restored.includes(step.beat.restoration)) return "";
 	return `${base}|beat`;
 }
 
-function segmentsFor(chapters, key) {
+function segmentsFor(chapters, key, lens, defaultLens) {
 	if (!key) return [];
 	const [c, st, kind, a, b] = key.split("|");
 	const step = chapters[Number(c)]?.steps[Number(st)];
@@ -155,9 +167,16 @@ function segmentsFor(chapters, key) {
 	else if (kind === "q" && Number(a) > 0) return []; // back at the options: the question is not asked twice
 	if (!beat) return [];
 	const spoken = spokenFor(beat);
+	if (lens !== defaultLens) {
+		// Only the default telling is recorded (brief 5.8). Another lens shows other words, so the
+		// voice stays out of it: the words on screen get reading time, then the pause the line was given.
+		if (beat.ui || !beat.text) return [];
+		const pause = spoken.length ? spoken[spoken.length - 1].pause_after_ms ?? 0 : 0;
+		return [{ text: textFor(beat.text, lens, defaultLens), pause_after_ms: pause, clip: null }];
+	}
 	if (spoken.length) return spoken;
 	// Unspoken story text still gets a reading-speed beat before "continue" stands out.
-	if (!beat.ui && beat.text) return [{ text: textFor(beat.text, "traveller"), pause_after_ms: 0, clip: null }];
+	if (!beat.ui && beat.text) return [{ text: textFor(beat.text, defaultLens), pause_after_ms: 0, clip: null }];
 	return [];
 }
 
@@ -183,6 +202,17 @@ function upcomingClips(chapters, key) {
 	return [...new Set([...ids, ...ofStep(next)].filter(Boolean))].slice(0, 6);
 }
 
+// Every clip a chapter can speak, the lines after a choice included.
+function chapterClips(chapter) {
+	const ids = [];
+	const add = (beat) => {
+		for (const sg of spokenFor(beat)) ids.push(sg.clip);
+		for (const o of beat?.options || []) for (const l of o.after || []) add(l);
+	};
+	for (const st of chapter?.steps || []) for (const beat of st.beats || [st.beat]) add(beat);
+	return ids;
+}
+
 function chapterLine(c) {
 	if (!c) return "";
 	if (c.preview) return c.title;
@@ -193,7 +223,7 @@ export default function Level({ slug, site, chapters, urls, startChapter = null,
 	const [s, dispatch] = useReducer(levelReducer, { slug, site, chapters, startChapter }, init);
 	const [narrator] = useState(() => createNarrator(urls));
 	const [soundOn, setSoundOn] = useState(false);
-	const [voice, setVoice] = useState({ checked: false, id: null });
+	const [voice, setVoice] = useState({ checked: false, id: null, clips: null });
 	const [readyKey, setReadyKey] = useState("");
 	const [sheet, setSheet] = useState(null); // null | "chapters" | "credits" | "note" | "evidence" | "debug" | { beat }
 
@@ -201,29 +231,34 @@ export default function Level({ slug, site, chapters, urls, startChapter = null,
 	const g = s.game;
 	const chapter = chapters[g.chapter];
 	const step = currentStep(g, chapters);
-	const lens = g.lens || story.default_lens || "traveller";
+	const defaultLens = story.default_lens || "traveller";
+	const lens = g.lens || defaultLens;
 	const node = nodeById(site, s.view.node) || site.nodes[0];
 	const key = unitKey(s);
-	// A line is "ready" once its telling has finished under the current sound setting.
-	const tellKey = `${key}#${soundOn ? voice.id || "silent" : "off"}`;
+	// A line is "ready" once its telling has finished under the current sound setting and lens.
+	const tellKey = `${key}#${soundOn ? voice.id || "silent" : "off"}#${lens}`;
 	const ready = key === "" || readyKey === tellKey;
 
 	// Save after every chapter (and whenever the story state changes: resume starts the chapter again).
+	// A level opened from a ?ch link is not saved until the player does something in it, so
+	// following a shared link does not move their own place in the story.
+	const held = s.held;
 	useEffect(() => {
+		if (g === held) return;
 		try {
 			window.localStorage.setItem(saveKey(slug), serialise(g));
 		} catch {
 			// No storage: nothing to do.
 		}
-	}, [slug, g]);
+	}, [slug, g, held]);
 
 	// Tell the current line: its clips with the directed pauses, or the same pauses on reading time.
 	useEffect(() => {
 		if (!key) return undefined;
-		const cancel = narrator.play(segmentsFor(chapters, key), { onDone: () => setReadyKey(tellKey) });
-		narrator.preload(upcomingClips(chapters, key));
+		const cancel = narrator.play(segmentsFor(chapters, key, lens, defaultLens), { onDone: () => setReadyKey(tellKey) });
+		narrator.preload(lens === defaultLens ? upcomingClips(chapters, key) : []);
 		return cancel;
-	}, [narrator, chapters, key, tellKey]);
+	}, [narrator, chapters, key, tellKey, lens, defaultLens]);
 
 	useEffect(() => () => narrator.dispose(), [narrator]);
 
@@ -260,7 +295,7 @@ export default function Level({ slug, site, chapters, urls, startChapter = null,
 				discoverVoices(urls).then((found) => {
 					const v = found.voices.find((x) => x.id === found.default && x.manifest) || null;
 					if (v) narrator.setVoice(v.id, v.clips, true);
-					setVoice({ checked: true, id: v ? v.id : null });
+					setVoice({ checked: true, id: v ? v.id : null, clips: v ? v.clips : null });
 				});
 			}
 		}
@@ -297,13 +332,32 @@ export default function Level({ slug, site, chapters, urls, startChapter = null,
 		else dispatch({ type: "aim", look: h.dir });
 	};
 
+	// Why the player may be hearing nothing although sound is on. One plain line, or none.
+	let soundNote = "";
+	if (soundOn && voice.checked && s.screen === "play") {
+		if (!voice.id) soundNote = "There is no narration in this pack yet. The pauses still run.";
+		else if (lens !== defaultLens) {
+			const name = (story.lenses || []).find((l) => l.id === defaultLens)?.name;
+			soundNote = name ? `Narration is in the ${name} telling only. The pauses still run.` : "This telling has no narration. The pauses still run.";
+		} else {
+			const ids = chapterClips(chapter);
+			const silent = ids.filter((id) => !clipUsable(voice.clips?.get(id))).length;
+			if (ids.length && silent === ids.length) soundNote = "This part of the story has no narration yet. The pauses still run.";
+			else if (silent) soundNote = "Some lines in this part have no narration yet.";
+		}
+	}
+
 	const closeSheet = () => {
 		if (sheet === "note") dispatch({ type: "note" });
 		setSheet(null);
 	};
 
+	// An open evidence card and the Restore step fill most of a short screen. The look controls
+	// are not needed for either, so on short screens they step aside (see play.css).
+	const tallPanel = s.screen === "play" && ((step?.kind === "look" && !!s.open) || (step?.kind === "restore" && !g.restored.includes(step.beat.restoration)));
+
 	return (
-		<div className="play-level">
+		<div className={`play-level${tallPanel ? " is-panel-tall" : ""}`}>
 			<PanoViewer
 				site={site.site}
 				urls={urls}
@@ -350,7 +404,7 @@ export default function Level({ slug, site, chapters, urls, startChapter = null,
 					<span className="play-where-node">{(s.screen === "done" ? [node.name] : [chapter?.years, node.name]).filter(Boolean).join(" · ")}</span>
 				</div>
 				<p className="play-note" role="status" aria-live="polite">
-					{soundOn && voice.checked && !voice.id ? "There is no narration in this pack yet. The pauses still run." : ""}
+					{soundNote}
 				</p>
 			</header>
 

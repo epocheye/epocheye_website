@@ -55,12 +55,23 @@ export function Icon({ name, size = 18 }) {
 // A sheet from the bottom on phones, a centred panel on wide screens.
 export function Sheet({ title, onClose, children, wide = false }) {
 	const ref = useRef(null);
-	// Move focus into the sheet once, and hand it back on close.
+	const wrapRef = useRef(null);
+	// While the sheet is open it is the only thing that can be reached: the page behind is inert.
+	// Focus moves into the sheet once, and is handed back on close.
 	useEffect(() => {
 		const before = document.activeElement;
+		const wrap = wrapRef.current;
+		const parent = wrap?.parentElement || null;
+		const behind = parent ? [...parent.children].filter((el) => el !== wrap && !el.inert) : [];
+		for (const el of behind) el.inert = true;
 		ref.current?.focus();
 		return () => {
+			for (const el of behind) el.inert = false;
 			if (before && typeof before.focus === "function" && document.contains(before)) before.focus();
+			// The control that opened the sheet may be gone or switched off by now. Do not leave focus nowhere.
+			if (!document.activeElement || document.activeElement === document.body) {
+				parent?.querySelector("[data-focus-home]")?.focus({ preventScroll: true });
+			}
 		};
 	}, []);
 	useEffect(() => {
@@ -68,13 +79,27 @@ export function Sheet({ title, onClose, children, wide = false }) {
 			if (e.key === "Escape") {
 				e.stopPropagation();
 				onClose();
+				return;
+			}
+			// Tab stays inside the sheet, also where "inert" is not supported.
+			if (e.key !== "Tab" || !ref.current) return;
+			const items = [...ref.current.querySelectorAll('button, a[href], input, select, textarea, [tabindex]:not([tabindex="-1"])')].filter(
+				(el) => !el.disabled && el.offsetParent !== null,
+			);
+			const first = items[0];
+			const last = items[items.length - 1];
+			const at = document.activeElement;
+			if (!first) e.preventDefault();
+			else if (!ref.current.contains(at) || (e.shiftKey && (at === first || at === ref.current)) || (!e.shiftKey && at === last)) {
+				e.preventDefault();
+				(e.shiftKey ? last : first).focus();
 			}
 		};
 		window.addEventListener("keydown", onKey);
 		return () => window.removeEventListener("keydown", onKey);
 	}, [onClose]);
 	return (
-		<div className="play-sheet-wrap" onClick={(e) => e.target === e.currentTarget && onClose()}>
+		<div ref={wrapRef} className="play-sheet-wrap" onClick={(e) => e.target === e.currentTarget && onClose()}>
 			<div ref={ref} className={`play-sheet${wide ? " is-wide" : ""}`} role="dialog" aria-modal="true" aria-label={title} tabIndex={-1}>
 				<div className="play-sheet-head">
 					<h2 className="play-sheet-title">{title}</h2>

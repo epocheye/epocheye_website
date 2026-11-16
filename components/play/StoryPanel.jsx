@@ -5,18 +5,23 @@
 
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { currentStep, textFor } from "@/lib/play/story/engine";
 import { directionFrom, nodeById } from "@/lib/play/pack";
 import { Icon, Pill, TierChip } from "@/components/play/ui";
 
 const PieceCanvas = dynamic(() => import("./engine/PieceCanvas"), { ssr: false });
 
+// Weakest first. A line that rests on several facts is only as sure as the least sure of them.
+const TIER_ORDER = ["unknown", "legend", "reconstruction", "reading", "record"];
+
 export function tierOf(story, beat) {
 	if (!beat) return null;
 	if (beat.tier) return beat.tier;
-	const first = beat.facts?.[0];
-	return (story.facts || []).find((f) => f.id === first)?.tier || null;
+	const tiers = factsOf(story, beat).map((f) => f.tier).filter(Boolean);
+	if (tiers.length === 0) return null;
+	const rank = (t) => (TIER_ORDER.includes(t) ? TIER_ORDER.indexOf(t) : TIER_ORDER.length);
+	return tiers.reduce((a, b) => (rank(b) < rank(a) ? b : a));
 }
 
 export function factsOf(story, beat) {
@@ -41,11 +46,9 @@ function Line({ story, beat, lens, role, label, onSources, onAdvance, children }
 				) : null}
 				{children}
 			</div>
-			<div aria-live="polite" aria-atomic="true">
-				<p key={beat.id} className={`play-line is-${kind}`} onClick={onAdvance}>
-					{text}
-				</p>
-			</div>
+			<p key={beat.id} className={`play-line is-${kind}`} onClick={onAdvance}>
+				{text}
+			</p>
 		</div>
 	);
 }
@@ -107,36 +110,27 @@ export default function StoryPanel({ slug, site, urls, chapters, state: s, lens,
 	const chapter = chapters[g.chapter];
 	const step = currentStep(g, chapters);
 	const node = nodeById(site, s.view.node);
+	const done = s.screen === "done";
+	const home = useRef(null);
+	const started = useRef(false);
 
-	if (s.screen === "done") {
-		const required = chapters.filter((c) => !c.preview);
-		const allDone = required.every((c) => g.chaptersDone.includes(c.id));
-		const previews = chapters.filter((c) => c.preview);
-		return (
-			<section className="play-panel is-done" aria-label="Story">
-				<div className="play-panel-in">
-				<div className="play-card">
-					<span className="play-label">{story.title}</span>
-					<p className="play-card-line">{allDone ? "You have reached the end of what is ready to play." : "That is the end of this part."}</p>
-					<div className="play-actions is-left">
-						{previews.map((p) => (
-							<Pill key={p.id} strong onClick={() => dispatch({ type: "jump", chapter: p.index })}>
-								{p.title}
-							</Pill>
-						))}
-						<Pill onClick={() => onSheet("chapters")}>Chapters</Pill>
-						<Pill as={Link} href="/play">
-							All sites
-						</Pill>
-					</div>
-				</div>
-				</div>
-			</section>
-		);
-	}
-	if (!step || !chapter) return null;
+	// What is on the panel now, as a key: it changes when the panel shows something new.
+	const showing = done ? "done" : `${g.chapter}|${g.step}|${s.open || ""}|${g.picked || ""}|${g.afterIndex}|${s.revealing || ""}|${g.restored.length}`;
 
-	const note = chapter.side_notes?.[lens];
+	// The control just used is often removed with the step it belonged to (an option, "Set it in
+	// place"). Focus then falls to the page. Bring it back to the panel so the next Tab starts here.
+	useEffect(() => {
+		if (!started.current) {
+			started.current = true; // not on arrival: the page keeps its own first focus
+			return;
+		}
+		const at = document.activeElement;
+		if (!at || at === document.body) home.current?.focus({ preventScroll: true });
+	}, [showing]);
+
+	if (!done && (!step || !chapter)) return null;
+
+	const note = done ? null : chapter.side_notes?.[lens];
 	const noteButton =
 		note && !s.noteSeen ? (
 			<button type="button" className="play-link-btn" onClick={() => onSheet("note")}>
@@ -145,8 +139,35 @@ export default function StoryPanel({ slug, site, urls, chapters, state: s, lens,
 		) : null;
 
 	let body = null;
+	// The words a screen reader is told when the panel changes. They go into one live region
+	// that stays mounted for the whole level (see the return), so every change is announced.
+	let announce = "";
+	const lineText = (beat) => textFor(beat?.text, lens, story.default_lens);
 
-	if (step.kind === "lens") {
+	if (done) {
+		const required = chapters.filter((c) => !c.preview);
+		const allDone = required.every((c) => g.chaptersDone.includes(c.id));
+		const previews = chapters.filter((c) => c.preview);
+		announce = allDone ? "You have reached the end of what is ready to play." : "That is the end of this part.";
+		body = (
+			<div className="play-card">
+				<span className="play-label">{story.title}</span>
+				<p className="play-card-line">{announce}</p>
+				<div className="play-actions is-left">
+					{previews.map((p) => (
+						<Pill key={p.id} strong onClick={() => dispatch({ type: "jump", chapter: p.index })}>
+							{p.title}
+						</Pill>
+					))}
+					<Pill onClick={() => onSheet("chapters")}>Chapters</Pill>
+					<Pill as={Link} href="/play">
+						All sites
+					</Pill>
+				</div>
+			</div>
+		);
+	} else if (step.kind === "lens") {
+		announce = lineText(step.beat);
 		body = (
 			<>
 				<p className="play-ui-text">{textFor(step.beat.text, lens, story.default_lens)}</p>
@@ -171,6 +192,7 @@ export default function StoryPanel({ slug, site, urls, chapters, state: s, lens,
 		const open = s.open ? step.beats.find((b) => b.id === s.open) : null;
 		const item = (b) => (story.evidence || []).find((e) => e.id === b.evidence);
 		if (open) {
+			announce = [item(open)?.title, lineText(open)].filter(Boolean).join(". ");
 			body = (
 				<>
 					<Line story={story} beat={open} lens={lens} label="Evidence" onSources={onSources}>
@@ -184,20 +206,21 @@ export default function StoryPanel({ slug, site, urls, chapters, state: s, lens,
 			const loose = step.beats.filter((b) => !b.at);
 			const elsewhere = [...new Set(step.beats.filter((b) => b.at && b.at.node !== node?.id && !g.found.includes(b.id)).map((b) => b.at.node))];
 			const here = step.beats.filter((b) => b.at && b.at.node === node?.id && !g.found.includes(b.id)).length;
+			const hint =
+				found === total
+					? "You have found all of it."
+					: here > 0
+						? "Look around. Tap each marker in the view."
+						: "Nothing more to find from here. Open a card or move on.";
+			announce = `Find the evidence. ${found} of ${total}. ${hint}`;
 			body = (
 				<>
 					<div className="play-meta">
 						<span className="play-label">Find the evidence</span>
-						<span className="play-count" role="status" aria-live="polite">{`${found} of ${total}`}</span>
+						<span className="play-count">{`${found} of ${total}`}</span>
 						{noteButton}
 					</div>
-					<p className="play-ui-text">
-						{found === total
-							? "You have found all of it."
-							: here > 0
-								? "Look around. Tap each marker in the view."
-								: "Nothing more to find from here. Open a card or move on."}
-					</p>
+					<p className="play-ui-text">{hint}</p>
 					{loose.length ? (
 						<div className="play-tray" role="group" aria-label="Evidence cards">
 							{loose.map((b) => {
@@ -234,6 +257,7 @@ export default function StoryPanel({ slug, site, urls, chapters, state: s, lens,
 		const beat = step.beat;
 		const tried = s.tried[beat.id] || [];
 		if (!g.picked) {
+			announce = lineText(beat);
 			body = (
 				<>
 					<Line story={story} beat={beat} lens={lens} role="question" label="Decide" onSources={onSources}>
@@ -258,6 +282,7 @@ export default function StoryPanel({ slug, site, urls, chapters, state: s, lens,
 			const after = opt?.after || [];
 			const line = after[g.afterIndex];
 			const last = g.afterIndex + 1 >= after.length;
+			announce = lineText(line);
 			body = (
 				<>
 					<p className="play-picked">{`You picked: ${textFor(opt?.text, lens, story.default_lens)}`}</p>
@@ -269,14 +294,20 @@ export default function StoryPanel({ slug, site, urls, chapters, state: s, lens,
 	} else if (step.kind === "restore") {
 		const r = (site.restorations || []).find((x) => x.id === step.beat.restoration);
 		const id = step.beat.restoration;
-		const done = g.restored.includes(id);
+		const placed = g.restored.includes(id);
 		const place = () => dispatch({ type: "restore", id, look: r?.target && node ? directionFrom(node, r.target) : null });
-		if (!done) {
+		if (!placed) {
+			announce = [r?.name, lineText(step.beat)].filter(Boolean).join(". ");
 			body = (
 				<>
 					<div className="play-meta">
 						<span className="play-label">Restore</span>
 						<TierChip tier={r?.tier} tiers={story.tiers} />
+						{step.beat.facts?.length ? (
+							<button type="button" className="play-link-btn" onClick={() => onSources(step.beat)}>
+								Source
+							</button>
+						) : null}
 					</div>
 					{r ? <h2 className="play-restore-name">{r.name}</h2> : null}
 					<p className="play-ui-text">{textFor(step.beat.text, lens, story.default_lens)}</p>
@@ -285,8 +316,9 @@ export default function StoryPanel({ slug, site, urls, chapters, state: s, lens,
 			);
 		} else if (s.revealing === id) {
 			// The picture is changing. Nothing is said and nothing covers the view.
-			body = <p className="play-sr" role="status">The view is changing.</p>;
+			announce = "The view is changing.";
 		} else {
+			announce = r?.name ? `Restored. ${r.name}` : "Restored.";
 			body = (
 				<>
 					<div className="play-meta">
@@ -303,15 +335,14 @@ export default function StoryPanel({ slug, site, urls, chapters, state: s, lens,
 		}
 	} else if (step.kind === "know") {
 		const text = textFor(step.beat.text, lens, story.default_lens);
+		announce = `You now know. ${text}`;
 		body = (
 			<div className="play-card">
 				<div className="play-meta">
 					<span className="play-label">You now know</span>
 					<TierChip tier={tierOf(story, step.beat)} tiers={story.tiers} />
 				</div>
-				<div aria-live="polite" aria-atomic="true">
-					<p className="play-card-line">{text}</p>
-				</div>
+				<p className="play-card-line">{text}</p>
 				<ul className="play-card-sources" aria-label="Sources">
 					{factsOf(story, step.beat).map((f) => (
 						<li key={f.id}>{f.source}</li>
@@ -328,6 +359,7 @@ export default function StoryPanel({ slug, site, urls, chapters, state: s, lens,
 	} else {
 		// line, answer, hook, and any kind this build does not know: show the text and move on.
 		const role = step.kind === "answer" ? "answer" : step.kind === "hook" ? "hook" : step.beat.role;
+		announce = lineText(step.beat);
 		body = (
 			<>
 				<Line story={story} beat={step.beat} lens={lens} role={role} onSources={onSources} onAdvance={advance}>
@@ -339,8 +371,13 @@ export default function StoryPanel({ slug, site, urls, chapters, state: s, lens,
 	}
 
 	return (
-		<section className={`play-panel is-${step.kind}${s.revealing ? " is-clear" : ""}`} aria-label="Story">
-			<div className="play-panel-in">{body}</div>
+		<section className={`play-panel is-${done ? "done" : step.kind}${s.revealing ? " is-clear" : ""}`} aria-label="Story">
+			<div className="play-sr" aria-live="polite" aria-atomic="true">
+				{announce}
+			</div>
+			<div ref={home} className="play-panel-in" tabIndex={-1} data-focus-home="">
+				{body}
+			</div>
 		</section>
 	);
 }

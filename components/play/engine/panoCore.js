@@ -171,6 +171,8 @@ export class PanoCore {
 		// Node and textures
 		this.gen = 0;
 		this.node = null;
+		this.pending = null; // { id, state } of the node being loaded, until it shows or fails
+		this.loadError = false;
 		this.primary = null;
 		this.secondary = null;
 		this.maskSlots = [];
@@ -385,6 +387,7 @@ export class PanoCore {
 			}
 		}
 		if (this.disposed) return "unsupported";
+		this.disableGyro(); // never two listeners
 		const zee = new THREE.Vector3(0, 0, 1);
 		const euler = new THREE.Euler();
 		const q0 = new THREE.Quaternion();
@@ -413,7 +416,7 @@ export class PanoCore {
 		// No sensor (most desktops): no event ever arrives.
 		await new Promise((r) => setTimeout(r, 1200));
 		if (!state.on) {
-			this.disableGyro();
+			if (this.gyro === state) this.disableGyro();
 			return "unsupported";
 		}
 		return "on";
@@ -437,7 +440,8 @@ export class PanoCore {
 		const my = ++this.gen;
 		const states = node.states?.length ? node.states : ["now"];
 		const primary = states.includes(state) ? state : states[0];
-		this.onStatus({ loading: true, node: node.id });
+		this.pending = { id: node.id, state: primary };
+		this.onStatus({ loading: true, node: node.id, shown: this.node?.id || null });
 		const secondary = primary === "now" && states.includes("then") ? "then" : null;
 		const slots = (node.masks || []).slice(0, MAX_MASKS);
 		// If a restoration already shows here, bring THEN and its masks in with the first picture,
@@ -453,7 +457,13 @@ export class PanoCore {
 				shows ? Promise.all(slots.map((id) => loadImage(this.urls.mask(node.id, id)).catch(() => null))) : [],
 			]);
 		} catch {
-			if (my === this.gen && !this.disposed) this.onStatus({ loading: false, node: node.id, error: "load" });
+			if (my === this.gen && !this.disposed) {
+				// The old picture stays up. Say so, and carry on sharpening it.
+				this.pending = null;
+				this.loadError = true;
+				this.onStatus({ loading: false, node: node.id, shown: this.node?.id || null, error: "load" });
+				this.kick();
+			}
 			return false;
 		}
 		if (my !== this.gen || this.disposed) {
@@ -462,6 +472,8 @@ export class PanoCore {
 			return false;
 		}
 		this.disposeNodeTextures();
+		this.pending = null;
+		this.loadError = false;
 		this.node = node;
 		this.primary = primary;
 		this.secondary = secondary;
@@ -487,15 +499,46 @@ export class PanoCore {
 		const first = !this.shownOnce;
 		this.shownOnce = true;
 		this.invalidate();
-		this.onStatus({ loading: false, node: node.id, size: this.sizes[0], first });
+		this.onStatus({ loading: false, node: node.id, shown: node.id, size: this.sizes[0], first });
 		this.kick();
 		return true;
 	}
 
+	// Stay on the node that is showing: drop a load that is still in flight, and any error one left.
+	stay() {
+		if (!this.node || (!this.pending && !this.loadError)) return;
+		if (this.pending) {
+			this.gen++;
+			this.pending = null;
+		}
+		this.loadError = false;
+		this.onStatus({ loading: false, node: this.node.id, shown: this.node.id });
+		this.kick();
+	}
+
 	maskFrom(img) {
+		const n = this.site.faces.length;
+		const max = this.renderer.capabilities.maxTextureSize || 4096;
+		let src = img;
+		let faceW = img.naturalWidth / n;
+		if (img.naturalWidth > max) {
+			// The strip is wider than this GPU takes, and a plain shrink would smear each face into
+			// the next. Redraw it face by face, a whole number of pixels to a face.
+			const w = Math.max(1, Math.floor(max / n));
+			const h = Math.max(1, Math.round((img.naturalHeight * w) / faceW));
+			const canvas = document.createElement("canvas");
+			canvas.width = w * n;
+			canvas.height = h;
+			const ctx = canvas.getContext("2d");
+			if (ctx) {
+				for (let i = 0; i < n; i++) ctx.drawImage(img, i * faceW, 0, faceW, img.naturalHeight, i * w, 0, w, h);
+				src = canvas;
+				faceW = w;
+			}
+		}
 		// half a texel of one face, in face units
-		this.shared.uHalf.value = 0.5 / Math.max(1, img.naturalWidth / this.site.faces.length);
-		return maskTexture(img);
+		this.shared.uHalf.value = 0.5 / Math.max(1, faceW);
+		return maskTexture(src);
 	}
 
 	applyTextures() {
@@ -551,9 +594,10 @@ export class PanoCore {
 
 	nextJob() {
 		const node = this.node;
-		if (!node) return null;
+		// While another node is loading, nothing more is fetched for the one on screen.
+		if (!node || this.pending) return null;
 		const my = this.gen;
-		const stale = () => my !== this.gen || this.disposed;
+		const stale = () => my !== this.gen || this.node !== node || this.disposed;
 		const { primary, then, masks } = this.tex;
 		const guarded = (key, fn) => (this.failed.has(key) ? null : async () => {
 			try {
@@ -577,7 +621,7 @@ export class PanoCore {
 			this.tex[slot] = { size, faces };
 			this.applyTextures();
 			old.forEach((t) => t.dispose());
-			this.onStatus({ loading: false, node: node.id, size: this.tex.primary.size });
+			this.onStatus({ loading: false, node: node.id, shown: node.id, size: this.tex.primary.size });
 		});
 		const up = (cur) => this.sizes.find((s) => s > cur && s <= this.targetSize());
 
