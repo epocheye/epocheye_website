@@ -1,0 +1,1419 @@
+{
+  "voice": "kokoro-heart",
+  "checked": "2026-11-16",
+  "stt_models": [
+    "small.en",
+    "base.en"
+  ],
+  "rule": "Lowest speed, in an unbroken run down from the fastest, at which no more than one probe line fewer is heard by both recognisers than at the fastest speed.",
+  "suggested_min_short": 0.9,
+  "suggested_min": 0.7,
+  "by_speed": [
+    {
+      "speed": 0.5,
+      "short_both": 0,
+      "short_total": 8,
+      "long_both": 3,
+      "long_total": 6,
+      "all_primary": 5,
+      "all_total": 14,
+      "long_wpm_median": 94.8
+    },
+    {
+      "speed": 0.6,
+      "short_both": 0,
+      "short_total": 8,
+      "long_both": 4,
+      "long_total": 6,
+      "all_primary": 4,
+      "all_total": 14,
+      "long_wpm_median": 117.2
+    },
+    {
+      "speed": 0.7,
+      "short_both": 2,
+      "short_total": 8,
+      "long_both": 5,
+      "long_total": 6,
+      "all_primary": 8,
+      "all_total": 14,
+      "long_wpm_median": 134.7
+    },
+    {
+      "speed": 0.8,
+      "short_both": 6,
+      "short_total": 8,
+      "long_both": 5,
+      "long_total": 6,
+      "all_primary": 11,
+      "all_total": 14,
+      "long_wpm_median": 152.8
+    },
+    {
+      "speed": 0.9,
+      "short_both": 8,
+      "short_total": 8,
+      "long_both": 5,
+      "long_total": 6,
+      "all_primary": 13,
+      "all_total": 14,
+      "long_wpm_median": 183.9
+    },
+    {
+      "speed": 1.0,
+      "short_both": 8,
+      "short_total": 8,
+      "long_both": 6,
+      "long_total": 6,
+      "all_primary": 14,
+      "all_total": 14,
+      "long_wpm_median": 195.3
+    }
+  ],
+  "probes": [
+    {
+      "id": "p-07",
+      "text": "Look around.",
+      "words": 2,
+      "speed": 0.5,
+      "ms": 1806,
+      "wpm": 66.4,
+      "heard": {
+        "small.en": "They look around.",
+        "base.en": "The look around."
+      },
+      "ok": {
+        "small.en": false,
+        "base.en": false
+      }
+    },
+    {
+      "id": "p-07",
+      "text": "Look around.",
+      "words": 2,
+      "speed": 0.6,
+      "ms": 1477,
+      "wpm": 81.3,
+      "heard": {
+        "small.en": "They look around.",
+        "base.en": "The look around."
+      },
+      "ok": {
+        "small.en": false,
+        "base.en": false
+      }
+    },
+    {
+      "id": "p-07",
+      "text": "Look around.",
+      "words": 2,
+      "speed": 0.7,
+      "ms": 1227,
+      "wpm": 97.8,
+      "heard": {
+        "small.en": "A look around.",
+        "base.en": "A look around."
+      },
+      "ok": {
+        "small.en": false,
+        "base.en": false
+      }
+    },
+    {
+      "id": "p-07",
+      "text": "Look around.",
+      "words": 2,
+      "speed": 0.8,
+      "ms": 1063,
+      "wpm": 112.9,
+      "heard": {
+        "small.en": "a look around.",
+        "base.en": "a look around."
+      },
+      "ok": {
+        "small.en": false,
+        "base.en": false
+      }
+    },
+    {
+      "id": "p-07",
+      "text": "Look around.",
+      "words": 2,
+      "speed": 0.9,
+      "ms": 853,
+      "wpm": 140.6,
+      "heard": {
+        "small.en": "Look around.",
+        "base.en": "Look around."
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": true
+      }
+    },
+    {
+      "id": "p-07",
+      "text": "Look around.",
+      "words": 2,
+      "speed": 1.0,
+      "ms": 818,
+      "wpm": 146.6,
+      "heard": {
+        "small.en": "Look around.",
+        "base.en": "Look around."
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": true
+      }
+    },
+    {
+      "id": "p-07-2",
+      "text": "Dark wood.",
+      "words": 2,
+      "speed": 0.5,
+      "ms": 1701,
+      "wpm": 70.5,
+      "heard": {
+        "small.en": "Dang dark wood.",
+        "base.en": "Tane Dark would."
+      },
+      "ok": {
+        "small.en": false,
+        "base.en": false
+      }
+    },
+    {
+      "id": "p-07-2",
+      "text": "Dark wood.",
+      "words": 2,
+      "speed": 0.6,
+      "ms": 1332,
+      "wpm": 90.1,
+      "heard": {
+        "small.en": "and dark wood.",
+        "base.en": "and dark wood."
+      },
+      "ok": {
+        "small.en": false,
+        "base.en": false
+      }
+    },
+    {
+      "id": "p-07-2",
+      "text": "Dark wood.",
+      "words": 2,
+      "speed": 0.7,
+      "ms": 1173,
+      "wpm": 102.3,
+      "heard": {
+        "small.en": "dark wood",
+        "base.en": "A dark wood."
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": false
+      }
+    },
+    {
+      "id": "p-07-2",
+      "text": "Dark wood.",
+      "words": 2,
+      "speed": 0.8,
+      "ms": 1008,
+      "wpm": 119.1,
+      "heard": {
+        "small.en": "Dark wood.",
+        "base.en": "Dark wood."
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": true
+      }
+    },
+    {
+      "id": "p-07-2",
+      "text": "Dark wood.",
+      "words": 2,
+      "speed": 0.9,
+      "ms": 823,
+      "wpm": 145.8,
+      "heard": {
+        "small.en": "Dark wood.",
+        "base.en": "Darkwood."
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": true
+      }
+    },
+    {
+      "id": "p-07-2",
+      "text": "Dark wood.",
+      "words": 2,
+      "speed": 1.0,
+      "ms": 773,
+      "wpm": 155.2,
+      "heard": {
+        "small.en": "Dark wood.",
+        "base.en": "Dark wood."
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": true
+      }
+    },
+    {
+      "id": "p-07-3",
+      "text": "Faded walls.",
+      "words": 2,
+      "speed": 0.5,
+      "ms": 2031,
+      "wpm": 59.1,
+      "heard": {
+        "small.en": "If Vaded Walls",
+        "base.en": "Evaded walls."
+      },
+      "ok": {
+        "small.en": false,
+        "base.en": false
+      }
+    },
+    {
+      "id": "p-07-3",
+      "text": "Faded walls.",
+      "words": 2,
+      "speed": 0.6,
+      "ms": 1612,
+      "wpm": 74.5,
+      "heard": {
+        "small.en": "If fated walls",
+        "base.en": "Faded walls."
+      },
+      "ok": {
+        "small.en": false,
+        "base.en": true
+      }
+    },
+    {
+      "id": "p-07-3",
+      "text": "Faded walls.",
+      "words": 2,
+      "speed": 0.7,
+      "ms": 1397,
+      "wpm": 85.9,
+      "heard": {
+        "small.en": "It faded walls.",
+        "base.en": "It faded walls."
+      },
+      "ok": {
+        "small.en": false,
+        "base.en": false
+      }
+    },
+    {
+      "id": "p-07-3",
+      "text": "Faded walls.",
+      "words": 2,
+      "speed": 0.8,
+      "ms": 1168,
+      "wpm": 102.8,
+      "heard": {
+        "small.en": "Faded Walls",
+        "base.en": "Faded walls."
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": true
+      }
+    },
+    {
+      "id": "p-07-3",
+      "text": "Faded walls.",
+      "words": 2,
+      "speed": 0.9,
+      "ms": 1018,
+      "wpm": 117.9,
+      "heard": {
+        "small.en": "Faded Walls",
+        "base.en": "Faded walls."
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": true
+      }
+    },
+    {
+      "id": "p-07-3",
+      "text": "Faded walls.",
+      "words": 2,
+      "speed": 1.0,
+      "ms": 938,
+      "wpm": 127.9,
+      "heard": {
+        "small.en": "Faded Walls",
+        "base.en": "Faded walls."
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": true
+      }
+    },
+    {
+      "id": "c1-05-3",
+      "text": "He said mud.",
+      "words": 3,
+      "speed": 0.5,
+      "ms": 1916,
+      "wpm": 94.0,
+      "heard": {
+        "small.en": "Yeah, he said mud.",
+        "base.en": "It he said mud."
+      },
+      "ok": {
+        "small.en": false,
+        "base.en": false
+      }
+    },
+    {
+      "id": "c1-05-3",
+      "text": "He said mud.",
+      "words": 3,
+      "speed": 0.6,
+      "ms": 1482,
+      "wpm": 121.5,
+      "heard": {
+        "small.en": "He said mad.",
+        "base.en": "and he said mud."
+      },
+      "ok": {
+        "small.en": false,
+        "base.en": false
+      }
+    },
+    {
+      "id": "c1-05-3",
+      "text": "He said mud.",
+      "words": 3,
+      "speed": 0.7,
+      "ms": 1297,
+      "wpm": 138.8,
+      "heard": {
+        "small.en": "He said, mud.",
+        "base.en": "He said mud."
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": true
+      }
+    },
+    {
+      "id": "c1-05-3",
+      "text": "He said mud.",
+      "words": 3,
+      "speed": 0.8,
+      "ms": 1093,
+      "wpm": 164.7,
+      "heard": {
+        "small.en": "He said mud.",
+        "base.en": "He said mud."
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": true
+      }
+    },
+    {
+      "id": "c1-05-3",
+      "text": "He said mud.",
+      "words": 3,
+      "speed": 0.9,
+      "ms": 938,
+      "wpm": 191.9,
+      "heard": {
+        "small.en": "He said mud.",
+        "base.en": "He said mud."
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": true
+      }
+    },
+    {
+      "id": "c1-05-3",
+      "text": "He said mud.",
+      "words": 3,
+      "speed": 1.0,
+      "ms": 868,
+      "wpm": 207.3,
+      "heard": {
+        "small.en": "He said mud.",
+        "base.en": "He said mud."
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": true
+      }
+    },
+    {
+      "id": "c1-e3",
+      "text": "The walls. Mud.",
+      "words": 3,
+      "speed": 0.5,
+      "ms": 2495,
+      "wpm": 72.2,
+      "heard": {
+        "small.en": "Eh the walls, mud.",
+        "base.en": "A. The walls. Mud."
+      },
+      "ok": {
+        "small.en": false,
+        "base.en": false
+      }
+    },
+    {
+      "id": "c1-e3",
+      "text": "The walls. Mud.",
+      "words": 3,
+      "speed": 0.6,
+      "ms": 2021,
+      "wpm": 89.1,
+      "heard": {
+        "small.en": "A the walls, mud.",
+        "base.en": "A the walls, mud."
+      },
+      "ok": {
+        "small.en": false,
+        "base.en": false
+      }
+    },
+    {
+      "id": "c1-e3",
+      "text": "The walls. Mud.",
+      "words": 3,
+      "speed": 0.7,
+      "ms": 1691,
+      "wpm": 106.4,
+      "heard": {
+        "small.en": "either walls, mud.",
+        "base.en": "Either walls, mud."
+      },
+      "ok": {
+        "small.en": false,
+        "base.en": false
+      }
+    },
+    {
+      "id": "c1-e3",
+      "text": "The walls. Mud.",
+      "words": 3,
+      "speed": 0.8,
+      "ms": 1527,
+      "wpm": 117.9,
+      "heard": {
+        "small.en": "The walls, mud.",
+        "base.en": "The walls mud."
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": true
+      }
+    },
+    {
+      "id": "c1-e3",
+      "text": "The walls. Mud.",
+      "words": 3,
+      "speed": 0.9,
+      "ms": 1267,
+      "wpm": 142.0,
+      "heard": {
+        "small.en": "The walls, mud.",
+        "base.en": "The walls mud."
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": true
+      }
+    },
+    {
+      "id": "c1-e3",
+      "text": "The walls. Mud.",
+      "words": 3,
+      "speed": 1.0,
+      "ms": 1133,
+      "wpm": 158.9,
+      "heard": {
+        "small.en": "The wall's mud.",
+        "base.en": "The walls mud."
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": true
+      }
+    },
+    {
+      "id": "c1-e4-2",
+      "text": "Composed of mud.",
+      "words": 3,
+      "speed": 0.5,
+      "ms": 2290,
+      "wpm": 78.6,
+      "heard": {
+        "small.en": "a composed of mud.",
+        "base.en": "a composed of mild."
+      },
+      "ok": {
+        "small.en": false,
+        "base.en": false
+      }
+    },
+    {
+      "id": "c1-e4-2",
+      "text": "Composed of mud.",
+      "words": 3,
+      "speed": 0.6,
+      "ms": 1866,
+      "wpm": 96.5,
+      "heard": {
+        "small.en": "I composed of mud.",
+        "base.en": "a composed of mud."
+      },
+      "ok": {
+        "small.en": false,
+        "base.en": false
+      }
+    },
+    {
+      "id": "c1-e4-2",
+      "text": "Composed of mud.",
+      "words": 3,
+      "speed": 0.7,
+      "ms": 1602,
+      "wpm": 112.4,
+      "heard": {
+        "small.en": "A composed of mud.",
+        "base.en": "It composed of mud."
+      },
+      "ok": {
+        "small.en": false,
+        "base.en": false
+      }
+    },
+    {
+      "id": "c1-e4-2",
+      "text": "Composed of mud.",
+      "words": 3,
+      "speed": 0.8,
+      "ms": 1362,
+      "wpm": 132.2,
+      "heard": {
+        "small.en": "A composed of mud.",
+        "base.en": "a composed of mud."
+      },
+      "ok": {
+        "small.en": false,
+        "base.en": false
+      }
+    },
+    {
+      "id": "c1-e4-2",
+      "text": "Composed of mud.",
+      "words": 3,
+      "speed": 0.9,
+      "ms": 1163,
+      "wpm": 154.8,
+      "heard": {
+        "small.en": "Composed of mud.",
+        "base.en": "Composed of mud."
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": true
+      }
+    },
+    {
+      "id": "c1-e4-2",
+      "text": "Composed of mud.",
+      "words": 3,
+      "speed": 1.0,
+      "ms": 1083,
+      "wpm": 166.2,
+      "heard": {
+        "small.en": "Composed of mud.",
+        "base.en": "Composed of mud."
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": true
+      }
+    },
+    {
+      "id": "c1-choice",
+      "text": "Who is right?",
+      "words": 3,
+      "speed": 0.5,
+      "ms": 1796,
+      "wpm": 100.2,
+      "heard": {
+        "small.en": "Who is right?",
+        "base.en": "I, who is right?"
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": false
+      }
+    },
+    {
+      "id": "c1-choice",
+      "text": "Who is right?",
+      "words": 3,
+      "speed": 0.6,
+      "ms": 1407,
+      "wpm": 127.9,
+      "heard": {
+        "small.en": "I who is right.",
+        "base.en": "I who is right."
+      },
+      "ok": {
+        "small.en": false,
+        "base.en": false
+      }
+    },
+    {
+      "id": "c1-choice",
+      "text": "Who is right?",
+      "words": 3,
+      "speed": 0.7,
+      "ms": 1227,
+      "wpm": 146.7,
+      "heard": {
+        "small.en": "Who is right?",
+        "base.en": "Who is right?"
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": true
+      }
+    },
+    {
+      "id": "c1-choice",
+      "text": "Who is right?",
+      "words": 3,
+      "speed": 0.8,
+      "ms": 1043,
+      "wpm": 172.6,
+      "heard": {
+        "small.en": "Who is right?",
+        "base.en": "Who is right?"
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": true
+      }
+    },
+    {
+      "id": "c1-choice",
+      "text": "Who is right?",
+      "words": 3,
+      "speed": 0.9,
+      "ms": 888,
+      "wpm": 202.7,
+      "heard": {
+        "small.en": "Who is right?",
+        "base.en": "Who is right?"
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": true
+      }
+    },
+    {
+      "id": "c1-choice",
+      "text": "Who is right?",
+      "words": 3,
+      "speed": 1.0,
+      "ms": 803,
+      "wpm": 224.1,
+      "heard": {
+        "small.en": "Who is right?",
+        "base.en": "Who is right?"
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": true
+      }
+    },
+    {
+      "id": "c1-C-1",
+      "text": "Stone below.",
+      "words": 2,
+      "speed": 0.5,
+      "ms": 1851,
+      "wpm": 64.8,
+      "heard": {
+        "small.en": "Fast stone below.",
+        "base.en": "Fast stone below."
+      },
+      "ok": {
+        "small.en": false,
+        "base.en": false
+      }
+    },
+    {
+      "id": "c1-C-1",
+      "text": "Stone below.",
+      "words": 2,
+      "speed": 0.6,
+      "ms": 1457,
+      "wpm": 82.4,
+      "heard": {
+        "small.en": "A stone below.",
+        "base.en": "Best stone below."
+      },
+      "ok": {
+        "small.en": false,
+        "base.en": false
+      }
+    },
+    {
+      "id": "c1-C-1",
+      "text": "Stone below.",
+      "words": 2,
+      "speed": 0.7,
+      "ms": 1282,
+      "wpm": 93.6,
+      "heard": {
+        "small.en": "a stone below",
+        "base.en": "It's stone below."
+      },
+      "ok": {
+        "small.en": false,
+        "base.en": false
+      }
+    },
+    {
+      "id": "c1-C-1",
+      "text": "Stone below.",
+      "words": 2,
+      "speed": 0.8,
+      "ms": 1078,
+      "wpm": 111.3,
+      "heard": {
+        "small.en": "Stone below.",
+        "base.en": "Stone below."
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": true
+      }
+    },
+    {
+      "id": "c1-C-1",
+      "text": "Stone below.",
+      "words": 2,
+      "speed": 0.9,
+      "ms": 913,
+      "wpm": 131.4,
+      "heard": {
+        "small.en": "Stone below.",
+        "base.en": "Stone below."
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": true
+      }
+    },
+    {
+      "id": "c1-C-1",
+      "text": "Stone below.",
+      "words": 2,
+      "speed": 1.0,
+      "ms": 838,
+      "wpm": 143.2,
+      "heard": {
+        "small.en": "Stone below.",
+        "base.en": "Stone below."
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": true
+      }
+    },
+    {
+      "id": "p-01",
+      "text": "This is Tipu Sultan's Summer Palace, in Bangalore.",
+      "words": 8,
+      "speed": 0.5,
+      "ms": 6191,
+      "wpm": 77.5,
+      "heard": {
+        "small.en": "This is Tipu Sultan's summer palace in Bangalore.",
+        "base.en": "This is Tipu Sultan's Summer Palace in Bangalore."
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": true
+      }
+    },
+    {
+      "id": "p-01",
+      "text": "This is Tipu Sultan's Summer Palace, in Bangalore.",
+      "words": 8,
+      "speed": 0.6,
+      "ms": 5034,
+      "wpm": 95.4,
+      "heard": {
+        "small.en": "This is Tipu Sultan's summer palace in Bangalore.",
+        "base.en": "This is Tipu Sultan's Summer Palace in Bangalore."
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": true
+      }
+    },
+    {
+      "id": "p-01",
+      "text": "This is Tipu Sultan's Summer Palace, in Bangalore.",
+      "words": 8,
+      "speed": 0.7,
+      "ms": 4256,
+      "wpm": 112.8,
+      "heard": {
+        "small.en": "This is Tipu Sultan's summer palace in Bangalore.",
+        "base.en": "This is Tipu Sultan's Summer Palace in Bangalore."
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": true
+      }
+    },
+    {
+      "id": "p-01",
+      "text": "This is Tipu Sultan's Summer Palace, in Bangalore.",
+      "words": 8,
+      "speed": 0.8,
+      "ms": 3836,
+      "wpm": 125.1,
+      "heard": {
+        "small.en": "This is Tipu Sultan's summer palace in Bangalore.",
+        "base.en": "This is Tipu Sultan's Summer Palace in Bangalore."
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": true
+      }
+    },
+    {
+      "id": "p-01",
+      "text": "This is Tipu Sultan's Summer Palace, in Bangalore.",
+      "words": 8,
+      "speed": 0.9,
+      "ms": 3098,
+      "wpm": 154.9,
+      "heard": {
+        "small.en": "This is Tipu Sultan's summer palace in Bangalore.",
+        "base.en": "This is Tipu Sultan's Summer Palace in Bangalore."
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": true
+      }
+    },
+    {
+      "id": "p-01",
+      "text": "This is Tipu Sultan's Summer Palace, in Bangalore.",
+      "words": 8,
+      "speed": 1.0,
+      "ms": 2968,
+      "wpm": 161.7,
+      "heard": {
+        "small.en": "This is Tipu Sultan's summer palace in Bangalore.",
+        "base.en": "This is Tipu Sultan's Summer Palace in Bangalore."
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": true
+      }
+    },
+    {
+      "id": "p-06",
+      "text": "A line of writing on its wall calls it the Abode of Happiness, and the Envy of Heaven.",
+      "words": 18,
+      "speed": 0.5,
+      "ms": 9309,
+      "wpm": 116.0,
+      "heard": {
+        "small.en": "A line of writing on its wall calls it the abode of happiness and the envy of heaven.",
+        "base.en": "A line of writing on its wall calls it the abode of happiness and the envy of heaven."
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": true
+      }
+    },
+    {
+      "id": "p-06",
+      "text": "A line of writing on its wall calls it the Abode of Happiness, and the Envy of Heaven.",
+      "words": 18,
+      "speed": 0.6,
+      "ms": 7748,
+      "wpm": 139.4,
+      "heard": {
+        "small.en": "A line of writing on its wall calls it the abode of happiness and the envy of heaven.",
+        "base.en": "A line of writing on its wall calls it the abode of happiness and the envy of heaven."
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": true
+      }
+    },
+    {
+      "id": "p-06",
+      "text": "A line of writing on its wall calls it the Abode of Happiness, and the Envy of Heaven.",
+      "words": 18,
+      "speed": 0.7,
+      "ms": 6585,
+      "wpm": 164.0,
+      "heard": {
+        "small.en": "A line of writing on its wall calls it the abode of happiness and the envy of heaven.",
+        "base.en": "A line of writing on its wall calls it the abode of happiness and the envy of heaven."
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": true
+      }
+    },
+    {
+      "id": "p-06",
+      "text": "A line of writing on its wall calls it the Abode of Happiness, and the Envy of Heaven.",
+      "words": 18,
+      "speed": 0.8,
+      "ms": 5842,
+      "wpm": 184.9,
+      "heard": {
+        "small.en": "A line of writing on its wall calls it the abode of happiness and the envy of heaven.",
+        "base.en": "A line of writing on its wall calls it the abode of happiness and the envy of heaven."
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": true
+      }
+    },
+    {
+      "id": "p-06",
+      "text": "A line of writing on its wall calls it the Abode of Happiness, and the Envy of Heaven.",
+      "words": 18,
+      "speed": 0.9,
+      "ms": 4695,
+      "wpm": 230.1,
+      "heard": {
+        "small.en": "A line of writing on its wall calls it the abode of happiness and the envy of heaven.",
+        "base.en": "A line of writing on its wall calls it the abode of happiness and the envy of heaven."
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": true
+      }
+    },
+    {
+      "id": "p-06",
+      "text": "A line of writing on its wall calls it the Abode of Happiness, and the Envy of Heaven.",
+      "words": 18,
+      "speed": 1.0,
+      "ms": 4510,
+      "wpm": 239.5,
+      "heard": {
+        "small.en": "A line of writing on its wall calls it the abode of happiness and the envy of heaven.",
+        "base.en": "A line of writing on its wall calls it the abode of happiness and the envy of heaven."
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": true
+      }
+    },
+    {
+      "id": "c1-02",
+      "text": "The board at the entrance carries the work back to the seventeen seventies.",
+      "words": 13,
+      "speed": 0.5,
+      "ms": 7972,
+      "wpm": 97.8,
+      "heard": {
+        "small.en": "The board at the entrance carries the work back to the 1770s.",
+        "base.en": "The board at the entrance carries the work back to the 1770s."
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": true
+      }
+    },
+    {
+      "id": "c1-02",
+      "text": "The board at the entrance carries the work back to the seventeen seventies.",
+      "words": 13,
+      "speed": 0.6,
+      "ms": 6451,
+      "wpm": 120.9,
+      "heard": {
+        "small.en": "The board at the entrance carries the work back to the 1770s.",
+        "base.en": "The board at the entrance carries the work back to the 1770s."
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": true
+      }
+    },
+    {
+      "id": "c1-02",
+      "text": "The board at the entrance carries the work back to the seventeen seventies.",
+      "words": 13,
+      "speed": 0.7,
+      "ms": 5587,
+      "wpm": 139.6,
+      "heard": {
+        "small.en": "The board at the entrance carries the work back to the 1770s.",
+        "base.en": "The board at the entrance carries the work back to the 1770s."
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": true
+      }
+    },
+    {
+      "id": "c1-02",
+      "text": "The board at the entrance carries the work back to the seventeen seventies.",
+      "words": 13,
+      "speed": 0.8,
+      "ms": 4964,
+      "wpm": 157.1,
+      "heard": {
+        "small.en": "The board at the entrance carries the work back to the 1770s.",
+        "base.en": "The board at the entrance carries the work back to the 1770s."
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": true
+      }
+    },
+    {
+      "id": "c1-02",
+      "text": "The board at the entrance carries the work back to the seventeen seventies.",
+      "words": 13,
+      "speed": 0.9,
+      "ms": 4131,
+      "wpm": 188.8,
+      "heard": {
+        "small.en": "The board at the entrance carries the work back to the 1770s.",
+        "base.en": "The board at the entrance carries the work back to the 1770s."
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": true
+      }
+    },
+    {
+      "id": "c1-02",
+      "text": "The board at the entrance carries the work back to the seventeen seventies.",
+      "words": 13,
+      "speed": 1.0,
+      "ms": 3896,
+      "wpm": 200.2,
+      "heard": {
+        "small.en": "The board at the entrance carries the work back to the 1770s.",
+        "base.en": "The board at the entrance carries the work back to the 1770s."
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": true
+      }
+    },
+    {
+      "id": "c1-e2",
+      "text": "The pillar bases and the platform. Stone.",
+      "words": 7,
+      "speed": 0.5,
+      "ms": 5388,
+      "wpm": 78.0,
+      "heard": {
+        "small.en": "A, the pillar, bases, and the platform. Stone.",
+        "base.en": "a the pillar bases and the platform stone"
+      },
+      "ok": {
+        "small.en": false,
+        "base.en": false
+      }
+    },
+    {
+      "id": "c1-e2",
+      "text": "The pillar bases and the platform. Stone.",
+      "words": 7,
+      "speed": 0.6,
+      "ms": 4460,
+      "wpm": 94.2,
+      "heard": {
+        "small.en": "a the pillar bases and the platform stone",
+        "base.en": "A the pillar bases and the platform. Stone."
+      },
+      "ok": {
+        "small.en": false,
+        "base.en": false
+      }
+    },
+    {
+      "id": "c1-e2",
+      "text": "The pillar bases and the platform. Stone.",
+      "words": 7,
+      "speed": 0.7,
+      "ms": 3652,
+      "wpm": 115.0,
+      "heard": {
+        "small.en": "The Pillar Basis and the Platform. Stone.",
+        "base.en": "The pillar bases and the platform. Stone."
+      },
+      "ok": {
+        "small.en": false,
+        "base.en": true
+      }
+    },
+    {
+      "id": "c1-e2",
+      "text": "The pillar bases and the platform. Stone.",
+      "words": 7,
+      "speed": 0.8,
+      "ms": 3203,
+      "wpm": 131.1,
+      "heard": {
+        "small.en": "The Pillar Basis and the Platform. Stone.",
+        "base.en": "The pillar bases and the platform stone."
+      },
+      "ok": {
+        "small.en": false,
+        "base.en": true
+      }
+    },
+    {
+      "id": "c1-e2",
+      "text": "The pillar bases and the platform. Stone.",
+      "words": 7,
+      "speed": 0.9,
+      "ms": 2779,
+      "wpm": 151.1,
+      "heard": {
+        "small.en": "The Pillar Basis and the Platform, Stone.",
+        "base.en": "The pillar bases and the platform stone."
+      },
+      "ok": {
+        "small.en": false,
+        "base.en": true
+      }
+    },
+    {
+      "id": "c1-e2",
+      "text": "The pillar bases and the platform. Stone.",
+      "words": 7,
+      "speed": 1.0,
+      "ms": 2549,
+      "wpm": 164.7,
+      "heard": {
+        "small.en": "The pillar bases and the platform, stone.",
+        "base.en": "The pillar bases and the platform stone."
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": true
+      }
+    },
+    {
+      "id": "c1-e5-4",
+      "text": "The first is worked out in a number system Tipu Sultan devised himself.",
+      "words": 13,
+      "speed": 0.5,
+      "ms": 8501,
+      "wpm": 91.8,
+      "heard": {
+        "small.en": "They the first is worked out in a number system Teepu Sultan devised himself.",
+        "base.en": "May the first is worked out in a number system, Teepu Sultan devised himself."
+      },
+      "ok": {
+        "small.en": false,
+        "base.en": false
+      }
+    },
+    {
+      "id": "c1-e5-4",
+      "text": "The first is worked out in a number system Tipu Sultan devised himself.",
+      "words": 13,
+      "speed": 0.6,
+      "ms": 6875,
+      "wpm": 113.5,
+      "heard": {
+        "small.en": "The first is worked out in a number system Tipu Sultan devised himself.",
+        "base.en": "The first is worked out in a number system, Tipu Sultan devised himself."
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": true
+      }
+    },
+    {
+      "id": "c1-e5-4",
+      "text": "The first is worked out in a number system Tipu Sultan devised himself.",
+      "words": 13,
+      "speed": 0.7,
+      "ms": 6012,
+      "wpm": 129.8,
+      "heard": {
+        "small.en": "The first is worked out in a number system Tipu Sultan devised himself.",
+        "base.en": "The first is worked out in a number system, Tipu Sultan devised himself."
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": true
+      }
+    },
+    {
+      "id": "c1-e5-4",
+      "text": "The first is worked out in a number system Tipu Sultan devised himself.",
+      "words": 13,
+      "speed": 0.8,
+      "ms": 5253,
+      "wpm": 148.5,
+      "heard": {
+        "small.en": "The first is worked out in a number system Tipu Sultan devised himself.",
+        "base.en": "The first is worked out in a number system, Tipu Sultan devised himself."
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": true
+      }
+    },
+    {
+      "id": "c1-e5-4",
+      "text": "The first is worked out in a number system Tipu Sultan devised himself.",
+      "words": 13,
+      "speed": 0.9,
+      "ms": 4355,
+      "wpm": 179.1,
+      "heard": {
+        "small.en": "The first is worked out in a number system, Tipu Sultan devised himself.",
+        "base.en": "The first is worked out in a number system, Tipu Sultan devised himself."
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": true
+      }
+    },
+    {
+      "id": "c1-e5-4",
+      "text": "The first is worked out in a number system Tipu Sultan devised himself.",
+      "words": 13,
+      "speed": 1.0,
+      "ms": 4096,
+      "wpm": 190.4,
+      "heard": {
+        "small.en": "The first is worked out in a number system, Tipu Sultan devised himself.",
+        "base.en": "The first is worked out in a number system, Tipu Sultan devised himself."
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": true
+      }
+    },
+    {
+      "id": "c1-C-3-2",
+      "text": "Keep that in mind. You will need it.",
+      "words": 8,
+      "speed": 0.5,
+      "ms": 4016,
+      "wpm": 119.5,
+      "heard": {
+        "small.en": "Keep that in mind. You will need it.",
+        "base.en": "Okay, keep that in mind. You will need it."
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": false
+      }
+    },
+    {
+      "id": "c1-C-3-2",
+      "text": "Keep that in mind. You will need it.",
+      "words": 8,
+      "speed": 0.6,
+      "ms": 3268,
+      "wpm": 146.9,
+      "heard": {
+        "small.en": "Ka keep that in mind. You will need it.",
+        "base.en": "Could keep that in mind. You will need it."
+      },
+      "ok": {
+        "small.en": false,
+        "base.en": false
+      }
+    },
+    {
+      "id": "c1-C-3-2",
+      "text": "Keep that in mind. You will need it.",
+      "words": 8,
+      "speed": 0.7,
+      "ms": 2759,
+      "wpm": 174.0,
+      "heard": {
+        "small.en": "Keep that in mind. You will need it.",
+        "base.en": "Keep that in mind. You will need it."
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": true
+      }
+    },
+    {
+      "id": "c1-C-3-2",
+      "text": "Keep that in mind. You will need it.",
+      "words": 8,
+      "speed": 0.8,
+      "ms": 2430,
+      "wpm": 197.6,
+      "heard": {
+        "small.en": "Keep that in mind. You will need it.",
+        "base.en": "Keep that in mind. You will need it."
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": true
+      }
+    },
+    {
+      "id": "c1-C-3-2",
+      "text": "Keep that in mind. You will need it.",
+      "words": 8,
+      "speed": 0.9,
+      "ms": 2021,
+      "wpm": 237.6,
+      "heard": {
+        "small.en": "Keep that in mind. You will need it.",
+        "base.en": "Keep that in mind, you will need it."
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": true
+      }
+    },
+    {
+      "id": "c1-C-3-2",
+      "text": "Keep that in mind. You will need it.",
+      "words": 8,
+      "speed": 1.0,
+      "ms": 1821,
+      "wpm": 263.6,
+      "heard": {
+        "small.en": "Keep that in mind. You will need it.",
+        "base.en": "Keep that in mind, you will need it."
+      },
+      "ok": {
+        "small.en": true,
+        "base.en": true
+      }
+    }
+  ]
+}

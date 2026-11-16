@@ -47,7 +47,7 @@ def ensure_venv() -> None:
         sys.exit(f"Missing virtual environment: {py}. See tools/play/voice/README.md (Setup).")
     if Path(sys.prefix).resolve() == py.parents[1].resolve():
         return
-    env = dict(os.environ, PYTHONUTF8="1", PYTHONIOENCODING="utf-8")
+    env = dict(os.environ, PYTHONUTF8="1", PYTHONIOENCODING="utf-8", PYTHONUNBUFFERED="1")
     sys.exit(subprocess.call([str(py), *sys.argv], env=env))
 
 
@@ -64,6 +64,11 @@ def cpu_only_env(extra: dict | None = None) -> dict:
         "PYTHONIOENCODING": "utf-8",
         "TOKENIZERS_PARALLELISM": "false",
     })
+    # A few threads only: the machine may be rendering at the same time, and a dozen
+    # spinning threads per engine makes every process slower.
+    threads = os.environ.get("PLAY_VOICE_THREADS", "4")
+    env.setdefault("OMP_NUM_THREADS", threads)
+    env.setdefault("MKL_NUM_THREADS", threads)
     if extra:
         env.update(extra)
     return env
@@ -185,34 +190,51 @@ def lexicon_words(lexicon: dict) -> dict[str, dict]:
     return words
 
 
+def _possessive_suffix(phonemes: str) -> str:
+    last = phonemes.rstrip()[-1:] if phonemes.strip() else ""
+    return "s" if last in "ptkfθ" else "z"
+
+
 def apply_lexicon(text: str, lexicon: dict, engine: str, variant: str | None = None) -> tuple[str, dict]:
     """Return (text for the TTS engine, extras for the worker).
 
-    The text shown to players and stored in the manifest is never changed. Per word, the
-    first of these that exists is used:
-      <engine>:<variant>   e.g. "kokoro:b"    inline phonemes or a respelling for that variant
-      <engine>             e.g. "kokoro"      inline phonemes or a respelling for that engine
-      respell                                 plain respelling, any engine
-    MeloTTS additionally takes "arpabet": a pronunciation injected into its dictionary by
-    the worker, with the text left as it is.
+    The text shown to players and stored in the manifest is never changed. Per word in
+    lexicon.json, the engine's own key is used if present, otherwise "respell":
+      kokoro   "kokoro_a" / "kokoro_b" (American / British voices): phonemes in Kokoro's own
+               alphabet, sent inline as [Word](/phonemes/)
+      melo     "arpabet": ARPAbet with stress digits, injected into MeloTTS's dictionary by
+               the worker; the text is left as it is
+      piper    "espeak": espeak-ng IPA, sent inline as [[ phonemes ]]
+      any      "respell": a plain respelling
+    A word with none of these is sent as written.
     """
     words = lexicon_words(lexicon)
     arpabet: dict[str, str] = {}
     out = text
     for word, spec in sorted(words.items(), key=lambda kv: -len(kv[0])):
-        pattern = re.compile(rf"(?<![A-Za-z]){re.escape(word)}(?![A-Za-z])")
+        pattern = re.compile(rf"(?<![A-Za-z\[/]){re.escape(word)}('s|’s)?(?![A-Za-z\]])")
         if not pattern.search(out):
             continue
         if engine == "melo" and spec.get("arpabet"):
             arpabet[word.upper()] = spec["arpabet"]
             continue
-        repl = None
-        for key in (f"{engine}:{variant}" if variant else None, engine, "respell"):
-            if key and spec.get(key):
-                repl = spec[key]
-                break
-        if repl:
-            out = pattern.sub(lambda _m, r=repl: r, out)
+        key = {"kokoro": f"kokoro_{variant}", "piper": "espeak"}.get(engine)
+        ph = spec.get(key) if key else None
+        if ph and engine == "kokoro":
+            def repl(m, ph=ph, word=word):
+                if m.group(1):
+                    return f"[{word}'s](/{ph}{_possessive_suffix(ph)}/)"
+                return f"[{word}](/{ph}/)"
+            out = pattern.sub(repl, out)
+        elif ph and engine == "piper":
+            out = pattern.sub(lambda m, ph=ph: f"[[ {ph}{_possessive_suffix(ph) if m.group(1) else ''} ]]", out)
+        elif spec.get("respell"):
+            out = pattern.sub(lambda m, r=spec["respell"]: r + (m.group(1) or ""), out)
+    if engine == "piper":
+        # Piper drops punctuation that directly follows a phoneme block, so move it inside,
+        # and join neighbouring blocks so only one space separates the words.
+        out = re.sub(r" \]\]([,.;:?!]+)", lambda m: m.group(1) + " ]]", out)
+        out = re.sub(r" \]\]\s+\[\[ ", " ", out)
     return out, ({"arpabet": arpabet} if arpabet else {})
 
 
@@ -361,32 +383,41 @@ def skeleton(s: str) -> str:
     return re.sub(r"(.)\1+", r"\1", s)
 
 
-def match_names(ref: list[str], hyp: list[str], names: list[str], threshold: float = 0.8):
+_FUNCTION_WORDS = set("the a an of in on at to and or his her its their this that is was it he she as by for with had has".split())
+
+
+def match_names(ref: list[str], hyp: list[str], names: list[str], threshold: float = 0.84):
     """Find each lexicon name that occurs in ref and the closest run of words in hyp.
 
-    Returns (hyp with close name spellings replaced by the reference spelling, findings).
-    A finding is {name, heard, match: exact|close|mismatch, similarity}.
+    Returns (hyp with accepted name spellings replaced by the reference spelling, findings).
+    A finding is {name, heard, match, similarity}:
+      exact     the recogniser wrote the name as the story spells it
+      close     another spelling or word split whose consonant skeleton is at least
+                `threshold` similar ("Haider Ali", "my sore")
+      mismatch  nothing close enough was heard
     """
     findings = []
     hyp = list(hyp)
     for name in sorted(names, key=lambda s: -len(s)):
         ntoks = normalise(name)
         n = len(ntoks)
-        positions = []
+        windows = []
         for i in range(len(ref) - n + 1):
             window = ref[i:i + n]
             if window[:-1] == ntoks[:-1] and window[-1] in (ntoks[-1], ntoks[-1] + "s"):
-                positions.append(window)
-        for window in positions:
+                windows.append(window)
+        for window in windows:
             target = "".join(window)
             best = (0.0, 0, 0)
             for length in range(1, n + 3):
                 for j in range(len(hyp) - length + 1):
-                    cand = "".join(hyp[j:j + length])
-                    if cand == target:
+                    cand_toks = hyp[j:j + length]
+                    if cand_toks == window:
                         score = 2.0
+                    elif cand_toks[0] in _FUNCTION_WORDS or cand_toks[-1] in _FUNCTION_WORDS:
+                        continue
                     else:
-                        score = difflib.SequenceMatcher(None, skeleton(cand), skeleton(target)).ratio()
+                        score = difflib.SequenceMatcher(None, skeleton("".join(cand_toks)), skeleton(target)).ratio()
                         score -= 0.001 * abs(length - n)
                     if score > best[0]:
                         best = (score, j, length)
@@ -395,7 +426,7 @@ def match_names(ref: list[str], hyp: list[str], names: list[str], threshold: flo
             if score >= 2.0:
                 findings.append({"name": name, "heard": heard, "match": "exact", "similarity": 1.0})
             elif score >= threshold:
-                findings.append({"name": name, "heard": heard, "match": "close", "similarity": round(score, 3)})
+                findings.append({"name": name, "heard": heard, "match": "close", "similarity": round(min(score, 1.0), 3)})
                 hyp[j:j + length] = window
             else:
                 findings.append({"name": name, "heard": heard, "match": "mismatch", "similarity": round(max(score, 0), 3)})
@@ -434,6 +465,8 @@ def compare(ref_text: str, hyp_text: str, names: list[str]) -> dict:
     hyp, name_findings = match_names(ref, hyp_raw, names)
     ops = align(ref, hyp)
     errors = [op for op in ops if op[0] != "ok"]
+    if errors and "".join(ref) == "".join(hyp):
+        errors = []                                  # only word spacing differs: "darkwood" for "dark wood"
     number_errors = [op for op in errors if (op[1] and is_number_token(op[1])) or (op[2] and is_number_token(op[2]))]
     name_errors = [f for f in name_findings if f["match"] == "mismatch"]
     return {

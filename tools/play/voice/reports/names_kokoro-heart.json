@@ -1,0 +1,125 @@
+{
+  "voice": "kokoro-heart",
+  "site": "tipu-summer-palace-bengaluru",
+  "gap_ms": 700,
+  "file": "public/play/packs/tipu-summer-palace-bengaluru/v1/audio/kokoro-heart/_names_reel.m4a",
+  "names": [
+    {
+      "n": 1,
+      "name": "Hyder Ali",
+      "tts_text": "Hyder Ali.",
+      "extras": {},
+      "phonemes": "hˈIdəɹ ɑlˈi.",
+      "start_ms": 40,
+      "end_ms": 818
+    },
+    {
+      "n": 2,
+      "name": "Tipu Sultan",
+      "tts_text": "[Tipu](/tˈipu/) Sultan.",
+      "extras": {},
+      "phonemes": "tˈipu sˈʌltᵊn.",
+      "start_ms": 1518,
+      "end_ms": 2431
+    },
+    {
+      "n": 3,
+      "name": "Srirangapatna",
+      "tts_text": "[Srirangapatna](/ʃɹˌiɹʌŋɡəpˈʌtnə/).",
+      "extras": {},
+      "phonemes": "ʃɹˌiɹʌŋɡəpˈʌtnə.",
+      "start_ms": 3131,
+      "end_ms": 4159
+    },
+    {
+      "n": 4,
+      "name": "Bangalore",
+      "tts_text": "Bangalore.",
+      "extras": {},
+      "phonemes": "bˌæŋɡəlˈɔɹ.",
+      "start_ms": 4859,
+      "end_ms": 5582
+    },
+    {
+      "n": 5,
+      "name": "Kempe Gowda",
+      "tts_text": "[Kempe](/kˈɛmpA/) Gowda.",
+      "extras": {},
+      "phonemes": "kˈɛmpA ɡˈWdə.",
+      "start_ms": 6282,
+      "end_ms": 7205
+    },
+    {
+      "n": 6,
+      "name": "Chikka Devaraja Wadiyar",
+      "tts_text": "Chikka [Devaraja](/dˌAvəɹˈɑʤə/) Wadiyar.",
+      "extras": {},
+      "phonemes": "ʧˈɪkə dˌAvəɹˈɑʤə wˈɑdɪjˌɑɹ.",
+      "start_ms": 7905,
+      "end_ms": 9432
+    },
+    {
+      "n": 7,
+      "name": "Kote Venkataramana",
+      "tts_text": "[Kote](/kˈOtA/) [Venkataramana](/vˌɛŋkətəɹˈʌmənə/).",
+      "extras": {},
+      "phonemes": "kˈOtA vˌɛŋkətəɹˈʌmənə.",
+      "start_ms": 10132,
+      "end_ms": 11549
+    },
+    {
+      "n": 8,
+      "name": "Attara Kacheri",
+      "tts_text": "[Attara](/ətˈɑɹə/) [Kacheri](/kəʧˈAɹi/).",
+      "extras": {},
+      "phonemes": "ətˈɑɹə kəʧˈAɹi.",
+      "start_ms": 12249,
+      "end_ms": 13261
+    },
+    {
+      "n": 9,
+      "name": "Mysore",
+      "tts_text": "Mysore.",
+      "extras": {},
+      "phonemes": "mIsˈɔɹ.",
+      "start_ms": 13961,
+      "end_ms": 14650
+    },
+    {
+      "n": 10,
+      "name": "Buchanan",
+      "tts_text": "Buchanan.",
+      "extras": {},
+      "phonemes": "bjukˈænən.",
+      "start_ms": 15350,
+      "end_ms": 16113
+    },
+    {
+      "n": 11,
+      "name": "Cornwallis",
+      "tts_text": "[Cornwallis](/kɔɹnwˈɑlɪs/).",
+      "extras": {},
+      "phonemes": "kɔɹnwˈɑlɪs.",
+      "start_ms": 16813,
+      "end_ms": 17567
+    },
+    {
+      "n": 12,
+      "name": "Bowring",
+      "tts_text": "Bowring.",
+      "extras": {},
+      "phonemes": "bˈOɹɪŋ.",
+      "start_ms": 18267,
+      "end_ms": 18900
+    },
+    {
+      "n": 13,
+      "name": "Hunter",
+      "tts_text": "Hunter.",
+      "extras": {},
+      "phonemes": "hˈʌntəɹ.",
+      "start_ms": 19600,
+      "end_ms": 20219
+    }
+  ]
+}
