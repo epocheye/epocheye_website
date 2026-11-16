@@ -2,6 +2,12 @@
 
 **GATE 1: waiting for the owner.** Phase 1 (vertical slice) is built on branch `feat/play`. Nothing further happens until you answer the gate.
 
+## Preview
+
+https://epocheye-website-git-feat-play-sambit-singhas-projects.vercel.app/play
+
+Vercel asks you to sign in first (preview deployments are protected). I could not open the pages through that sign-in, so the deployed copy is confirmed built and Ready but not played by me; the play-through was on the local production build.
+
 ## What to look at
 
 - `/play` : site select, one live card, three locked cards.
