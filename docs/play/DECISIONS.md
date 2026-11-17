@@ -83,3 +83,4 @@ Choices made outside the gates, newest last. Each has a date and a reason.
 | 2026-11-17 | Hall-floor viewpoint re-rendered at exposure +0.3 instead of +1.3. | The first render was blown out. |
 | 2026-11-17 | Speed floors for the reveal line (0.72), the empty-panel line (0.72) and the last line (0.84) were set by trial, three speeds each, checked with both recognisers. | Words before pace. The last line could not be slowed further without a recogniser hearing an extra word. |
 | 2026-11-17 | GATE 2 shown. | Phases 2, 3 and 4 complete. |
+| 2026-11-17 | **GATE 2 approved by the owner** ("Approve, go on"). No story rulings were given, so the proposals in STATUS.md stand and are listed again at GATE 3. | The goal says to log the choice and continue. Every one is reversible in `story.json`. |
