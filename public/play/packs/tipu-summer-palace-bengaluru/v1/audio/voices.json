@@ -2,11 +2,14 @@
   "voices": [
     {
       "id": "kokoro-heart",
-      "clips": 51,
+      "clips": 188,
       "chapters": [
         "prologue",
         "ch1",
-        "ch2-preview"
+        "ch2",
+        "ch3",
+        "ch4",
+        "ch5"
       ],
       "engine": "kokoro",
       "language": "en-US",

@@ -44,7 +44,19 @@ def set_device(scene, device):
         backend = enable_gpu()
         scene.cycles.device = "GPU" if backend else "CPU"
         return backend or "CPU"
+    # CPU only: keep CUDA out of the process entirely, including the OptiX denoiser and the
+    # viewport/compositor devices, so a faulted GPU driver cannot stop a CPU render.
+    try:
+        bpy.context.preferences.addons["cycles"].preferences.compute_device_type = "NONE"
+    except Exception:
+        pass
     scene.cycles.device = "CPU"
+    if getattr(scene.cycles, "denoiser", None) == "OPTIX":
+        scene.cycles.denoiser = "OPENIMAGEDENOISE"
+    if hasattr(scene.cycles, "denoising_use_gpu"):
+        scene.cycles.denoising_use_gpu = False
+    if hasattr(scene.render, "compositor_device"):
+        scene.render.compositor_device = "CPU"
     return "CPU"
 
 

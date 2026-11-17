@@ -37,6 +37,34 @@
         "c1-C-1-2": {
           "min": 0.85,
           "why": "At engine speed 0.72 both recognisers heard an extra first word (\"Be mud in the walls\", \"A mud in the walls\"). With the floor at 0.90 the clip was 12.6% over its pace (its round trip was not tested). At 0.85 both recognisers hear it word for word and it is 10.5% over. Checked 2026-11-16."
+        },
+        "c2-01": {
+          "min": 0.9,
+          "why": "Slow line. At the usual floor Kokoro added or changed a word that both recognisers heard (2026-11-17 check). Words come before pace, so the floor is raised for this clip only."
+        },
+        "c2-A-3": {
+          "min": 0.9,
+          "why": "Slow line. At the usual floor Kokoro added or changed a word that both recognisers heard (2026-11-17 check). Words come before pace, so the floor is raised for this clip only."
+        },
+        "c3-C-1": {
+          "min": 0.9,
+          "why": "Slow line. At the usual floor Kokoro added or changed a word that both recognisers heard (2026-11-17 check). Words come before pace, so the floor is raised for this clip only."
+        },
+        "c5-e3": {
+          "min": 0.9,
+          "why": "Slow line. At the usual floor Kokoro added or changed a word that both recognisers heard (2026-11-17 check). Words come before pace, so the floor is raised for this clip only."
+        },
+        "c5-e5": {
+          "min": 0.72,
+          "why": "At 0.70 Kokoro added \"Its\"; at 0.72 both recognisers hear it word for word (trial 2026-11-17)."
+        },
+        "c5-08": {
+          "min": 0.72,
+          "why": "Reveal line. At 0.70 Kokoro added \"And\"; at 0.72 both recognisers hear it word for word (trial 2026-11-17)."
+        },
+        "c5-11": {
+          "min": 0.84,
+          "why": "Last line. At 0.72 and 0.78 a recogniser heard \"So\" before it; at 0.84 both hear it word for word (trial 2026-11-17)."
         }
       }
     },

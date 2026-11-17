@@ -260,7 +260,7 @@ _ORD = {"first": 1, "second": 2, "third": 3, "fourth": 4, "fifth": 5, "sixth": 6
         "ninth": 9, "tenth": 10, "eleventh": 11, "twelfth": 12, "thirteenth": 13, "fourteenth": 14,
         "fifteenth": 15, "sixteenth": 16, "seventeenth": 17, "eighteenth": 18, "nineteenth": 19,
         "twentieth": 20, "thirtieth": 30}
-_SPELLING = {"colour": "color", "colours": "colors", "coloured": "colored", "honour": "honor", "grey": "gray",
+_SPELLING = {"watercolour": "watercolor", "watercolours": "watercolors", "colour": "color", "colours": "colors", "coloured": "colored", "honour": "honor", "grey": "gray",
              "centre": "center", "storey": "story", "storeys": "stories", "ok": "okay"}
 BOUNDARY = "|"
 
