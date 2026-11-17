@@ -30,6 +30,7 @@ M = {
     "lost": mat("TEST_PAINT__DECORATION-RECONSTRUCTED", (0.55, 0.08, 0.05), 0.4),
     "plain": mat("TEST_PLAIN__PRESENT-STATE", (0.62, 0.62, 0.6)),
 }
+M["plain"].use_fake_user = True   # used only by the NOW swap, so keep it through the save
 
 def box(name, loc, size, m):
     bpy.ops.mesh.primitive_cube_add(location=loc)

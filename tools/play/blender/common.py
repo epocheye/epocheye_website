@@ -111,6 +111,10 @@ def set_collections(scene, hide=(), show=()):
 def swap_materials(mapping):
     """Replace material OLD with NEW on every slot that uses it (in memory only)."""
     n = 0
+    missing = sorted(v for v in mapping.values() if not bpy.data.materials.get(v))
+    if missing:
+        # A NOW state that silently keeps the THEN material would look restored when it is not.
+        raise RuntimeError(f"matswap target material(s) not in the scene: {missing}")
     pairs = {k: bpy.data.materials.get(v) for k, v in mapping.items()}
     for o in bpy.data.objects:
         for slot in getattr(o, "material_slots", []):

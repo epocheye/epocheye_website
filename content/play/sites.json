@@ -33,6 +33,13 @@
    "version": 1,
    "name": "Dev pack",
    "place": "Synthetic faces"
+  },
+  {
+   "slug": "_test-boxes",
+   "status": "dev",
+   "version": 1,
+   "name": "Format test: three boxes",
+   "place": "A throwaway scene"
   }
  ]
 }

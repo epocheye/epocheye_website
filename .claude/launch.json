@@ -20,6 +20,20 @@
         "3100"
       ],
       "port": 3100
+    },
+    {
+      "name": "prod-dev",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "next",
+        "start",
+        "-p",
+        "3120"
+      ],
+      "port": 3120,
+      "env": {
+        "PLAY_DEV_PACKS": "1"
+      }
     }
   ]
 }
