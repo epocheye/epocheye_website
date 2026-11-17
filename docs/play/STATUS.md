@@ -1,109 +1,86 @@
 # Epocheye Play: status
 
-**Phase 2 in progress.** GATE 1 answered on 2026-11-16: the voice is Kokoro. The other GATE 1 rulings were not given, so Phase 2 uses the proposals in STORY_CHECK.md and they come back at GATE 2. The sections below are the GATE 1 record.
+**GATE 2: waiting for the owner.** Phases 2, 3 and 4 are built on branch `feat/play`. Nothing further happens until you answer this gate. (The GATE 1 record is in git history: commit `de8a203`.)
+
+GATE 1 was answered on 2026-11-16: the voice is Kokoro. The other GATE 1 rulings were not given, so the build went ahead on the proposals in STORY_CHECK.md. They are listed again below.
 
 ## Preview
 
 https://epocheye-website-git-feat-play-sambit-singhas-projects.vercel.app/play
 
-Vercel asks you to sign in first (preview deployments are protected). I could not open the pages through that sign-in, so the deployed copy is confirmed built and Ready but not played by me; the play-through was on the local production build.
+Vercel asks you to sign in first (preview deployments are protected). I cannot get through that sign-in, so every play-through below was on a local production build. The preview is built from the same commit.
 
-## What to look at
+## What to look at (on a phone)
 
-- `/play` : site select, one live card, three locked cards.
-- `/play/tipu-summer-palace-bengaluru` : Prologue, lens choice, Chapter 1, then the restoration preview from the Chapters list.
-- `/play/tipu-summer-palace-bengaluru?ch=2` : straight to the restoration preview.
-- `/play/admin/voice` : the voice review page (sign in at `/admin/login` first). Three voices, names reel, redo marks.
-- `docs/play/STORY_CHECK.md` : every change to section 8 and why.
-- `tools/play/AUDIT.md` : the palace audit.
-- `tools/play/voice/BAKEOFF.md` : the three voices, measured side by side, and what to listen for.
+| Page | What it is |
+|---|---|
+| `/play` | Site select: the palace, three locked cards with Vote and "Play the next site a week early", links to the daily puzzle, the weekly vote and the leaderboards |
+| `/play/tipu-summer-palace-bengaluru` | The whole level: Prologue, five chapters, the full reveal, the proof switch, the year vote, the "What you now know" card. `?ch=<n>` jumps to a chapter |
+| `/play/daily` | The Missing Piece |
+| `/play/vote` | The weekly vote |
+| `/play/leaderboards` | Per site, daily and streaks |
+| `/play/c/<id>` | A shared card, with its own share image |
+| `/play/admin` | Chapter drop-off and the other numbers (admin sign-in) |
+| `/play/admin/voice` | Every spoken line with its clip, pace and pause |
 
-## The four things you judge
+## What changed since GATE 1
 
-1. **Does it look like our renders.** Three viewpoints, NOW and THEN, at 512, 1024 and 2048 px cube faces. THEN is the scene as saved. NOW is derived in the exporter from present-state materials and your own photos, with haze beyond the garden.
-2. **Is the restoration satisfying.** Chapter 1 has no restoration (nothing structural is lost), so the slice carries the Chapter 2 colour restoration as a labelled preview: turn the pillar, set it, the front's colours come back.
-3. **Do you want to know what happens in Chapter 2.**
-4. **Which voice.** Prologue in three voices; Chapter 1 and the preview in Kokoro.
+- **Story:** chapters 2 to 5 and the ending, written from section 8 with the STORY_CHECK corrections, then checked line by line against the facts and fixed. 40 facts, 158 beats, 188 spoken clips, 0 validator errors.
+- **Pack:** eight viewpoints (forecourt, forecourt corner, colonnade, colonnade end, floor of the hall, upper hall, front arcade, corner room), NOW and THEN at 512, 1024 and 2048 px. Three restorations, each with a mask on every viewpoint and a 3D piece: the colours of the front (Chapter 2), the painted walls (Chapter 3), the painted ceiling (Chapter 5, the last piece). A tier mask on every viewpoint drives the proof switch. Five evidence images. 60 MB, 0 problems in `tools/play/verify_pack.py`.
+- **Engine:** dated cards to put in order (Chapter 4), the full reveal, the proof switch, the year vote, the end card with Share, See it for real and Next site, text that pages in step with its clips, evidence images, and the eight-question test in the debug view.
+- **Narration:** all 188 clips in Kokoro.
+- **Phase 3:** additive `play_` tables in Neon by migration, anonymous players with generated names, server-checked runs, daily puzzles and votes, year-vote percentages, weekly vote, email unlock with consent, creator links (`?c=`), cookieless analytics with chapter drop-off, the admin dashboard, and the social exporter (`tools/play/social/export.mjs`). Three reviewers (security and privacy, spec and copy, correctness) checked it; 35 findings, the confirmed ones fixed.
+- **Phase 4:** a throwaway three-box scene went through the exporter and loaded with **zero engine changes**. The only file it changed is `content/play/sites.json`, which the exporter writes. To make that true, the site registry was first moved out of code into that file. The test also found an exporter gap, now fixed: a NOW state whose replacement material was missing silently showed THEN; it now stops the render.
 
 ## Decisions I need from you
 
-| # | Decision | Where |
-|---|---|---|
-| 1 | The voice: `kokoro-heart`, `melo-india` or `piper-ljspeech`. Listen to the names reel and correct any name | `/play/admin/voice` |
-| 2 | Line p-02, "Most visitors photograph the front, call it nice and old, and leave." Keep or cut. It is your observation | Prologue |
-| 3 | F09: put "Bangalore went back to Tipu Sultan in 1792" back in (Rice supports it) or leave it cut (your files' do-not-say list) | STORY_CHECK.md |
-| 4 | Chapter 4's turn. The record says most of the palace was pulled down after 1868. Approve the new line or rewrite it | STORY_CHECK.md section 3 |
-| 5 | The construction dates. The script now says "by its own inscription" and adds the board's 1770s. Approve | STORY_CHECK.md |
-| 6 | Two added lines for wrong picks in the Chapter 1 choice (A and B) | story.json, `c1-A-1`, `c1-B-1` |
-| 7 | A fifth chip, "Our reading", beside the four in the brief. Keep or fold into "Our reconstruction" | story.json `tiers` |
-| 8 | Title "Envy of Heaven", the four lens names, the share line, the game's working name | brief placeholders |
-| 9 | Hunter's 1804 plates of the palace: supply licensed scans, or Chapter 2 uses the one Yale watercolour | AUDIT.md section 7 |
-| 10 | Confirm the project-made tiles (exterior diaper, painted ceiling, gilding) are your own work | AUDIT.md section 7 |
+**Story** (all in `docs/play/STORY_CHECK.md` and `tools/play/out/reports/phase2_story_fix.md`):
+
+| # | Decision |
+|---|---|
+| 1 | Chapter 4's turn. The record says most of the palace was pulled down after 1868 and what stands is the block that held the treasury. The line is now "The block that held the treasury is the part still standing." Approve or rewrite |
+| 2 | F09 and c4-11, both cut: "Bangalore went back to Tipu Sultan in 1792" and "Tipu Sultan dismantled [the fort] himself after the peace of 1792". Rice supports both; your files' do-not-say list bars them. Keep cut, or put back |
+| 3 | Chapter 2, option B now reads "Trust them for what stood where. For colour, go back to the watercolour he painted himself." Our colours follow the watercolour, not the London plates. Approve |
+| 4 | The Scribe side notes were removed from chapters 3 to 5: they quote primary texts, not the palace files (brief 1.2). Keep out, or rule that the primary texts count |
+| 5 | The construction dates: "by its own inscription", plus the entrance board's 1770s. Approve |
+| 6 | Lines added for wrong picks that section 8 does not script (chapters 1, 3, 5), and the four "nobody knows" lines and eight test questions |
+| 7 | A fifth chip, "Our reading", for our inference. Keep or fold into "Our reconstruction" |
+| 8 | Line p-02, "Most visitors photograph the front, call it nice and old, and leave." It is your observation. Keep or cut |
+
+**Other:**
+
+| # | Decision |
+|---|---|
+| 9 | Title "Envy of Heaven", the four lens names, the share line, the game's final name |
+| 10 | Hunter's 1804 plates of the palace: supply licensed scans, or Chapter 2 keeps the one Yale watercolour (current) |
+| 11 | Confirm the project-made tiles (exterior diaper, painted ceiling, gilding) are your own work |
+| 12 | Who counts as a founding member, whose weekly votes are binding, and where that list lives |
+| 13 | The date the next site opens (`opens_at`), which starts early access a week before |
+| 14 | Build clips for the three locked cards |
+| 15 | Privacy wording for Play, to go into `/privacy` (a draft page is at `/play/privacy`) |
+| 16 | The daily runs out on 2026-12-10: the palace has 24 elements and the rule is no element twice inside 30 days. Publish more elements, or allow a shorter gap |
 
 ## Measured
 
-- Lint: 0 errors. Build: passes. `validate-story`: 17 facts, 43 beats, 0 errors, 1 placeholder (p-02), 1 line over two lines on a 375 px phone (`c1-C-1`).
-- Bytes before the first view, cold cache, phone size: 883 KB (limit 3 MB).
-- Full play-through, headless Chrome, 375x812 and 1440x900, production build, real pack: no console errors except the Vercel analytics script, which only exists on Vercel.
-- Narration, Kokoro, 51 clips: every clip passes the speech-to-text round trip on at least one recogniser; loudness within 0.53 LU; no clipping.
-- Pack: 28 MB (panoramas 20 MB, audio 4 MB).
-- Render time, GTX 1650: about 30 minutes per viewpoint for both states at 2048 px. The estimate printed beforehand was 7.2 hours for three; the real time was about 1.5 hours.
+- Lint: 0 errors (17 warnings, all in pages outside Play). Build: passes.
+- Phase 3 end to end on a local production build at 375x812: the palace level to the end card with year-vote percentages, the daily right and wrong, the vote with the email flow (dry run), a `?c=` link landing in the events table, the admin page signed out and in, a shared card and its image. Every test row was deleted afterwards; all `play_` tables held 0 rows.
+- Phase 4: the test site plays through its restoration on a phone-size screen with no console errors beyond the Vercel analytics script, which exists only on Vercel.
+- Bytes before the first view, cold cache, phone size: about 880 KB (limit 3 MB), measured at Phase 1 and re-measured in Phase 2 and Phase 3.
+- Daily: 58 puzzles from 24 elements, scheduled 2026-11-17 to 2026-12-10.
+- Render time on the GTX 1650: 10 to 17 minutes per state per viewpoint at 2048 px.
 
 ## Known issues
 
-- **Slow lines run fast in Kokoro.** 6 of 13 slow lines are 19 to 32 percent over the 125 words a minute target. Kokoro garbles words when slowed further. MeloTTS and Piper slow cleanly. Nobody has listened to any clip.
-- **`c1-C-1` runs to three lines on a 375 px phone.** It is the list "Stone below. Mud in the walls. Wood for everything...". Splitting it into separate taps would lose the scripted 200 ms list rhythm. The proper fix is text that pages in step with its clips, planned for Phase 2.
-- **The flat wall at the end of the colonnade** has a stretched wood-grain look in both states. It comes from the scene's own present-state wall material. Left alone.
-- **From the colonnade, the NOW lawn is washed out**, because the exposure is set for the shade.
-- **Upper-floor viewpoints render near black** in the scene's late-afternoon light. They need an interior lighting pass before Phase 2.
-- **The piece is flat-coloured.** The pillar carries the scene's own colours but no baked texture or fluting detail.
-- **Not tested:** gyroscope and the iOS motion prompt, real phone hardware, frame rate, `navigator.share`, a screen reader. All runs were headless desktop Chrome.
-- **The `order` beat (Chapter 4's dated cards) is not built.** It no longer locks the level, but the card interface is Phase 2.
-- **The Vote button on locked cards is a stub** until the Phase 3 backend.
-- **Unlocking a site still needs one line in `lib/play/sites.js`.** A build-time pack index would remove it. Phase 4.
-- **`/admin/login` redirects to itself when signed out in a local production build.** That is the existing admin layout, not Play. On Vercel it behaves as today.
-- **`docs/virtual/TEXTURES.md` wrongly calls `interior_madder_photo.jpg` our own.** It derives from a Mike Prince photo, CC BY 2.0. Play credits him; `/virtual` should too.
-
-## Placeholders
-
-- `[SAMBIT: your gate observation. Keep or cut.]` (fact O1, line p-02)
-- From the brief, still open: final name of the game; confirm the four lenses; confirm the title; confirm the share line; listen to the names reel; which of A or B the model uses for empty panels (answered by the audit: both).
-
-## Done before this gate
-
-- Branches consolidated: `main` is the only branch besides `feat/play`; `archive/color-palettes` kept as a tag.
-- Phase 0: repo report, palace audit, story check.
-- Exporter: estimate, render (GPU guard, resumable, CPU option), pieces, assemble, publish.
-- Engine: panorama viewer, story engine, level UI, restore step, debug view, voice review page. Reviewed from three lenses; 28 findings, all blockers and majors fixed.
-- Narration pipeline: render, check, calibrate, lexicon, names reel, recording sheet.
-
-## 5.1 report
-
-1. Framework: Next.js 16.2.4 App Router, React 19, JSX, Tailwind v4, React Compiler. ESLint only, no test runner.
-2. Hosting: Vercel project `epocheye-website`. Branch pushes get preview URLs from the Git integration.
-3. Backend: Next route handlers, Neon Postgres through `lib/server/neon.js`, hand-run SQL in `db/` plus `scripts/migrate-*.mjs`, admin by JWT cookie, email by Resend, in-memory rate limiter.
-4. Analytics: cookieless `@vercel/analytics`. No queryable event store for the website, so Play adds its own in Phase 3.
-5. 3D and legal: `/virtual` loads one GLB with meshopt and KTX2; `/journeys` loads Draco GLBs; both serve from `public/`. Legal pages are `/privacy`, `/terms`, `/refunds` (draft).
+- **Narration words.** 182 of 188 clips are heard word for word by both speech-to-text models, 4 by one of them. Two fail on both: `c2-01` (both drop "the" and "of" from "The twenty first of March, seventeen ninety one") and `c3-C-1` ("Buchanan wrote of false gilding" heard as "wrote a false gilding"). Listen to those two first.
+- **Narration pace.** Kokoro adds or changes a word when slowed, so words come first: 19 slow or brisk lines run over their pace target, including the reveal line (165 against 125 words a minute) and the last line (213). Nobody has listened to any clip. The silences between lines are exact.
+- **Progress across devices is not built.** The email link carries the name, votes and daily streak, not a player's place in the level.
+- **Leaderboard anti-cheat raises the cost but does not stop a determined player.** The accepted answers ship in the public pack.
+- **The front balcony is not modelled** (it is switched off in the scene and its projection is unrecorded), so that viewpoint stands at the front arcade of the upper floor. Credits say so.
+- **NOW shows plain plaster and timber everywhere on the upper floor.** Paint survives somewhere (own photos 37 and 41) but no file says which panels. The two photos ship as evidence.
+- **The NOW garden is flat** (lawn, hedge blocks, brick walk) and the haze beyond it is plain.
+- **The hall-floor viewpoint was too bright at first.** Re-rendered one stop darker; it now reads cleanly in both states.
+- **Not tested:** real phones, frame rate, gyroscope, a screen reader, real email delivery, the deployed preview, link previews on WhatsApp, Instagram, X and Reddit, the test with a real player.
 
 ## After the gate
 
-Phase 2: chapters 2 to 5, the ending, proof toggle, year vote, final card, lenses, the `order` step, interior lighting for the upper floor.
-
-## Phase 3 review (2026-11-17)
-
-Three reviewers' findings were checked against the code; the confirmed ones are fixed (DECISIONS.md, 2026-11-17 "Phase 3 review" rows). Verified on a local production build at 375x812: the full palace level to the end card with year-vote percentages, `/play/daily` right and wrong, `/play/vote` with the email flow in dry run, a `?c=` link landing in `play_events`, `/play/admin` signed out and in, `/play/c/<short id>` and its share image. Every test row was deleted afterwards.
-
-Still open:
-
-- **Progress across devices (brief 5.4) is not built.** The email link carries the name, votes and daily streak; a player's place in a level stays on each device. Copy now says only that.
-- **The daily runs out on 2026-12-10.** The pack has 24 elements, fewer than the 30 the rule needs. `[SAMBIT: publish more elements and rerun tools/play/daily/generate.mjs, or choose a shorter --min-gap.]`
-- **Leaderboard anti-cheat is a raised cost, not a wall.** Times are the server's and first picks are locked as they happen, but the accepted options ship in the public `site.json`, and ids can be prepared a day ahead.
-- **Someone who stopped Play emails from a link nobody else confirmed cannot sign up again** from another player. A support path is needed if that matters.
-- **Unlocking a site still needs an entry in `lib/play/sites.js`** (now a `version` and an `opens_at` date). A build-time pack index would remove it.
-- Not tested: real email delivery (dry run only), early access in a browser (rules checked in Node), a real phone.
-
-Placeholders added in this review:
-
-- `[SAMBIT: privacy wording for Play, to go into the privacy notice at /privacy before launch.]` on `/play/privacy`.
-- `[SAMBIT: build clip for Konark Sun Temple]`, `[SAMBIT: build clip for Victoria Memorial]`, `[SAMBIT: build clip for Hampi]`: locked cards show a clip only when the registry entry has `clip` or `still`.
-- `[SAMBIT: opens_at for the next site]`: early access starts a week before it.
+Phase 5: polish, the quality bar in brief 5.7 with a Lighthouse mobile report, legal pages, `docs/play/PLAY.md`, the full placeholder list, the eight-question test, then GATE 3.

@@ -210,8 +210,8 @@
    ],
    "samples": 128,
    "exposure": {
-    "then": 1.3,
-    "now": 1.3
+    "then": 0.3,
+    "now": 0.3
    },
    "links": [
     "colonnade"
