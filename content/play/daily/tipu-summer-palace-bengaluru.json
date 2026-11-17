@@ -1,0 +1,6996 @@
+{
+ "format": 2,
+ "site": {
+  "slug": "tipu-summer-palace-bengaluru",
+  "name": "Tipu Sultan's Summer Palace",
+  "place": "Bengaluru",
+  "version": 1
+ },
+ "source": {
+  "site_json": "public/play/packs/tipu-summer-palace-bengaluru/v1/site.json",
+  "sha256": "26a5600279a7f477bb93756907367119dce7f9a60be162ff230c8bd0ca2d303e"
+ },
+ "lens": "traveller",
+ "tiers": {
+  "record": "From the record",
+  "reconstruction": "Our reconstruction",
+  "legend": "Legend",
+  "unknown": "Not known",
+  "reading": "Our reading"
+ },
+ "elements": [
+  {
+   "key": "r:exterior-colour",
+   "kind": "restoration",
+   "name": "The colours of the front",
+   "chapter": "ch2",
+   "puzzles": 4
+  },
+  {
+   "key": "r:painted-walls",
+   "kind": "restoration",
+   "name": "The painted walls of the upper hall",
+   "chapter": "ch3",
+   "puzzles": 4
+  },
+  {
+   "key": "r:painted-ceiling",
+   "kind": "restoration",
+   "name": "The painted ceiling",
+   "chapter": "ch5",
+   "puzzles": 5
+  },
+  {
+   "key": "e:e-wood",
+   "kind": "evidence",
+   "name": "Wood",
+   "chapter": "ch1",
+   "puzzles": 2
+  },
+  {
+   "key": "e:e-hunter-north",
+   "kind": "evidence",
+   "name": "Hunter's watercolour",
+   "chapter": "ch2",
+   "puzzles": 2
+  },
+  {
+   "key": "e:e-court-halls",
+   "kind": "evidence",
+   "name": "Four halls",
+   "chapter": "ch3",
+   "puzzles": 2
+  },
+  {
+   "key": "e:e-paint-wall",
+   "kind": "evidence",
+   "name": "Paint on a wall",
+   "chapter": "ch5",
+   "puzzles": 2
+  },
+  {
+   "key": "e:e-stone",
+   "kind": "evidence",
+   "name": "Stone",
+   "chapter": "ch1",
+   "puzzles": 2
+  },
+  {
+   "key": "e:e-hunter-west",
+   "kind": "evidence",
+   "name": "Hunter's west front",
+   "chapter": "ch2",
+   "puzzles": 2
+  },
+  {
+   "key": "e:e-court-courts",
+   "kind": "evidence",
+   "name": "The courts",
+   "chapter": "ch3",
+   "puzzles": 2
+  },
+  {
+   "key": "e:e-paint-ceiling",
+   "kind": "evidence",
+   "name": "Paint on a ceiling",
+   "chapter": "ch5",
+   "puzzles": 2
+  },
+  {
+   "key": "e:e-mud",
+   "kind": "evidence",
+   "name": "Mud",
+   "chapter": "ch1",
+   "puzzles": 2
+  },
+  {
+   "key": "e:e-hunter-square",
+   "kind": "evidence",
+   "name": "Hunter's square and entrance",
+   "chapter": "ch2",
+   "puzzles": 2
+  },
+  {
+   "key": "e:e-court-guards",
+   "kind": "evidence",
+   "name": "The guards",
+   "chapter": "ch3",
+   "puzzles": 2
+  },
+  {
+   "key": "e:e-paint-niche",
+   "kind": "evidence",
+   "name": "Paint in a niche",
+   "chapter": "ch5",
+   "puzzles": 1
+  },
+  {
+   "key": "e:e-buchanan",
+   "kind": "evidence",
+   "name": "Francis Buchanan, 1800",
+   "chapter": "ch1",
+   "puzzles": 3
+  },
+  {
+   "key": "e:e-hunter-title",
+   "kind": "evidence",
+   "name": "The title page",
+   "chapter": "ch2",
+   "puzzles": 3
+  },
+  {
+   "key": "e:e-court-officers",
+   "kind": "evidence",
+   "name": "The highest officers",
+   "chapter": "ch3",
+   "puzzles": 2
+  },
+  {
+   "key": "e:e-buchanan-paint",
+   "kind": "evidence",
+   "name": "Francis Buchanan, 1800",
+   "chapter": "ch5",
+   "puzzles": 3
+  },
+  {
+   "key": "e:e-inscription",
+   "kind": "evidence",
+   "name": "The inscription",
+   "chapter": "ch1",
+   "puzzles": 3
+  },
+  {
+   "key": "e:e-front-today",
+   "kind": "evidence",
+   "name": "The front today",
+   "chapter": "ch2",
+   "puzzles": 2
+  },
+  {
+   "key": "e:e-court-lower",
+   "kind": "evidence",
+   "name": "The lower officers",
+   "chapter": "ch3",
+   "puzzles": 2
+  },
+  {
+   "key": "e:e-empty-panel",
+   "kind": "evidence",
+   "name": "An empty panel",
+   "chapter": "ch5",
+   "puzzles": 2
+  },
+  {
+   "key": "e:e-court-people",
+   "kind": "evidence",
+   "name": "The people",
+   "chapter": "ch3",
+   "puzzles": 2
+  }
+ ],
+ "puzzles": {
+  "r:exterior-colour.0.c": {
+   "id": "r:exterior-colour.0.c",
+   "element": {
+    "key": "r:exterior-colour",
+    "kind": "restoration",
+    "id": "exterior-colour",
+    "name": "The colours of the front",
+    "image": null
+   },
+   "chapter": {
+    "id": "ch2",
+    "n": 2,
+    "title": "The Year It Was Finished",
+    "years": "1791 to 1792"
+   },
+   "clues": [
+    {
+     "kind": "caption",
+     "text": "The north front of the palace, painted by James Hunter in February 1792.",
+     "source": "Yale Center for British Art, Paul Mellon Collection, B1974.12.1168. Public domain (CC0).",
+     "tier": "record",
+     "witness": null,
+     "facts": [
+      "F08"
+     ]
+    },
+    {
+     "kind": "caption",
+     "text": "The plates are dated 1804 and were published by Edward Orme in London: hand-coloured aquatints, twelve years after Hunter died. The title page itself is dated 1805.",
+     "source": "Picturesque Scenery in the Kingdom of Mysore (Edward Orme, London, 1805).",
+     "tier": "record",
+     "witness": null,
+     "facts": [
+      "F08d",
+      "F08c"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "The exterior colours in our model follow Hunter's watercolour of February 1792. Hunter painted a different front from the one modelled, so their placement here is our reconstruction. The 1804 plates of the palace are not on disk and were not used.",
+     "source": "Palace research files palace-measurements.md and TSP_period_assumptions.md; tools/play/AUDIT.md, sections 5 and 7",
+     "tier": "reconstruction",
+     "facts": [
+      "M2"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch3",
+       "label": "Chapter 3: A Machine for Being Seen",
+       "sub": "1792 to 1799"
+      },
+      {
+       "id": "ch2",
+       "label": "Chapter 2: The Year It Was Finished",
+       "sub": "1791 to 1792"
+      },
+      {
+       "id": "ch5",
+       "label": "Chapter 5: What Nobody Wrote Down",
+       "sub": "1868 to today"
+      }
+     ],
+     "answer": [
+      "ch2"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "How do you use the prints?",
+     "hint": null,
+     "from": "c2-choice",
+     "options": [
+      {
+       "id": "A",
+       "label": "Copy their colours exactly."
+      },
+      {
+       "id": "B",
+       "label": "Trust them for what stood where. For colour, go back to the watercolour he painted himself."
+      },
+      {
+       "id": "C",
+       "label": "Ignore them. He was with the army that took the place."
+      }
+     ],
+     "answer": [
+      "B"
+     ],
+     "explain": {
+      "A": [
+       "He drew it on the spot.",
+       "But the plates were engraved and coloured twelve years later, for a London publisher.",
+       "The shapes are his. We cannot say the same of every colour."
+      ],
+      "B": [
+       "Good, that is the method. Our colours follow the watercolour Hunter painted himself, not the London plates. Where they sit on this front is our reconstruction."
+      ],
+      "C": [
+       "A hostile witness is still a witness.",
+       "He had no reason to lie about a doorway."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "r:exterior-colour.1.c": {
+   "id": "r:exterior-colour.1.c",
+   "element": {
+    "key": "r:exterior-colour",
+    "kind": "restoration",
+    "id": "exterior-colour",
+    "name": "The colours of the front",
+    "image": null
+   },
+   "chapter": {
+    "id": "ch2",
+    "n": 2,
+    "title": "The Year It Was Finished",
+    "years": "1791 to 1792"
+   },
+   "clues": [
+    {
+     "kind": "caption",
+     "text": "The front of the palace as it stands now.",
+     "source": "Photograph: Epocheye, September 2026.",
+     "tier": "record",
+     "witness": null,
+     "facts": [
+      "F18"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "On 21 March 1791 an East India Company army under Cornwallis stormed Bangalore Fort through a breach beside the Delhi Gate.",
+     "source": "Mark Wilks, Historical Sketches of the South of India, vol. III (1817), pp. 127 to 129; the tablet at the breach",
+     "tier": "record",
+     "facts": [
+      "F07"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "The palace inscription gives two dates, 1781 and 1791. Rice reads them as begun in Hyder Ali's time and completed under Tipu Sultan. The ASI board at the entrance gives 1778 to 1789. The palace stood inside Bangalore Fort.",
+     "source": "B. L. Rice, Epigraphia Carnatica IX (1905), Bangalore no. 7 and introduction p. 27; Mackenzie's survey of Bangalore, March 1791, key 14; palace research file palace-dimensions.json (dates tiered disputed)",
+     "tier": "record",
+     "facts": [
+      "F01"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch1",
+       "label": "Chapter 1: Ten Years",
+       "sub": "1781 to 1791"
+      },
+      {
+       "id": "ch2",
+       "label": "Chapter 2: The Year It Was Finished",
+       "sub": "1791 to 1792"
+      },
+      {
+       "id": "ch3",
+       "label": "Chapter 3: A Machine for Being Seen",
+       "sub": "1792 to 1799"
+      }
+     ],
+     "answer": [
+      "ch2"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "How do you use the prints?",
+     "hint": null,
+     "from": "c2-choice",
+     "options": [
+      {
+       "id": "C",
+       "label": "Ignore them. He was with the army that took the place."
+      },
+      {
+       "id": "B",
+       "label": "Trust them for what stood where. For colour, go back to the watercolour he painted himself."
+      },
+      {
+       "id": "A",
+       "label": "Copy their colours exactly."
+      }
+     ],
+     "answer": [
+      "B"
+     ],
+     "explain": {
+      "A": [
+       "He drew it on the spot.",
+       "But the plates were engraved and coloured twelve years later, for a London publisher.",
+       "The shapes are his. We cannot say the same of every colour."
+      ],
+      "B": [
+       "Good, that is the method. Our colours follow the watercolour Hunter painted himself, not the London plates. Where they sit on this front is our reconstruction."
+      ],
+      "C": [
+       "A hostile witness is still a witness.",
+       "He had no reason to lie about a doorway."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "r:exterior-colour.2.c": {
+   "id": "r:exterior-colour.2.c",
+   "element": {
+    "key": "r:exterior-colour",
+    "kind": "restoration",
+    "id": "exterior-colour",
+    "name": "The colours of the front",
+    "image": null
+   },
+   "chapter": {
+    "id": "ch2",
+    "n": 2,
+    "title": "The Year It Was Finished",
+    "years": "1791 to 1792"
+   },
+   "clues": [
+    {
+     "kind": "fact",
+     "text": "James Hunter, Lieutenant in the Royal Artillery, painted the north front of the palace in February 1792.",
+     "source": "Yale Center for British Art, B1974.12.1168, inscribed on the back \"A View of Tippoos Palace at Bangalore Feby. 92\"; title page of Picturesque Scenery in the Kingdom of Mysore (Orme, 1805)",
+     "tier": "record",
+     "facts": [
+      "F08"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "Hunter's drawing of the palace entrance is also dated February 1792. The plates made after his views include the North Front, the West Front, and the Square and Entrance of the palace.",
+     "source": "British Library WD2893, \"The Entrance of Tippoo's Palace, Bangalore Feby. 92\"; plates of Picturesque Scenery in the Kingdom of Mysore (Orme, 1805)",
+     "tier": "record",
+     "facts": [
+      "F08b"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "James Hunter died at Vellore on 19 May 1792.",
+     "source": "His tomb inscription at Vellore",
+     "tier": "record",
+     "facts": [
+      "F08c"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch5",
+       "label": "Chapter 5: What Nobody Wrote Down",
+       "sub": "1868 to today"
+      },
+      {
+       "id": "ch2",
+       "label": "Chapter 2: The Year It Was Finished",
+       "sub": "1791 to 1792"
+      },
+      {
+       "id": "ch3",
+       "label": "Chapter 3: A Machine for Being Seen",
+       "sub": "1792 to 1799"
+      }
+     ],
+     "answer": [
+      "ch2"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "How do you use the prints?",
+     "hint": null,
+     "from": "c2-choice",
+     "options": [
+      {
+       "id": "B",
+       "label": "Trust them for what stood where. For colour, go back to the watercolour he painted himself."
+      },
+      {
+       "id": "A",
+       "label": "Copy their colours exactly."
+      },
+      {
+       "id": "C",
+       "label": "Ignore them. He was with the army that took the place."
+      }
+     ],
+     "answer": [
+      "B"
+     ],
+     "explain": {
+      "A": [
+       "He drew it on the spot.",
+       "But the plates were engraved and coloured twelve years later, for a London publisher.",
+       "The shapes are his. We cannot say the same of every colour."
+      ],
+      "B": [
+       "Good, that is the method. Our colours follow the watercolour Hunter painted himself, not the London plates. Where they sit on this front is our reconstruction."
+      ],
+      "C": [
+       "A hostile witness is still a witness.",
+       "He had no reason to lie about a doorway."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "r:exterior-colour.3.c": {
+   "id": "r:exterior-colour.3.c",
+   "element": {
+    "key": "r:exterior-colour",
+    "kind": "restoration",
+    "id": "exterior-colour",
+    "name": "The colours of the front",
+    "image": null
+   },
+   "chapter": {
+    "id": "ch2",
+    "n": 2,
+    "title": "The Year It Was Finished",
+    "years": "1791 to 1792"
+   },
+   "clues": [
+    {
+     "kind": "fact",
+     "text": "The plates after Hunter's views are dated 1804 and were published by Edward Orme in London as hand-coloured aquatints. The title page is dated 1805. Catalogues differ on the engraver of each plate.",
+     "source": "Title page and plates of Picturesque Scenery in the Kingdom of Mysore (Edward Orme, London, 1805)",
+     "tier": "record",
+     "facts": [
+      "F08d"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "Today the timber is dark and polished, and faded floral painting survives in places on walls, ceilings and niches.",
+     "source": "Palace research file palace-measurements.md; own photographs 37 and 41, September 2026",
+     "tier": "record",
+     "facts": [
+      "F18"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "The rule of this game and of our reconstructions: use only what the evidence supports, and label the rest.",
+     "source": "Epocheye method",
+     "tier": "reading",
+     "facts": [
+      "M1"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch2",
+       "label": "Chapter 2: The Year It Was Finished",
+       "sub": "1791 to 1792"
+      },
+      {
+       "id": "ch4",
+       "label": "Chapter 4: The Office",
+       "sub": "1831 to 1868"
+      },
+      {
+       "id": "ch5",
+       "label": "Chapter 5: What Nobody Wrote Down",
+       "sub": "1868 to today"
+      }
+     ],
+     "answer": [
+      "ch2"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "How do you use the prints?",
+     "hint": null,
+     "from": "c2-choice",
+     "options": [
+      {
+       "id": "C",
+       "label": "Ignore them. He was with the army that took the place."
+      },
+      {
+       "id": "A",
+       "label": "Copy their colours exactly."
+      },
+      {
+       "id": "B",
+       "label": "Trust them for what stood where. For colour, go back to the watercolour he painted himself."
+      }
+     ],
+     "answer": [
+      "B"
+     ],
+     "explain": {
+      "A": [
+       "He drew it on the spot.",
+       "But the plates were engraved and coloured twelve years later, for a London publisher.",
+       "The shapes are his. We cannot say the same of every colour."
+      ],
+      "B": [
+       "Good, that is the method. Our colours follow the watercolour Hunter painted himself, not the London plates. Where they sit on this front is our reconstruction."
+      ],
+      "C": [
+       "A hostile witness is still a witness.",
+       "He had no reason to lie about a doorway."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "r:painted-walls.0.c": {
+   "id": "r:painted-walls.0.c",
+   "element": {
+    "key": "r:painted-walls",
+    "kind": "restoration",
+    "id": "painted-walls",
+    "name": "The painted walls of the upper hall",
+    "image": null
+   },
+   "chapter": {
+    "id": "ch3",
+    "n": 3,
+    "title": "A Machine for Being Seen",
+    "years": "1792 to 1799"
+   },
+   "clues": [
+    {
+     "kind": "quote",
+     "text": "On the upper story, it contains four halls, each comprising two balconies of state for the prince",
+     "source": "A Journey from Madras through the Countries of Mysore, Canara, and Malabar, vol. 1 pp. 45 to 46. Public domain.",
+     "tier": "record",
+     "witness": "Francis Buchanan",
+     "facts": [
+      "F12"
+     ]
+    },
+    {
+     "kind": "caption",
+     "text": "From his entry for 10 May 1800. Printed in London in 1807.",
+     "source": "A Journey from Madras through the Countries of Mysore, Canara, and Malabar, vol. 1 pp. 45 to 46. Public domain.",
+     "tier": "record",
+     "witness": null,
+     "facts": [
+      "F12"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "The painted walls of the upper hall in our model follow the idiom of the fragments that survive. What was painted in each room is not recorded.",
+     "source": "Palace research file palace-measurements.md, section 7.4; tools/play/AUDIT.md, section 4",
+     "tier": "reconstruction",
+     "facts": [
+      "M3"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch2",
+       "label": "Chapter 2: The Year It Was Finished",
+       "sub": "1791 to 1792"
+      },
+      {
+       "id": "ch3",
+       "label": "Chapter 3: A Machine for Being Seen",
+       "sub": "1792 to 1799"
+      },
+      {
+       "id": "ch4",
+       "label": "Chapter 4: The Office",
+       "sub": "1831 to 1868"
+      }
+     ],
+     "answer": [
+      "ch3"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "It glittered. With what?",
+     "hint": null,
+     "from": "c3-choice",
+     "options": [
+      {
+       "id": "A",
+       "label": "Gold leaf."
+      },
+      {
+       "id": "B",
+       "label": "False gilding."
+      },
+      {
+       "id": "C",
+       "label": "Plain paint. The gold is a later story."
+      }
+     ],
+     "answer": [
+      "B"
+     ],
+     "explain": {
+      "A": [
+       "Not gold leaf. Buchanan walked through the palace and wrote \"false gilding\"."
+      ],
+      "B": [
+       "The shine was made to be seen from the court below.",
+       "Up close it was not gold. Buchanan was close.",
+       "The paint and the gilding were in the rooms where the ruler was seen.",
+       "The private rooms, by his account, were small and mean."
+      ],
+      "C": [
+       "Not a later story. Buchanan wrote of \"false gilding\" in 1800."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "r:painted-walls.1.c": {
+   "id": "r:painted-walls.1.c",
+   "element": {
+    "key": "r:painted-walls",
+    "kind": "restoration",
+    "id": "painted-walls",
+    "name": "The painted walls of the upper hall",
+    "image": null
+   },
+   "chapter": {
+    "id": "ch3",
+    "n": 3,
+    "title": "A Machine for Being Seen",
+    "years": "1792 to 1799"
+   },
+   "clues": [
+    {
+     "kind": "quote",
+     "text": "each balcony faces a different Cutchery, or court for giving audience",
+     "source": "A Journey from Madras through the Countries of Mysore, Canara, and Malabar, vol. 1 pp. 45 to 46. Public domain.",
+     "tier": "record",
+     "witness": "Francis Buchanan",
+     "facts": [
+      "F12"
+     ]
+    },
+    {
+     "kind": "quote",
+     "text": "No persons, except a few trusty guards, were admitted into the hall with the Sultan",
+     "source": "A Journey from Madras through the Countries of Mysore, Canara, and Malabar, vol. 1 pp. 45 to 46. Public domain.",
+     "tier": "record",
+     "witness": "Francis Buchanan",
+     "facts": [
+      "F12"
+     ]
+    },
+    {
+     "kind": "quote",
+     "text": "at each end of the court was erected a balcony for the officers of the highest rank",
+     "source": "A Journey from Madras through the Countries of Mysore, Canara, and Malabar, vol. 1 pp. 45 to 46. Public domain.",
+     "tier": "record",
+     "witness": "Francis Buchanan",
+     "facts": [
+      "F12"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch1",
+       "label": "Chapter 1: Ten Years",
+       "sub": "1781 to 1791"
+      },
+      {
+       "id": "ch3",
+       "label": "Chapter 3: A Machine for Being Seen",
+       "sub": "1792 to 1799"
+      },
+      {
+       "id": "ch5",
+       "label": "Chapter 5: What Nobody Wrote Down",
+       "sub": "1868 to today"
+      }
+     ],
+     "answer": [
+      "ch3"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "It glittered. With what?",
+     "hint": null,
+     "from": "c3-choice",
+     "options": [
+      {
+       "id": "B",
+       "label": "False gilding."
+      },
+      {
+       "id": "C",
+       "label": "Plain paint. The gold is a later story."
+      },
+      {
+       "id": "A",
+       "label": "Gold leaf."
+      }
+     ],
+     "answer": [
+      "B"
+     ],
+     "explain": {
+      "A": [
+       "Not gold leaf. Buchanan walked through the palace and wrote \"false gilding\"."
+      ],
+      "B": [
+       "The shine was made to be seen from the court below.",
+       "Up close it was not gold. Buchanan was close.",
+       "The paint and the gilding were in the rooms where the ruler was seen.",
+       "The private rooms, by his account, were small and mean."
+      ],
+      "C": [
+       "Not a later story. Buchanan wrote of \"false gilding\" in 1800."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "r:painted-walls.2.c": {
+   "id": "r:painted-walls.2.c",
+   "element": {
+    "key": "r:painted-walls",
+    "kind": "restoration",
+    "id": "painted-walls",
+    "name": "The painted walls of the upper hall",
+    "image": null
+   },
+   "chapter": {
+    "id": "ch3",
+    "n": 3,
+    "title": "A Machine for Being Seen",
+    "years": "1792 to 1799"
+   },
+   "clues": [
+    {
+     "kind": "quote",
+     "text": "The inferior officers occupied a hall under the balcony of the prince, open in front, and supported by columns as high as the roof of the upper story",
+     "source": "A Journey from Madras through the Countries of Mysore, Canara, and Malabar, vol. 1 pp. 45 to 46. Public domain.",
+     "tier": "record",
+     "witness": "Francis Buchanan",
+     "facts": [
+      "F12"
+     ]
+    },
+    {
+     "kind": "quote",
+     "text": "The populace were admitted into the open court, in which there were fountains for cooling the air",
+     "source": "A Journey from Madras through the Countries of Mysore, Canara, and Malabar, vol. 1 pp. 45 to 46. Public domain.",
+     "tier": "record",
+     "witness": "Francis Buchanan",
+     "facts": [
+      "F12"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "Tipu Sultan was killed at Srirangapatna on 4 May 1799.",
+     "source": "B. L. Rice, Mysore Gazetteer (1897), vol. I pp. 414 to 415",
+     "tier": "record",
+     "facts": [
+      "F10"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch4",
+       "label": "Chapter 4: The Office",
+       "sub": "1831 to 1868"
+      },
+      {
+       "id": "ch3",
+       "label": "Chapter 3: A Machine for Being Seen",
+       "sub": "1792 to 1799"
+      },
+      {
+       "id": "ch5",
+       "label": "Chapter 5: What Nobody Wrote Down",
+       "sub": "1868 to today"
+      }
+     ],
+     "answer": [
+      "ch3"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "It glittered. With what?",
+     "hint": null,
+     "from": "c3-choice",
+     "options": [
+      {
+       "id": "B",
+       "label": "False gilding."
+      },
+      {
+       "id": "A",
+       "label": "Gold leaf."
+      },
+      {
+       "id": "C",
+       "label": "Plain paint. The gold is a later story."
+      }
+     ],
+     "answer": [
+      "B"
+     ],
+     "explain": {
+      "A": [
+       "Not gold leaf. Buchanan walked through the palace and wrote \"false gilding\"."
+      ],
+      "B": [
+       "The shine was made to be seen from the court below.",
+       "Up close it was not gold. Buchanan was close.",
+       "The paint and the gilding were in the rooms where the ruler was seen.",
+       "The private rooms, by his account, were small and mean."
+      ],
+      "C": [
+       "Not a later story. Buchanan wrote of \"false gilding\" in 1800."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "r:painted-walls.3.c": {
+   "id": "r:painted-walls.3.c",
+   "element": {
+    "key": "r:painted-walls",
+    "kind": "restoration",
+    "id": "painted-walls",
+    "name": "The painted walls of the upper hall",
+    "image": null
+   },
+   "chapter": {
+    "id": "ch3",
+    "n": 3,
+    "title": "A Machine for Being Seen",
+    "years": "1792 to 1799"
+   },
+   "clues": [
+    {
+     "kind": "fact",
+     "text": "Francis Buchanan's account of the palace is entered in his journal under 10 May 1800, at Bangalore.",
+     "source": "Francis Buchanan, A Journey from Madras through the Countries of Mysore, Canara, and Malabar (1807), vol. 1 p. 44",
+     "tier": "record",
+     "facts": [
+      "F11"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "Most of the palace Buchanan described is gone. Sankey, 1873: the main block \"has now been cleared away\", and \"an adjoining block which housed the Treasury ... still stands\". Rice, 1897: \"The palace having partly fallen in the greater part was demolished.\"",
+     "source": "R. H. Sankey, Offices of the Mysore Government at Bangalore, Professional Papers on Indian Engineering, 2nd series, vol. II, no. LXIII (1873), pp. 1 to 2; B. L. Rice, Mysore Gazetteer (1897), vol. II p. 47",
+     "tier": "record",
+     "facts": [
+      "F19"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "Buchanan, 10 May 1800: \"At each end of the halls are private apartments, small, mean, and inconvenient. The public rooms are neatly painted, and ornamented with false gilding.\"",
+     "source": "Francis Buchanan, A Journey from Madras through the Countries of Mysore, Canara, and Malabar (1807), vol. 1 pp. 45 to 46",
+     "tier": "record",
+     "facts": [
+      "F13"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch2",
+       "label": "Chapter 2: The Year It Was Finished",
+       "sub": "1791 to 1792"
+      },
+      {
+       "id": "ch4",
+       "label": "Chapter 4: The Office",
+       "sub": "1831 to 1868"
+      },
+      {
+       "id": "ch3",
+       "label": "Chapter 3: A Machine for Being Seen",
+       "sub": "1792 to 1799"
+      }
+     ],
+     "answer": [
+      "ch3"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "It glittered. With what?",
+     "hint": null,
+     "from": "c3-choice",
+     "options": [
+      {
+       "id": "B",
+       "label": "False gilding."
+      },
+      {
+       "id": "C",
+       "label": "Plain paint. The gold is a later story."
+      },
+      {
+       "id": "A",
+       "label": "Gold leaf."
+      }
+     ],
+     "answer": [
+      "B"
+     ],
+     "explain": {
+      "A": [
+       "Not gold leaf. Buchanan walked through the palace and wrote \"false gilding\"."
+      ],
+      "B": [
+       "The shine was made to be seen from the court below.",
+       "Up close it was not gold. Buchanan was close.",
+       "The paint and the gilding were in the rooms where the ruler was seen.",
+       "The private rooms, by his account, were small and mean."
+      ],
+      "C": [
+       "Not a later story. Buchanan wrote of \"false gilding\" in 1800."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "r:painted-ceiling.0.c": {
+   "id": "r:painted-ceiling.0.c",
+   "element": {
+    "key": "r:painted-ceiling",
+    "kind": "restoration",
+    "id": "painted-ceiling",
+    "name": "The painted ceiling",
+    "image": null
+   },
+   "chapter": {
+    "id": "ch5",
+    "n": 5,
+    "title": "What Nobody Wrote Down",
+    "years": "1868 to today"
+   },
+   "clues": [
+    {
+     "kind": "caption",
+     "text": "Painted flowers that survive on a wall of the palace.",
+     "source": "Photograph: Epocheye, September 2026.",
+     "tier": "record",
+     "witness": null,
+     "facts": [
+      "F18"
+     ]
+    },
+    {
+     "kind": "caption",
+     "text": "Paint that survives on a ceiling of the palace.",
+     "source": "Photograph: Epocheye, September 2026.",
+     "tier": "record",
+     "witness": null,
+     "facts": [
+      "F18"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "For panels with nothing left, our model repeats the one recorded pattern across the upper floor and labels its extent as inferred. It leaves the ground floor plain. It never invents a pattern.",
+     "source": "tools/play/AUDIT.md, section 4; docs/play/STORY_CHECK.md, section 6",
+     "tier": "reconstruction",
+     "facts": [
+      "M4"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch4",
+       "label": "Chapter 4: The Office",
+       "sub": "1831 to 1868"
+      },
+      {
+       "id": "ch5",
+       "label": "Chapter 5: What Nobody Wrote Down",
+       "sub": "1868 to today"
+      },
+      {
+       "id": "ch2",
+       "label": "Chapter 2: The Year It Was Finished",
+       "sub": "1791 to 1792"
+      }
+     ],
+     "answer": [
+      "ch5"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "The empty panel. What do you do?",
+     "hint": null,
+     "from": "c5-choice",
+     "options": [
+      {
+       "id": "B",
+       "label": "Leave it plain."
+      },
+      {
+       "id": "C",
+       "label": "Design something that suits the period."
+      },
+      {
+       "id": "A",
+       "label": "Continue the pattern that survives on matching panels, and mark it as our reconstruction."
+      }
+     ],
+     "answer": [
+      "A",
+      "B"
+     ],
+     "explain": {
+      "A": [
+       "Good. Where the same panel survives elsewhere in the palace, we repeat it and label it."
+      ],
+      "B": [
+       "Good. Where nothing survives, plain is the honest answer.",
+       "Even though plain looks unfinished."
+      ],
+      "C": [
+       "It would look the best. It would also be fiction.",
+       "A rebuilt ceiling does not look uncertain. It looks like the answer.",
+       "So it has to come from the building, not from taste."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "r:painted-ceiling.1.c": {
+   "id": "r:painted-ceiling.1.c",
+   "element": {
+    "key": "r:painted-ceiling",
+    "kind": "restoration",
+    "id": "painted-ceiling",
+    "name": "The painted ceiling",
+    "image": null
+   },
+   "chapter": {
+    "id": "ch5",
+    "n": 5,
+    "title": "What Nobody Wrote Down",
+    "years": "1868 to today"
+   },
+   "clues": [
+    {
+     "kind": "quote",
+     "text": "The public rooms are neatly painted, and ornamented with false gilding.",
+     "source": "A Journey from Madras through the Countries of Mysore, Canara, and Malabar, vol. 1 pp. 45 to 46. Public domain.",
+     "tier": "record",
+     "witness": "Francis Buchanan",
+     "facts": [
+      "F13"
+     ]
+    },
+    {
+     "kind": "caption",
+     "text": "From his entry for 10 May 1800. Printed in London in 1807.",
+     "source": "A Journey from Madras through the Countries of Mysore, Canara, and Malabar, vol. 1 pp. 45 to 46. Public domain.",
+     "tier": "record",
+     "witness": null,
+     "facts": [
+      "F13"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "The exterior colours in our model follow Hunter's watercolour of February 1792. Hunter painted a different front from the one modelled, so their placement here is our reconstruction. The 1804 plates of the palace are not on disk and were not used.",
+     "source": "Palace research files palace-measurements.md and TSP_period_assumptions.md; tools/play/AUDIT.md, sections 5 and 7",
+     "tier": "reconstruction",
+     "facts": [
+      "M2"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch5",
+       "label": "Chapter 5: What Nobody Wrote Down",
+       "sub": "1868 to today"
+      },
+      {
+       "id": "ch4",
+       "label": "Chapter 4: The Office",
+       "sub": "1831 to 1868"
+      },
+      {
+       "id": "ch3",
+       "label": "Chapter 3: A Machine for Being Seen",
+       "sub": "1792 to 1799"
+      }
+     ],
+     "answer": [
+      "ch5"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "The empty panel. What do you do?",
+     "hint": null,
+     "from": "c5-choice",
+     "options": [
+      {
+       "id": "A",
+       "label": "Continue the pattern that survives on matching panels, and mark it as our reconstruction."
+      },
+      {
+       "id": "B",
+       "label": "Leave it plain."
+      },
+      {
+       "id": "C",
+       "label": "Design something that suits the period."
+      }
+     ],
+     "answer": [
+      "A",
+      "B"
+     ],
+     "explain": {
+      "A": [
+       "Good. Where the same panel survives elsewhere in the palace, we repeat it and label it."
+      ],
+      "B": [
+       "Good. Where nothing survives, plain is the honest answer.",
+       "Even though plain looks unfinished."
+      ],
+      "C": [
+       "It would look the best. It would also be fiction.",
+       "A rebuilt ceiling does not look uncertain. It looks like the answer.",
+       "So it has to come from the building, not from taste."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "r:painted-ceiling.2.c": {
+   "id": "r:painted-ceiling.2.c",
+   "element": {
+    "key": "r:painted-ceiling",
+    "kind": "restoration",
+    "id": "painted-ceiling",
+    "name": "The painted ceiling",
+    "image": null
+   },
+   "chapter": {
+    "id": "ch5",
+    "n": 5,
+    "title": "What Nobody Wrote Down",
+    "years": "1868 to today"
+   },
+   "clues": [
+    {
+     "kind": "caption",
+     "text": "A panel with none of its painting left.",
+     "source": "Palace narration (seed 105); own photographs 37 and 41, September 2026",
+     "tier": "record",
+     "witness": null,
+     "facts": [
+      "F17"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "Buchanan, 10 May 1800: \"At each end of the halls are private apartments, small, mean, and inconvenient. The public rooms are neatly painted, and ornamented with false gilding.\"",
+     "source": "Francis Buchanan, A Journey from Madras through the Countries of Mysore, Canara, and Malabar (1807), vol. 1 pp. 45 to 46",
+     "tier": "record",
+     "facts": [
+      "F13"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "The painted walls of the upper hall in our model follow the idiom of the fragments that survive. What was painted in each room is not recorded.",
+     "source": "Palace research file palace-measurements.md, section 7.4; tools/play/AUDIT.md, section 4",
+     "tier": "reconstruction",
+     "facts": [
+      "M3"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch5",
+       "label": "Chapter 5: What Nobody Wrote Down",
+       "sub": "1868 to today"
+      },
+      {
+       "id": "ch3",
+       "label": "Chapter 3: A Machine for Being Seen",
+       "sub": "1792 to 1799"
+      },
+      {
+       "id": "ch1",
+       "label": "Chapter 1: Ten Years",
+       "sub": "1781 to 1791"
+      }
+     ],
+     "answer": [
+      "ch5"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "The empty panel. What do you do?",
+     "hint": null,
+     "from": "c5-choice",
+     "options": [
+      {
+       "id": "C",
+       "label": "Design something that suits the period."
+      },
+      {
+       "id": "A",
+       "label": "Continue the pattern that survives on matching panels, and mark it as our reconstruction."
+      },
+      {
+       "id": "B",
+       "label": "Leave it plain."
+      }
+     ],
+     "answer": [
+      "A",
+      "B"
+     ],
+     "explain": {
+      "A": [
+       "Good. Where the same panel survives elsewhere in the palace, we repeat it and label it."
+      ],
+      "B": [
+       "Good. Where nothing survives, plain is the honest answer.",
+       "Even though plain looks unfinished."
+      ],
+      "C": [
+       "It would look the best. It would also be fiction.",
+       "A rebuilt ceiling does not look uncertain. It looks like the answer.",
+       "So it has to come from the building, not from taste."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "r:painted-ceiling.3.c": {
+   "id": "r:painted-ceiling.3.c",
+   "element": {
+    "key": "r:painted-ceiling",
+    "kind": "restoration",
+    "id": "painted-ceiling",
+    "name": "The painted ceiling",
+    "image": null
+   },
+   "chapter": {
+    "id": "ch5",
+    "n": 5,
+    "title": "What Nobody Wrote Down",
+    "years": "1868 to today"
+   },
+   "clues": [
+    {
+     "kind": "fact",
+     "text": "Almost all of the painted decoration is gone. What is left are fragments, and they are faint.",
+     "source": "Palace narration (seed 105); own photographs 37 and 41, September 2026",
+     "tier": "record",
+     "facts": [
+      "F17"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "Today the timber is dark and polished, and faded floral painting survives in places on walls, ceilings and niches.",
+     "source": "Palace research file palace-measurements.md; own photographs 37 and 41, September 2026",
+     "tier": "record",
+     "facts": [
+      "F18"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "In 1873 the engineer R. H. Sankey wrote of \"the happy application of white-wash\" to the block of the palace that still stood.",
+     "source": "R. H. Sankey, Offices of the Mysore Government at Bangalore, Professional Papers on Indian Engineering, 2nd series, vol. II, no. LXIII (1873), pp. 1 to 2",
+     "tier": "record",
+     "facts": [
+      "F17b"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch1",
+       "label": "Chapter 1: Ten Years",
+       "sub": "1781 to 1791"
+      },
+      {
+       "id": "ch5",
+       "label": "Chapter 5: What Nobody Wrote Down",
+       "sub": "1868 to today"
+      },
+      {
+       "id": "ch4",
+       "label": "Chapter 4: The Office",
+       "sub": "1831 to 1868"
+      }
+     ],
+     "answer": [
+      "ch5"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "The empty panel. What do you do?",
+     "hint": null,
+     "from": "c5-choice",
+     "options": [
+      {
+       "id": "A",
+       "label": "Continue the pattern that survives on matching panels, and mark it as our reconstruction."
+      },
+      {
+       "id": "B",
+       "label": "Leave it plain."
+      },
+      {
+       "id": "C",
+       "label": "Design something that suits the period."
+      }
+     ],
+     "answer": [
+      "A",
+      "B"
+     ],
+     "explain": {
+      "A": [
+       "Good. Where the same panel survives elsewhere in the palace, we repeat it and label it."
+      ],
+      "B": [
+       "Good. Where nothing survives, plain is the honest answer.",
+       "Even though plain looks unfinished."
+      ],
+      "C": [
+       "It would look the best. It would also be fiction.",
+       "A rebuilt ceiling does not look uncertain. It looks like the answer.",
+       "So it has to come from the building, not from taste."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "r:painted-ceiling.4.c": {
+   "id": "r:painted-ceiling.4.c",
+   "element": {
+    "key": "r:painted-ceiling",
+    "kind": "restoration",
+    "id": "painted-ceiling",
+    "name": "The painted ceiling",
+    "image": null
+   },
+   "chapter": {
+    "id": "ch5",
+    "n": 5,
+    "title": "What Nobody Wrote Down",
+    "years": "1868 to today"
+   },
+   "clues": [
+    {
+     "kind": "fact",
+     "text": "The rule of this game and of our reconstructions: use only what the evidence supports, and label the rest.",
+     "source": "Epocheye method",
+     "tier": "reading",
+     "facts": [
+      "M1"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "A Persian inscription on a stone in the palace opens with the laying of the foundation and gives its two dates as phrases meaning Abode of Happiness and Envy of Heaven. The first is computed in a letter-number system devised by Tipu Sultan.",
+     "source": "B. L. Rice, Epigraphia Carnatica IX (1905), Bangalore no. 7, with his note on the Zar system; Rice, Mysore Gazetteer (1897) II p. 47 note",
+     "tier": "record",
+     "facts": [
+      "F06"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "From its completion in 1791 to the death of Tipu Sultan in 1799 is about eight years.",
+     "source": "Arithmetic on F01 and F10",
+     "tier": "reading",
+     "facts": [
+      "F01b"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch2",
+       "label": "Chapter 2: The Year It Was Finished",
+       "sub": "1791 to 1792"
+      },
+      {
+       "id": "ch5",
+       "label": "Chapter 5: What Nobody Wrote Down",
+       "sub": "1868 to today"
+      },
+      {
+       "id": "ch1",
+       "label": "Chapter 1: Ten Years",
+       "sub": "1781 to 1791"
+      }
+     ],
+     "answer": [
+      "ch5"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "The empty panel. What do you do?",
+     "hint": null,
+     "from": "c5-choice",
+     "options": [
+      {
+       "id": "A",
+       "label": "Continue the pattern that survives on matching panels, and mark it as our reconstruction."
+      },
+      {
+       "id": "B",
+       "label": "Leave it plain."
+      },
+      {
+       "id": "C",
+       "label": "Design something that suits the period."
+      }
+     ],
+     "answer": [
+      "A",
+      "B"
+     ],
+     "explain": {
+      "A": [
+       "Good. Where the same panel survives elsewhere in the palace, we repeat it and label it."
+      ],
+      "B": [
+       "Good. Where nothing survives, plain is the honest answer.",
+       "Even though plain looks unfinished."
+      ],
+      "C": [
+       "It would look the best. It would also be fiction.",
+       "A rebuilt ceiling does not look uncertain. It looks like the answer.",
+       "So it has to come from the building, not from taste."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "e:e-wood.0.c": {
+   "id": "e:e-wood.0.c",
+   "element": {
+    "key": "e:e-wood",
+    "kind": "evidence",
+    "id": "e-wood",
+    "name": "Wood",
+    "image": null
+   },
+   "chapter": {
+    "id": "ch1",
+    "n": 1,
+    "title": "Ten Years",
+    "years": "1781 to 1791"
+   },
+   "clues": [
+    {
+     "kind": "fact",
+     "text": "The palace inscription gives two dates, 1781 and 1791. Rice reads them as begun in Hyder Ali's time and completed under Tipu Sultan. The ASI board at the entrance gives 1778 to 1789. The palace stood inside Bangalore Fort.",
+     "source": "B. L. Rice, Epigraphia Carnatica IX (1905), Bangalore no. 7 and introduction p. 27; Mackenzie's survey of Bangalore, March 1791, key 14; palace research file palace-dimensions.json (dates tiered disputed)",
+     "tier": "record",
+     "facts": [
+      "F01"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "Bangalore Fort: a mud fort said to date from 1537 under Kempe Gowda I; rebuilt in stone in 1761, the first year of Hyder Ali's reign.",
+     "source": "B. L. Rice, Mysore Gazetteer (1897), vol. II p. 46",
+     "tier": "record",
+     "facts": [
+      "F02"
+     ]
+    },
+    {
+     "kind": "caption",
+     "text": "Pillars, arches, beams and ceilings. The palace's own files record the timber as teak.",
+     "source": "Palace research file palace-dimensions.json (materials, confirmed); ASI display board as recorded in photos_own/MANIFEST.md; Rice, Mysore Gazetteer (1897) II p. 47",
+     "tier": "record",
+     "witness": null,
+     "facts": [
+      "F04"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch5",
+       "label": "Chapter 5: What Nobody Wrote Down",
+       "sub": "1868 to today"
+      },
+      {
+       "id": "ch1",
+       "label": "Chapter 1: Ten Years",
+       "sub": "1781 to 1791"
+      },
+      {
+       "id": "ch2",
+       "label": "Chapter 2: The Year It Was Finished",
+       "sub": "1791 to 1792"
+      }
+     ],
+     "answer": [
+      "ch1"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "Who is right?",
+     "hint": null,
+     "from": "c1-choice",
+     "options": [
+      {
+       "id": "A",
+       "label": "Teak. Buchanan was careless."
+      },
+      {
+       "id": "C",
+       "label": "Both."
+      },
+      {
+       "id": "B",
+       "label": "Mud. The teak is later repair."
+      }
+     ],
+     "answer": [
+      "C"
+     ],
+     "explain": {
+      "A": [
+       "Not careless. The outer walls are mud. He was right about that."
+      ],
+      "B": [
+       "Not repair. A view engraved in 1794 already shows these wooden pillars."
+      ],
+      "C": [
+       "Stone below. Mud in the walls. Wood for everything that holds the building up and everything you look at.",
+       "The mud is in the walls. You are looking at pillars.",
+       "Two honest witnesses can describe two different buildings."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "e:e-wood.1.c": {
+   "id": "e:e-wood.1.c",
+   "element": {
+    "key": "e:e-wood",
+    "kind": "evidence",
+    "id": "e-wood",
+    "name": "Wood",
+    "image": null
+   },
+   "chapter": {
+    "id": "ch1",
+    "n": 1,
+    "title": "Ten Years",
+    "years": "1781 to 1791"
+   },
+   "clues": [
+    {
+     "kind": "fact",
+     "text": "The Venkataramana temple in the fort was built under Chikka Devaraja Wadiyar and immediately adjoins the palace on the north-east. No year of building is recorded.",
+     "source": "Epigraphia Carnatica IX, Bangalore no. 118 and introduction p. 27",
+     "tier": "record",
+     "facts": [
+      "F03"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "Francis Buchanan, 10 May 1800: the palace \"is composed of mud\", yet \"not without some degree of magnificence\".",
+     "source": "Francis Buchanan, A Journey from Madras through the Countries of Mysore, Canara, and Malabar (1807), vol. 1 p. 45",
+     "tier": "record",
+     "facts": [
+      "F05"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "Teak framing and pillars, stone pillar bases and stone platform; the outer walls of mud.",
+     "source": "Palace research file palace-dimensions.json (materials, confirmed); ASI display board as recorded in photos_own/MANIFEST.md; Rice, Mysore Gazetteer (1897) II p. 47",
+     "tier": "record",
+     "facts": [
+      "F04"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch5",
+       "label": "Chapter 5: What Nobody Wrote Down",
+       "sub": "1868 to today"
+      },
+      {
+       "id": "ch1",
+       "label": "Chapter 1: Ten Years",
+       "sub": "1781 to 1791"
+      },
+      {
+       "id": "ch3",
+       "label": "Chapter 3: A Machine for Being Seen",
+       "sub": "1792 to 1799"
+      }
+     ],
+     "answer": [
+      "ch1"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "Who is right?",
+     "hint": null,
+     "from": "c1-choice",
+     "options": [
+      {
+       "id": "A",
+       "label": "Teak. Buchanan was careless."
+      },
+      {
+       "id": "B",
+       "label": "Mud. The teak is later repair."
+      },
+      {
+       "id": "C",
+       "label": "Both."
+      }
+     ],
+     "answer": [
+      "C"
+     ],
+     "explain": {
+      "A": [
+       "Not careless. The outer walls are mud. He was right about that."
+      ],
+      "B": [
+       "Not repair. A view engraved in 1794 already shows these wooden pillars."
+      ],
+      "C": [
+       "Stone below. Mud in the walls. Wood for everything that holds the building up and everything you look at.",
+       "The mud is in the walls. You are looking at pillars.",
+       "Two honest witnesses can describe two different buildings."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "e:e-stone.0.c": {
+   "id": "e:e-stone.0.c",
+   "element": {
+    "key": "e:e-stone",
+    "kind": "evidence",
+    "id": "e-stone",
+    "name": "Stone",
+    "image": null
+   },
+   "chapter": {
+    "id": "ch1",
+    "n": 1,
+    "title": "Ten Years",
+    "years": "1781 to 1791"
+   },
+   "clues": [
+    {
+     "kind": "fact",
+     "text": "The palace inscription gives two dates, 1781 and 1791. Rice reads them as begun in Hyder Ali's time and completed under Tipu Sultan. The ASI board at the entrance gives 1778 to 1789. The palace stood inside Bangalore Fort.",
+     "source": "B. L. Rice, Epigraphia Carnatica IX (1905), Bangalore no. 7 and introduction p. 27; Mackenzie's survey of Bangalore, March 1791, key 14; palace research file palace-dimensions.json (dates tiered disputed)",
+     "tier": "record",
+     "facts": [
+      "F01"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "Bangalore Fort: a mud fort said to date from 1537 under Kempe Gowda I; rebuilt in stone in 1761, the first year of Hyder Ali's reign.",
+     "source": "B. L. Rice, Mysore Gazetteer (1897), vol. II p. 46",
+     "tier": "record",
+     "facts": [
+      "F02"
+     ]
+    },
+    {
+     "kind": "caption",
+     "text": "Each pillar stands on a carved stone base. The platform under the whole building is stone.",
+     "source": "Palace research file palace-dimensions.json (materials, confirmed); ASI display board as recorded in photos_own/MANIFEST.md; Rice, Mysore Gazetteer (1897) II p. 47",
+     "tier": "record",
+     "witness": null,
+     "facts": [
+      "F04"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch2",
+       "label": "Chapter 2: The Year It Was Finished",
+       "sub": "1791 to 1792"
+      },
+      {
+       "id": "ch1",
+       "label": "Chapter 1: Ten Years",
+       "sub": "1781 to 1791"
+      },
+      {
+       "id": "ch5",
+       "label": "Chapter 5: What Nobody Wrote Down",
+       "sub": "1868 to today"
+      }
+     ],
+     "answer": [
+      "ch1"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "Who is right?",
+     "hint": null,
+     "from": "c1-choice",
+     "options": [
+      {
+       "id": "A",
+       "label": "Teak. Buchanan was careless."
+      },
+      {
+       "id": "C",
+       "label": "Both."
+      },
+      {
+       "id": "B",
+       "label": "Mud. The teak is later repair."
+      }
+     ],
+     "answer": [
+      "C"
+     ],
+     "explain": {
+      "A": [
+       "Not careless. The outer walls are mud. He was right about that."
+      ],
+      "B": [
+       "Not repair. A view engraved in 1794 already shows these wooden pillars."
+      ],
+      "C": [
+       "Stone below. Mud in the walls. Wood for everything that holds the building up and everything you look at.",
+       "The mud is in the walls. You are looking at pillars.",
+       "Two honest witnesses can describe two different buildings."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "e:e-stone.1.c": {
+   "id": "e:e-stone.1.c",
+   "element": {
+    "key": "e:e-stone",
+    "kind": "evidence",
+    "id": "e-stone",
+    "name": "Stone",
+    "image": null
+   },
+   "chapter": {
+    "id": "ch1",
+    "n": 1,
+    "title": "Ten Years",
+    "years": "1781 to 1791"
+   },
+   "clues": [
+    {
+     "kind": "fact",
+     "text": "The Venkataramana temple in the fort was built under Chikka Devaraja Wadiyar and immediately adjoins the palace on the north-east. No year of building is recorded.",
+     "source": "Epigraphia Carnatica IX, Bangalore no. 118 and introduction p. 27",
+     "tier": "record",
+     "facts": [
+      "F03"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "Francis Buchanan, 10 May 1800: the palace \"is composed of mud\", yet \"not without some degree of magnificence\".",
+     "source": "Francis Buchanan, A Journey from Madras through the Countries of Mysore, Canara, and Malabar (1807), vol. 1 p. 45",
+     "tier": "record",
+     "facts": [
+      "F05"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "Teak framing and pillars, stone pillar bases and stone platform; the outer walls of mud.",
+     "source": "Palace research file palace-dimensions.json (materials, confirmed); ASI display board as recorded in photos_own/MANIFEST.md; Rice, Mysore Gazetteer (1897) II p. 47",
+     "tier": "record",
+     "facts": [
+      "F04"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch3",
+       "label": "Chapter 3: A Machine for Being Seen",
+       "sub": "1792 to 1799"
+      },
+      {
+       "id": "ch2",
+       "label": "Chapter 2: The Year It Was Finished",
+       "sub": "1791 to 1792"
+      },
+      {
+       "id": "ch1",
+       "label": "Chapter 1: Ten Years",
+       "sub": "1781 to 1791"
+      }
+     ],
+     "answer": [
+      "ch1"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "Who is right?",
+     "hint": null,
+     "from": "c1-choice",
+     "options": [
+      {
+       "id": "A",
+       "label": "Teak. Buchanan was careless."
+      },
+      {
+       "id": "C",
+       "label": "Both."
+      },
+      {
+       "id": "B",
+       "label": "Mud. The teak is later repair."
+      }
+     ],
+     "answer": [
+      "C"
+     ],
+     "explain": {
+      "A": [
+       "Not careless. The outer walls are mud. He was right about that."
+      ],
+      "B": [
+       "Not repair. A view engraved in 1794 already shows these wooden pillars."
+      ],
+      "C": [
+       "Stone below. Mud in the walls. Wood for everything that holds the building up and everything you look at.",
+       "The mud is in the walls. You are looking at pillars.",
+       "Two honest witnesses can describe two different buildings."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "e:e-mud.0.c": {
+   "id": "e:e-mud.0.c",
+   "element": {
+    "key": "e:e-mud",
+    "kind": "evidence",
+    "id": "e-mud",
+    "name": "Mud",
+    "image": null
+   },
+   "chapter": {
+    "id": "ch1",
+    "n": 1,
+    "title": "Ten Years",
+    "years": "1781 to 1791"
+   },
+   "clues": [
+    {
+     "kind": "fact",
+     "text": "The palace inscription gives two dates, 1781 and 1791. Rice reads them as begun in Hyder Ali's time and completed under Tipu Sultan. The ASI board at the entrance gives 1778 to 1789. The palace stood inside Bangalore Fort.",
+     "source": "B. L. Rice, Epigraphia Carnatica IX (1905), Bangalore no. 7 and introduction p. 27; Mackenzie's survey of Bangalore, March 1791, key 14; palace research file palace-dimensions.json (dates tiered disputed)",
+     "tier": "record",
+     "facts": [
+      "F01"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "Bangalore Fort: a mud fort said to date from 1537 under Kempe Gowda I; rebuilt in stone in 1761, the first year of Hyder Ali's reign.",
+     "source": "B. L. Rice, Mysore Gazetteer (1897), vol. II p. 46",
+     "tier": "record",
+     "facts": [
+      "F02"
+     ]
+    },
+    {
+     "kind": "caption",
+     "text": "The outer walls are mud, under plaster.",
+     "source": "Palace research file palace-dimensions.json (materials, confirmed); ASI display board as recorded in photos_own/MANIFEST.md; Rice, Mysore Gazetteer (1897) II p. 47",
+     "tier": "record",
+     "witness": null,
+     "facts": [
+      "F04"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch4",
+       "label": "Chapter 4: The Office",
+       "sub": "1831 to 1868"
+      },
+      {
+       "id": "ch1",
+       "label": "Chapter 1: Ten Years",
+       "sub": "1781 to 1791"
+      },
+      {
+       "id": "ch3",
+       "label": "Chapter 3: A Machine for Being Seen",
+       "sub": "1792 to 1799"
+      }
+     ],
+     "answer": [
+      "ch1"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "Who is right?",
+     "hint": null,
+     "from": "c1-choice",
+     "options": [
+      {
+       "id": "C",
+       "label": "Both."
+      },
+      {
+       "id": "B",
+       "label": "Mud. The teak is later repair."
+      },
+      {
+       "id": "A",
+       "label": "Teak. Buchanan was careless."
+      }
+     ],
+     "answer": [
+      "C"
+     ],
+     "explain": {
+      "A": [
+       "Not careless. The outer walls are mud. He was right about that."
+      ],
+      "B": [
+       "Not repair. A view engraved in 1794 already shows these wooden pillars."
+      ],
+      "C": [
+       "Stone below. Mud in the walls. Wood for everything that holds the building up and everything you look at.",
+       "The mud is in the walls. You are looking at pillars.",
+       "Two honest witnesses can describe two different buildings."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "e:e-mud.1.c": {
+   "id": "e:e-mud.1.c",
+   "element": {
+    "key": "e:e-mud",
+    "kind": "evidence",
+    "id": "e-mud",
+    "name": "Mud",
+    "image": null
+   },
+   "chapter": {
+    "id": "ch1",
+    "n": 1,
+    "title": "Ten Years",
+    "years": "1781 to 1791"
+   },
+   "clues": [
+    {
+     "kind": "fact",
+     "text": "The Venkataramana temple in the fort was built under Chikka Devaraja Wadiyar and immediately adjoins the palace on the north-east. No year of building is recorded.",
+     "source": "Epigraphia Carnatica IX, Bangalore no. 118 and introduction p. 27",
+     "tier": "record",
+     "facts": [
+      "F03"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "Francis Buchanan, 10 May 1800: the palace \"is composed of mud\", yet \"not without some degree of magnificence\".",
+     "source": "Francis Buchanan, A Journey from Madras through the Countries of Mysore, Canara, and Malabar (1807), vol. 1 p. 45",
+     "tier": "record",
+     "facts": [
+      "F05"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "Teak framing and pillars, stone pillar bases and stone platform; the outer walls of mud.",
+     "source": "Palace research file palace-dimensions.json (materials, confirmed); ASI display board as recorded in photos_own/MANIFEST.md; Rice, Mysore Gazetteer (1897) II p. 47",
+     "tier": "record",
+     "facts": [
+      "F04"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch2",
+       "label": "Chapter 2: The Year It Was Finished",
+       "sub": "1791 to 1792"
+      },
+      {
+       "id": "ch4",
+       "label": "Chapter 4: The Office",
+       "sub": "1831 to 1868"
+      },
+      {
+       "id": "ch1",
+       "label": "Chapter 1: Ten Years",
+       "sub": "1781 to 1791"
+      }
+     ],
+     "answer": [
+      "ch1"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "Who is right?",
+     "hint": null,
+     "from": "c1-choice",
+     "options": [
+      {
+       "id": "B",
+       "label": "Mud. The teak is later repair."
+      },
+      {
+       "id": "C",
+       "label": "Both."
+      },
+      {
+       "id": "A",
+       "label": "Teak. Buchanan was careless."
+      }
+     ],
+     "answer": [
+      "C"
+     ],
+     "explain": {
+      "A": [
+       "Not careless. The outer walls are mud. He was right about that."
+      ],
+      "B": [
+       "Not repair. A view engraved in 1794 already shows these wooden pillars."
+      ],
+      "C": [
+       "Stone below. Mud in the walls. Wood for everything that holds the building up and everything you look at.",
+       "The mud is in the walls. You are looking at pillars.",
+       "Two honest witnesses can describe two different buildings."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "e:e-buchanan.0.c": {
+   "id": "e:e-buchanan.0.c",
+   "element": {
+    "key": "e:e-buchanan",
+    "kind": "evidence",
+    "id": "e-buchanan",
+    "name": "Francis Buchanan, 1800",
+    "image": null
+   },
+   "chapter": {
+    "id": "ch1",
+    "n": 1,
+    "title": "Ten Years",
+    "years": "1781 to 1791"
+   },
+   "clues": [
+    {
+     "kind": "fact",
+     "text": "The palace inscription gives two dates, 1781 and 1791. Rice reads them as begun in Hyder Ali's time and completed under Tipu Sultan. The ASI board at the entrance gives 1778 to 1789. The palace stood inside Bangalore Fort.",
+     "source": "B. L. Rice, Epigraphia Carnatica IX (1905), Bangalore no. 7 and introduction p. 27; Mackenzie's survey of Bangalore, March 1791, key 14; palace research file palace-dimensions.json (dates tiered disputed)",
+     "tier": "record",
+     "facts": [
+      "F01"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "Bangalore Fort: a mud fort said to date from 1537 under Kempe Gowda I; rebuilt in stone in 1761, the first year of Hyder Ali's reign.",
+     "source": "B. L. Rice, Mysore Gazetteer (1897), vol. II p. 46",
+     "tier": "record",
+     "facts": [
+      "F02"
+     ]
+    },
+    {
+     "kind": "quote",
+     "text": "Although this is composed of mud, it is not without some degree of magnificence.",
+     "source": "A Journey from Madras through the Countries of Mysore, Canara, and Malabar, vol. 1 p. 45. Public domain.",
+     "tier": "record",
+     "witness": "Francis Buchanan",
+     "facts": [
+      "F05"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch1",
+       "label": "Chapter 1: Ten Years",
+       "sub": "1781 to 1791"
+      },
+      {
+       "id": "ch3",
+       "label": "Chapter 3: A Machine for Being Seen",
+       "sub": "1792 to 1799"
+      },
+      {
+       "id": "ch5",
+       "label": "Chapter 5: What Nobody Wrote Down",
+       "sub": "1868 to today"
+      }
+     ],
+     "answer": [
+      "ch1"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "Who is right?",
+     "hint": null,
+     "from": "c1-choice",
+     "options": [
+      {
+       "id": "C",
+       "label": "Both."
+      },
+      {
+       "id": "B",
+       "label": "Mud. The teak is later repair."
+      },
+      {
+       "id": "A",
+       "label": "Teak. Buchanan was careless."
+      }
+     ],
+     "answer": [
+      "C"
+     ],
+     "explain": {
+      "A": [
+       "Not careless. The outer walls are mud. He was right about that."
+      ],
+      "B": [
+       "Not repair. A view engraved in 1794 already shows these wooden pillars."
+      ],
+      "C": [
+       "Stone below. Mud in the walls. Wood for everything that holds the building up and everything you look at.",
+       "The mud is in the walls. You are looking at pillars.",
+       "Two honest witnesses can describe two different buildings."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "e:e-buchanan.1.c": {
+   "id": "e:e-buchanan.1.c",
+   "element": {
+    "key": "e:e-buchanan",
+    "kind": "evidence",
+    "id": "e-buchanan",
+    "name": "Francis Buchanan, 1800",
+    "image": null
+   },
+   "chapter": {
+    "id": "ch1",
+    "n": 1,
+    "title": "Ten Years",
+    "years": "1781 to 1791"
+   },
+   "clues": [
+    {
+     "kind": "fact",
+     "text": "The Venkataramana temple in the fort was built under Chikka Devaraja Wadiyar and immediately adjoins the palace on the north-east. No year of building is recorded.",
+     "source": "Epigraphia Carnatica IX, Bangalore no. 118 and introduction p. 27",
+     "tier": "record",
+     "facts": [
+      "F03"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "Teak framing and pillars, stone pillar bases and stone platform; the outer walls of mud.",
+     "source": "Palace research file palace-dimensions.json (materials, confirmed); ASI display board as recorded in photos_own/MANIFEST.md; Rice, Mysore Gazetteer (1897) II p. 47",
+     "tier": "record",
+     "facts": [
+      "F04"
+     ]
+    },
+    {
+     "kind": "caption",
+     "text": "Written after he walked through the palace on 10 May 1800. Printed in London in 1807.",
+     "source": "A Journey from Madras through the Countries of Mysore, Canara, and Malabar, vol. 1 p. 45. Public domain.",
+     "tier": "record",
+     "witness": null,
+     "facts": [
+      "F05"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch3",
+       "label": "Chapter 3: A Machine for Being Seen",
+       "sub": "1792 to 1799"
+      },
+      {
+       "id": "ch1",
+       "label": "Chapter 1: Ten Years",
+       "sub": "1781 to 1791"
+      },
+      {
+       "id": "ch4",
+       "label": "Chapter 4: The Office",
+       "sub": "1831 to 1868"
+      }
+     ],
+     "answer": [
+      "ch1"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "Who is right?",
+     "hint": null,
+     "from": "c1-choice",
+     "options": [
+      {
+       "id": "A",
+       "label": "Teak. Buchanan was careless."
+      },
+      {
+       "id": "B",
+       "label": "Mud. The teak is later repair."
+      },
+      {
+       "id": "C",
+       "label": "Both."
+      }
+     ],
+     "answer": [
+      "C"
+     ],
+     "explain": {
+      "A": [
+       "Not careless. The outer walls are mud. He was right about that."
+      ],
+      "B": [
+       "Not repair. A view engraved in 1794 already shows these wooden pillars."
+      ],
+      "C": [
+       "Stone below. Mud in the walls. Wood for everything that holds the building up and everything you look at.",
+       "The mud is in the walls. You are looking at pillars.",
+       "Two honest witnesses can describe two different buildings."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "e:e-buchanan.2.c": {
+   "id": "e:e-buchanan.2.c",
+   "element": {
+    "key": "e:e-buchanan",
+    "kind": "evidence",
+    "id": "e-buchanan",
+    "name": "Francis Buchanan, 1800",
+    "image": null
+   },
+   "chapter": {
+    "id": "ch1",
+    "n": 1,
+    "title": "Ten Years",
+    "years": "1781 to 1791"
+   },
+   "clues": [
+    {
+     "kind": "fact",
+     "text": "A Persian inscription on a stone in the palace opens with the laying of the foundation and gives its two dates as phrases meaning Abode of Happiness and Envy of Heaven. The first is computed in a letter-number system devised by Tipu Sultan.",
+     "source": "B. L. Rice, Epigraphia Carnatica IX (1905), Bangalore no. 7, with his note on the Zar system; Rice, Mysore Gazetteer (1897) II p. 47 note",
+     "tier": "record",
+     "facts": [
+      "F06"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "Robert Home's engraving \"Inside View of the Palace at Bangalore\", published 1 February 1794, shows the timber colonnade.",
+     "source": "Robert Home, Select Views in Mysore (1794); palace research file palace-measurements.md",
+     "tier": "record",
+     "facts": [
+      "F24"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "Francis Buchanan, 10 May 1800: the palace \"is composed of mud\", yet \"not without some degree of magnificence\".",
+     "source": "Francis Buchanan, A Journey from Madras through the Countries of Mysore, Canara, and Malabar (1807), vol. 1 p. 45",
+     "tier": "record",
+     "facts": [
+      "F05"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch5",
+       "label": "Chapter 5: What Nobody Wrote Down",
+       "sub": "1868 to today"
+      },
+      {
+       "id": "ch3",
+       "label": "Chapter 3: A Machine for Being Seen",
+       "sub": "1792 to 1799"
+      },
+      {
+       "id": "ch1",
+       "label": "Chapter 1: Ten Years",
+       "sub": "1781 to 1791"
+      }
+     ],
+     "answer": [
+      "ch1"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "Who is right?",
+     "hint": null,
+     "from": "c1-choice",
+     "options": [
+      {
+       "id": "A",
+       "label": "Teak. Buchanan was careless."
+      },
+      {
+       "id": "C",
+       "label": "Both."
+      },
+      {
+       "id": "B",
+       "label": "Mud. The teak is later repair."
+      }
+     ],
+     "answer": [
+      "C"
+     ],
+     "explain": {
+      "A": [
+       "Not careless. The outer walls are mud. He was right about that."
+      ],
+      "B": [
+       "Not repair. A view engraved in 1794 already shows these wooden pillars."
+      ],
+      "C": [
+       "Stone below. Mud in the walls. Wood for everything that holds the building up and everything you look at.",
+       "The mud is in the walls. You are looking at pillars.",
+       "Two honest witnesses can describe two different buildings."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "e:e-inscription.0.c": {
+   "id": "e:e-inscription.0.c",
+   "element": {
+    "key": "e:e-inscription",
+    "kind": "evidence",
+    "id": "e-inscription",
+    "name": "The inscription",
+    "image": null
+   },
+   "chapter": {
+    "id": "ch1",
+    "n": 1,
+    "title": "Ten Years",
+    "years": "1781 to 1791"
+   },
+   "clues": [
+    {
+     "kind": "fact",
+     "text": "The palace inscription gives two dates, 1781 and 1791. Rice reads them as begun in Hyder Ali's time and completed under Tipu Sultan. The ASI board at the entrance gives 1778 to 1789. The palace stood inside Bangalore Fort.",
+     "source": "B. L. Rice, Epigraphia Carnatica IX (1905), Bangalore no. 7 and introduction p. 27; Mackenzie's survey of Bangalore, March 1791, key 14; palace research file palace-dimensions.json (dates tiered disputed)",
+     "tier": "record",
+     "facts": [
+      "F01"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "Bangalore Fort: a mud fort said to date from 1537 under Kempe Gowda I; rebuilt in stone in 1761, the first year of Hyder Ali's reign.",
+     "source": "B. L. Rice, Mysore Gazetteer (1897), vol. II p. 46",
+     "tier": "record",
+     "facts": [
+      "F02"
+     ]
+    },
+    {
+     "kind": "quote",
+     "text": "As soon as the foundation of this palace was laid, its head was raised to heaven with joy.",
+     "source": "Translation: B. L. Rice, Epigraphia Carnatica IX, Bangalore no. 7. Public domain.",
+     "tier": "record",
+     "witness": "The building and its inscription",
+     "facts": [
+      "F06"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch3",
+       "label": "Chapter 3: A Machine for Being Seen",
+       "sub": "1792 to 1799"
+      },
+      {
+       "id": "ch1",
+       "label": "Chapter 1: Ten Years",
+       "sub": "1781 to 1791"
+      },
+      {
+       "id": "ch5",
+       "label": "Chapter 5: What Nobody Wrote Down",
+       "sub": "1868 to today"
+      }
+     ],
+     "answer": [
+      "ch1"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "Who is right?",
+     "hint": null,
+     "from": "c1-choice",
+     "options": [
+      {
+       "id": "B",
+       "label": "Mud. The teak is later repair."
+      },
+      {
+       "id": "C",
+       "label": "Both."
+      },
+      {
+       "id": "A",
+       "label": "Teak. Buchanan was careless."
+      }
+     ],
+     "answer": [
+      "C"
+     ],
+     "explain": {
+      "A": [
+       "Not careless. The outer walls are mud. He was right about that."
+      ],
+      "B": [
+       "Not repair. A view engraved in 1794 already shows these wooden pillars."
+      ],
+      "C": [
+       "Stone below. Mud in the walls. Wood for everything that holds the building up and everything you look at.",
+       "The mud is in the walls. You are looking at pillars.",
+       "Two honest witnesses can describe two different buildings."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "e:e-inscription.1.c": {
+   "id": "e:e-inscription.1.c",
+   "element": {
+    "key": "e:e-inscription",
+    "kind": "evidence",
+    "id": "e-inscription",
+    "name": "The inscription",
+    "image": null
+   },
+   "chapter": {
+    "id": "ch1",
+    "n": 1,
+    "title": "Ten Years",
+    "years": "1781 to 1791"
+   },
+   "clues": [
+    {
+     "kind": "fact",
+     "text": "The Venkataramana temple in the fort was built under Chikka Devaraja Wadiyar and immediately adjoins the palace on the north-east. No year of building is recorded.",
+     "source": "Epigraphia Carnatica IX, Bangalore no. 118 and introduction p. 27",
+     "tier": "record",
+     "facts": [
+      "F03"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "Teak framing and pillars, stone pillar bases and stone platform; the outer walls of mud.",
+     "source": "Palace research file palace-dimensions.json (materials, confirmed); ASI display board as recorded in photos_own/MANIFEST.md; Rice, Mysore Gazetteer (1897) II p. 47",
+     "tier": "record",
+     "facts": [
+      "F04"
+     ]
+    },
+    {
+     "kind": "caption",
+     "text": "A Persian verse on a stone set into the wall. Its two dates are hidden in two phrases: a house of happiness, and envied by heaven. The first is worked out in a letter and number system Tipu Sultan devised himself.",
+     "source": "Translation: B. L. Rice, Epigraphia Carnatica IX, Bangalore no. 7. Public domain.",
+     "tier": "record",
+     "witness": null,
+     "facts": [
+      "F06"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch5",
+       "label": "Chapter 5: What Nobody Wrote Down",
+       "sub": "1868 to today"
+      },
+      {
+       "id": "ch1",
+       "label": "Chapter 1: Ten Years",
+       "sub": "1781 to 1791"
+      },
+      {
+       "id": "ch3",
+       "label": "Chapter 3: A Machine for Being Seen",
+       "sub": "1792 to 1799"
+      }
+     ],
+     "answer": [
+      "ch1"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "Who is right?",
+     "hint": null,
+     "from": "c1-choice",
+     "options": [
+      {
+       "id": "B",
+       "label": "Mud. The teak is later repair."
+      },
+      {
+       "id": "A",
+       "label": "Teak. Buchanan was careless."
+      },
+      {
+       "id": "C",
+       "label": "Both."
+      }
+     ],
+     "answer": [
+      "C"
+     ],
+     "explain": {
+      "A": [
+       "Not careless. The outer walls are mud. He was right about that."
+      ],
+      "B": [
+       "Not repair. A view engraved in 1794 already shows these wooden pillars."
+      ],
+      "C": [
+       "Stone below. Mud in the walls. Wood for everything that holds the building up and everything you look at.",
+       "The mud is in the walls. You are looking at pillars.",
+       "Two honest witnesses can describe two different buildings."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "e:e-inscription.2.c": {
+   "id": "e:e-inscription.2.c",
+   "element": {
+    "key": "e:e-inscription",
+    "kind": "evidence",
+    "id": "e-inscription",
+    "name": "The inscription",
+    "image": null
+   },
+   "chapter": {
+    "id": "ch1",
+    "n": 1,
+    "title": "Ten Years",
+    "years": "1781 to 1791"
+   },
+   "clues": [
+    {
+     "kind": "fact",
+     "text": "Francis Buchanan, 10 May 1800: the palace \"is composed of mud\", yet \"not without some degree of magnificence\".",
+     "source": "Francis Buchanan, A Journey from Madras through the Countries of Mysore, Canara, and Malabar (1807), vol. 1 p. 45",
+     "tier": "record",
+     "facts": [
+      "F05"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "Robert Home's engraving \"Inside View of the Palace at Bangalore\", published 1 February 1794, shows the timber colonnade.",
+     "source": "Robert Home, Select Views in Mysore (1794); palace research file palace-measurements.md",
+     "tier": "record",
+     "facts": [
+      "F24"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "A Persian inscription on a stone in the palace opens with the laying of the foundation and gives its two dates as phrases meaning Abode of Happiness and Envy of Heaven. The first is computed in a letter-number system devised by Tipu Sultan.",
+     "source": "B. L. Rice, Epigraphia Carnatica IX (1905), Bangalore no. 7, with his note on the Zar system; Rice, Mysore Gazetteer (1897) II p. 47 note",
+     "tier": "record",
+     "facts": [
+      "F06"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch4",
+       "label": "Chapter 4: The Office",
+       "sub": "1831 to 1868"
+      },
+      {
+       "id": "ch3",
+       "label": "Chapter 3: A Machine for Being Seen",
+       "sub": "1792 to 1799"
+      },
+      {
+       "id": "ch1",
+       "label": "Chapter 1: Ten Years",
+       "sub": "1781 to 1791"
+      }
+     ],
+     "answer": [
+      "ch1"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "Who is right?",
+     "hint": null,
+     "from": "c1-choice",
+     "options": [
+      {
+       "id": "B",
+       "label": "Mud. The teak is later repair."
+      },
+      {
+       "id": "A",
+       "label": "Teak. Buchanan was careless."
+      },
+      {
+       "id": "C",
+       "label": "Both."
+      }
+     ],
+     "answer": [
+      "C"
+     ],
+     "explain": {
+      "A": [
+       "Not careless. The outer walls are mud. He was right about that."
+      ],
+      "B": [
+       "Not repair. A view engraved in 1794 already shows these wooden pillars."
+      ],
+      "C": [
+       "Stone below. Mud in the walls. Wood for everything that holds the building up and everything you look at.",
+       "The mud is in the walls. You are looking at pillars.",
+       "Two honest witnesses can describe two different buildings."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "e:e-hunter-north.0.c": {
+   "id": "e:e-hunter-north.0.c",
+   "element": {
+    "key": "e:e-hunter-north",
+    "kind": "evidence",
+    "id": "e-hunter-north",
+    "name": "Hunter's watercolour",
+    "image": {
+     "src": "/play/packs/tipu-summer-palace-bengaluru/v1/evidence/e-hunter-north.webp",
+     "w": 1600,
+     "h": 952,
+     "credit": "Yale Center for British Art, Paul Mellon Collection, B1974.12.1168. Public domain (CC0)."
+    }
+   },
+   "chapter": {
+    "id": "ch2",
+    "n": 2,
+    "title": "The Year It Was Finished",
+    "years": "1791 to 1792"
+   },
+   "clues": [
+    {
+     "kind": "fact",
+     "text": "On 21 March 1791 an East India Company army under Cornwallis stormed Bangalore Fort through a breach beside the Delhi Gate.",
+     "source": "Mark Wilks, Historical Sketches of the South of India, vol. III (1817), pp. 127 to 129; the tablet at the breach",
+     "tier": "record",
+     "facts": [
+      "F07"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "The palace inscription gives two dates, 1781 and 1791. Rice reads them as begun in Hyder Ali's time and completed under Tipu Sultan. The ASI board at the entrance gives 1778 to 1789. The palace stood inside Bangalore Fort.",
+     "source": "B. L. Rice, Epigraphia Carnatica IX (1905), Bangalore no. 7 and introduction p. 27; Mackenzie's survey of Bangalore, March 1791, key 14; palace research file palace-dimensions.json (dates tiered disputed)",
+     "tier": "record",
+     "facts": [
+      "F01"
+     ]
+    },
+    {
+     "kind": "caption",
+     "text": "The north front of the palace, painted by James Hunter in February 1792.",
+     "source": "Yale Center for British Art, Paul Mellon Collection, B1974.12.1168. Public domain (CC0).",
+     "tier": "record",
+     "witness": null,
+     "facts": [
+      "F08"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch2",
+       "label": "Chapter 2: The Year It Was Finished",
+       "sub": "1791 to 1792"
+      },
+      {
+       "id": "ch4",
+       "label": "Chapter 4: The Office",
+       "sub": "1831 to 1868"
+      },
+      {
+       "id": "ch3",
+       "label": "Chapter 3: A Machine for Being Seen",
+       "sub": "1792 to 1799"
+      }
+     ],
+     "answer": [
+      "ch2"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "How do you use the prints?",
+     "hint": null,
+     "from": "c2-choice",
+     "options": [
+      {
+       "id": "B",
+       "label": "Trust them for what stood where. For colour, go back to the watercolour he painted himself."
+      },
+      {
+       "id": "C",
+       "label": "Ignore them. He was with the army that took the place."
+      },
+      {
+       "id": "A",
+       "label": "Copy their colours exactly."
+      }
+     ],
+     "answer": [
+      "B"
+     ],
+     "explain": {
+      "A": [
+       "He drew it on the spot.",
+       "But the plates were engraved and coloured twelve years later, for a London publisher.",
+       "The shapes are his. We cannot say the same of every colour."
+      ],
+      "B": [
+       "Good, that is the method. Our colours follow the watercolour Hunter painted himself, not the London plates. Where they sit on this front is our reconstruction."
+      ],
+      "C": [
+       "A hostile witness is still a witness.",
+       "He had no reason to lie about a doorway."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "e:e-hunter-north.1.c": {
+   "id": "e:e-hunter-north.1.c",
+   "element": {
+    "key": "e:e-hunter-north",
+    "kind": "evidence",
+    "id": "e-hunter-north",
+    "name": "Hunter's watercolour",
+    "image": {
+     "src": "/play/packs/tipu-summer-palace-bengaluru/v1/evidence/e-hunter-north.webp",
+     "w": 1600,
+     "h": 952,
+     "credit": "Yale Center for British Art, Paul Mellon Collection, B1974.12.1168. Public domain (CC0)."
+    }
+   },
+   "chapter": {
+    "id": "ch2",
+    "n": 2,
+    "title": "The Year It Was Finished",
+    "years": "1791 to 1792"
+   },
+   "clues": [
+    {
+     "kind": "fact",
+     "text": "Hunter's drawing of the palace entrance is also dated February 1792. The plates made after his views include the North Front, the West Front, and the Square and Entrance of the palace.",
+     "source": "British Library WD2893, \"The Entrance of Tippoo's Palace, Bangalore Feby. 92\"; plates of Picturesque Scenery in the Kingdom of Mysore (Orme, 1805)",
+     "tier": "record",
+     "facts": [
+      "F08b"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "James Hunter died at Vellore on 19 May 1792.",
+     "source": "His tomb inscription at Vellore",
+     "tier": "record",
+     "facts": [
+      "F08c"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "James Hunter, Lieutenant in the Royal Artillery, painted the north front of the palace in February 1792.",
+     "source": "Yale Center for British Art, B1974.12.1168, inscribed on the back \"A View of Tippoos Palace at Bangalore Feby. 92\"; title page of Picturesque Scenery in the Kingdom of Mysore (Orme, 1805)",
+     "tier": "record",
+     "facts": [
+      "F08"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch2",
+       "label": "Chapter 2: The Year It Was Finished",
+       "sub": "1791 to 1792"
+      },
+      {
+       "id": "ch4",
+       "label": "Chapter 4: The Office",
+       "sub": "1831 to 1868"
+      },
+      {
+       "id": "ch1",
+       "label": "Chapter 1: Ten Years",
+       "sub": "1781 to 1791"
+      }
+     ],
+     "answer": [
+      "ch2"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "How do you use the prints?",
+     "hint": null,
+     "from": "c2-choice",
+     "options": [
+      {
+       "id": "A",
+       "label": "Copy their colours exactly."
+      },
+      {
+       "id": "C",
+       "label": "Ignore them. He was with the army that took the place."
+      },
+      {
+       "id": "B",
+       "label": "Trust them for what stood where. For colour, go back to the watercolour he painted himself."
+      }
+     ],
+     "answer": [
+      "B"
+     ],
+     "explain": {
+      "A": [
+       "He drew it on the spot.",
+       "But the plates were engraved and coloured twelve years later, for a London publisher.",
+       "The shapes are his. We cannot say the same of every colour."
+      ],
+      "B": [
+       "Good, that is the method. Our colours follow the watercolour Hunter painted himself, not the London plates. Where they sit on this front is our reconstruction."
+      ],
+      "C": [
+       "A hostile witness is still a witness.",
+       "He had no reason to lie about a doorway."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "e:e-hunter-west.0.c": {
+   "id": "e:e-hunter-west.0.c",
+   "element": {
+    "key": "e:e-hunter-west",
+    "kind": "evidence",
+    "id": "e-hunter-west",
+    "name": "Hunter's west front",
+    "image": null
+   },
+   "chapter": {
+    "id": "ch2",
+    "n": 2,
+    "title": "The Year It Was Finished",
+    "years": "1791 to 1792"
+   },
+   "clues": [
+    {
+     "kind": "fact",
+     "text": "On 21 March 1791 an East India Company army under Cornwallis stormed Bangalore Fort through a breach beside the Delhi Gate.",
+     "source": "Mark Wilks, Historical Sketches of the South of India, vol. III (1817), pp. 127 to 129; the tablet at the breach",
+     "tier": "record",
+     "facts": [
+      "F07"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "The palace inscription gives two dates, 1781 and 1791. Rice reads them as begun in Hyder Ali's time and completed under Tipu Sultan. The ASI board at the entrance gives 1778 to 1789. The palace stood inside Bangalore Fort.",
+     "source": "B. L. Rice, Epigraphia Carnatica IX (1905), Bangalore no. 7 and introduction p. 27; Mackenzie's survey of Bangalore, March 1791, key 14; palace research file palace-dimensions.json (dates tiered disputed)",
+     "tier": "record",
+     "facts": [
+      "F01"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "Hunter's drawing of the palace entrance is also dated February 1792. The plates made after his views include the North Front, the West Front, and the Square and Entrance of the palace.",
+     "source": "British Library WD2893, \"The Entrance of Tippoo's Palace, Bangalore Feby. 92\"; plates of Picturesque Scenery in the Kingdom of Mysore (Orme, 1805)",
+     "tier": "record",
+     "facts": [
+      "F08b"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch5",
+       "label": "Chapter 5: What Nobody Wrote Down",
+       "sub": "1868 to today"
+      },
+      {
+       "id": "ch2",
+       "label": "Chapter 2: The Year It Was Finished",
+       "sub": "1791 to 1792"
+      },
+      {
+       "id": "ch4",
+       "label": "Chapter 4: The Office",
+       "sub": "1831 to 1868"
+      }
+     ],
+     "answer": [
+      "ch2"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "How do you use the prints?",
+     "hint": null,
+     "from": "c2-choice",
+     "options": [
+      {
+       "id": "C",
+       "label": "Ignore them. He was with the army that took the place."
+      },
+      {
+       "id": "B",
+       "label": "Trust them for what stood where. For colour, go back to the watercolour he painted himself."
+      },
+      {
+       "id": "A",
+       "label": "Copy their colours exactly."
+      }
+     ],
+     "answer": [
+      "B"
+     ],
+     "explain": {
+      "A": [
+       "He drew it on the spot.",
+       "But the plates were engraved and coloured twelve years later, for a London publisher.",
+       "The shapes are his. We cannot say the same of every colour."
+      ],
+      "B": [
+       "Good, that is the method. Our colours follow the watercolour Hunter painted himself, not the London plates. Where they sit on this front is our reconstruction."
+      ],
+      "C": [
+       "A hostile witness is still a witness.",
+       "He had no reason to lie about a doorway."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "e:e-hunter-west.1.c": {
+   "id": "e:e-hunter-west.1.c",
+   "element": {
+    "key": "e:e-hunter-west",
+    "kind": "evidence",
+    "id": "e-hunter-west",
+    "name": "Hunter's west front",
+    "image": null
+   },
+   "chapter": {
+    "id": "ch2",
+    "n": 2,
+    "title": "The Year It Was Finished",
+    "years": "1791 to 1792"
+   },
+   "clues": [
+    {
+     "kind": "fact",
+     "text": "James Hunter, Lieutenant in the Royal Artillery, painted the north front of the palace in February 1792.",
+     "source": "Yale Center for British Art, B1974.12.1168, inscribed on the back \"A View of Tippoos Palace at Bangalore Feby. 92\"; title page of Picturesque Scenery in the Kingdom of Mysore (Orme, 1805)",
+     "tier": "record",
+     "facts": [
+      "F08"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "James Hunter died at Vellore on 19 May 1792.",
+     "source": "His tomb inscription at Vellore",
+     "tier": "record",
+     "facts": [
+      "F08c"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "The plates after Hunter's views are dated 1804 and were published by Edward Orme in London as hand-coloured aquatints. The title page is dated 1805. Catalogues differ on the engraver of each plate.",
+     "source": "Title page and plates of Picturesque Scenery in the Kingdom of Mysore (Edward Orme, London, 1805)",
+     "tier": "record",
+     "facts": [
+      "F08d"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch4",
+       "label": "Chapter 4: The Office",
+       "sub": "1831 to 1868"
+      },
+      {
+       "id": "ch2",
+       "label": "Chapter 2: The Year It Was Finished",
+       "sub": "1791 to 1792"
+      },
+      {
+       "id": "ch3",
+       "label": "Chapter 3: A Machine for Being Seen",
+       "sub": "1792 to 1799"
+      }
+     ],
+     "answer": [
+      "ch2"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "How do you use the prints?",
+     "hint": null,
+     "from": "c2-choice",
+     "options": [
+      {
+       "id": "C",
+       "label": "Ignore them. He was with the army that took the place."
+      },
+      {
+       "id": "B",
+       "label": "Trust them for what stood where. For colour, go back to the watercolour he painted himself."
+      },
+      {
+       "id": "A",
+       "label": "Copy their colours exactly."
+      }
+     ],
+     "answer": [
+      "B"
+     ],
+     "explain": {
+      "A": [
+       "He drew it on the spot.",
+       "But the plates were engraved and coloured twelve years later, for a London publisher.",
+       "The shapes are his. We cannot say the same of every colour."
+      ],
+      "B": [
+       "Good, that is the method. Our colours follow the watercolour Hunter painted himself, not the London plates. Where they sit on this front is our reconstruction."
+      ],
+      "C": [
+       "A hostile witness is still a witness.",
+       "He had no reason to lie about a doorway."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "e:e-hunter-square.0.c": {
+   "id": "e:e-hunter-square.0.c",
+   "element": {
+    "key": "e:e-hunter-square",
+    "kind": "evidence",
+    "id": "e-hunter-square",
+    "name": "Hunter's square and entrance",
+    "image": null
+   },
+   "chapter": {
+    "id": "ch2",
+    "n": 2,
+    "title": "The Year It Was Finished",
+    "years": "1791 to 1792"
+   },
+   "clues": [
+    {
+     "kind": "fact",
+     "text": "On 21 March 1791 an East India Company army under Cornwallis stormed Bangalore Fort through a breach beside the Delhi Gate.",
+     "source": "Mark Wilks, Historical Sketches of the South of India, vol. III (1817), pp. 127 to 129; the tablet at the breach",
+     "tier": "record",
+     "facts": [
+      "F07"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "The palace inscription gives two dates, 1781 and 1791. Rice reads them as begun in Hyder Ali's time and completed under Tipu Sultan. The ASI board at the entrance gives 1778 to 1789. The palace stood inside Bangalore Fort.",
+     "source": "B. L. Rice, Epigraphia Carnatica IX (1905), Bangalore no. 7 and introduction p. 27; Mackenzie's survey of Bangalore, March 1791, key 14; palace research file palace-dimensions.json (dates tiered disputed)",
+     "tier": "record",
+     "facts": [
+      "F01"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "Hunter's drawing of the palace entrance is also dated February 1792. The plates made after his views include the North Front, the West Front, and the Square and Entrance of the palace.",
+     "source": "British Library WD2893, \"The Entrance of Tippoo's Palace, Bangalore Feby. 92\"; plates of Picturesque Scenery in the Kingdom of Mysore (Orme, 1805)",
+     "tier": "record",
+     "facts": [
+      "F08b"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch4",
+       "label": "Chapter 4: The Office",
+       "sub": "1831 to 1868"
+      },
+      {
+       "id": "ch2",
+       "label": "Chapter 2: The Year It Was Finished",
+       "sub": "1791 to 1792"
+      },
+      {
+       "id": "ch1",
+       "label": "Chapter 1: Ten Years",
+       "sub": "1781 to 1791"
+      }
+     ],
+     "answer": [
+      "ch2"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "How do you use the prints?",
+     "hint": null,
+     "from": "c2-choice",
+     "options": [
+      {
+       "id": "B",
+       "label": "Trust them for what stood where. For colour, go back to the watercolour he painted himself."
+      },
+      {
+       "id": "A",
+       "label": "Copy their colours exactly."
+      },
+      {
+       "id": "C",
+       "label": "Ignore them. He was with the army that took the place."
+      }
+     ],
+     "answer": [
+      "B"
+     ],
+     "explain": {
+      "A": [
+       "He drew it on the spot.",
+       "But the plates were engraved and coloured twelve years later, for a London publisher.",
+       "The shapes are his. We cannot say the same of every colour."
+      ],
+      "B": [
+       "Good, that is the method. Our colours follow the watercolour Hunter painted himself, not the London plates. Where they sit on this front is our reconstruction."
+      ],
+      "C": [
+       "A hostile witness is still a witness.",
+       "He had no reason to lie about a doorway."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "e:e-hunter-square.1.c": {
+   "id": "e:e-hunter-square.1.c",
+   "element": {
+    "key": "e:e-hunter-square",
+    "kind": "evidence",
+    "id": "e-hunter-square",
+    "name": "Hunter's square and entrance",
+    "image": null
+   },
+   "chapter": {
+    "id": "ch2",
+    "n": 2,
+    "title": "The Year It Was Finished",
+    "years": "1791 to 1792"
+   },
+   "clues": [
+    {
+     "kind": "fact",
+     "text": "James Hunter, Lieutenant in the Royal Artillery, painted the north front of the palace in February 1792.",
+     "source": "Yale Center for British Art, B1974.12.1168, inscribed on the back \"A View of Tippoos Palace at Bangalore Feby. 92\"; title page of Picturesque Scenery in the Kingdom of Mysore (Orme, 1805)",
+     "tier": "record",
+     "facts": [
+      "F08"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "James Hunter died at Vellore on 19 May 1792.",
+     "source": "His tomb inscription at Vellore",
+     "tier": "record",
+     "facts": [
+      "F08c"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "The plates after Hunter's views are dated 1804 and were published by Edward Orme in London as hand-coloured aquatints. The title page is dated 1805. Catalogues differ on the engraver of each plate.",
+     "source": "Title page and plates of Picturesque Scenery in the Kingdom of Mysore (Edward Orme, London, 1805)",
+     "tier": "record",
+     "facts": [
+      "F08d"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch5",
+       "label": "Chapter 5: What Nobody Wrote Down",
+       "sub": "1868 to today"
+      },
+      {
+       "id": "ch4",
+       "label": "Chapter 4: The Office",
+       "sub": "1831 to 1868"
+      },
+      {
+       "id": "ch2",
+       "label": "Chapter 2: The Year It Was Finished",
+       "sub": "1791 to 1792"
+      }
+     ],
+     "answer": [
+      "ch2"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "How do you use the prints?",
+     "hint": null,
+     "from": "c2-choice",
+     "options": [
+      {
+       "id": "B",
+       "label": "Trust them for what stood where. For colour, go back to the watercolour he painted himself."
+      },
+      {
+       "id": "A",
+       "label": "Copy their colours exactly."
+      },
+      {
+       "id": "C",
+       "label": "Ignore them. He was with the army that took the place."
+      }
+     ],
+     "answer": [
+      "B"
+     ],
+     "explain": {
+      "A": [
+       "He drew it on the spot.",
+       "But the plates were engraved and coloured twelve years later, for a London publisher.",
+       "The shapes are his. We cannot say the same of every colour."
+      ],
+      "B": [
+       "Good, that is the method. Our colours follow the watercolour Hunter painted himself, not the London plates. Where they sit on this front is our reconstruction."
+      ],
+      "C": [
+       "A hostile witness is still a witness.",
+       "He had no reason to lie about a doorway."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "e:e-hunter-title.0.c": {
+   "id": "e:e-hunter-title.0.c",
+   "element": {
+    "key": "e:e-hunter-title",
+    "kind": "evidence",
+    "id": "e-hunter-title",
+    "name": "The title page",
+    "image": null
+   },
+   "chapter": {
+    "id": "ch2",
+    "n": 2,
+    "title": "The Year It Was Finished",
+    "years": "1791 to 1792"
+   },
+   "clues": [
+    {
+     "kind": "fact",
+     "text": "On 21 March 1791 an East India Company army under Cornwallis stormed Bangalore Fort through a breach beside the Delhi Gate.",
+     "source": "Mark Wilks, Historical Sketches of the South of India, vol. III (1817), pp. 127 to 129; the tablet at the breach",
+     "tier": "record",
+     "facts": [
+      "F07"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "The palace inscription gives two dates, 1781 and 1791. Rice reads them as begun in Hyder Ali's time and completed under Tipu Sultan. The ASI board at the entrance gives 1778 to 1789. The palace stood inside Bangalore Fort.",
+     "source": "B. L. Rice, Epigraphia Carnatica IX (1905), Bangalore no. 7 and introduction p. 27; Mackenzie's survey of Bangalore, March 1791, key 14; palace research file palace-dimensions.json (dates tiered disputed)",
+     "tier": "record",
+     "facts": [
+      "F01"
+     ]
+    },
+    {
+     "kind": "caption",
+     "text": "The plates are dated 1804 and were published by Edward Orme in London: hand-coloured aquatints, twelve years after Hunter died. The title page itself is dated 1805.",
+     "source": "Picturesque Scenery in the Kingdom of Mysore (Edward Orme, London, 1805).",
+     "tier": "record",
+     "witness": null,
+     "facts": [
+      "F08d",
+      "F08c"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch3",
+       "label": "Chapter 3: A Machine for Being Seen",
+       "sub": "1792 to 1799"
+      },
+      {
+       "id": "ch1",
+       "label": "Chapter 1: Ten Years",
+       "sub": "1781 to 1791"
+      },
+      {
+       "id": "ch2",
+       "label": "Chapter 2: The Year It Was Finished",
+       "sub": "1791 to 1792"
+      }
+     ],
+     "answer": [
+      "ch2"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "How do you use the prints?",
+     "hint": null,
+     "from": "c2-choice",
+     "options": [
+      {
+       "id": "C",
+       "label": "Ignore them. He was with the army that took the place."
+      },
+      {
+       "id": "A",
+       "label": "Copy their colours exactly."
+      },
+      {
+       "id": "B",
+       "label": "Trust them for what stood where. For colour, go back to the watercolour he painted himself."
+      }
+     ],
+     "answer": [
+      "B"
+     ],
+     "explain": {
+      "A": [
+       "He drew it on the spot.",
+       "But the plates were engraved and coloured twelve years later, for a London publisher.",
+       "The shapes are his. We cannot say the same of every colour."
+      ],
+      "B": [
+       "Good, that is the method. Our colours follow the watercolour Hunter painted himself, not the London plates. Where they sit on this front is our reconstruction."
+      ],
+      "C": [
+       "A hostile witness is still a witness.",
+       "He had no reason to lie about a doorway."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "e:e-hunter-title.1.c": {
+   "id": "e:e-hunter-title.1.c",
+   "element": {
+    "key": "e:e-hunter-title",
+    "kind": "evidence",
+    "id": "e-hunter-title",
+    "name": "The title page",
+    "image": null
+   },
+   "chapter": {
+    "id": "ch2",
+    "n": 2,
+    "title": "The Year It Was Finished",
+    "years": "1791 to 1792"
+   },
+   "clues": [
+    {
+     "kind": "fact",
+     "text": "James Hunter, Lieutenant in the Royal Artillery, painted the north front of the palace in February 1792.",
+     "source": "Yale Center for British Art, B1974.12.1168, inscribed on the back \"A View of Tippoos Palace at Bangalore Feby. 92\"; title page of Picturesque Scenery in the Kingdom of Mysore (Orme, 1805)",
+     "tier": "record",
+     "facts": [
+      "F08"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "Hunter's drawing of the palace entrance is also dated February 1792. The plates made after his views include the North Front, the West Front, and the Square and Entrance of the palace.",
+     "source": "British Library WD2893, \"The Entrance of Tippoo's Palace, Bangalore Feby. 92\"; plates of Picturesque Scenery in the Kingdom of Mysore (Orme, 1805)",
+     "tier": "record",
+     "facts": [
+      "F08b"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "The plates after Hunter's views are dated 1804 and were published by Edward Orme in London as hand-coloured aquatints. The title page is dated 1805. Catalogues differ on the engraver of each plate.",
+     "source": "Title page and plates of Picturesque Scenery in the Kingdom of Mysore (Edward Orme, London, 1805)",
+     "tier": "record",
+     "facts": [
+      "F08d"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch5",
+       "label": "Chapter 5: What Nobody Wrote Down",
+       "sub": "1868 to today"
+      },
+      {
+       "id": "ch4",
+       "label": "Chapter 4: The Office",
+       "sub": "1831 to 1868"
+      },
+      {
+       "id": "ch2",
+       "label": "Chapter 2: The Year It Was Finished",
+       "sub": "1791 to 1792"
+      }
+     ],
+     "answer": [
+      "ch2"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "How do you use the prints?",
+     "hint": null,
+     "from": "c2-choice",
+     "options": [
+      {
+       "id": "A",
+       "label": "Copy their colours exactly."
+      },
+      {
+       "id": "C",
+       "label": "Ignore them. He was with the army that took the place."
+      },
+      {
+       "id": "B",
+       "label": "Trust them for what stood where. For colour, go back to the watercolour he painted himself."
+      }
+     ],
+     "answer": [
+      "B"
+     ],
+     "explain": {
+      "A": [
+       "He drew it on the spot.",
+       "But the plates were engraved and coloured twelve years later, for a London publisher.",
+       "The shapes are his. We cannot say the same of every colour."
+      ],
+      "B": [
+       "Good, that is the method. Our colours follow the watercolour Hunter painted himself, not the London plates. Where they sit on this front is our reconstruction."
+      ],
+      "C": [
+       "A hostile witness is still a witness.",
+       "He had no reason to lie about a doorway."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "e:e-hunter-title.2.c": {
+   "id": "e:e-hunter-title.2.c",
+   "element": {
+    "key": "e:e-hunter-title",
+    "kind": "evidence",
+    "id": "e-hunter-title",
+    "name": "The title page",
+    "image": null
+   },
+   "chapter": {
+    "id": "ch2",
+    "n": 2,
+    "title": "The Year It Was Finished",
+    "years": "1791 to 1792"
+   },
+   "clues": [
+    {
+     "kind": "fact",
+     "text": "Today the timber is dark and polished, and faded floral painting survives in places on walls, ceilings and niches.",
+     "source": "Palace research file palace-measurements.md; own photographs 37 and 41, September 2026",
+     "tier": "record",
+     "facts": [
+      "F18"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "The rule of this game and of our reconstructions: use only what the evidence supports, and label the rest.",
+     "source": "Epocheye method",
+     "tier": "reading",
+     "facts": [
+      "M1"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "James Hunter died at Vellore on 19 May 1792.",
+     "source": "His tomb inscription at Vellore",
+     "tier": "record",
+     "facts": [
+      "F08c"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch5",
+       "label": "Chapter 5: What Nobody Wrote Down",
+       "sub": "1868 to today"
+      },
+      {
+       "id": "ch4",
+       "label": "Chapter 4: The Office",
+       "sub": "1831 to 1868"
+      },
+      {
+       "id": "ch2",
+       "label": "Chapter 2: The Year It Was Finished",
+       "sub": "1791 to 1792"
+      }
+     ],
+     "answer": [
+      "ch2"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "How do you use the prints?",
+     "hint": null,
+     "from": "c2-choice",
+     "options": [
+      {
+       "id": "C",
+       "label": "Ignore them. He was with the army that took the place."
+      },
+      {
+       "id": "B",
+       "label": "Trust them for what stood where. For colour, go back to the watercolour he painted himself."
+      },
+      {
+       "id": "A",
+       "label": "Copy their colours exactly."
+      }
+     ],
+     "answer": [
+      "B"
+     ],
+     "explain": {
+      "A": [
+       "He drew it on the spot.",
+       "But the plates were engraved and coloured twelve years later, for a London publisher.",
+       "The shapes are his. We cannot say the same of every colour."
+      ],
+      "B": [
+       "Good, that is the method. Our colours follow the watercolour Hunter painted himself, not the London plates. Where they sit on this front is our reconstruction."
+      ],
+      "C": [
+       "A hostile witness is still a witness.",
+       "He had no reason to lie about a doorway."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "e:e-front-today.0.c": {
+   "id": "e:e-front-today.0.c",
+   "element": {
+    "key": "e:e-front-today",
+    "kind": "evidence",
+    "id": "e-front-today",
+    "name": "The front today",
+    "image": {
+     "src": "/play/packs/tipu-summer-palace-bengaluru/v1/evidence/e-front-today.webp",
+     "w": 1600,
+     "h": 791,
+     "credit": "Photograph: Epocheye, September 2026."
+    }
+   },
+   "chapter": {
+    "id": "ch2",
+    "n": 2,
+    "title": "The Year It Was Finished",
+    "years": "1791 to 1792"
+   },
+   "clues": [
+    {
+     "kind": "fact",
+     "text": "On 21 March 1791 an East India Company army under Cornwallis stormed Bangalore Fort through a breach beside the Delhi Gate.",
+     "source": "Mark Wilks, Historical Sketches of the South of India, vol. III (1817), pp. 127 to 129; the tablet at the breach",
+     "tier": "record",
+     "facts": [
+      "F07"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "The palace inscription gives two dates, 1781 and 1791. Rice reads them as begun in Hyder Ali's time and completed under Tipu Sultan. The ASI board at the entrance gives 1778 to 1789. The palace stood inside Bangalore Fort.",
+     "source": "B. L. Rice, Epigraphia Carnatica IX (1905), Bangalore no. 7 and introduction p. 27; Mackenzie's survey of Bangalore, March 1791, key 14; palace research file palace-dimensions.json (dates tiered disputed)",
+     "tier": "record",
+     "facts": [
+      "F01"
+     ]
+    },
+    {
+     "kind": "caption",
+     "text": "The front of the palace as it stands now.",
+     "source": "Photograph: Epocheye, September 2026.",
+     "tier": "record",
+     "witness": null,
+     "facts": [
+      "F18"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch3",
+       "label": "Chapter 3: A Machine for Being Seen",
+       "sub": "1792 to 1799"
+      },
+      {
+       "id": "ch5",
+       "label": "Chapter 5: What Nobody Wrote Down",
+       "sub": "1868 to today"
+      },
+      {
+       "id": "ch2",
+       "label": "Chapter 2: The Year It Was Finished",
+       "sub": "1791 to 1792"
+      }
+     ],
+     "answer": [
+      "ch2"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "How do you use the prints?",
+     "hint": null,
+     "from": "c2-choice",
+     "options": [
+      {
+       "id": "A",
+       "label": "Copy their colours exactly."
+      },
+      {
+       "id": "B",
+       "label": "Trust them for what stood where. For colour, go back to the watercolour he painted himself."
+      },
+      {
+       "id": "C",
+       "label": "Ignore them. He was with the army that took the place."
+      }
+     ],
+     "answer": [
+      "B"
+     ],
+     "explain": {
+      "A": [
+       "He drew it on the spot.",
+       "But the plates were engraved and coloured twelve years later, for a London publisher.",
+       "The shapes are his. We cannot say the same of every colour."
+      ],
+      "B": [
+       "Good, that is the method. Our colours follow the watercolour Hunter painted himself, not the London plates. Where they sit on this front is our reconstruction."
+      ],
+      "C": [
+       "A hostile witness is still a witness.",
+       "He had no reason to lie about a doorway."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "e:e-front-today.1.c": {
+   "id": "e:e-front-today.1.c",
+   "element": {
+    "key": "e:e-front-today",
+    "kind": "evidence",
+    "id": "e-front-today",
+    "name": "The front today",
+    "image": {
+     "src": "/play/packs/tipu-summer-palace-bengaluru/v1/evidence/e-front-today.webp",
+     "w": 1600,
+     "h": 791,
+     "credit": "Photograph: Epocheye, September 2026."
+    }
+   },
+   "chapter": {
+    "id": "ch2",
+    "n": 2,
+    "title": "The Year It Was Finished",
+    "years": "1791 to 1792"
+   },
+   "clues": [
+    {
+     "kind": "fact",
+     "text": "James Hunter, Lieutenant in the Royal Artillery, painted the north front of the palace in February 1792.",
+     "source": "Yale Center for British Art, B1974.12.1168, inscribed on the back \"A View of Tippoos Palace at Bangalore Feby. 92\"; title page of Picturesque Scenery in the Kingdom of Mysore (Orme, 1805)",
+     "tier": "record",
+     "facts": [
+      "F08"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "Hunter's drawing of the palace entrance is also dated February 1792. The plates made after his views include the North Front, the West Front, and the Square and Entrance of the palace.",
+     "source": "British Library WD2893, \"The Entrance of Tippoo's Palace, Bangalore Feby. 92\"; plates of Picturesque Scenery in the Kingdom of Mysore (Orme, 1805)",
+     "tier": "record",
+     "facts": [
+      "F08b"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "Today the timber is dark and polished, and faded floral painting survives in places on walls, ceilings and niches.",
+     "source": "Palace research file palace-measurements.md; own photographs 37 and 41, September 2026",
+     "tier": "record",
+     "facts": [
+      "F18"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch4",
+       "label": "Chapter 4: The Office",
+       "sub": "1831 to 1868"
+      },
+      {
+       "id": "ch2",
+       "label": "Chapter 2: The Year It Was Finished",
+       "sub": "1791 to 1792"
+      },
+      {
+       "id": "ch3",
+       "label": "Chapter 3: A Machine for Being Seen",
+       "sub": "1792 to 1799"
+      }
+     ],
+     "answer": [
+      "ch2"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "How do you use the prints?",
+     "hint": null,
+     "from": "c2-choice",
+     "options": [
+      {
+       "id": "B",
+       "label": "Trust them for what stood where. For colour, go back to the watercolour he painted himself."
+      },
+      {
+       "id": "C",
+       "label": "Ignore them. He was with the army that took the place."
+      },
+      {
+       "id": "A",
+       "label": "Copy their colours exactly."
+      }
+     ],
+     "answer": [
+      "B"
+     ],
+     "explain": {
+      "A": [
+       "He drew it on the spot.",
+       "But the plates were engraved and coloured twelve years later, for a London publisher.",
+       "The shapes are his. We cannot say the same of every colour."
+      ],
+      "B": [
+       "Good, that is the method. Our colours follow the watercolour Hunter painted himself, not the London plates. Where they sit on this front is our reconstruction."
+      ],
+      "C": [
+       "A hostile witness is still a witness.",
+       "He had no reason to lie about a doorway."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "e:e-court-halls.0.c": {
+   "id": "e:e-court-halls.0.c",
+   "element": {
+    "key": "e:e-court-halls",
+    "kind": "evidence",
+    "id": "e-court-halls",
+    "name": "Four halls",
+    "image": null
+   },
+   "chapter": {
+    "id": "ch3",
+    "n": 3,
+    "title": "A Machine for Being Seen",
+    "years": "1792 to 1799"
+   },
+   "clues": [
+    {
+     "kind": "fact",
+     "text": "Tipu Sultan was killed at Srirangapatna on 4 May 1799.",
+     "source": "B. L. Rice, Mysore Gazetteer (1897), vol. I pp. 414 to 415",
+     "tier": "record",
+     "facts": [
+      "F10"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "Francis Buchanan's account of the palace is entered in his journal under 10 May 1800, at Bangalore.",
+     "source": "Francis Buchanan, A Journey from Madras through the Countries of Mysore, Canara, and Malabar (1807), vol. 1 p. 44",
+     "tier": "record",
+     "facts": [
+      "F11"
+     ]
+    },
+    {
+     "kind": "quote",
+     "text": "On the upper story, it contains four halls, each comprising two balconies of state for the prince",
+     "source": "A Journey from Madras through the Countries of Mysore, Canara, and Malabar, vol. 1 pp. 45 to 46. Public domain.",
+     "tier": "record",
+     "witness": "Francis Buchanan",
+     "facts": [
+      "F12"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch3",
+       "label": "Chapter 3: A Machine for Being Seen",
+       "sub": "1792 to 1799"
+      },
+      {
+       "id": "ch5",
+       "label": "Chapter 5: What Nobody Wrote Down",
+       "sub": "1868 to today"
+      },
+      {
+       "id": "ch2",
+       "label": "Chapter 2: The Year It Was Finished",
+       "sub": "1791 to 1792"
+      }
+     ],
+     "answer": [
+      "ch3"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "It glittered. With what?",
+     "hint": null,
+     "from": "c3-choice",
+     "options": [
+      {
+       "id": "A",
+       "label": "Gold leaf."
+      },
+      {
+       "id": "B",
+       "label": "False gilding."
+      },
+      {
+       "id": "C",
+       "label": "Plain paint. The gold is a later story."
+      }
+     ],
+     "answer": [
+      "B"
+     ],
+     "explain": {
+      "A": [
+       "Not gold leaf. Buchanan walked through the palace and wrote \"false gilding\"."
+      ],
+      "B": [
+       "The shine was made to be seen from the court below.",
+       "Up close it was not gold. Buchanan was close.",
+       "The paint and the gilding were in the rooms where the ruler was seen.",
+       "The private rooms, by his account, were small and mean."
+      ],
+      "C": [
+       "Not a later story. Buchanan wrote of \"false gilding\" in 1800."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "e:e-court-halls.1.c": {
+   "id": "e:e-court-halls.1.c",
+   "element": {
+    "key": "e:e-court-halls",
+    "kind": "evidence",
+    "id": "e-court-halls",
+    "name": "Four halls",
+    "image": null
+   },
+   "chapter": {
+    "id": "ch3",
+    "n": 3,
+    "title": "A Machine for Being Seen",
+    "years": "1792 to 1799"
+   },
+   "clues": [
+    {
+     "kind": "fact",
+     "text": "Most of the palace Buchanan described is gone. Sankey, 1873: the main block \"has now been cleared away\", and \"an adjoining block which housed the Treasury ... still stands\". Rice, 1897: \"The palace having partly fallen in the greater part was demolished.\"",
+     "source": "R. H. Sankey, Offices of the Mysore Government at Bangalore, Professional Papers on Indian Engineering, 2nd series, vol. II, no. LXIII (1873), pp. 1 to 2; B. L. Rice, Mysore Gazetteer (1897), vol. II p. 47",
+     "tier": "record",
+     "facts": [
+      "F19"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "Buchanan, 10 May 1800: \"At each end of the halls are private apartments, small, mean, and inconvenient. The public rooms are neatly painted, and ornamented with false gilding.\"",
+     "source": "Francis Buchanan, A Journey from Madras through the Countries of Mysore, Canara, and Malabar (1807), vol. 1 pp. 45 to 46",
+     "tier": "record",
+     "facts": [
+      "F13"
+     ]
+    },
+    {
+     "kind": "caption",
+     "text": "From his entry for 10 May 1800. Printed in London in 1807.",
+     "source": "A Journey from Madras through the Countries of Mysore, Canara, and Malabar, vol. 1 pp. 45 to 46. Public domain.",
+     "tier": "record",
+     "witness": null,
+     "facts": [
+      "F12"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch3",
+       "label": "Chapter 3: A Machine for Being Seen",
+       "sub": "1792 to 1799"
+      },
+      {
+       "id": "ch5",
+       "label": "Chapter 5: What Nobody Wrote Down",
+       "sub": "1868 to today"
+      },
+      {
+       "id": "ch2",
+       "label": "Chapter 2: The Year It Was Finished",
+       "sub": "1791 to 1792"
+      }
+     ],
+     "answer": [
+      "ch3"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "It glittered. With what?",
+     "hint": null,
+     "from": "c3-choice",
+     "options": [
+      {
+       "id": "C",
+       "label": "Plain paint. The gold is a later story."
+      },
+      {
+       "id": "A",
+       "label": "Gold leaf."
+      },
+      {
+       "id": "B",
+       "label": "False gilding."
+      }
+     ],
+     "answer": [
+      "B"
+     ],
+     "explain": {
+      "A": [
+       "Not gold leaf. Buchanan walked through the palace and wrote \"false gilding\"."
+      ],
+      "B": [
+       "The shine was made to be seen from the court below.",
+       "Up close it was not gold. Buchanan was close.",
+       "The paint and the gilding were in the rooms where the ruler was seen.",
+       "The private rooms, by his account, were small and mean."
+      ],
+      "C": [
+       "Not a later story. Buchanan wrote of \"false gilding\" in 1800."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "e:e-court-courts.0.c": {
+   "id": "e:e-court-courts.0.c",
+   "element": {
+    "key": "e:e-court-courts",
+    "kind": "evidence",
+    "id": "e-court-courts",
+    "name": "The courts",
+    "image": null
+   },
+   "chapter": {
+    "id": "ch3",
+    "n": 3,
+    "title": "A Machine for Being Seen",
+    "years": "1792 to 1799"
+   },
+   "clues": [
+    {
+     "kind": "fact",
+     "text": "Tipu Sultan was killed at Srirangapatna on 4 May 1799.",
+     "source": "B. L. Rice, Mysore Gazetteer (1897), vol. I pp. 414 to 415",
+     "tier": "record",
+     "facts": [
+      "F10"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "Francis Buchanan's account of the palace is entered in his journal under 10 May 1800, at Bangalore.",
+     "source": "Francis Buchanan, A Journey from Madras through the Countries of Mysore, Canara, and Malabar (1807), vol. 1 p. 44",
+     "tier": "record",
+     "facts": [
+      "F11"
+     ]
+    },
+    {
+     "kind": "quote",
+     "text": "each balcony faces a different Cutchery, or court for giving audience",
+     "source": "A Journey from Madras through the Countries of Mysore, Canara, and Malabar, vol. 1 pp. 45 to 46. Public domain.",
+     "tier": "record",
+     "witness": "Francis Buchanan",
+     "facts": [
+      "F12"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch4",
+       "label": "Chapter 4: The Office",
+       "sub": "1831 to 1868"
+      },
+      {
+       "id": "ch3",
+       "label": "Chapter 3: A Machine for Being Seen",
+       "sub": "1792 to 1799"
+      },
+      {
+       "id": "ch5",
+       "label": "Chapter 5: What Nobody Wrote Down",
+       "sub": "1868 to today"
+      }
+     ],
+     "answer": [
+      "ch3"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "It glittered. With what?",
+     "hint": null,
+     "from": "c3-choice",
+     "options": [
+      {
+       "id": "B",
+       "label": "False gilding."
+      },
+      {
+       "id": "A",
+       "label": "Gold leaf."
+      },
+      {
+       "id": "C",
+       "label": "Plain paint. The gold is a later story."
+      }
+     ],
+     "answer": [
+      "B"
+     ],
+     "explain": {
+      "A": [
+       "Not gold leaf. Buchanan walked through the palace and wrote \"false gilding\"."
+      ],
+      "B": [
+       "The shine was made to be seen from the court below.",
+       "Up close it was not gold. Buchanan was close.",
+       "The paint and the gilding were in the rooms where the ruler was seen.",
+       "The private rooms, by his account, were small and mean."
+      ],
+      "C": [
+       "Not a later story. Buchanan wrote of \"false gilding\" in 1800."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "e:e-court-courts.1.c": {
+   "id": "e:e-court-courts.1.c",
+   "element": {
+    "key": "e:e-court-courts",
+    "kind": "evidence",
+    "id": "e-court-courts",
+    "name": "The courts",
+    "image": null
+   },
+   "chapter": {
+    "id": "ch3",
+    "n": 3,
+    "title": "A Machine for Being Seen",
+    "years": "1792 to 1799"
+   },
+   "clues": [
+    {
+     "kind": "fact",
+     "text": "Most of the palace Buchanan described is gone. Sankey, 1873: the main block \"has now been cleared away\", and \"an adjoining block which housed the Treasury ... still stands\". Rice, 1897: \"The palace having partly fallen in the greater part was demolished.\"",
+     "source": "R. H. Sankey, Offices of the Mysore Government at Bangalore, Professional Papers on Indian Engineering, 2nd series, vol. II, no. LXIII (1873), pp. 1 to 2; B. L. Rice, Mysore Gazetteer (1897), vol. II p. 47",
+     "tier": "record",
+     "facts": [
+      "F19"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "Buchanan, 10 May 1800: \"At each end of the halls are private apartments, small, mean, and inconvenient. The public rooms are neatly painted, and ornamented with false gilding.\"",
+     "source": "Francis Buchanan, A Journey from Madras through the Countries of Mysore, Canara, and Malabar (1807), vol. 1 pp. 45 to 46",
+     "tier": "record",
+     "facts": [
+      "F13"
+     ]
+    },
+    {
+     "kind": "caption",
+     "text": "From his entry for 10 May 1800. Printed in London in 1807.",
+     "source": "A Journey from Madras through the Countries of Mysore, Canara, and Malabar, vol. 1 pp. 45 to 46. Public domain.",
+     "tier": "record",
+     "witness": null,
+     "facts": [
+      "F12"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch3",
+       "label": "Chapter 3: A Machine for Being Seen",
+       "sub": "1792 to 1799"
+      },
+      {
+       "id": "ch4",
+       "label": "Chapter 4: The Office",
+       "sub": "1831 to 1868"
+      },
+      {
+       "id": "ch2",
+       "label": "Chapter 2: The Year It Was Finished",
+       "sub": "1791 to 1792"
+      }
+     ],
+     "answer": [
+      "ch3"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "It glittered. With what?",
+     "hint": null,
+     "from": "c3-choice",
+     "options": [
+      {
+       "id": "B",
+       "label": "False gilding."
+      },
+      {
+       "id": "C",
+       "label": "Plain paint. The gold is a later story."
+      },
+      {
+       "id": "A",
+       "label": "Gold leaf."
+      }
+     ],
+     "answer": [
+      "B"
+     ],
+     "explain": {
+      "A": [
+       "Not gold leaf. Buchanan walked through the palace and wrote \"false gilding\"."
+      ],
+      "B": [
+       "The shine was made to be seen from the court below.",
+       "Up close it was not gold. Buchanan was close.",
+       "The paint and the gilding were in the rooms where the ruler was seen.",
+       "The private rooms, by his account, were small and mean."
+      ],
+      "C": [
+       "Not a later story. Buchanan wrote of \"false gilding\" in 1800."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "e:e-court-guards.0.c": {
+   "id": "e:e-court-guards.0.c",
+   "element": {
+    "key": "e:e-court-guards",
+    "kind": "evidence",
+    "id": "e-court-guards",
+    "name": "The guards",
+    "image": null
+   },
+   "chapter": {
+    "id": "ch3",
+    "n": 3,
+    "title": "A Machine for Being Seen",
+    "years": "1792 to 1799"
+   },
+   "clues": [
+    {
+     "kind": "fact",
+     "text": "Tipu Sultan was killed at Srirangapatna on 4 May 1799.",
+     "source": "B. L. Rice, Mysore Gazetteer (1897), vol. I pp. 414 to 415",
+     "tier": "record",
+     "facts": [
+      "F10"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "Francis Buchanan's account of the palace is entered in his journal under 10 May 1800, at Bangalore.",
+     "source": "Francis Buchanan, A Journey from Madras through the Countries of Mysore, Canara, and Malabar (1807), vol. 1 p. 44",
+     "tier": "record",
+     "facts": [
+      "F11"
+     ]
+    },
+    {
+     "kind": "quote",
+     "text": "No persons, except a few trusty guards, were admitted into the hall with the Sultan",
+     "source": "A Journey from Madras through the Countries of Mysore, Canara, and Malabar, vol. 1 pp. 45 to 46. Public domain.",
+     "tier": "record",
+     "witness": "Francis Buchanan",
+     "facts": [
+      "F12"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch3",
+       "label": "Chapter 3: A Machine for Being Seen",
+       "sub": "1792 to 1799"
+      },
+      {
+       "id": "ch2",
+       "label": "Chapter 2: The Year It Was Finished",
+       "sub": "1791 to 1792"
+      },
+      {
+       "id": "ch5",
+       "label": "Chapter 5: What Nobody Wrote Down",
+       "sub": "1868 to today"
+      }
+     ],
+     "answer": [
+      "ch3"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "It glittered. With what?",
+     "hint": null,
+     "from": "c3-choice",
+     "options": [
+      {
+       "id": "A",
+       "label": "Gold leaf."
+      },
+      {
+       "id": "B",
+       "label": "False gilding."
+      },
+      {
+       "id": "C",
+       "label": "Plain paint. The gold is a later story."
+      }
+     ],
+     "answer": [
+      "B"
+     ],
+     "explain": {
+      "A": [
+       "Not gold leaf. Buchanan walked through the palace and wrote \"false gilding\"."
+      ],
+      "B": [
+       "The shine was made to be seen from the court below.",
+       "Up close it was not gold. Buchanan was close.",
+       "The paint and the gilding were in the rooms where the ruler was seen.",
+       "The private rooms, by his account, were small and mean."
+      ],
+      "C": [
+       "Not a later story. Buchanan wrote of \"false gilding\" in 1800."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "e:e-court-guards.1.c": {
+   "id": "e:e-court-guards.1.c",
+   "element": {
+    "key": "e:e-court-guards",
+    "kind": "evidence",
+    "id": "e-court-guards",
+    "name": "The guards",
+    "image": null
+   },
+   "chapter": {
+    "id": "ch3",
+    "n": 3,
+    "title": "A Machine for Being Seen",
+    "years": "1792 to 1799"
+   },
+   "clues": [
+    {
+     "kind": "fact",
+     "text": "Most of the palace Buchanan described is gone. Sankey, 1873: the main block \"has now been cleared away\", and \"an adjoining block which housed the Treasury ... still stands\". Rice, 1897: \"The palace having partly fallen in the greater part was demolished.\"",
+     "source": "R. H. Sankey, Offices of the Mysore Government at Bangalore, Professional Papers on Indian Engineering, 2nd series, vol. II, no. LXIII (1873), pp. 1 to 2; B. L. Rice, Mysore Gazetteer (1897), vol. II p. 47",
+     "tier": "record",
+     "facts": [
+      "F19"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "Buchanan, 10 May 1800: \"At each end of the halls are private apartments, small, mean, and inconvenient. The public rooms are neatly painted, and ornamented with false gilding.\"",
+     "source": "Francis Buchanan, A Journey from Madras through the Countries of Mysore, Canara, and Malabar (1807), vol. 1 pp. 45 to 46",
+     "tier": "record",
+     "facts": [
+      "F13"
+     ]
+    },
+    {
+     "kind": "caption",
+     "text": "From his entry for 10 May 1800. Printed in London in 1807.",
+     "source": "A Journey from Madras through the Countries of Mysore, Canara, and Malabar, vol. 1 pp. 45 to 46. Public domain.",
+     "tier": "record",
+     "witness": null,
+     "facts": [
+      "F12"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch5",
+       "label": "Chapter 5: What Nobody Wrote Down",
+       "sub": "1868 to today"
+      },
+      {
+       "id": "ch3",
+       "label": "Chapter 3: A Machine for Being Seen",
+       "sub": "1792 to 1799"
+      },
+      {
+       "id": "ch4",
+       "label": "Chapter 4: The Office",
+       "sub": "1831 to 1868"
+      }
+     ],
+     "answer": [
+      "ch3"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "It glittered. With what?",
+     "hint": null,
+     "from": "c3-choice",
+     "options": [
+      {
+       "id": "C",
+       "label": "Plain paint. The gold is a later story."
+      },
+      {
+       "id": "B",
+       "label": "False gilding."
+      },
+      {
+       "id": "A",
+       "label": "Gold leaf."
+      }
+     ],
+     "answer": [
+      "B"
+     ],
+     "explain": {
+      "A": [
+       "Not gold leaf. Buchanan walked through the palace and wrote \"false gilding\"."
+      ],
+      "B": [
+       "The shine was made to be seen from the court below.",
+       "Up close it was not gold. Buchanan was close.",
+       "The paint and the gilding were in the rooms where the ruler was seen.",
+       "The private rooms, by his account, were small and mean."
+      ],
+      "C": [
+       "Not a later story. Buchanan wrote of \"false gilding\" in 1800."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "e:e-court-officers.0.c": {
+   "id": "e:e-court-officers.0.c",
+   "element": {
+    "key": "e:e-court-officers",
+    "kind": "evidence",
+    "id": "e-court-officers",
+    "name": "The highest officers",
+    "image": null
+   },
+   "chapter": {
+    "id": "ch3",
+    "n": 3,
+    "title": "A Machine for Being Seen",
+    "years": "1792 to 1799"
+   },
+   "clues": [
+    {
+     "kind": "fact",
+     "text": "Tipu Sultan was killed at Srirangapatna on 4 May 1799.",
+     "source": "B. L. Rice, Mysore Gazetteer (1897), vol. I pp. 414 to 415",
+     "tier": "record",
+     "facts": [
+      "F10"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "Francis Buchanan's account of the palace is entered in his journal under 10 May 1800, at Bangalore.",
+     "source": "Francis Buchanan, A Journey from Madras through the Countries of Mysore, Canara, and Malabar (1807), vol. 1 p. 44",
+     "tier": "record",
+     "facts": [
+      "F11"
+     ]
+    },
+    {
+     "kind": "quote",
+     "text": "at each end of the court was erected a balcony for the officers of the highest rank",
+     "source": "A Journey from Madras through the Countries of Mysore, Canara, and Malabar, vol. 1 pp. 45 to 46. Public domain.",
+     "tier": "record",
+     "witness": "Francis Buchanan",
+     "facts": [
+      "F12"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch1",
+       "label": "Chapter 1: Ten Years",
+       "sub": "1781 to 1791"
+      },
+      {
+       "id": "ch3",
+       "label": "Chapter 3: A Machine for Being Seen",
+       "sub": "1792 to 1799"
+      },
+      {
+       "id": "ch4",
+       "label": "Chapter 4: The Office",
+       "sub": "1831 to 1868"
+      }
+     ],
+     "answer": [
+      "ch3"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "It glittered. With what?",
+     "hint": null,
+     "from": "c3-choice",
+     "options": [
+      {
+       "id": "B",
+       "label": "False gilding."
+      },
+      {
+       "id": "C",
+       "label": "Plain paint. The gold is a later story."
+      },
+      {
+       "id": "A",
+       "label": "Gold leaf."
+      }
+     ],
+     "answer": [
+      "B"
+     ],
+     "explain": {
+      "A": [
+       "Not gold leaf. Buchanan walked through the palace and wrote \"false gilding\"."
+      ],
+      "B": [
+       "The shine was made to be seen from the court below.",
+       "Up close it was not gold. Buchanan was close.",
+       "The paint and the gilding were in the rooms where the ruler was seen.",
+       "The private rooms, by his account, were small and mean."
+      ],
+      "C": [
+       "Not a later story. Buchanan wrote of \"false gilding\" in 1800."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "e:e-court-officers.1.c": {
+   "id": "e:e-court-officers.1.c",
+   "element": {
+    "key": "e:e-court-officers",
+    "kind": "evidence",
+    "id": "e-court-officers",
+    "name": "The highest officers",
+    "image": null
+   },
+   "chapter": {
+    "id": "ch3",
+    "n": 3,
+    "title": "A Machine for Being Seen",
+    "years": "1792 to 1799"
+   },
+   "clues": [
+    {
+     "kind": "fact",
+     "text": "Most of the palace Buchanan described is gone. Sankey, 1873: the main block \"has now been cleared away\", and \"an adjoining block which housed the Treasury ... still stands\". Rice, 1897: \"The palace having partly fallen in the greater part was demolished.\"",
+     "source": "R. H. Sankey, Offices of the Mysore Government at Bangalore, Professional Papers on Indian Engineering, 2nd series, vol. II, no. LXIII (1873), pp. 1 to 2; B. L. Rice, Mysore Gazetteer (1897), vol. II p. 47",
+     "tier": "record",
+     "facts": [
+      "F19"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "Buchanan, 10 May 1800: \"At each end of the halls are private apartments, small, mean, and inconvenient. The public rooms are neatly painted, and ornamented with false gilding.\"",
+     "source": "Francis Buchanan, A Journey from Madras through the Countries of Mysore, Canara, and Malabar (1807), vol. 1 pp. 45 to 46",
+     "tier": "record",
+     "facts": [
+      "F13"
+     ]
+    },
+    {
+     "kind": "caption",
+     "text": "From his entry for 10 May 1800. Printed in London in 1807.",
+     "source": "A Journey from Madras through the Countries of Mysore, Canara, and Malabar, vol. 1 pp. 45 to 46. Public domain.",
+     "tier": "record",
+     "witness": null,
+     "facts": [
+      "F12"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch4",
+       "label": "Chapter 4: The Office",
+       "sub": "1831 to 1868"
+      },
+      {
+       "id": "ch5",
+       "label": "Chapter 5: What Nobody Wrote Down",
+       "sub": "1868 to today"
+      },
+      {
+       "id": "ch3",
+       "label": "Chapter 3: A Machine for Being Seen",
+       "sub": "1792 to 1799"
+      }
+     ],
+     "answer": [
+      "ch3"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "It glittered. With what?",
+     "hint": null,
+     "from": "c3-choice",
+     "options": [
+      {
+       "id": "A",
+       "label": "Gold leaf."
+      },
+      {
+       "id": "B",
+       "label": "False gilding."
+      },
+      {
+       "id": "C",
+       "label": "Plain paint. The gold is a later story."
+      }
+     ],
+     "answer": [
+      "B"
+     ],
+     "explain": {
+      "A": [
+       "Not gold leaf. Buchanan walked through the palace and wrote \"false gilding\"."
+      ],
+      "B": [
+       "The shine was made to be seen from the court below.",
+       "Up close it was not gold. Buchanan was close.",
+       "The paint and the gilding were in the rooms where the ruler was seen.",
+       "The private rooms, by his account, were small and mean."
+      ],
+      "C": [
+       "Not a later story. Buchanan wrote of \"false gilding\" in 1800."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "e:e-court-lower.0.c": {
+   "id": "e:e-court-lower.0.c",
+   "element": {
+    "key": "e:e-court-lower",
+    "kind": "evidence",
+    "id": "e-court-lower",
+    "name": "The lower officers",
+    "image": null
+   },
+   "chapter": {
+    "id": "ch3",
+    "n": 3,
+    "title": "A Machine for Being Seen",
+    "years": "1792 to 1799"
+   },
+   "clues": [
+    {
+     "kind": "fact",
+     "text": "Tipu Sultan was killed at Srirangapatna on 4 May 1799.",
+     "source": "B. L. Rice, Mysore Gazetteer (1897), vol. I pp. 414 to 415",
+     "tier": "record",
+     "facts": [
+      "F10"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "Francis Buchanan's account of the palace is entered in his journal under 10 May 1800, at Bangalore.",
+     "source": "Francis Buchanan, A Journey from Madras through the Countries of Mysore, Canara, and Malabar (1807), vol. 1 p. 44",
+     "tier": "record",
+     "facts": [
+      "F11"
+     ]
+    },
+    {
+     "kind": "quote",
+     "text": "The inferior officers occupied a hall under the balcony of the prince, open in front, and supported by columns as high as the roof of the upper story",
+     "source": "A Journey from Madras through the Countries of Mysore, Canara, and Malabar, vol. 1 pp. 45 to 46. Public domain.",
+     "tier": "record",
+     "witness": "Francis Buchanan",
+     "facts": [
+      "F12"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch1",
+       "label": "Chapter 1: Ten Years",
+       "sub": "1781 to 1791"
+      },
+      {
+       "id": "ch2",
+       "label": "Chapter 2: The Year It Was Finished",
+       "sub": "1791 to 1792"
+      },
+      {
+       "id": "ch3",
+       "label": "Chapter 3: A Machine for Being Seen",
+       "sub": "1792 to 1799"
+      }
+     ],
+     "answer": [
+      "ch3"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "It glittered. With what?",
+     "hint": null,
+     "from": "c3-choice",
+     "options": [
+      {
+       "id": "B",
+       "label": "False gilding."
+      },
+      {
+       "id": "A",
+       "label": "Gold leaf."
+      },
+      {
+       "id": "C",
+       "label": "Plain paint. The gold is a later story."
+      }
+     ],
+     "answer": [
+      "B"
+     ],
+     "explain": {
+      "A": [
+       "Not gold leaf. Buchanan walked through the palace and wrote \"false gilding\"."
+      ],
+      "B": [
+       "The shine was made to be seen from the court below.",
+       "Up close it was not gold. Buchanan was close.",
+       "The paint and the gilding were in the rooms where the ruler was seen.",
+       "The private rooms, by his account, were small and mean."
+      ],
+      "C": [
+       "Not a later story. Buchanan wrote of \"false gilding\" in 1800."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "e:e-court-lower.1.c": {
+   "id": "e:e-court-lower.1.c",
+   "element": {
+    "key": "e:e-court-lower",
+    "kind": "evidence",
+    "id": "e-court-lower",
+    "name": "The lower officers",
+    "image": null
+   },
+   "chapter": {
+    "id": "ch3",
+    "n": 3,
+    "title": "A Machine for Being Seen",
+    "years": "1792 to 1799"
+   },
+   "clues": [
+    {
+     "kind": "fact",
+     "text": "Most of the palace Buchanan described is gone. Sankey, 1873: the main block \"has now been cleared away\", and \"an adjoining block which housed the Treasury ... still stands\". Rice, 1897: \"The palace having partly fallen in the greater part was demolished.\"",
+     "source": "R. H. Sankey, Offices of the Mysore Government at Bangalore, Professional Papers on Indian Engineering, 2nd series, vol. II, no. LXIII (1873), pp. 1 to 2; B. L. Rice, Mysore Gazetteer (1897), vol. II p. 47",
+     "tier": "record",
+     "facts": [
+      "F19"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "Buchanan, 10 May 1800: \"At each end of the halls are private apartments, small, mean, and inconvenient. The public rooms are neatly painted, and ornamented with false gilding.\"",
+     "source": "Francis Buchanan, A Journey from Madras through the Countries of Mysore, Canara, and Malabar (1807), vol. 1 pp. 45 to 46",
+     "tier": "record",
+     "facts": [
+      "F13"
+     ]
+    },
+    {
+     "kind": "caption",
+     "text": "From his entry for 10 May 1800. Printed in London in 1807.",
+     "source": "A Journey from Madras through the Countries of Mysore, Canara, and Malabar, vol. 1 pp. 45 to 46. Public domain.",
+     "tier": "record",
+     "witness": null,
+     "facts": [
+      "F12"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch4",
+       "label": "Chapter 4: The Office",
+       "sub": "1831 to 1868"
+      },
+      {
+       "id": "ch5",
+       "label": "Chapter 5: What Nobody Wrote Down",
+       "sub": "1868 to today"
+      },
+      {
+       "id": "ch3",
+       "label": "Chapter 3: A Machine for Being Seen",
+       "sub": "1792 to 1799"
+      }
+     ],
+     "answer": [
+      "ch3"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "It glittered. With what?",
+     "hint": null,
+     "from": "c3-choice",
+     "options": [
+      {
+       "id": "B",
+       "label": "False gilding."
+      },
+      {
+       "id": "C",
+       "label": "Plain paint. The gold is a later story."
+      },
+      {
+       "id": "A",
+       "label": "Gold leaf."
+      }
+     ],
+     "answer": [
+      "B"
+     ],
+     "explain": {
+      "A": [
+       "Not gold leaf. Buchanan walked through the palace and wrote \"false gilding\"."
+      ],
+      "B": [
+       "The shine was made to be seen from the court below.",
+       "Up close it was not gold. Buchanan was close.",
+       "The paint and the gilding were in the rooms where the ruler was seen.",
+       "The private rooms, by his account, were small and mean."
+      ],
+      "C": [
+       "Not a later story. Buchanan wrote of \"false gilding\" in 1800."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "e:e-court-people.0.c": {
+   "id": "e:e-court-people.0.c",
+   "element": {
+    "key": "e:e-court-people",
+    "kind": "evidence",
+    "id": "e-court-people",
+    "name": "The people",
+    "image": null
+   },
+   "chapter": {
+    "id": "ch3",
+    "n": 3,
+    "title": "A Machine for Being Seen",
+    "years": "1792 to 1799"
+   },
+   "clues": [
+    {
+     "kind": "fact",
+     "text": "Tipu Sultan was killed at Srirangapatna on 4 May 1799.",
+     "source": "B. L. Rice, Mysore Gazetteer (1897), vol. I pp. 414 to 415",
+     "tier": "record",
+     "facts": [
+      "F10"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "Francis Buchanan's account of the palace is entered in his journal under 10 May 1800, at Bangalore.",
+     "source": "Francis Buchanan, A Journey from Madras through the Countries of Mysore, Canara, and Malabar (1807), vol. 1 p. 44",
+     "tier": "record",
+     "facts": [
+      "F11"
+     ]
+    },
+    {
+     "kind": "quote",
+     "text": "The populace were admitted into the open court, in which there were fountains for cooling the air",
+     "source": "A Journey from Madras through the Countries of Mysore, Canara, and Malabar, vol. 1 pp. 45 to 46. Public domain.",
+     "tier": "record",
+     "witness": "Francis Buchanan",
+     "facts": [
+      "F12"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch4",
+       "label": "Chapter 4: The Office",
+       "sub": "1831 to 1868"
+      },
+      {
+       "id": "ch1",
+       "label": "Chapter 1: Ten Years",
+       "sub": "1781 to 1791"
+      },
+      {
+       "id": "ch3",
+       "label": "Chapter 3: A Machine for Being Seen",
+       "sub": "1792 to 1799"
+      }
+     ],
+     "answer": [
+      "ch3"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "It glittered. With what?",
+     "hint": null,
+     "from": "c3-choice",
+     "options": [
+      {
+       "id": "C",
+       "label": "Plain paint. The gold is a later story."
+      },
+      {
+       "id": "A",
+       "label": "Gold leaf."
+      },
+      {
+       "id": "B",
+       "label": "False gilding."
+      }
+     ],
+     "answer": [
+      "B"
+     ],
+     "explain": {
+      "A": [
+       "Not gold leaf. Buchanan walked through the palace and wrote \"false gilding\"."
+      ],
+      "B": [
+       "The shine was made to be seen from the court below.",
+       "Up close it was not gold. Buchanan was close.",
+       "The paint and the gilding were in the rooms where the ruler was seen.",
+       "The private rooms, by his account, were small and mean."
+      ],
+      "C": [
+       "Not a later story. Buchanan wrote of \"false gilding\" in 1800."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "e:e-court-people.1.c": {
+   "id": "e:e-court-people.1.c",
+   "element": {
+    "key": "e:e-court-people",
+    "kind": "evidence",
+    "id": "e-court-people",
+    "name": "The people",
+    "image": null
+   },
+   "chapter": {
+    "id": "ch3",
+    "n": 3,
+    "title": "A Machine for Being Seen",
+    "years": "1792 to 1799"
+   },
+   "clues": [
+    {
+     "kind": "fact",
+     "text": "Most of the palace Buchanan described is gone. Sankey, 1873: the main block \"has now been cleared away\", and \"an adjoining block which housed the Treasury ... still stands\". Rice, 1897: \"The palace having partly fallen in the greater part was demolished.\"",
+     "source": "R. H. Sankey, Offices of the Mysore Government at Bangalore, Professional Papers on Indian Engineering, 2nd series, vol. II, no. LXIII (1873), pp. 1 to 2; B. L. Rice, Mysore Gazetteer (1897), vol. II p. 47",
+     "tier": "record",
+     "facts": [
+      "F19"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "Buchanan, 10 May 1800: \"At each end of the halls are private apartments, small, mean, and inconvenient. The public rooms are neatly painted, and ornamented with false gilding.\"",
+     "source": "Francis Buchanan, A Journey from Madras through the Countries of Mysore, Canara, and Malabar (1807), vol. 1 pp. 45 to 46",
+     "tier": "record",
+     "facts": [
+      "F13"
+     ]
+    },
+    {
+     "kind": "caption",
+     "text": "From his entry for 10 May 1800. Printed in London in 1807.",
+     "source": "A Journey from Madras through the Countries of Mysore, Canara, and Malabar, vol. 1 pp. 45 to 46. Public domain.",
+     "tier": "record",
+     "witness": null,
+     "facts": [
+      "F12"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch1",
+       "label": "Chapter 1: Ten Years",
+       "sub": "1781 to 1791"
+      },
+      {
+       "id": "ch4",
+       "label": "Chapter 4: The Office",
+       "sub": "1831 to 1868"
+      },
+      {
+       "id": "ch3",
+       "label": "Chapter 3: A Machine for Being Seen",
+       "sub": "1792 to 1799"
+      }
+     ],
+     "answer": [
+      "ch3"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "It glittered. With what?",
+     "hint": null,
+     "from": "c3-choice",
+     "options": [
+      {
+       "id": "B",
+       "label": "False gilding."
+      },
+      {
+       "id": "C",
+       "label": "Plain paint. The gold is a later story."
+      },
+      {
+       "id": "A",
+       "label": "Gold leaf."
+      }
+     ],
+     "answer": [
+      "B"
+     ],
+     "explain": {
+      "A": [
+       "Not gold leaf. Buchanan walked through the palace and wrote \"false gilding\"."
+      ],
+      "B": [
+       "The shine was made to be seen from the court below.",
+       "Up close it was not gold. Buchanan was close.",
+       "The paint and the gilding were in the rooms where the ruler was seen.",
+       "The private rooms, by his account, were small and mean."
+      ],
+      "C": [
+       "Not a later story. Buchanan wrote of \"false gilding\" in 1800."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "e:e-paint-wall.0.c": {
+   "id": "e:e-paint-wall.0.c",
+   "element": {
+    "key": "e:e-paint-wall",
+    "kind": "evidence",
+    "id": "e-paint-wall",
+    "name": "Paint on a wall",
+    "image": {
+     "src": "/play/packs/tipu-summer-palace-bengaluru/v1/evidence/e-paint-wall.webp",
+     "w": 736,
+     "h": 1600,
+     "credit": "Photograph: Epocheye, September 2026."
+    }
+   },
+   "chapter": {
+    "id": "ch5",
+    "n": 5,
+    "title": "What Nobody Wrote Down",
+    "years": "1868 to today"
+   },
+   "clues": [
+    {
+     "kind": "fact",
+     "text": "Buchanan, 10 May 1800: \"At each end of the halls are private apartments, small, mean, and inconvenient. The public rooms are neatly painted, and ornamented with false gilding.\"",
+     "source": "Francis Buchanan, A Journey from Madras through the Countries of Mysore, Canara, and Malabar (1807), vol. 1 pp. 45 to 46",
+     "tier": "record",
+     "facts": [
+      "F13"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "Almost all of the painted decoration is gone. What is left are fragments, and they are faint.",
+     "source": "Palace narration (seed 105); own photographs 37 and 41, September 2026",
+     "tier": "record",
+     "facts": [
+      "F17"
+     ]
+    },
+    {
+     "kind": "caption",
+     "text": "Painted flowers that survive on a wall of the palace.",
+     "source": "Photograph: Epocheye, September 2026.",
+     "tier": "record",
+     "witness": null,
+     "facts": [
+      "F18"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch4",
+       "label": "Chapter 4: The Office",
+       "sub": "1831 to 1868"
+      },
+      {
+       "id": "ch5",
+       "label": "Chapter 5: What Nobody Wrote Down",
+       "sub": "1868 to today"
+      },
+      {
+       "id": "ch2",
+       "label": "Chapter 2: The Year It Was Finished",
+       "sub": "1791 to 1792"
+      }
+     ],
+     "answer": [
+      "ch5"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "The empty panel. What do you do?",
+     "hint": null,
+     "from": "c5-choice",
+     "options": [
+      {
+       "id": "B",
+       "label": "Leave it plain."
+      },
+      {
+       "id": "A",
+       "label": "Continue the pattern that survives on matching panels, and mark it as our reconstruction."
+      },
+      {
+       "id": "C",
+       "label": "Design something that suits the period."
+      }
+     ],
+     "answer": [
+      "A",
+      "B"
+     ],
+     "explain": {
+      "A": [
+       "Good. Where the same panel survives elsewhere in the palace, we repeat it and label it."
+      ],
+      "B": [
+       "Good. Where nothing survives, plain is the honest answer.",
+       "Even though plain looks unfinished."
+      ],
+      "C": [
+       "It would look the best. It would also be fiction.",
+       "A rebuilt ceiling does not look uncertain. It looks like the answer.",
+       "So it has to come from the building, not from taste."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "e:e-paint-wall.1.c": {
+   "id": "e:e-paint-wall.1.c",
+   "element": {
+    "key": "e:e-paint-wall",
+    "kind": "evidence",
+    "id": "e-paint-wall",
+    "name": "Paint on a wall",
+    "image": {
+     "src": "/play/packs/tipu-summer-palace-bengaluru/v1/evidence/e-paint-wall.webp",
+     "w": 736,
+     "h": 1600,
+     "credit": "Photograph: Epocheye, September 2026."
+    }
+   },
+   "chapter": {
+    "id": "ch5",
+    "n": 5,
+    "title": "What Nobody Wrote Down",
+    "years": "1868 to today"
+   },
+   "clues": [
+    {
+     "kind": "fact",
+     "text": "In 1873 the engineer R. H. Sankey wrote of \"the happy application of white-wash\" to the block of the palace that still stood.",
+     "source": "R. H. Sankey, Offices of the Mysore Government at Bangalore, Professional Papers on Indian Engineering, 2nd series, vol. II, no. LXIII (1873), pp. 1 to 2",
+     "tier": "record",
+     "facts": [
+      "F17b"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "The rule of this game and of our reconstructions: use only what the evidence supports, and label the rest.",
+     "source": "Epocheye method",
+     "tier": "reading",
+     "facts": [
+      "M1"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "Today the timber is dark and polished, and faded floral painting survives in places on walls, ceilings and niches.",
+     "source": "Palace research file palace-measurements.md; own photographs 37 and 41, September 2026",
+     "tier": "record",
+     "facts": [
+      "F18"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch5",
+       "label": "Chapter 5: What Nobody Wrote Down",
+       "sub": "1868 to today"
+      },
+      {
+       "id": "ch4",
+       "label": "Chapter 4: The Office",
+       "sub": "1831 to 1868"
+      },
+      {
+       "id": "ch3",
+       "label": "Chapter 3: A Machine for Being Seen",
+       "sub": "1792 to 1799"
+      }
+     ],
+     "answer": [
+      "ch5"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "The empty panel. What do you do?",
+     "hint": null,
+     "from": "c5-choice",
+     "options": [
+      {
+       "id": "B",
+       "label": "Leave it plain."
+      },
+      {
+       "id": "C",
+       "label": "Design something that suits the period."
+      },
+      {
+       "id": "A",
+       "label": "Continue the pattern that survives on matching panels, and mark it as our reconstruction."
+      }
+     ],
+     "answer": [
+      "A",
+      "B"
+     ],
+     "explain": {
+      "A": [
+       "Good. Where the same panel survives elsewhere in the palace, we repeat it and label it."
+      ],
+      "B": [
+       "Good. Where nothing survives, plain is the honest answer.",
+       "Even though plain looks unfinished."
+      ],
+      "C": [
+       "It would look the best. It would also be fiction.",
+       "A rebuilt ceiling does not look uncertain. It looks like the answer.",
+       "So it has to come from the building, not from taste."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "e:e-paint-ceiling.0.c": {
+   "id": "e:e-paint-ceiling.0.c",
+   "element": {
+    "key": "e:e-paint-ceiling",
+    "kind": "evidence",
+    "id": "e-paint-ceiling",
+    "name": "Paint on a ceiling",
+    "image": {
+     "src": "/play/packs/tipu-summer-palace-bengaluru/v1/evidence/e-paint-ceiling.webp",
+     "w": 1600,
+     "h": 736,
+     "credit": "Photograph: Epocheye, September 2026."
+    }
+   },
+   "chapter": {
+    "id": "ch5",
+    "n": 5,
+    "title": "What Nobody Wrote Down",
+    "years": "1868 to today"
+   },
+   "clues": [
+    {
+     "kind": "fact",
+     "text": "Buchanan, 10 May 1800: \"At each end of the halls are private apartments, small, mean, and inconvenient. The public rooms are neatly painted, and ornamented with false gilding.\"",
+     "source": "Francis Buchanan, A Journey from Madras through the Countries of Mysore, Canara, and Malabar (1807), vol. 1 pp. 45 to 46",
+     "tier": "record",
+     "facts": [
+      "F13"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "Almost all of the painted decoration is gone. What is left are fragments, and they are faint.",
+     "source": "Palace narration (seed 105); own photographs 37 and 41, September 2026",
+     "tier": "record",
+     "facts": [
+      "F17"
+     ]
+    },
+    {
+     "kind": "caption",
+     "text": "Paint that survives on a ceiling of the palace.",
+     "source": "Photograph: Epocheye, September 2026.",
+     "tier": "record",
+     "witness": null,
+     "facts": [
+      "F18"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch5",
+       "label": "Chapter 5: What Nobody Wrote Down",
+       "sub": "1868 to today"
+      },
+      {
+       "id": "ch4",
+       "label": "Chapter 4: The Office",
+       "sub": "1831 to 1868"
+      },
+      {
+       "id": "ch2",
+       "label": "Chapter 2: The Year It Was Finished",
+       "sub": "1791 to 1792"
+      }
+     ],
+     "answer": [
+      "ch5"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "The empty panel. What do you do?",
+     "hint": null,
+     "from": "c5-choice",
+     "options": [
+      {
+       "id": "B",
+       "label": "Leave it plain."
+      },
+      {
+       "id": "C",
+       "label": "Design something that suits the period."
+      },
+      {
+       "id": "A",
+       "label": "Continue the pattern that survives on matching panels, and mark it as our reconstruction."
+      }
+     ],
+     "answer": [
+      "A",
+      "B"
+     ],
+     "explain": {
+      "A": [
+       "Good. Where the same panel survives elsewhere in the palace, we repeat it and label it."
+      ],
+      "B": [
+       "Good. Where nothing survives, plain is the honest answer.",
+       "Even though plain looks unfinished."
+      ],
+      "C": [
+       "It would look the best. It would also be fiction.",
+       "A rebuilt ceiling does not look uncertain. It looks like the answer.",
+       "So it has to come from the building, not from taste."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "e:e-paint-ceiling.1.c": {
+   "id": "e:e-paint-ceiling.1.c",
+   "element": {
+    "key": "e:e-paint-ceiling",
+    "kind": "evidence",
+    "id": "e-paint-ceiling",
+    "name": "Paint on a ceiling",
+    "image": {
+     "src": "/play/packs/tipu-summer-palace-bengaluru/v1/evidence/e-paint-ceiling.webp",
+     "w": 1600,
+     "h": 736,
+     "credit": "Photograph: Epocheye, September 2026."
+    }
+   },
+   "chapter": {
+    "id": "ch5",
+    "n": 5,
+    "title": "What Nobody Wrote Down",
+    "years": "1868 to today"
+   },
+   "clues": [
+    {
+     "kind": "fact",
+     "text": "In 1873 the engineer R. H. Sankey wrote of \"the happy application of white-wash\" to the block of the palace that still stood.",
+     "source": "R. H. Sankey, Offices of the Mysore Government at Bangalore, Professional Papers on Indian Engineering, 2nd series, vol. II, no. LXIII (1873), pp. 1 to 2",
+     "tier": "record",
+     "facts": [
+      "F17b"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "The rule of this game and of our reconstructions: use only what the evidence supports, and label the rest.",
+     "source": "Epocheye method",
+     "tier": "reading",
+     "facts": [
+      "M1"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "Today the timber is dark and polished, and faded floral painting survives in places on walls, ceilings and niches.",
+     "source": "Palace research file palace-measurements.md; own photographs 37 and 41, September 2026",
+     "tier": "record",
+     "facts": [
+      "F18"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch2",
+       "label": "Chapter 2: The Year It Was Finished",
+       "sub": "1791 to 1792"
+      },
+      {
+       "id": "ch5",
+       "label": "Chapter 5: What Nobody Wrote Down",
+       "sub": "1868 to today"
+      },
+      {
+       "id": "ch4",
+       "label": "Chapter 4: The Office",
+       "sub": "1831 to 1868"
+      }
+     ],
+     "answer": [
+      "ch5"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "The empty panel. What do you do?",
+     "hint": null,
+     "from": "c5-choice",
+     "options": [
+      {
+       "id": "B",
+       "label": "Leave it plain."
+      },
+      {
+       "id": "C",
+       "label": "Design something that suits the period."
+      },
+      {
+       "id": "A",
+       "label": "Continue the pattern that survives on matching panels, and mark it as our reconstruction."
+      }
+     ],
+     "answer": [
+      "A",
+      "B"
+     ],
+     "explain": {
+      "A": [
+       "Good. Where the same panel survives elsewhere in the palace, we repeat it and label it."
+      ],
+      "B": [
+       "Good. Where nothing survives, plain is the honest answer.",
+       "Even though plain looks unfinished."
+      ],
+      "C": [
+       "It would look the best. It would also be fiction.",
+       "A rebuilt ceiling does not look uncertain. It looks like the answer.",
+       "So it has to come from the building, not from taste."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "e:e-paint-niche.0.c": {
+   "id": "e:e-paint-niche.0.c",
+   "element": {
+    "key": "e:e-paint-niche",
+    "kind": "evidence",
+    "id": "e-paint-niche",
+    "name": "Paint in a niche",
+    "image": {
+     "src": "/play/packs/tipu-summer-palace-bengaluru/v1/evidence/e-paint-wall.webp",
+     "w": 736,
+     "h": 1600,
+     "credit": "Photograph: Epocheye, September 2026."
+    }
+   },
+   "chapter": {
+    "id": "ch5",
+    "n": 5,
+    "title": "What Nobody Wrote Down",
+    "years": "1868 to today"
+   },
+   "clues": [
+    {
+     "kind": "fact",
+     "text": "Buchanan, 10 May 1800: \"At each end of the halls are private apartments, small, mean, and inconvenient. The public rooms are neatly painted, and ornamented with false gilding.\"",
+     "source": "Francis Buchanan, A Journey from Madras through the Countries of Mysore, Canara, and Malabar (1807), vol. 1 pp. 45 to 46",
+     "tier": "record",
+     "facts": [
+      "F13"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "Almost all of the painted decoration is gone. What is left are fragments, and they are faint.",
+     "source": "Palace narration (seed 105); own photographs 37 and 41, September 2026",
+     "tier": "record",
+     "facts": [
+      "F17"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "Today the timber is dark and polished, and faded floral painting survives in places on walls, ceilings and niches.",
+     "source": "Palace research file palace-measurements.md; own photographs 37 and 41, September 2026",
+     "tier": "record",
+     "facts": [
+      "F18"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch5",
+       "label": "Chapter 5: What Nobody Wrote Down",
+       "sub": "1868 to today"
+      },
+      {
+       "id": "ch3",
+       "label": "Chapter 3: A Machine for Being Seen",
+       "sub": "1792 to 1799"
+      },
+      {
+       "id": "ch1",
+       "label": "Chapter 1: Ten Years",
+       "sub": "1781 to 1791"
+      }
+     ],
+     "answer": [
+      "ch5"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "The empty panel. What do you do?",
+     "hint": null,
+     "from": "c5-choice",
+     "options": [
+      {
+       "id": "A",
+       "label": "Continue the pattern that survives on matching panels, and mark it as our reconstruction."
+      },
+      {
+       "id": "B",
+       "label": "Leave it plain."
+      },
+      {
+       "id": "C",
+       "label": "Design something that suits the period."
+      }
+     ],
+     "answer": [
+      "A",
+      "B"
+     ],
+     "explain": {
+      "A": [
+       "Good. Where the same panel survives elsewhere in the palace, we repeat it and label it."
+      ],
+      "B": [
+       "Good. Where nothing survives, plain is the honest answer.",
+       "Even though plain looks unfinished."
+      ],
+      "C": [
+       "It would look the best. It would also be fiction.",
+       "A rebuilt ceiling does not look uncertain. It looks like the answer.",
+       "So it has to come from the building, not from taste."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "e:e-buchanan-paint.0.c": {
+   "id": "e:e-buchanan-paint.0.c",
+   "element": {
+    "key": "e:e-buchanan-paint",
+    "kind": "evidence",
+    "id": "e-buchanan-paint",
+    "name": "Francis Buchanan, 1800",
+    "image": null
+   },
+   "chapter": {
+    "id": "ch5",
+    "n": 5,
+    "title": "What Nobody Wrote Down",
+    "years": "1868 to today"
+   },
+   "clues": [
+    {
+     "kind": "fact",
+     "text": "Almost all of the painted decoration is gone. What is left are fragments, and they are faint.",
+     "source": "Palace narration (seed 105); own photographs 37 and 41, September 2026",
+     "tier": "record",
+     "facts": [
+      "F17"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "Today the timber is dark and polished, and faded floral painting survives in places on walls, ceilings and niches.",
+     "source": "Palace research file palace-measurements.md; own photographs 37 and 41, September 2026",
+     "tier": "record",
+     "facts": [
+      "F18"
+     ]
+    },
+    {
+     "kind": "quote",
+     "text": "The public rooms are neatly painted, and ornamented with false gilding.",
+     "source": "A Journey from Madras through the Countries of Mysore, Canara, and Malabar, vol. 1 pp. 45 to 46. Public domain.",
+     "tier": "record",
+     "witness": "Francis Buchanan",
+     "facts": [
+      "F13"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch4",
+       "label": "Chapter 4: The Office",
+       "sub": "1831 to 1868"
+      },
+      {
+       "id": "ch5",
+       "label": "Chapter 5: What Nobody Wrote Down",
+       "sub": "1868 to today"
+      },
+      {
+       "id": "ch2",
+       "label": "Chapter 2: The Year It Was Finished",
+       "sub": "1791 to 1792"
+      }
+     ],
+     "answer": [
+      "ch5"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "The empty panel. What do you do?",
+     "hint": null,
+     "from": "c5-choice",
+     "options": [
+      {
+       "id": "B",
+       "label": "Leave it plain."
+      },
+      {
+       "id": "A",
+       "label": "Continue the pattern that survives on matching panels, and mark it as our reconstruction."
+      },
+      {
+       "id": "C",
+       "label": "Design something that suits the period."
+      }
+     ],
+     "answer": [
+      "A",
+      "B"
+     ],
+     "explain": {
+      "A": [
+       "Good. Where the same panel survives elsewhere in the palace, we repeat it and label it."
+      ],
+      "B": [
+       "Good. Where nothing survives, plain is the honest answer.",
+       "Even though plain looks unfinished."
+      ],
+      "C": [
+       "It would look the best. It would also be fiction.",
+       "A rebuilt ceiling does not look uncertain. It looks like the answer.",
+       "So it has to come from the building, not from taste."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "e:e-buchanan-paint.1.c": {
+   "id": "e:e-buchanan-paint.1.c",
+   "element": {
+    "key": "e:e-buchanan-paint",
+    "kind": "evidence",
+    "id": "e-buchanan-paint",
+    "name": "Francis Buchanan, 1800",
+    "image": null
+   },
+   "chapter": {
+    "id": "ch5",
+    "n": 5,
+    "title": "What Nobody Wrote Down",
+    "years": "1868 to today"
+   },
+   "clues": [
+    {
+     "kind": "fact",
+     "text": "In 1873 the engineer R. H. Sankey wrote of \"the happy application of white-wash\" to the block of the palace that still stood.",
+     "source": "R. H. Sankey, Offices of the Mysore Government at Bangalore, Professional Papers on Indian Engineering, 2nd series, vol. II, no. LXIII (1873), pp. 1 to 2",
+     "tier": "record",
+     "facts": [
+      "F17b"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "The rule of this game and of our reconstructions: use only what the evidence supports, and label the rest.",
+     "source": "Epocheye method",
+     "tier": "reading",
+     "facts": [
+      "M1"
+     ]
+    },
+    {
+     "kind": "caption",
+     "text": "From his entry for 10 May 1800. Printed in London in 1807.",
+     "source": "A Journey from Madras through the Countries of Mysore, Canara, and Malabar, vol. 1 pp. 45 to 46. Public domain.",
+     "tier": "record",
+     "witness": null,
+     "facts": [
+      "F13"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch2",
+       "label": "Chapter 2: The Year It Was Finished",
+       "sub": "1791 to 1792"
+      },
+      {
+       "id": "ch5",
+       "label": "Chapter 5: What Nobody Wrote Down",
+       "sub": "1868 to today"
+      },
+      {
+       "id": "ch1",
+       "label": "Chapter 1: Ten Years",
+       "sub": "1781 to 1791"
+      }
+     ],
+     "answer": [
+      "ch5"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "The empty panel. What do you do?",
+     "hint": null,
+     "from": "c5-choice",
+     "options": [
+      {
+       "id": "C",
+       "label": "Design something that suits the period."
+      },
+      {
+       "id": "A",
+       "label": "Continue the pattern that survives on matching panels, and mark it as our reconstruction."
+      },
+      {
+       "id": "B",
+       "label": "Leave it plain."
+      }
+     ],
+     "answer": [
+      "A",
+      "B"
+     ],
+     "explain": {
+      "A": [
+       "Good. Where the same panel survives elsewhere in the palace, we repeat it and label it."
+      ],
+      "B": [
+       "Good. Where nothing survives, plain is the honest answer.",
+       "Even though plain looks unfinished."
+      ],
+      "C": [
+       "It would look the best. It would also be fiction.",
+       "A rebuilt ceiling does not look uncertain. It looks like the answer.",
+       "So it has to come from the building, not from taste."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "e:e-buchanan-paint.2.c": {
+   "id": "e:e-buchanan-paint.2.c",
+   "element": {
+    "key": "e:e-buchanan-paint",
+    "kind": "evidence",
+    "id": "e-buchanan-paint",
+    "name": "Francis Buchanan, 1800",
+    "image": null
+   },
+   "chapter": {
+    "id": "ch5",
+    "n": 5,
+    "title": "What Nobody Wrote Down",
+    "years": "1868 to today"
+   },
+   "clues": [
+    {
+     "kind": "fact",
+     "text": "For panels with nothing left, our model repeats the one recorded pattern across the upper floor and labels its extent as inferred. It leaves the ground floor plain. It never invents a pattern.",
+     "source": "tools/play/AUDIT.md, section 4; docs/play/STORY_CHECK.md, section 6",
+     "tier": "reconstruction",
+     "facts": [
+      "M4"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "A Persian inscription on a stone in the palace opens with the laying of the foundation and gives its two dates as phrases meaning Abode of Happiness and Envy of Heaven. The first is computed in a letter-number system devised by Tipu Sultan.",
+     "source": "B. L. Rice, Epigraphia Carnatica IX (1905), Bangalore no. 7, with his note on the Zar system; Rice, Mysore Gazetteer (1897) II p. 47 note",
+     "tier": "record",
+     "facts": [
+      "F06"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "Buchanan, 10 May 1800: \"At each end of the halls are private apartments, small, mean, and inconvenient. The public rooms are neatly painted, and ornamented with false gilding.\"",
+     "source": "Francis Buchanan, A Journey from Madras through the Countries of Mysore, Canara, and Malabar (1807), vol. 1 pp. 45 to 46",
+     "tier": "record",
+     "facts": [
+      "F13"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch4",
+       "label": "Chapter 4: The Office",
+       "sub": "1831 to 1868"
+      },
+      {
+       "id": "ch2",
+       "label": "Chapter 2: The Year It Was Finished",
+       "sub": "1791 to 1792"
+      },
+      {
+       "id": "ch5",
+       "label": "Chapter 5: What Nobody Wrote Down",
+       "sub": "1868 to today"
+      }
+     ],
+     "answer": [
+      "ch5"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "The empty panel. What do you do?",
+     "hint": null,
+     "from": "c5-choice",
+     "options": [
+      {
+       "id": "C",
+       "label": "Design something that suits the period."
+      },
+      {
+       "id": "A",
+       "label": "Continue the pattern that survives on matching panels, and mark it as our reconstruction."
+      },
+      {
+       "id": "B",
+       "label": "Leave it plain."
+      }
+     ],
+     "answer": [
+      "A",
+      "B"
+     ],
+     "explain": {
+      "A": [
+       "Good. Where the same panel survives elsewhere in the palace, we repeat it and label it."
+      ],
+      "B": [
+       "Good. Where nothing survives, plain is the honest answer.",
+       "Even though plain looks unfinished."
+      ],
+      "C": [
+       "It would look the best. It would also be fiction.",
+       "A rebuilt ceiling does not look uncertain. It looks like the answer.",
+       "So it has to come from the building, not from taste."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "e:e-empty-panel.0.c": {
+   "id": "e:e-empty-panel.0.c",
+   "element": {
+    "key": "e:e-empty-panel",
+    "kind": "evidence",
+    "id": "e-empty-panel",
+    "name": "An empty panel",
+    "image": null
+   },
+   "chapter": {
+    "id": "ch5",
+    "n": 5,
+    "title": "What Nobody Wrote Down",
+    "years": "1868 to today"
+   },
+   "clues": [
+    {
+     "kind": "fact",
+     "text": "Buchanan, 10 May 1800: \"At each end of the halls are private apartments, small, mean, and inconvenient. The public rooms are neatly painted, and ornamented with false gilding.\"",
+     "source": "Francis Buchanan, A Journey from Madras through the Countries of Mysore, Canara, and Malabar (1807), vol. 1 pp. 45 to 46",
+     "tier": "record",
+     "facts": [
+      "F13"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "Today the timber is dark and polished, and faded floral painting survives in places on walls, ceilings and niches.",
+     "source": "Palace research file palace-measurements.md; own photographs 37 and 41, September 2026",
+     "tier": "record",
+     "facts": [
+      "F18"
+     ]
+    },
+    {
+     "kind": "caption",
+     "text": "A panel with none of its painting left.",
+     "source": "Palace narration (seed 105); own photographs 37 and 41, September 2026",
+     "tier": "record",
+     "witness": null,
+     "facts": [
+      "F17"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch5",
+       "label": "Chapter 5: What Nobody Wrote Down",
+       "sub": "1868 to today"
+      },
+      {
+       "id": "ch4",
+       "label": "Chapter 4: The Office",
+       "sub": "1831 to 1868"
+      },
+      {
+       "id": "ch2",
+       "label": "Chapter 2: The Year It Was Finished",
+       "sub": "1791 to 1792"
+      }
+     ],
+     "answer": [
+      "ch5"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "The empty panel. What do you do?",
+     "hint": null,
+     "from": "c5-choice",
+     "options": [
+      {
+       "id": "A",
+       "label": "Continue the pattern that survives on matching panels, and mark it as our reconstruction."
+      },
+      {
+       "id": "B",
+       "label": "Leave it plain."
+      },
+      {
+       "id": "C",
+       "label": "Design something that suits the period."
+      }
+     ],
+     "answer": [
+      "A",
+      "B"
+     ],
+     "explain": {
+      "A": [
+       "Good. Where the same panel survives elsewhere in the palace, we repeat it and label it."
+      ],
+      "B": [
+       "Good. Where nothing survives, plain is the honest answer.",
+       "Even though plain looks unfinished."
+      ],
+      "C": [
+       "It would look the best. It would also be fiction.",
+       "A rebuilt ceiling does not look uncertain. It looks like the answer.",
+       "So it has to come from the building, not from taste."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  },
+  "e:e-empty-panel.1.c": {
+   "id": "e:e-empty-panel.1.c",
+   "element": {
+    "key": "e:e-empty-panel",
+    "kind": "evidence",
+    "id": "e-empty-panel",
+    "name": "An empty panel",
+    "image": null
+   },
+   "chapter": {
+    "id": "ch5",
+    "n": 5,
+    "title": "What Nobody Wrote Down",
+    "years": "1868 to today"
+   },
+   "clues": [
+    {
+     "kind": "fact",
+     "text": "In 1873 the engineer R. H. Sankey wrote of \"the happy application of white-wash\" to the block of the palace that still stood.",
+     "source": "R. H. Sankey, Offices of the Mysore Government at Bangalore, Professional Papers on Indian Engineering, 2nd series, vol. II, no. LXIII (1873), pp. 1 to 2",
+     "tier": "record",
+     "facts": [
+      "F17b"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "The rule of this game and of our reconstructions: use only what the evidence supports, and label the rest.",
+     "source": "Epocheye method",
+     "tier": "reading",
+     "facts": [
+      "M1"
+     ]
+    },
+    {
+     "kind": "fact",
+     "text": "Almost all of the painted decoration is gone. What is left are fragments, and they are faint.",
+     "source": "Palace narration (seed 105); own photographs 37 and 41, September 2026",
+     "tier": "record",
+     "facts": [
+      "F17"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "id": "where",
+     "kind": "chapter",
+     "prompt": "Where does it belong?",
+     "hint": "Pick the chapter of the story it belongs to.",
+     "options": [
+      {
+       "id": "ch1",
+       "label": "Chapter 1: Ten Years",
+       "sub": "1781 to 1791"
+      },
+      {
+       "id": "ch5",
+       "label": "Chapter 5: What Nobody Wrote Down",
+       "sub": "1868 to today"
+      },
+      {
+       "id": "ch3",
+       "label": "Chapter 3: A Machine for Being Seen",
+       "sub": "1792 to 1799"
+      }
+     ],
+     "answer": [
+      "ch5"
+     ],
+     "explain": {}
+    },
+    {
+     "id": "version",
+     "kind": "choice",
+     "prompt": "The empty panel. What do you do?",
+     "hint": null,
+     "from": "c5-choice",
+     "options": [
+      {
+       "id": "C",
+       "label": "Design something that suits the period."
+      },
+      {
+       "id": "A",
+       "label": "Continue the pattern that survives on matching panels, and mark it as our reconstruction."
+      },
+      {
+       "id": "B",
+       "label": "Leave it plain."
+      }
+     ],
+     "answer": [
+      "A",
+      "B"
+     ],
+     "explain": {
+      "A": [
+       "Good. Where the same panel survives elsewhere in the palace, we repeat it and label it."
+      ],
+      "B": [
+       "Good. Where nothing survives, plain is the honest answer.",
+       "Even though plain looks unfinished."
+      ],
+      "C": [
+       "It would look the best. It would also be fiction.",
+       "A rebuilt ceiling does not look uncertain. It looks like the answer.",
+       "So it has to come from the building, not from taste."
+      ]
+     }
+    }
+   ],
+   "reveal": null
+  }
+ },
+ "min_gap": 30,
+ "coverage": {
+  "elements": 24,
+  "puzzles": 58,
+  "kept_days": 0,
+  "added_days": 24,
+  "first_day": "2026-11-17",
+  "last_day": "2026-12-10",
+  "by_min_gap": [
+   {
+    "min_gap": 30,
+    "days": 24
+   },
+   {
+    "min_gap": 29,
+    "days": 24
+   },
+   {
+    "min_gap": 28,
+    "days": 24
+   },
+   {
+    "min_gap": 27,
+    "days": 24
+   },
+   {
+    "min_gap": 26,
+    "days": 24
+   },
+   {
+    "min_gap": 25,
+    "days": 24
+   },
+   {
+    "min_gap": 24,
+    "days": 38
+   },
+   {
+    "min_gap": 23,
+    "days": 50
+   },
+   {
+    "min_gap": 22,
+    "days": 50
+   },
+   {
+    "min_gap": 21,
+    "days": 50
+   },
+   {
+    "min_gap": 20,
+    "days": 50
+   },
+   {
+    "min_gap": 19,
+    "days": 50
+   },
+   {
+    "min_gap": 18,
+    "days": 50
+   },
+   {
+    "min_gap": 17,
+    "days": 50
+   },
+   {
+    "min_gap": 16,
+    "days": 50
+   },
+   {
+    "min_gap": 15,
+    "days": 50
+   },
+   {
+    "min_gap": 14,
+    "days": 50
+   },
+   {
+    "min_gap": 13,
+    "days": 50
+   },
+   {
+    "min_gap": 12,
+    "days": 52
+   },
+   {
+    "min_gap": 11,
+    "days": 54
+   },
+   {
+    "min_gap": 10,
+    "days": 54
+   },
+   {
+    "min_gap": 9,
+    "days": 54
+   },
+   {
+    "min_gap": 8,
+    "days": 54
+   },
+   {
+    "min_gap": 7,
+    "days": 57
+   },
+   {
+    "min_gap": 6,
+    "days": 57
+   },
+   {
+    "min_gap": 5,
+    "days": 57
+   },
+   {
+    "min_gap": 4,
+    "days": 57
+   },
+   {
+    "min_gap": 3,
+    "days": 57
+   },
+   {
+    "min_gap": 2,
+    "days": 57
+   },
+   {
+    "min_gap": 1,
+    "days": 58
+   }
+  ]
+ },
+ "days": {
+  "2026-11-17": "r:exterior-colour.0.c",
+  "2026-11-18": "r:painted-walls.0.c",
+  "2026-11-19": "r:painted-ceiling.0.c",
+  "2026-11-20": "e:e-wood.0.c",
+  "2026-11-21": "e:e-hunter-north.0.c",
+  "2026-11-22": "e:e-court-halls.0.c",
+  "2026-11-23": "e:e-paint-wall.0.c",
+  "2026-11-24": "e:e-stone.0.c",
+  "2026-11-25": "e:e-hunter-west.0.c",
+  "2026-11-26": "e:e-court-courts.0.c",
+  "2026-11-27": "e:e-paint-ceiling.0.c",
+  "2026-11-28": "e:e-mud.0.c",
+  "2026-11-29": "e:e-hunter-square.0.c",
+  "2026-11-30": "e:e-court-guards.0.c",
+  "2026-12-01": "e:e-paint-niche.0.c",
+  "2026-12-02": "e:e-buchanan.0.c",
+  "2026-12-03": "e:e-hunter-title.0.c",
+  "2026-12-04": "e:e-court-officers.0.c",
+  "2026-12-05": "e:e-buchanan-paint.0.c",
+  "2026-12-06": "e:e-inscription.0.c",
+  "2026-12-07": "e:e-front-today.0.c",
+  "2026-12-08": "e:e-court-lower.0.c",
+  "2026-12-09": "e:e-empty-panel.0.c",
+  "2026-12-10": "e:e-court-people.0.c"
+ }
+}

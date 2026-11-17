@@ -1,0 +1,751 @@
+{
+  "voice": "piper-ljspeech",
+  "site": "tipu-summer-palace-bengaluru",
+  "scope": "all 13 rendered clips (prologue)",
+  "checked": "2026-11-16",
+  "stt_models": [
+    "small.en",
+    "base.en"
+  ],
+  "device": "cpu",
+  "summary": {
+    "clips": 13,
+    "status": {
+      "PASS": 12,
+      "WARN": 0,
+      "FAIL": 1
+    },
+    "round_trip": {
+      "pass_primary": 12,
+      "pass_second_opinion_only": 1,
+      "fail": 0,
+      "names_exact": 2,
+      "names_close": 0,
+      "names_mismatch": 0,
+      "number_errors_primary": 0
+    },
+    "pace": {
+      "checked": 10,
+      "within_tolerance": 9,
+      "exempt_short_clips": 3,
+      "mean_abs_deviation_pct": 2.06,
+      "max_abs_deviation_pct": 14.2,
+      "engine_speed_median": 0.69,
+      "engine_speed_min": 0.5
+    },
+    "loudness": {
+      "target_lufs": -18.0,
+      "bs1770_clips": 11,
+      "bs1770_min": -18.19,
+      "bs1770_max": -18.04,
+      "bs1770_spread_lu": 0.15,
+      "all_min": -18.19,
+      "all_max": -18.01,
+      "all_spread_lu": 0.18
+    },
+    "peaks": {
+      "max_true_peak_db": -1.85,
+      "clipped_clips": 0
+    },
+    "edges": {
+      "head_ms_min": 33.9,
+      "head_ms_max": 43.9,
+      "tail_ms_min": 37.6,
+      "tail_ms_max": 59.5
+    },
+    "artefact_flags": 6,
+    "clips_with_flags": 5
+  },
+  "clips": [
+    {
+      "id": "p-01",
+      "chapter": "prologue",
+      "text": "This is Tipu Sultan's Summer Palace, in Bangalore.",
+      "pace": "steady",
+      "words": 8,
+      "fails": [],
+      "warns": [],
+      "flags": [],
+      "duration_ms": 3158,
+      "stt": {
+        "model": "small.en",
+        "heard": "This is Tipu Sultan's Summer Palace in Bangalore.",
+        "wer": 0.0,
+        "errors": [],
+        "names": [
+          {
+            "name": "Tipu Sultan",
+            "heard": "tipu sultans",
+            "match": "exact",
+            "similarity": 1.0
+          },
+          {
+            "name": "Bangalore",
+            "heard": "bangalore",
+            "match": "exact",
+            "similarity": 1.0
+          }
+        ],
+        "number_errors": [],
+        "insertions": 0,
+        "match": true
+      },
+      "stt_status": "pass",
+      "wpm": 152.0,
+      "wpm_target": 150,
+      "pace_status": "pass",
+      "pace_dev_pct": 1.3,
+      "loudness_lufs": -18.16,
+      "loudness_method": "bs1770",
+      "true_peak_db": -2.27,
+      "sample_peak_db": -2.27,
+      "clipped_samples": 0,
+      "head_silence_ms": 43.9,
+      "tail_silence_ms": 47.0,
+      "max_inner_gap_ms": 229.5,
+      "engine_speed": 1.181,
+      "atempo": 1.0,
+      "status": "PASS"
+    },
+    {
+      "id": "p-02",
+      "chapter": "prologue",
+      "text": "Most visitors photograph the front, call it nice and old, and leave.",
+      "pace": "steady",
+      "words": 12,
+      "fails": [],
+      "warns": [],
+      "flags": [],
+      "duration_ms": 4807,
+      "stt": {
+        "model": "small.en",
+        "heard": "Most visitors photograph the front, call it nice and old, and leave.",
+        "wer": 0.0,
+        "errors": [],
+        "names": [],
+        "number_errors": [],
+        "insertions": 0,
+        "match": true
+      },
+      "stt_status": "pass",
+      "wpm": 149.8,
+      "wpm_target": 150,
+      "pace_status": "pass",
+      "pace_dev_pct": -0.1,
+      "loudness_lufs": -18.04,
+      "loudness_method": "bs1770",
+      "true_peak_db": -2.06,
+      "sample_peak_db": -2.09,
+      "clipped_samples": 0,
+      "head_silence_ms": 37.9,
+      "tail_silence_ms": 57.3,
+      "max_inner_gap_ms": 419.0,
+      "engine_speed": 0.874,
+      "atempo": 1.0,
+      "status": "PASS"
+    },
+    {
+      "id": "p-03",
+      "chapter": "prologue",
+      "text": "Here is what the front does not tell you.",
+      "pace": "slow",
+      "words": 9,
+      "fails": [
+        "pace 142.7 wpm, target 125 (+14.2%)"
+      ],
+      "warns": [
+        "small.en heard \"Fear is what the front does not tell you.\", base.en heard the line correctly"
+      ],
+      "flags": [
+        "time-stretched by more than 10% (atempo 0.85)",
+        "engine speed at the voice's limit (0.5)"
+      ],
+      "duration_ms": 3785,
+      "stt": {
+        "model": "small.en",
+        "heard": "Fear is what the front does not tell you.",
+        "wer": 0.111,
+        "errors": [
+          {
+            "op": "sub",
+            "ref": "here",
+            "hyp": "fear"
+          }
+        ],
+        "names": [],
+        "number_errors": [],
+        "insertions": 0,
+        "match": false
+      },
+      "stt_second": {
+        "model": "base.en",
+        "heard": "Here is what the front does not tell you.",
+        "wer": 0.0,
+        "errors": [],
+        "names": [],
+        "number_errors": [],
+        "insertions": 0,
+        "match": true
+      },
+      "stt_status": "warn",
+      "wpm": 142.7,
+      "wpm_target": 125,
+      "pace_status": "fail",
+      "pace_dev_pct": 14.2,
+      "loudness_lufs": -18.1,
+      "loudness_method": "bs1770",
+      "true_peak_db": -2.19,
+      "sample_peak_db": -2.2,
+      "clipped_samples": 0,
+      "head_silence_ms": 39.9,
+      "tail_silence_ms": 45.4,
+      "max_inner_gap_ms": 99.8,
+      "engine_speed": 0.5,
+      "atempo": 0.85,
+      "status": "FAIL"
+    },
+    {
+      "id": "p-04",
+      "chapter": "prologue",
+      "text": "By its own inscription, it took ten years to build.",
+      "pace": "steady",
+      "words": 10,
+      "fails": [],
+      "warns": [],
+      "flags": [],
+      "duration_ms": 3971,
+      "stt": {
+        "model": "small.en",
+        "heard": "By its own inscription, it took 10 years to build.",
+        "wer": 0.0,
+        "errors": [],
+        "names": [],
+        "number_errors": [],
+        "insertions": 0,
+        "match": true
+      },
+      "stt_status": "pass",
+      "wpm": 151.1,
+      "wpm_target": 150,
+      "pace_status": "pass",
+      "pace_dev_pct": 0.7,
+      "loudness_lufs": -18.19,
+      "loudness_method": "bs1770",
+      "true_peak_db": -1.85,
+      "sample_peak_db": -2.19,
+      "clipped_samples": 0,
+      "head_silence_ms": 35.9,
+      "tail_silence_ms": 49.5,
+      "max_inner_gap_ms": 503.9,
+      "engine_speed": 0.713,
+      "atempo": 1.0,
+      "status": "PASS"
+    },
+    {
+      "id": "p-05",
+      "chapter": "prologue",
+      "text": "It was a finished palace for about eight.",
+      "pace": "steady",
+      "words": 8,
+      "fails": [],
+      "warns": [],
+      "flags": [],
+      "duration_ms": 3204,
+      "stt": {
+        "model": "small.en",
+        "heard": "It was a finished palace for about eight.",
+        "wer": 0.0,
+        "errors": [],
+        "names": [],
+        "number_errors": [],
+        "insertions": 0,
+        "match": true
+      },
+      "stt_status": "pass",
+      "wpm": 149.8,
+      "wpm_target": 150,
+      "pace_status": "pass",
+      "pace_dev_pct": -0.1,
+      "loudness_lufs": -18.13,
+      "loudness_method": "bs1770",
+      "true_peak_db": -2.23,
+      "sample_peak_db": -2.23,
+      "clipped_samples": 0,
+      "head_silence_ms": 39.9,
+      "tail_silence_ms": 37.6,
+      "max_inner_gap_ms": 174.6,
+      "engine_speed": 0.723,
+      "atempo": 1.0,
+      "status": "PASS"
+    },
+    {
+      "id": "p-06",
+      "chapter": "prologue",
+      "text": "A line of writing on its wall calls it the Abode of Happiness, and the Envy of Heaven.",
+      "pace": "slow",
+      "words": 18,
+      "fails": [],
+      "warns": [],
+      "flags": [
+        "engine speed at the voice's limit (0.5)"
+      ],
+      "duration_ms": 8568,
+      "stt": {
+        "model": "small.en",
+        "heard": "A line of writing on its wall calls it the abode of happiness and the envy of heaven.",
+        "wer": 0.0,
+        "errors": [],
+        "names": [],
+        "number_errors": [],
+        "insertions": 0,
+        "match": true
+      },
+      "stt_status": "pass",
+      "wpm": 126.1,
+      "wpm_target": 125,
+      "pace_status": "pass",
+      "pace_dev_pct": 0.9,
+      "loudness_lufs": -18.1,
+      "loudness_method": "bs1770",
+      "true_peak_db": -2.18,
+      "sample_peak_db": -2.19,
+      "clipped_samples": 0,
+      "head_silence_ms": 35.9,
+      "tail_silence_ms": 41.5,
+      "max_inner_gap_ms": 349.2,
+      "engine_speed": 0.5,
+      "atempo": 1.0,
+      "status": "PASS"
+    },
+    {
+      "id": "p-07",
+      "chapter": "prologue",
+      "text": "Look around.",
+      "pace": "steady",
+      "words": 2,
+      "fails": [],
+      "warns": [],
+      "flags": [],
+      "duration_ms": 952,
+      "stt": {
+        "model": "small.en",
+        "heard": "Look around.",
+        "wer": 0.0,
+        "errors": [],
+        "names": [],
+        "number_errors": [],
+        "insertions": 0,
+        "match": true
+      },
+      "stt_status": "pass",
+      "wpm": 126.1,
+      "wpm_target": 150,
+      "pace_status": "exempt",
+      "pace_dev_pct": null,
+      "loudness_lufs": -18.02,
+      "loudness_method": "kw_rms",
+      "true_peak_db": -2.03,
+      "sample_peak_db": -2.07,
+      "clipped_samples": 0,
+      "head_silence_ms": 37.9,
+      "tail_silence_ms": 46.1,
+      "max_inner_gap_ms": 34.9,
+      "engine_speed": 0.76,
+      "atempo": 1.0,
+      "status": "PASS"
+    },
+    {
+      "id": "p-07-2",
+      "chapter": "prologue",
+      "text": "Dark wood.",
+      "pace": "steady",
+      "words": 2,
+      "fails": [],
+      "warns": [],
+      "flags": [],
+      "duration_ms": 906,
+      "stt": {
+        "model": "small.en",
+        "heard": "Darkwood.",
+        "wer": 0.0,
+        "errors": [],
+        "names": [],
+        "number_errors": [],
+        "insertions": 0,
+        "match": true
+      },
+      "stt_status": "pass",
+      "wpm": 132.5,
+      "wpm_target": 150,
+      "pace_status": "exempt",
+      "pace_dev_pct": null,
+      "loudness_lufs": -18.01,
+      "loudness_method": "kw_rms",
+      "true_peak_db": -2.56,
+      "sample_peak_db": -2.58,
+      "clipped_samples": 0,
+      "head_silence_ms": 39.9,
+      "tail_silence_ms": 59.5,
+      "max_inner_gap_ms": 24.9,
+      "engine_speed": 0.76,
+      "atempo": 1.0,
+      "status": "PASS"
+    },
+    {
+      "id": "p-07-3",
+      "chapter": "prologue",
+      "text": "Faded walls.",
+      "pace": "steady",
+      "words": 2,
+      "fails": [],
+      "warns": [],
+      "flags": [],
+      "duration_ms": 1463,
+      "stt": {
+        "model": "small.en",
+        "heard": "Faded walls.",
+        "wer": 0.0,
+        "errors": [],
+        "names": [],
+        "number_errors": [],
+        "insertions": 0,
+        "match": true
+      },
+      "stt_status": "pass",
+      "wpm": 82.0,
+      "wpm_target": 150,
+      "pace_status": "exempt",
+      "pace_dev_pct": null,
+      "loudness_lufs": -18.08,
+      "loudness_method": "bs1770",
+      "true_peak_db": -3.25,
+      "sample_peak_db": -3.31,
+      "clipped_samples": 0,
+      "head_silence_ms": 33.9,
+      "tail_silence_ms": 48.1,
+      "max_inner_gap_ms": 15.0,
+      "engine_speed": 0.76,
+      "atempo": 1.0,
+      "status": "PASS"
+    },
+    {
+      "id": "p-08",
+      "chapter": "prologue",
+      "text": "So what was there to envy?",
+      "pace": "slow",
+      "words": 6,
+      "fails": [],
+      "warns": [],
+      "flags": [
+        "engine speed at the voice's limit (0.5)"
+      ],
+      "duration_ms": 2879,
+      "stt": {
+        "model": "small.en",
+        "heard": "So what was there to envy?",
+        "wer": 0.0,
+        "errors": [],
+        "names": [],
+        "number_errors": [],
+        "insertions": 0,
+        "match": true
+      },
+      "stt_status": "pass",
+      "wpm": 125.0,
+      "wpm_target": 125,
+      "pace_status": "pass",
+      "pace_dev_pct": 0.0,
+      "loudness_lufs": -18.04,
+      "loudness_method": "bs1770",
+      "true_peak_db": -4.3,
+      "sample_peak_db": -4.32,
+      "clipped_samples": 0,
+      "head_silence_ms": 39.9,
+      "tail_silence_ms": 39.7,
+      "max_inner_gap_ms": 49.9,
+      "engine_speed": 0.5,
+      "atempo": 0.945,
+      "status": "PASS"
+    },
+    {
+      "id": "p-09",
+      "chapter": "prologue",
+      "text": "That is the case.",
+      "pace": "steady",
+      "words": 4,
+      "fails": [],
+      "warns": [],
+      "flags": [
+        "limiter reduced a peak by 6.58 dB"
+      ],
+      "duration_ms": 1625,
+      "stt": {
+        "model": "small.en",
+        "heard": "That is the case.",
+        "wer": 0.0,
+        "errors": [],
+        "names": [],
+        "number_errors": [],
+        "insertions": 0,
+        "match": true
+      },
+      "stt_status": "pass",
+      "wpm": 147.7,
+      "wpm_target": 150,
+      "pace_status": "pass",
+      "pace_dev_pct": -1.5,
+      "loudness_lufs": -18.12,
+      "loudness_method": "bs1770",
+      "true_peak_db": -2.15,
+      "sample_peak_db": -2.2,
+      "clipped_samples": 0,
+      "head_silence_ms": 33.9,
+      "tail_silence_ms": 41.0,
+      "max_inner_gap_ms": 54.9,
+      "engine_speed": 0.825,
+      "atempo": 1.0,
+      "status": "PASS"
+    },
+    {
+      "id": "p-10",
+      "chapter": "prologue",
+      "text": "You are going to put this building back.",
+      "pace": "steady",
+      "words": 8,
+      "fails": [],
+      "warns": [],
+      "flags": [],
+      "duration_ms": 3251,
+      "stt": {
+        "model": "small.en",
+        "heard": "You are going to put this building back.",
+        "wer": 0.0,
+        "errors": [],
+        "names": [],
+        "number_errors": [],
+        "insertions": 0,
+        "match": true
+      },
+      "stt_status": "pass",
+      "wpm": 147.6,
+      "wpm_target": 150,
+      "pace_status": "pass",
+      "pace_dev_pct": -1.6,
+      "loudness_lufs": -18.09,
+      "loudness_method": "bs1770",
+      "true_peak_db": -2.15,
+      "sample_peak_db": -2.16,
+      "clipped_samples": 0,
+      "head_silence_ms": 37.9,
+      "tail_silence_ms": 44.1,
+      "max_inner_gap_ms": 129.7,
+      "engine_speed": 0.667,
+      "atempo": 1.0,
+      "status": "PASS"
+    },
+    {
+      "id": "p-11",
+      "chapter": "prologue",
+      "text": "You may only use what you can prove.",
+      "pace": "slow",
+      "words": 8,
+      "fails": [],
+      "warns": [],
+      "flags": [
+        "engine speed at the voice's limit (0.5)"
+      ],
+      "duration_ms": 3831,
+      "stt": {
+        "model": "small.en",
+        "heard": "You may only use what you can prove.",
+        "wer": 0.0,
+        "errors": [],
+        "names": [],
+        "number_errors": [],
+        "insertions": 0,
+        "match": true
+      },
+      "stt_status": "pass",
+      "wpm": 125.3,
+      "wpm_target": 125,
+      "pace_status": "pass",
+      "pace_dev_pct": 0.2,
+      "loudness_lufs": -18.04,
+      "loudness_method": "bs1770",
+      "true_peak_db": -2.3,
+      "sample_peak_db": -2.3,
+      "clipped_samples": 0,
+      "head_silence_ms": 41.9,
+      "tail_silence_ms": 45.9,
+      "max_inner_gap_ms": 44.9,
+      "engine_speed": 0.5,
+      "atempo": 0.925,
+      "status": "PASS"
+    }
+  ],
+  "names_reel": {
+    "file": "public/play/packs/tipu-summer-palace-bengaluru/v1/audio/piper-ljspeech/_names_reel.m4a",
+    "duration_ms": 22848,
+    "names": [
+      {
+        "n": 1,
+        "name": "Hyder Ali",
+        "heard": {
+          "small.en": "pider arley",
+          "base.en": "Tighter hourly."
+        },
+        "match": "close",
+        "tts_text": "Hyder Ali.",
+        "phonemes": "hˈaɪdəɹ ˈɑːli."
+      },
+      {
+        "n": 2,
+        "name": "Tipu Sultan",
+        "heard": {
+          "small.en": "Tipu Sultan.",
+          "base.en": "Tiko Sultan."
+        },
+        "match": "exact",
+        "tts_text": "[[ tˈiːpuː ]] Sultan.",
+        "phonemes": "tˈiːpuː sˈʌltən."
+      },
+      {
+        "n": 3,
+        "name": "Srirangapatna",
+        "heard": {
+          "small.en": "Triyaramba partner.",
+          "base.en": "Tree around the partner."
+        },
+        "match": "mismatch",
+        "tts_text": "[[ ʃɹˌiːɹʌŋɡəpˈʌtnə. ]]",
+        "phonemes": "ʃɹˌiːɹʌŋɡəpˈʌtnə."
+      },
+      {
+        "n": 4,
+        "name": "Bangalore",
+        "heard": {
+          "small.en": "angle law",
+          "base.en": "Angle lock."
+        },
+        "match": "mismatch",
+        "tts_text": "Bangalore.",
+        "phonemes": "bˌaŋɡɐlˈɔː."
+      },
+      {
+        "n": 5,
+        "name": "Kempe Gowda",
+        "heard": {
+          "small.en": "campaign gouder.",
+          "base.en": "Campay Gouder"
+        },
+        "match": "mismatch",
+        "tts_text": "[[ kˈɛmpeɪ ]] Gowda.",
+        "phonemes": "kˈɛmpeɪ ɡˈaʊdə."
+      },
+      {
+        "n": 6,
+        "name": "Chikka Devaraja Wadiyar",
+        "heard": {
+          "small.en": "Chikur Devarajar Wadiar",
+          "base.en": "Chicker Dave or Roger Wadi are..."
+        },
+        "match": "close",
+        "tts_text": "Chikka [[ dˌeɪvəɹˈɑːdʒə ]] Wadiyar.",
+        "phonemes": "tʃˈɪkə dˌeɪvəɹˈɑːdʒə wˈɒdɪjˌɑː."
+      },
+      {
+        "n": 7,
+        "name": "Kote Venkataramana",
+        "heard": {
+          "small.en": "Kote Venkataraminar.",
+          "base.en": "Kote Venka Teruminer."
+        },
+        "match": "close",
+        "tts_text": "[[ kˈəʊteɪ vˌɛŋkətəɹˈʌmənə. ]]",
+        "phonemes": "kˈəʊteɪ vˌɛŋkətəɹˈʌmənə."
+      },
+      {
+        "n": 8,
+        "name": "Attara Kacheri",
+        "heard": {
+          "small.en": "A Torah could sheary.",
+          "base.en": "Atara could Sherry."
+        },
+        "match": "mismatch",
+        "tts_text": "Attara [[ kətʃˈeɪɹi. ]]",
+        "phonemes": "ɐtˈɑːɹə kətʃˈeɪɹi."
+      },
+      {
+        "n": 9,
+        "name": "Mysore",
+        "heard": {
+          "small.en": "My sore.",
+          "base.en": "My sore."
+        },
+        "match": "close",
+        "tts_text": "Mysore.",
+        "phonemes": "mˈaɪsɔː."
+      },
+      {
+        "n": 10,
+        "name": "Buchanan",
+        "heard": {
+          "small.en": "You cannon.",
+          "base.en": "through cannon."
+        },
+        "match": "mismatch",
+        "tts_text": "Buchanan.",
+        "phonemes": "bjuːkˈanən."
+      },
+      {
+        "n": 11,
+        "name": "Cornwallis",
+        "heard": {
+          "small.en": "Cornwallis",
+          "base.en": "Cornwallis."
+        },
+        "match": "exact",
+        "tts_text": "[[ kɔːnwˈɒlɪs. ]]",
+        "phonemes": "kɔːnwˈɒlɪs."
+      },
+      {
+        "n": 12,
+        "name": "Bowring",
+        "heard": {
+          "small.en": "boring.",
+          "base.en": "Boring."
+        },
+        "match": "close",
+        "tts_text": "Bowring.",
+        "phonemes": "bˈəʊɹɪŋ."
+      },
+      {
+        "n": 13,
+        "name": "Hunter",
+        "heard": {
+          "small.en": "Hunter",
+          "base.en": "Hunter."
+        },
+        "match": "exact",
+        "tts_text": "Hunter.",
+        "phonemes": "hˈʌntə."
+      }
+    ],
+    "gap_ms_planned": 700,
+    "gaps_measured_ms": [
+      723,
+      723,
+      718,
+      718,
+      718,
+      718,
+      723,
+      723,
+      738,
+      718,
+      718,
+      718
+    ],
+    "gaps_ok": true
+  }
+}

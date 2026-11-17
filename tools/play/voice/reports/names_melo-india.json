@@ -1,0 +1,155 @@
+{
+  "voice": "melo-india",
+  "site": "tipu-summer-palace-bengaluru",
+  "gap_ms": 700,
+  "file": "public/play/packs/tipu-summer-palace-bengaluru/v1/audio/melo-india/_names_reel.m4a",
+  "names": [
+    {
+      "n": 1,
+      "name": "Hyder Ali",
+      "tts_text": "Hyder Ali.",
+      "extras": {},
+      "phonemes": "_ hh ay d er aa l iy . _",
+      "start_ms": 40,
+      "end_ms": 858
+    },
+    {
+      "n": 2,
+      "name": "Tipu Sultan",
+      "tts_text": "Tipu Sultan.",
+      "extras": {
+        "arpabet": {
+          "TIPU": "T IY1 P UW0"
+        }
+      },
+      "phonemes": "_ t iy p uw s ah l t ah n . _",
+      "start_ms": 1558,
+      "end_ms": 2711
+    },
+    {
+      "n": 3,
+      "name": "Srirangapatna",
+      "tts_text": "Srirangapatna.",
+      "extras": {
+        "arpabet": {
+          "SRIRANGAPATNA": "SH R IY2 R AH0 NG G AH0 P AH1 T N AH0"
+        }
+      },
+      "phonemes": "_ sh r iy r ah ng g ah p ah t n ah . _",
+      "start_ms": 3411,
+      "end_ms": 4593
+    },
+    {
+      "n": 4,
+      "name": "Bangalore",
+      "tts_text": "Bangalore.",
+      "extras": {},
+      "phonemes": "_ b ae ng g ah l ao r . _",
+      "start_ms": 5293,
+      "end_ms": 6166
+    },
+    {
+      "n": 5,
+      "name": "Kempe Gowda",
+      "tts_text": "Kempe Gowda.",
+      "extras": {
+        "arpabet": {
+          "KEMPE": "K EH1 M P EY0"
+        }
+      },
+      "phonemes": "_ k eh m p ey g aw d ah . _",
+      "start_ms": 6866,
+      "end_ms": 7894
+    },
+    {
+      "n": 6,
+      "name": "Chikka Devaraja Wadiyar",
+      "tts_text": "Chikka Devaraja Wadiyar.",
+      "extras": {
+        "arpabet": {
+          "DEVARAJA": "D EY2 V AH0 R AA1 JH AH0",
+          "WADIYAR": "W AA1 D IH0 Y AA2 R"
+        }
+      },
+      "phonemes": "_ ch ih k ah d ey V ah r aa jh ah w aa d ih y aa r . _",
+      "start_ms": 8594,
+      "end_ms": 10719
+    },
+    {
+      "n": 7,
+      "name": "Kote Venkataramana",
+      "tts_text": "Kote Venkataramana.",
+      "extras": {
+        "arpabet": {
+          "VENKATARAMANA": "V EH2 NG K AH0 T AH0 R AH1 M AH0 N AH0",
+          "KOTE": "K OW1 T EY0"
+        }
+      },
+      "phonemes": "_ k ow t ey V eh ng k ah t ah r ah m ah n ah . _",
+      "start_ms": 11419,
+      "end_ms": 13005
+    },
+    {
+      "n": 8,
+      "name": "Attara Kacheri",
+      "tts_text": "Attara Kacheri.",
+      "extras": {
+        "arpabet": {
+          "KACHERI": "K AH0 CH EY1 R IY0"
+        }
+      },
+      "phonemes": "_ aa t aa r ah k ah ch ey r iy . _",
+      "start_ms": 13705,
+      "end_ms": 15072
+    },
+    {
+      "n": 9,
+      "name": "Mysore",
+      "tts_text": "Mysore.",
+      "extras": {
+        "arpabet": {
+          "MYSORE": "M AY0 S AO1 R"
+        }
+      },
+      "phonemes": "_ m ay s ao r . _",
+      "start_ms": 15772,
+      "end_ms": 16426
+    },
+    {
+      "n": 10,
+      "name": "Buchanan",
+      "tts_text": "Buchanan.",
+      "extras": {},
+      "phonemes": "_ b y uw k ae n ah n . _",
+      "start_ms": 17126,
+      "end_ms": 17909
+    },
+    {
+      "n": 11,
+      "name": "Cornwallis",
+      "tts_text": "Cornwallis.",
+      "extras": {},
+      "phonemes": "_ k ao r n w ao l ah s . _",
+      "start_ms": 18609,
+      "end_ms": 19497
+    },
+    {
+      "n": 12,
+      "name": "Bowring",
+      "tts_text": "Bowring.",
+      "extras": {},
+      "phonemes": "_ b ow r ih ng . _",
+      "start_ms": 20197,
+      "end_ms": 20806
+    },
+    {
+      "n": 13,
+      "name": "Hunter",
+      "tts_text": "Hunter.",
+      "extras": {},
+      "phonemes": "_ hh ah n t er . _",
+      "start_ms": 21506,
+      "end_ms": 22120
+    }
+  ]
+}

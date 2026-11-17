@@ -1,0 +1,252 @@
+{
+ "mode": "keyboard",
+ "reduce": false,
+ "reachedEnd": true,
+ "seconds": 90,
+ "anon": "test-q5-e87260c95907a04a",
+ "errors": [],
+ "axe": {
+  "line": [],
+  "lens": [],
+  "look": [],
+  "look-evidence-open": [],
+  "sheet-evidence": [],
+  "choice": [],
+  "answer": [],
+  "know": [],
+  "hook": [],
+  "restore": [],
+  "order": [],
+  "reveal": [],
+  "proof": [],
+  "vote": [],
+  "end": []
+ },
+ "axeMinor": {
+  "line": [],
+  "lens": [],
+  "look": [],
+  "look-evidence-open": [],
+  "sheet-evidence": [],
+  "choice": [],
+  "answer": [],
+  "know": [],
+  "hook": [],
+  "restore": [],
+  "order": [],
+  "reveal": [],
+  "proof": [],
+  "vote": [],
+  "end": []
+ },
+ "notReachable": [],
+ "noFocusRing": {},
+ "sheet": {
+  "focusStayedInside": true,
+  "closedByEscape": true,
+  "focusBackOn": "Chapters"
+ },
+ "smallTargets": {
+  "button.play-order-slot 313x38": 21
+ },
+ "primaryInUpperHalf": {},
+ "horizontalScroll": [],
+ "contrastMin": {
+  "at": "look at 1791 to 1792 · Corner of the forecourt",
+  "ratio": 6.01,
+  "text": [
+   255,
+   255,
+   255
+  ],
+  "brightest": [
+   101,
+   99,
+   92
+  ]
+ },
+ "contrast": [
+  {
+   "at": "line at today · Forecourt",
+   "ratio": 16.44,
+   "text": [
+    255,
+    255,
+    255
+   ],
+   "brightest": [
+    33,
+    31,
+    28
+   ]
+  },
+  {
+   "at": "line at 1781 to 1791 · Ground colonnade",
+   "ratio": 17.49,
+   "text": [
+    255,
+    255,
+    255
+   ],
+   "brightest": [
+    28,
+    25,
+    23
+   ]
+  },
+  {
+   "at": "look at 1781 to 1791 · End of the colonnade",
+   "ratio": 8.24,
+   "text": [
+    255,
+    255,
+    255
+   ],
+   "brightest": [
+    82,
+    78,
+    74
+   ]
+  },
+  {
+   "at": "line at 1791 to 1792 · Forecourt",
+   "ratio": 17.17,
+   "text": [
+    255,
+    255,
+    255
+   ],
+   "brightest": [
+    29,
+    27,
+    25
+   ]
+  },
+  {
+   "at": "look at 1791 to 1792 · Corner of the forecourt",
+   "ratio": 6.01,
+   "text": [
+    255,
+    255,
+    255
+   ],
+   "brightest": [
+    101,
+    99,
+    92
+   ]
+  },
+  {
+   "at": "line at 1792 to 1799 · Floor of the hall",
+   "ratio": 14.62,
+   "text": [
+    255,
+    255,
+    255
+   ],
+   "brightest": [
+    39,
+    41,
+    42
+   ]
+  },
+  {
+   "at": "line at 1831 to 1868 · Floor of the hall",
+   "ratio": 15.56,
+   "text": [
+    255,
+    255,
+    255
+   ],
+   "brightest": [
+    34,
+    36,
+    39
+   ]
+  },
+  {
+   "at": "line at 1868 to today · Upper hall",
+   "ratio": 19.19,
+   "text": [
+    255,
+    255,
+    255
+   ],
+   "brightest": [
+    14,
+    15,
+    16
+   ]
+  },
+  {
+   "at": "look at 1868 to today · Corner room",
+   "ratio": 14.74,
+   "text": [
+    255,
+    255,
+    255
+   ],
+   "brightest": [
+    56,
+    36,
+    9
+   ]
+  }
+ ],
+ "animations": [],
+ "counts": {
+  "line": 84,
+  "lens": 1,
+  "look": 47,
+  "choice": 30,
+  "answer": 2,
+  "know": 8,
+  "hook": 7,
+  "restore": 42,
+  "order": 8,
+  "reveal": 5,
+  "proof": 3,
+  "vote": 2
+ },
+ "endButtons": [
+  "Share",
+  "See it for real",
+  "Next site"
+ ],
+ "markerOnPanel": [
+  "restore: Where it goes: The colours of the front"
+ ],
+ "doubledStops": [],
+ "goToOpens": [
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true
+ ],
+ "nothingMoreHints": [
+  {
+   "count": "4 of 5",
+   "hint": "Nothing more to find here. The rest are at: End of the colonnade."
+  },
+  {
+   "count": "0 of 5",
+   "hint": "Nothing more to find here. The rest are at: Corner of the forecourt. Or open a card below."
+  },
+  {
+   "count": "4 of 5",
+   "hint": "Nothing more to find here. The rest are at: Corner of the forecourt."
+  },
+  {
+   "count": "0 of 6",
+   "hint": "Nothing more to find here. Open a card below."
+  },
+  {
+   "count": "4 of 5",
+   "hint": "Nothing more to find here. The rest are at: Upper hall."
+  }
+ ]
+}

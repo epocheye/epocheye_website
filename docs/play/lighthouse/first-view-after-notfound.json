@@ -1,0 +1,692 @@
+{
+ "url": "http://localhost:3105/play/tipu-summer-palace-bengaluru",
+ "profile": "task",
+ "network": {
+  "offline": false,
+  "latency": 150,
+  "downloadThroughput": 209715.2,
+  "uploadThroughput": 96000
+ },
+ "cpuSlowdown": 4,
+ "viewport": {
+  "width": 412,
+  "height": 823,
+  "deviceScaleFactor": 1.75,
+  "isMobile": true,
+  "hasTouch": true
+ },
+ "runs": 3,
+ "firstViewMedianMs": 6617,
+ "bytesBeforeMedian": 915992,
+ "fpsMedian": 59.9,
+ "fpsP5Median": 59.2,
+ "gl": "ANGLE (AMD, AMD Radeon(TM) Graphics (0x00001638) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+ "results": [
+  {
+   "run": 1,
+   "anon": "test-q5-5df3ff5a0c8941f2",
+   "firstViewMs": 6753,
+   "panoMs": 6753,
+   "lineMs": 5487,
+   "fcpMs": 1340,
+   "bytesBefore": 915992,
+   "requestsBefore": 37,
+   "inFlight": [
+    "/_vercel/insights/script.js"
+   ],
+   "faces": [
+    "forecourt/now/512/px.webp",
+    "forecourt/now/512/nx.webp",
+    "forecourt/now/512/py.webp",
+    "forecourt/now/512/ny.webp",
+    "forecourt/now/512/pz.webp",
+    "forecourt/now/512/nz.webp"
+   ],
+   "firstLine": "This is Tipu Sultan's Summer Palace, in Bangalore.",
+   "gl": "ANGLE (AMD, AMD Radeon(TM) Graphics (0x00001638) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+   "fpsMedian": 59.9,
+   "fpsP5": 58.8,
+   "panoFramesPerSecond": 57.9,
+   "frames": 298,
+   "list": [
+    {
+     "name": "/play/tipu-summer-palace-bengaluru",
+     "bytes": 24474,
+     "end": 305.69999999925494
+    },
+    {
+     "name": "/_next/static/media/47185047d9bf99cc-s.p.14898fg2_eo7j.woff2",
+     "bytes": 16120,
+     "end": 782
+    },
+    {
+     "name": "/_next/static/media/9c25569e5bfeaac2-s.p.0jt81_0uq1n.f.woff2",
+     "bytes": 16104,
+     "end": 789
+    },
+    {
+     "name": "/_next/static/media/a3b21dc8e8180cb3-s.p.0w942~e22v-7-.woff2",
+     "bytes": 16172,
+     "end": 805
+    },
+    {
+     "name": "/_next/static/media/a6fa2da6a1aa1b4a-s.p.15wrk82pv0juo.woff2",
+     "bytes": 16000,
+     "end": 810
+    },
+    {
+     "name": "/_next/static/media/b66541dc5358997a-s.p.18d7sdg2qe8pf.woff2",
+     "bytes": 16088,
+     "end": 822
+    },
+    {
+     "name": "/_next/static/media/caa3a2e1cccd8315-s.p.09~u27dqhyhd6.woff2",
+     "bytes": 29588,
+     "end": 1556
+    },
+    {
+     "name": "/_next/static/media/e41d5df559864f9e-s.p.0gq7fw9.sy_5..woff2",
+     "bytes": 15340,
+     "end": 1276
+    },
+    {
+     "name": "/_next/static/media/f06bf9da926bae75-s.p.0pz0x0eczp58u.woff2",
+     "bytes": 30204,
+     "end": 1647
+    },
+    {
+     "name": "/_next/static/chunks/0.37f3lk63fql.css",
+     "bytes": 2393,
+     "end": 530
+    },
+    {
+     "name": "/_next/static/chunks/0wmvg888g155s.css",
+     "bytes": 24325,
+     "end": 935
+    },
+    {
+     "name": "/_next/static/chunks/12ek95.utnlwv.css",
+     "bytes": 6758,
+     "end": 1022
+    },
+    {
+     "name": "/_next/static/chunks/02dfb1mx8~7rb.css",
+     "bytes": 1792,
+     "end": 976
+    },
+    {
+     "name": "/_next/static/chunks/0dv8xd0_dai4m.js",
+     "bytes": 2562,
+     "end": 1139
+    },
+    {
+     "name": "/_next/static/chunks/0wifdv-06nrkm.js",
+     "bytes": 10358,
+     "end": 1405
+    },
+    {
+     "name": "/_next/static/chunks/0japrmd30fy5n.js",
+     "bytes": 72765,
+     "end": 2441
+    },
+    {
+     "name": "/_next/static/chunks/06pk.ea8nytpq.js",
+     "bytes": 37321,
+     "end": 1998
+    },
+    {
+     "name": "/_next/static/chunks/0~74w51l_bjmf.js",
+     "bytes": 7573,
+     "end": 1647
+    },
+    {
+     "name": "/_next/static/chunks/turbopack-0tqo57.jf048d.js",
+     "bytes": 4461,
+     "end": 1689
+    },
+    {
+     "name": "/_next/static/chunks/0x.73w57rn4ou.js",
+     "bytes": 1756,
+     "end": 1755
+    },
+    {
+     "name": "/_next/static/chunks/0i.l9589uvx0j.js",
+     "bytes": 13238,
+     "end": 2059
+    },
+    {
+     "name": "/_next/static/chunks/0e.gg85i83lug.js",
+     "bytes": 3184,
+     "end": 1896
+    },
+    {
+     "name": "/_next/static/chunks/0ru.pfdb~i7e8.js",
+     "bytes": 8293,
+     "end": 2032
+    },
+    {
+     "name": "/_next/static/chunks/07pxhewj1rh.f.js",
+     "bytes": 1639,
+     "end": 1992
+    },
+    {
+     "name": "/_next/static/chunks/0_b7xjy8.5wz5.js",
+     "bytes": 5580,
+     "end": 2106
+    },
+    {
+     "name": "/_next/static/chunks/05e-b6xqg2bqm.js",
+     "bytes": 1574,
+     "end": 2182
+    },
+    {
+     "name": "/_next/static/chunks/17o2z17~fa2c0.js",
+     "bytes": 21309,
+     "end": 2662
+    },
+    {
+     "name": "/_next/static/chunks/07ats6xdf0z3y.js",
+     "bytes": 169001,
+     "end": 4746
+    },
+    {
+     "name": "/_next/static/chunks/0z-rr~u1..ao~.js",
+     "bytes": 37039,
+     "end": 3142
+    },
+    {
+     "name": "/play/packs/tipu-summer-palace-bengaluru/v1/pano/forecourt/now/512/px.webp",
+     "bytes": 43720,
+     "end": 3413
+    },
+    {
+     "name": "/play/packs/tipu-summer-palace-bengaluru/v1/pano/forecourt/now/512/nx.webp",
+     "bytes": 54308,
+     "end": 3742
+    },
+    {
+     "name": "/play/packs/tipu-summer-palace-bengaluru/v1/pano/forecourt/now/512/py.webp",
+     "bytes": 10322,
+     "end": 2855
+    },
+    {
+     "name": "/play/packs/tipu-summer-palace-bengaluru/v1/pano/forecourt/now/512/ny.webp",
+     "bytes": 77076,
+     "end": 4413
+    },
+    {
+     "name": "/play/packs/tipu-summer-palace-bengaluru/v1/pano/forecourt/now/512/pz.webp",
+     "bytes": 63106,
+     "end": 4366
+    },
+    {
+     "name": "/play/packs/tipu-summer-palace-bengaluru/v1/pano/forecourt/now/512/nz.webp",
+     "bytes": 38408,
+     "end": 4146
+    },
+    {
+     "name": "/favicon.ico?favicon.10ozsqcl6cxdp.ico",
+     "bytes": 15706,
+     "end": 5639
+    },
+    {
+     "name": "/api/play/run/progress",
+     "bytes": 335,
+     "end": 6081
+    }
+   ],
+   "errors": [
+    "500 http://localhost:3105/api/play/run/progress",
+    "console: Failed to load resource: the server responded with a status of 500 (Internal Server Error) http://localhost:3105/api/play/run/progress",
+    "500 http://localhost:3105/api/play/player",
+    "console: Failed to load resource: the server responded with a status of 500 (Internal Server Error) http://localhost:3105/api/play/player",
+    "500 http://localhost:3105/api/play/event",
+    "console: Failed to load resource: the server responded with a status of 500 (Internal Server Error) http://localhost:3105/api/play/event"
+   ]
+  },
+  {
+   "run": 2,
+   "anon": "test-q5-d79c8f0a58b20739",
+   "firstViewMs": 6533,
+   "panoMs": 6533,
+   "lineMs": 5317,
+   "fcpMs": 1268,
+   "bytesBefore": 915992,
+   "requestsBefore": 37,
+   "inFlight": [
+    "/_vercel/insights/script.js"
+   ],
+   "faces": [
+    "forecourt/now/512/px.webp",
+    "forecourt/now/512/nx.webp",
+    "forecourt/now/512/py.webp",
+    "forecourt/now/512/ny.webp",
+    "forecourt/now/512/pz.webp",
+    "forecourt/now/512/nz.webp"
+   ],
+   "firstLine": "This is Tipu Sultan's Summer Palace, in Bangalore.",
+   "gl": "ANGLE (AMD, AMD Radeon(TM) Graphics (0x00001638) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+   "fpsMedian": 59.9,
+   "fpsP5": 59.2,
+   "panoFramesPerSecond": 58.5,
+   "frames": 300,
+   "list": [
+    {
+     "name": "/play/tipu-summer-palace-bengaluru",
+     "bytes": 24474,
+     "end": 311.30000000074506
+    },
+    {
+     "name": "/_next/static/media/47185047d9bf99cc-s.p.14898fg2_eo7j.woff2",
+     "bytes": 16120,
+     "end": 765
+    },
+    {
+     "name": "/_next/static/media/9c25569e5bfeaac2-s.p.0jt81_0uq1n.f.woff2",
+     "bytes": 16104,
+     "end": 780
+    },
+    {
+     "name": "/_next/static/media/a3b21dc8e8180cb3-s.p.0w942~e22v-7-.woff2",
+     "bytes": 16172,
+     "end": 797
+    },
+    {
+     "name": "/_next/static/media/a6fa2da6a1aa1b4a-s.p.15wrk82pv0juo.woff2",
+     "bytes": 16000,
+     "end": 795
+    },
+    {
+     "name": "/_next/static/media/b66541dc5358997a-s.p.18d7sdg2qe8pf.woff2",
+     "bytes": 16088,
+     "end": 801
+    },
+    {
+     "name": "/_next/static/media/caa3a2e1cccd8315-s.p.09~u27dqhyhd6.woff2",
+     "bytes": 29588,
+     "end": 1530
+    },
+    {
+     "name": "/_next/static/media/e41d5df559864f9e-s.p.0gq7fw9.sy_5..woff2",
+     "bytes": 15340,
+     "end": 1247
+    },
+    {
+     "name": "/_next/static/media/f06bf9da926bae75-s.p.0pz0x0eczp58u.woff2",
+     "bytes": 30204,
+     "end": 1623
+    },
+    {
+     "name": "/_next/static/chunks/0.37f3lk63fql.css",
+     "bytes": 2393,
+     "end": 546
+    },
+    {
+     "name": "/_next/static/chunks/0wmvg888g155s.css",
+     "bytes": 24325,
+     "end": 920
+    },
+    {
+     "name": "/_next/static/chunks/12ek95.utnlwv.css",
+     "bytes": 6758,
+     "end": 1014
+    },
+    {
+     "name": "/_next/static/chunks/02dfb1mx8~7rb.css",
+     "bytes": 1792,
+     "end": 952
+    },
+    {
+     "name": "/_next/static/chunks/0dv8xd0_dai4m.js",
+     "bytes": 2562,
+     "end": 1138
+    },
+    {
+     "name": "/_next/static/chunks/0wifdv-06nrkm.js",
+     "bytes": 10358,
+     "end": 1375
+    },
+    {
+     "name": "/_next/static/chunks/0japrmd30fy5n.js",
+     "bytes": 72765,
+     "end": 2387
+    },
+    {
+     "name": "/_next/static/chunks/06pk.ea8nytpq.js",
+     "bytes": 37321,
+     "end": 1996
+    },
+    {
+     "name": "/_next/static/chunks/0~74w51l_bjmf.js",
+     "bytes": 7573,
+     "end": 1623
+    },
+    {
+     "name": "/_next/static/chunks/turbopack-0tqo57.jf048d.js",
+     "bytes": 4461,
+     "end": 1654
+    },
+    {
+     "name": "/_next/static/chunks/0x.73w57rn4ou.js",
+     "bytes": 1756,
+     "end": 1732
+    },
+    {
+     "name": "/_next/static/chunks/0i.l9589uvx0j.js",
+     "bytes": 13238,
+     "end": 2043
+    },
+    {
+     "name": "/_next/static/chunks/0e.gg85i83lug.js",
+     "bytes": 3184,
+     "end": 1856
+    },
+    {
+     "name": "/_next/static/chunks/0ru.pfdb~i7e8.js",
+     "bytes": 8293,
+     "end": 2009
+    },
+    {
+     "name": "/_next/static/chunks/07pxhewj1rh.f.js",
+     "bytes": 1639,
+     "end": 1950
+    },
+    {
+     "name": "/_next/static/chunks/0_b7xjy8.5wz5.js",
+     "bytes": 5580,
+     "end": 2074
+    },
+    {
+     "name": "/_next/static/chunks/05e-b6xqg2bqm.js",
+     "bytes": 1574,
+     "end": 2137
+    },
+    {
+     "name": "/_next/static/chunks/17o2z17~fa2c0.js",
+     "bytes": 21309,
+     "end": 2685
+    },
+    {
+     "name": "/_next/static/chunks/07ats6xdf0z3y.js",
+     "bytes": 169001,
+     "end": 4700
+    },
+    {
+     "name": "/_next/static/chunks/0z-rr~u1..ao~.js",
+     "bytes": 37039,
+     "end": 3118
+    },
+    {
+     "name": "/play/packs/tipu-summer-palace-bengaluru/v1/pano/forecourt/now/512/px.webp",
+     "bytes": 43720,
+     "end": 3357
+    },
+    {
+     "name": "/play/packs/tipu-summer-palace-bengaluru/v1/pano/forecourt/now/512/nx.webp",
+     "bytes": 54308,
+     "end": 3684
+    },
+    {
+     "name": "/play/packs/tipu-summer-palace-bengaluru/v1/pano/forecourt/now/512/py.webp",
+     "bytes": 10322,
+     "end": 2826
+    },
+    {
+     "name": "/play/packs/tipu-summer-palace-bengaluru/v1/pano/forecourt/now/512/ny.webp",
+     "bytes": 77076,
+     "end": 4406
+    },
+    {
+     "name": "/play/packs/tipu-summer-palace-bengaluru/v1/pano/forecourt/now/512/pz.webp",
+     "bytes": 63106,
+     "end": 4326
+    },
+    {
+     "name": "/play/packs/tipu-summer-palace-bengaluru/v1/pano/forecourt/now/512/nz.webp",
+     "bytes": 38408,
+     "end": 4112
+    },
+    {
+     "name": "/favicon.ico?favicon.10ozsqcl6cxdp.ico",
+     "bytes": 15706,
+     "end": 5480
+    },
+    {
+     "name": "/api/play/run/progress",
+     "bytes": 335,
+     "end": 5887
+    }
+   ],
+   "errors": [
+    "500 http://localhost:3105/api/play/run/progress",
+    "console: Failed to load resource: the server responded with a status of 500 (Internal Server Error) http://localhost:3105/api/play/run/progress",
+    "500 http://localhost:3105/api/play/player",
+    "console: Failed to load resource: the server responded with a status of 500 (Internal Server Error) http://localhost:3105/api/play/player",
+    "500 http://localhost:3105/api/play/event",
+    "console: Failed to load resource: the server responded with a status of 500 (Internal Server Error) http://localhost:3105/api/play/event"
+   ]
+  },
+  {
+   "run": 3,
+   "anon": "test-q5-d22436438924b58c",
+   "firstViewMs": 6617,
+   "panoMs": 6617,
+   "lineMs": 5317,
+   "fcpMs": 1236,
+   "bytesBefore": 915992,
+   "requestsBefore": 37,
+   "inFlight": [
+    "/_vercel/insights/script.js"
+   ],
+   "faces": [
+    "forecourt/now/512/px.webp",
+    "forecourt/now/512/nx.webp",
+    "forecourt/now/512/py.webp",
+    "forecourt/now/512/ny.webp",
+    "forecourt/now/512/pz.webp",
+    "forecourt/now/512/nz.webp"
+   ],
+   "firstLine": "This is Tipu Sultan's Summer Palace, in Bangalore.",
+   "gl": "ANGLE (AMD, AMD Radeon(TM) Graphics (0x00001638) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+   "fpsMedian": 59.9,
+   "fpsP5": 59.5,
+   "panoFramesPerSecond": 59.4,
+   "frames": 304,
+   "list": [
+    {
+     "name": "/play/tipu-summer-palace-bengaluru",
+     "bytes": 24474,
+     "end": 287.6000000014901
+    },
+    {
+     "name": "/_next/static/media/47185047d9bf99cc-s.p.14898fg2_eo7j.woff2",
+     "bytes": 16120,
+     "end": 739
+    },
+    {
+     "name": "/_next/static/media/9c25569e5bfeaac2-s.p.0jt81_0uq1n.f.woff2",
+     "bytes": 16104,
+     "end": 772
+    },
+    {
+     "name": "/_next/static/media/a3b21dc8e8180cb3-s.p.0w942~e22v-7-.woff2",
+     "bytes": 16172,
+     "end": 773
+    },
+    {
+     "name": "/_next/static/media/a6fa2da6a1aa1b4a-s.p.15wrk82pv0juo.woff2",
+     "bytes": 16000,
+     "end": 775
+    },
+    {
+     "name": "/_next/static/media/b66541dc5358997a-s.p.18d7sdg2qe8pf.woff2",
+     "bytes": 16088,
+     "end": 789
+    },
+    {
+     "name": "/_next/static/media/caa3a2e1cccd8315-s.p.09~u27dqhyhd6.woff2",
+     "bytes": 29588,
+     "end": 1537
+    },
+    {
+     "name": "/_next/static/media/e41d5df559864f9e-s.p.0gq7fw9.sy_5..woff2",
+     "bytes": 15340,
+     "end": 1226
+    },
+    {
+     "name": "/_next/static/media/f06bf9da926bae75-s.p.0pz0x0eczp58u.woff2",
+     "bytes": 30204,
+     "end": 1599
+    },
+    {
+     "name": "/_next/static/chunks/0.37f3lk63fql.css",
+     "bytes": 2393,
+     "end": 518
+    },
+    {
+     "name": "/_next/static/chunks/0wmvg888g155s.css",
+     "bytes": 24325,
+     "end": 899
+    },
+    {
+     "name": "/_next/static/chunks/12ek95.utnlwv.css",
+     "bytes": 6758,
+     "end": 960
+    },
+    {
+     "name": "/_next/static/chunks/02dfb1mx8~7rb.css",
+     "bytes": 1792,
+     "end": 976
+    },
+    {
+     "name": "/_next/static/chunks/0dv8xd0_dai4m.js",
+     "bytes": 2562,
+     "end": 1117
+    },
+    {
+     "name": "/_next/static/chunks/0wifdv-06nrkm.js",
+     "bytes": 10358,
+     "end": 1383
+    },
+    {
+     "name": "/_next/static/chunks/0japrmd30fy5n.js",
+     "bytes": 72765,
+     "end": 2389
+    },
+    {
+     "name": "/_next/static/chunks/06pk.ea8nytpq.js",
+     "bytes": 37321,
+     "end": 1974
+    },
+    {
+     "name": "/_next/static/chunks/0~74w51l_bjmf.js",
+     "bytes": 7573,
+     "end": 1599
+    },
+    {
+     "name": "/_next/static/chunks/turbopack-0tqo57.jf048d.js",
+     "bytes": 4461,
+     "end": 1647
+    },
+    {
+     "name": "/_next/static/chunks/0x.73w57rn4ou.js",
+     "bytes": 1756,
+     "end": 1739
+    },
+    {
+     "name": "/_next/static/chunks/0i.l9589uvx0j.js",
+     "bytes": 13238,
+     "end": 2020
+    },
+    {
+     "name": "/_next/static/chunks/0e.gg85i83lug.js",
+     "bytes": 3184,
+     "end": 1833
+    },
+    {
+     "name": "/_next/static/chunks/0ru.pfdb~i7e8.js",
+     "bytes": 8293,
+     "end": 1987
+    },
+    {
+     "name": "/_next/static/chunks/07pxhewj1rh.f.js",
+     "bytes": 1639,
+     "end": 1958
+    },
+    {
+     "name": "/_next/static/chunks/0_b7xjy8.5wz5.js",
+     "bytes": 5580,
+     "end": 2066
+    },
+    {
+     "name": "/_next/static/chunks/05e-b6xqg2bqm.js",
+     "bytes": 1574,
+     "end": 2126
+    },
+    {
+     "name": "/_next/static/chunks/17o2z17~fa2c0.js",
+     "bytes": 21309,
+     "end": 2638
+    },
+    {
+     "name": "/_next/static/chunks/07ats6xdf0z3y.js",
+     "bytes": 169001,
+     "end": 4687
+    },
+    {
+     "name": "/_next/static/chunks/0z-rr~u1..ao~.js",
+     "bytes": 37039,
+     "end": 3122
+    },
+    {
+     "name": "/play/packs/tipu-summer-palace-bengaluru/v1/pano/forecourt/now/512/px.webp",
+     "bytes": 43720,
+     "end": 3353
+    },
+    {
+     "name": "/play/packs/tipu-summer-palace-bengaluru/v1/pano/forecourt/now/512/nx.webp",
+     "bytes": 54308,
+     "end": 3667
+    },
+    {
+     "name": "/play/packs/tipu-summer-palace-bengaluru/v1/pano/forecourt/now/512/py.webp",
+     "bytes": 10322,
+     "end": 2818
+    },
+    {
+     "name": "/play/packs/tipu-summer-palace-bengaluru/v1/pano/forecourt/now/512/ny.webp",
+     "bytes": 77076,
+     "end": 4386
+    },
+    {
+     "name": "/play/packs/tipu-summer-palace-bengaluru/v1/pano/forecourt/now/512/pz.webp",
+     "bytes": 63106,
+     "end": 4312
+    },
+    {
+     "name": "/play/packs/tipu-summer-palace-bengaluru/v1/pano/forecourt/now/512/nz.webp",
+     "bytes": 38408,
+     "end": 4111
+    },
+    {
+     "name": "/favicon.ico?favicon.10ozsqcl6cxdp.ico",
+     "bytes": 15706,
+     "end": 5527
+    },
+    {
+     "name": "/api/play/run/progress",
+     "bytes": 335,
+     "end": 5918
+    }
+   ],
+   "errors": [
+    "500 http://localhost:3105/api/play/run/progress",
+    "console: Failed to load resource: the server responded with a status of 500 (Internal Server Error) http://localhost:3105/api/play/run/progress",
+    "500 http://localhost:3105/api/play/player",
+    "console: Failed to load resource: the server responded with a status of 500 (Internal Server Error) http://localhost:3105/api/play/player",
+    "500 http://localhost:3105/api/play/event",
+    "console: Failed to load resource: the server responded with a status of 500 (Internal Server Error) http://localhost:3105/api/play/event"
+   ]
+  }
+ ]
+}

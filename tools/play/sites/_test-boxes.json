@@ -1,0 +1,126 @@
+{
+ "slug": "_test-boxes",
+ "name": "Format test: three boxes",
+ "place": "A throwaway scene",
+ "version": 1,
+ "_note": "Phase 4 format test. Never ships: its pack is git-ignored and its registry status is dev.",
+ "blend": "E:/epocheye_website/tools/play/out/test/test_scene.blend",
+ "search_dirs": [],
+ "face_px": 512,
+ "sizes": [
+  512
+ ],
+ "mask_px": 512,
+ "webp_quality": 88,
+ "samples": 32,
+ "mask_samples": 4,
+ "start_node": "front",
+ "base": {
+  "hide": [],
+  "objhide": []
+ },
+ "states": {
+  "then": {},
+  "now": {
+   "matswap": {
+    "TEST_PAINT__DECORATION-RECONSTRUCTED": "TEST_PLAIN__PRESENT-STATE"
+   }
+  }
+ },
+ "nodes": [
+  {
+   "id": "front",
+   "name": "In front",
+   "kind": "exterior",
+   "loc": [
+    0,
+    -4,
+    1.6
+   ],
+   "look": [
+    0,
+    1,
+    0
+   ],
+   "samples": 32,
+   "links": [
+    "side"
+   ]
+  },
+  {
+   "id": "side",
+   "name": "To the side",
+   "kind": "exterior",
+   "loc": [
+    6,
+    2,
+    1.6
+   ],
+   "look": [
+    -1,
+    0.4,
+    0
+   ],
+   "samples": 32,
+   "links": [
+    "front"
+   ]
+  }
+ ],
+ "restorations": [
+  {
+   "id": "red-cap",
+   "name": "The red cap",
+   "chapter": "t1",
+   "slot": "S1",
+   "tier": "reconstruction",
+   "nodes": [
+    "front",
+    "side"
+   ],
+   "target": [
+    0,
+    5,
+    2.65
+   ],
+   "piece": "pieces/red-cap.glb",
+   "evidence": [
+    "Test fact T2"
+   ],
+   "select": {
+    "materials": [
+     "TEST_PAINT__DECORATION-RECONSTRUCTED"
+    ]
+   },
+   "piece_source": {
+    "collection": "Scene Collection",
+    "objects": [
+     "Test_cap_middle__DECORATION-RECONSTRUCTED"
+    ]
+   }
+  }
+ ],
+ "tier": {
+  "reconstruction": {
+   "material_tiers": [
+    "DECORATION-RECONSTRUCTED"
+   ],
+   "object_tiers": [
+    "DECORATION-RECONSTRUCTED"
+   ]
+  }
+ },
+ "evidence_images": [],
+ "figures": [],
+ "credits": [
+  "Format test scene: Epocheye. Not a real place."
+ ],
+ "licenses": [
+  {
+   "asset": "everything",
+   "holder": "Epocheye",
+   "licence": "own work"
+  }
+ ],
+ "status": "dev"
+}

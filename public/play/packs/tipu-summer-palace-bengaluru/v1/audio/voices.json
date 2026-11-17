@@ -1,0 +1,41 @@
+{
+  "voices": [
+    {
+      "id": "kokoro-heart",
+      "clips": 188,
+      "chapters": [
+        "prologue",
+        "ch1",
+        "ch2",
+        "ch3",
+        "ch4",
+        "ch5"
+      ],
+      "engine": "kokoro",
+      "language": "en-US",
+      "names_reel": true
+    },
+    {
+      "id": "melo-india",
+      "clips": 13,
+      "chapters": [
+        "prologue"
+      ],
+      "engine": "melo",
+      "language": "en-IN",
+      "names_reel": true
+    },
+    {
+      "id": "piper-ljspeech",
+      "clips": 13,
+      "chapters": [
+        "prologue"
+      ],
+      "engine": "piper",
+      "language": "en-US",
+      "names_reel": true
+    }
+  ],
+  "default": "kokoro-heart",
+  "credit": "Narration: synthetic voice."
+}

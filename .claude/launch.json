@@ -20,6 +20,35 @@
         "3100"
       ],
       "port": 3100
+    },
+    {
+      "name": "prod-dev",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "next",
+        "start",
+        "-p",
+        "3120"
+      ],
+      "port": 3120,
+      "env": {
+        "PLAY_DEV_PACKS": "1"
+      }
+    },
+    {
+      "name": "prod-nodb",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "next",
+        "start",
+        "-p",
+        "3105"
+      ],
+      "port": 3105,
+      "env": {
+        "DATABASE_URL": "postgres://measure:none@127.0.0.1:1/none",
+        "NEON_DATABASE_URL": "postgres://measure:none@127.0.0.1:1/none"
+      }
     }
   ]
 }

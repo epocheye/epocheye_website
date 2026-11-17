@@ -1,0 +1,176 @@
+{
+ "version": 1,
+ "about": "Names lexicon for the Epocheye Play narration. Applied by render.py to the text sent to the TTS engine only. The text players read, and the text in each manifest, is never changed. The 'intended' column is the pipeline author's best understanding of the usual pronunciation, written as a plain respelling with the stressed syllable in capitals. It has not been checked by ear by anyone. The owner corrects it after listening to the names reel.",
+ "keys": {
+  "kokoro_a": "Phonemes in Kokoro's alphabet for American voices (lang a). A=ay as in day, I=eye, O=oh, W=ow as in now, Y=oy.",
+  "kokoro_b": "The same for British voices (lang b). Q=oh. Long vowels carry a length mark.",
+  "arpabet": "ARPAbet with stress digits, for MeloTTS. Injected into its pronouncing dictionary for the run.",
+  "espeak": "espeak-ng IPA for Piper voices, sent inline as [[ phonemes ]].",
+  "respell": "Plain respelling for any engine with no phoneme entry."
+ },
+ "entries": [
+  {
+   "name": "Hyder Ali",
+   "intended": "HY-der AH-lee",
+   "spoken_in_story": true,
+   "words": {},
+   "notes": "All three engines produce HY-der by default. Kokoro American stresses the second syllable of Ali (ah-LEE), Kokoro British and MeloTTS the first (AH-lee). Left as the engines say it."
+  },
+  {
+   "name": "Tipu Sultan",
+   "intended": "TEE-poo SUL-tun",
+   "spoken_in_story": true,
+   "words": {
+    "Tipu": {
+     "kokoro_a": "tˈipu",
+     "kokoro_b": "tˈiːpuː",
+     "arpabet": "T IY1 P UW0",
+     "espeak": "tˈiːpuː"
+    }
+   },
+   "notes": "Engines say TIP-oo by default (short i). Overridden to TEE-poo. Sultan is left as the English dictionary word (SUL-tun). In India it is usually said sool-TAHN. Owner to choose: to switch, add Sultan with kokoro_a 'sʊltˈɑn', kokoro_b 'sʊltˈɑːn', arpabet 'S UH0 L T AA1 N', espeak 'sʊltˈɑːn'."
+  },
+  {
+   "name": "Srirangapatna",
+   "intended": "shree-RUNG-guh-PUT-nuh",
+   "spoken_in_story": false,
+   "words": {
+    "Srirangapatna": {
+     "kokoro_a": "ʃɹˌiɹʌŋɡəpˈʌtnə",
+     "kokoro_b": "ʃɹˌiːɹʌŋɡəpˈʌtnə",
+     "arpabet": "SH R IY2 R AH0 NG G AH0 P AH1 T N AH0",
+     "espeak": "ʃɹˌiːɹʌŋɡəpˈʌtnə"
+    }
+   },
+   "notes": "Engine defaults were wrong (for example Kokoro: SRUR-ung-gap-at-nuh). Overridden."
+  },
+  {
+   "name": "Bangalore",
+   "intended": "BANG-guh-lor",
+   "spoken_in_story": true,
+   "words": {},
+   "notes": "Engine defaults are the English dictionary form, with the main stress on the last syllable in Kokoro (bang-guh-LOR)."
+  },
+  {
+   "name": "Kempe Gowda",
+   "intended": "KEM-pay GOW-duh (GOW as in now)",
+   "spoken_in_story": false,
+   "words": {
+    "Kempe": {
+     "kokoro_a": "kˈɛmpA",
+     "kokoro_b": "kˈɛmpA",
+     "arpabet": "K EH1 M P EY0",
+     "espeak": "kˈɛmpeɪ"
+    }
+   },
+   "notes": "Engines dropped the final e of Kempe (KEMP). Overridden to KEM-pay. Gowda is GOW-duh by default in all three."
+  },
+  {
+   "name": "Chikka Devaraja Wadiyar",
+   "intended": "CHIK-kuh DAY-vuh-RAH-juh WAH-di-yar",
+   "spoken_in_story": true,
+   "words": {
+    "Devaraja": {
+     "kokoro_a": "dˌAvəɹˈɑʤə",
+     "kokoro_b": "dˌAvəɹˈɑːʤə",
+     "arpabet": "D EY2 V AH0 R AA1 JH AH0",
+     "espeak": "dˌeɪvəɹˈɑːdʒə"
+    },
+    "Wadiyar": {
+     "arpabet": "W AA1 D IH0 Y AA2 R"
+    }
+   },
+   "notes": "Devaraja: defaults were di-vuh-RAH-juh (Kokoro, Piper) and di-var-JEE-uh (MeloTTS). Overridden to DAY-vuh-RAH-juh. Wadiyar: MeloTTS guessed wah-DIV-er, overridden. Kokoro and Piper say WAH-di-yar (WOD-i-yar in British voices) by default."
+  },
+  {
+   "name": "Kote Venkataramana",
+   "intended": "KOH-tay ven-kuh-tuh-RUM-uh-nuh",
+   "spoken_in_story": false,
+   "words": {
+    "Kote": {
+     "kokoro_a": "kˈOtA",
+     "kokoro_b": "kˈQtA",
+     "arpabet": "K OW1 T EY0",
+     "espeak": "kˈəʊteɪ"
+    },
+    "Venkataramana": {
+     "kokoro_a": "vˌɛŋkətəɹˈʌmənə",
+     "kokoro_b": "vˌɛŋkətəɹˈʌmənə",
+     "arpabet": "V EH2 NG K AH0 T AH0 R AH1 M AH0 N AH0",
+     "espeak": "vˌɛŋkətəɹˈʌmənə"
+    }
+   },
+   "notes": "Engines said KOHT (one syllable) and ven-kuh-tar-uh-MAH-nuh or ven-kuh-tar-AY-muh-nuh. Overridden."
+  },
+  {
+   "name": "Attara Kacheri",
+   "intended": "uh-TAH-ruh kuh-CHAY-ree",
+   "spoken_in_story": false,
+   "words": {
+    "Attara": {
+     "kokoro_a": "ətˈɑɹə",
+     "kokoro_b": "ətˈɑːɹə"
+    },
+    "Kacheri": {
+     "kokoro_a": "kəʧˈAɹi",
+     "kokoro_b": "kəʧˈAɹi",
+     "arpabet": "K AH0 CH EY1 R IY0",
+     "espeak": "kətʃˈeɪɹi"
+    }
+   },
+   "notes": "Kacheri: engines said KASH-er-ee or kuh-SHER-ee. Overridden to kuh-CHAY-ree. Attara: Kokoro doubled the r, overridden; MeloTTS and Piper say uh-TAH-ruh by default."
+  },
+  {
+   "name": "Mysore",
+   "intended": "my-SOR",
+   "spoken_in_story": true,
+   "words": {
+    "Mysore": {
+     "arpabet": "M AY0 S AO1 R"
+    }
+   },
+   "notes": "MeloTTS guessed mis-OR, overridden. Kokoro says my-SOR by default. Piper says MY-sor (first syllable stressed)."
+  },
+  {
+   "name": "Buchanan",
+   "intended": "byoo-KAN-un",
+   "spoken_in_story": true,
+   "words": {},
+   "notes": "Engine defaults (byoo-KAN-un). Francis Buchanan was Scottish; buh-KAN-un is also heard."
+  },
+  {
+   "name": "Cornwallis",
+   "intended": "korn-WOL-iss",
+   "spoken_in_story": false,
+   "words": {
+    "Cornwallis": {
+     "kokoro_a": "kɔɹnwˈɑlɪs",
+     "kokoro_b": "kɔːnwˈɒlɪs",
+     "espeak": "kɔːnwˈɒlɪs"
+    }
+   },
+   "notes": "Kokoro and Piper ended it in -eez with the stress on the first syllable. Overridden. MeloTTS has it in its dictionary (korn-WAW-lus)."
+  },
+  {
+   "name": "Bowring",
+   "intended": "NOT VERIFIED. Engines say BOH-ring. BOW-ring (as in now) is also possible.",
+   "spoken_in_story": false,
+   "words": {},
+   "notes": "No primary source for the pronunciation was found on the day (Wikipedia's article on John Bowring gives none). Left as the engines say it, BOH-ring. If the owner knows it as BOW-ring: kokoro_a 'bˈWɹɪŋ', kokoro_b 'bˈWɹɪŋ', arpabet 'B AW1 R IH0 NG', espeak 'bˈaʊɹɪŋ'."
+  },
+  {
+   "name": "Hunter",
+   "intended": "HUN-ter",
+   "spoken_in_story": false,
+   "words": {},
+   "notes": "Ordinary English word. Engine defaults."
+  },
+  {
+   "name": "Orme",
+   "intended": "ORM",
+   "spoken_in_story": true,
+   "words": {},
+   "notes": "Edward Orme, the London publisher of Hunter's plates (chapter 2). Said as one syllable, so a recogniser writing \"Orm\" has heard it right."
+  }
+ ]
+}

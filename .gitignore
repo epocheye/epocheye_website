@@ -68,3 +68,13 @@ crowd_model.pkl
 # Python bytecode
 __pycache__/
 *.pyc
+
+# Play exporter scratch output
+tools/play/out/
+tools/play/voice/.venv/
+
+# Play: synthetic dev pack
+public/play/packs/_dev/
+
+# Play: Phase 4 throwaway format-test pack (never ships)
+public/play/packs/_test-*/

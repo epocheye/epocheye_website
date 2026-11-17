@@ -1,0 +1,38 @@
+[
+ {
+  "asset": "Hunter watercolour B1974.12.1168 (colour source, and evidence/e-hunter-north.webp)",
+  "holder": "Yale Center for British Art, Paul Mellon Collection",
+  "licence": "CC0"
+ },
+ {
+  "asset": "evidence/e-home-inside.webp: Robert Home, Inside View of the Palace at Bangalore, 1794",
+  "holder": "National Library of Norway (scan, URN:NBN:no-nb_digibok_2013122024014)",
+  "licence": "public domain (plate published 1794; the library declares the scan public domain)"
+ },
+ {
+  "asset": "evidence/e-paint-wall.webp, evidence/e-paint-ceiling.webp, evidence/e-front-today.webp",
+  "holder": "Epocheye",
+  "licence": "own work"
+ },
+ {
+  "asset": "interior_madder_photo.jpg (wall texture, also inside pieces/painted-walls.glb)",
+  "holder": "Mike Prince",
+  "licence": "CC BY 2.0",
+  "attribution_required": true
+ },
+ {
+  "asset": "own_*.jpg textures",
+  "holder": "Epocheye",
+  "licence": "own work"
+ },
+ {
+  "asset": "Project-made tiles: painted ceiling, exterior diaper, gilding (the ceiling tile is also inside pieces/painted-ceiling.glb)",
+  "holder": "Epocheye",
+  "licence": "made by the project; owner to confirm provenance (open since the audit)"
+ },
+ {
+  "asset": "Poly Haven textures, models and sky",
+  "holder": "Poly Haven",
+  "licence": "CC0"
+ }
+]

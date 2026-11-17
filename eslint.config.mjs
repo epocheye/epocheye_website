@@ -17,6 +17,8 @@ const eslintConfig = defineConfig([
     "apps/**/.open-next/**",
     // Static/vendored assets (e.g. Draco decoder) — not source to lint.
     "public/**",
+    // Play tooling: Python, Blender scripts, virtual environments and render output.
+    "tools/**",
   ]),
 ]);
 

@@ -1,0 +1,120 @@
+{
+  "about": "Registry of narration voices for render.py. Every voice here runs locally on CPU and was rendered and measured on 2026-11-16. Licences: LICENSES.md. Rejected voices are listed there, not here.",
+  "speed_keys": {
+    "steady / slow / brisk": "Engine speed render.py starts from for that pace (1.0 is the engine's own rate). It then measures each clip and re-reads it until the pace is met.",
+    "min": "Lowest engine speed allowed for lines of 4 words or more. Set from calibrate.py: below it the speech-to-text round trip gets worse for this voice.",
+    "min_short": "The same for clips of 1 to 3 words, which degrade sooner. These clips are read once at max(pace speed, min_short), never above 1.0.",
+    "max": "Highest engine speed allowed.",
+    "clip_overrides": "Optional, per voice: {clip id: {min: speed, why: text}}. Raises the speed floor for one clip that failed its round trip at the usual floor. Only that clip is re-rendered."
+  },
+  "voices": {
+    "kokoro-heart": {
+      "engine": "kokoro",
+      "engine_voice": "af_heart",
+      "variant": "a",
+      "language": "en-US",
+      "accent": "American English (neutral). Female.",
+      "model": "hexgrad/Kokoro-82M",
+      "licence": "Apache-2.0",
+      "licence_url": "https://huggingface.co/hexgrad/Kokoro-82M",
+      "venv": ".venv",
+      "worker": "engines/kokoro_worker.py",
+      "args": [
+        "--voice",
+        "af_heart",
+        "--lang",
+        "a"
+      ],
+      "speed": {
+        "steady": 0.79,
+        "slow": 0.7,
+        "brisk": 0.88,
+        "min": 0.7,
+        "min_short": 0.9,
+        "max": 1.3
+      },
+      "clip_overrides": {
+        "c1-C-1-2": {
+          "min": 0.85,
+          "why": "At engine speed 0.72 both recognisers heard an extra first word (\"Be mud in the walls\", \"A mud in the walls\"). With the floor at 0.90 the clip was 12.6% over its pace (its round trip was not tested). At 0.85 both recognisers hear it word for word and it is 10.5% over. Checked 2026-11-16."
+        },
+        "c2-01": {
+          "min": 0.9,
+          "why": "Slow line. At the usual floor Kokoro added or changed a word that both recognisers heard (2026-11-17 check). Words come before pace, so the floor is raised for this clip only."
+        },
+        "c2-A-3": {
+          "min": 0.9,
+          "why": "Slow line. At the usual floor Kokoro added or changed a word that both recognisers heard (2026-11-17 check). Words come before pace, so the floor is raised for this clip only."
+        },
+        "c3-C-1": {
+          "min": 0.9,
+          "why": "Slow line. At the usual floor Kokoro added or changed a word that both recognisers heard (2026-11-17 check). Words come before pace, so the floor is raised for this clip only."
+        },
+        "c5-e3": {
+          "min": 0.9,
+          "why": "Slow line. At the usual floor Kokoro added or changed a word that both recognisers heard (2026-11-17 check). Words come before pace, so the floor is raised for this clip only."
+        },
+        "c5-e5": {
+          "min": 0.72,
+          "why": "At 0.70 Kokoro added \"Its\"; at 0.72 both recognisers hear it word for word (trial 2026-11-17)."
+        },
+        "c5-08": {
+          "min": 0.72,
+          "why": "Reveal line. At 0.70 Kokoro added \"And\"; at 0.72 both recognisers hear it word for word (trial 2026-11-17)."
+        },
+        "c5-11": {
+          "min": 0.84,
+          "why": "Last line. At 0.72 and 0.78 a recogniser heard \"So\" before it; at 0.84 both hear it word for word (trial 2026-11-17)."
+        }
+      }
+    },
+    "melo-india": {
+      "engine": "melo",
+      "engine_voice": "EN_INDIA",
+      "variant": null,
+      "language": "en-IN",
+      "accent": "Indian English. The speaker is part of the published model, not an accent put on by this pipeline.",
+      "model": "myshell-ai/MeloTTS-English",
+      "licence": "MIT",
+      "licence_url": "https://huggingface.co/myshell-ai/MeloTTS-English",
+      "venv": ".venv-melo",
+      "worker": "engines/melo_worker.py",
+      "args": [
+        "--speaker",
+        "EN_INDIA"
+      ],
+      "speed": {
+        "steady": 0.75,
+        "slow": 0.6,
+        "brisk": 0.85,
+        "min": 0.5,
+        "min_short": 0.5,
+        "max": 1.3
+      }
+    },
+    "piper-ljspeech": {
+      "engine": "piper",
+      "engine_voice": "en_US-ljspeech-high",
+      "variant": null,
+      "language": "en-US",
+      "accent": "American English (neutral). Female. Trained from scratch on the public domain LJ Speech dataset.",
+      "model": "rhasspy/piper-voices en/en_US/ljspeech/high",
+      "licence": "Voice: public domain dataset, model repository MIT. Engine: piper-tts GPL-3.0-or-later (used as a local tool, not shipped).",
+      "licence_url": "https://huggingface.co/rhasspy/piper-voices/blob/main/en/en_US/ljspeech/high/MODEL_CARD",
+      "venv": ".venv",
+      "worker": "engines/piper_worker.py",
+      "args": [
+        "--model",
+        "{models}/piper/en_US-ljspeech-high.onnx"
+      ],
+      "speed": {
+        "steady": 0.76,
+        "slow": 0.61,
+        "brisk": 0.87,
+        "min": 0.5,
+        "min_short": 0.5,
+        "max": 1.3
+      }
+    }
+  }
+}

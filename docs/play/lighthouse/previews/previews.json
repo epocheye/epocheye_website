@@ -1,0 +1,54 @@
+[
+ {
+  "path": "/play",
+  "title": "Epocheye Play",
+  "description": "A history game. Rebuild a lost monument from its evidence.",
+  "url": "https://www.epocheye.com/play",
+  "image": "https://www.epocheye.com/play/opengraph-image",
+  "imageType": "image/png",
+  "card": "summary_large_image",
+  "twitterImage": "https://www.epocheye.com/play/twitter-image",
+  "imageBytes": 39993,
+  "imageSize": "1200x630",
+  "imageContentType": "image/png"
+ },
+ {
+  "path": "/play/tipu-summer-palace-bengaluru",
+  "title": "Tipu Sultan's Summer Palace | Epocheye Play",
+  "description": "Rebuild Tipu Sultan's Summer Palace from its evidence, chapter by chapter. A history game.",
+  "url": "https://www.epocheye.com/play/tipu-summer-palace-bengaluru",
+  "image": "https://www.epocheye.com/play/opengraph-image",
+  "imageType": "image/png",
+  "card": "summary_large_image",
+  "twitterImage": "https://www.epocheye.com/play/twitter-image",
+  "imageBytes": 39993,
+  "imageSize": "1200x630",
+  "imageContentType": "image/png"
+ },
+ {
+  "path": "/play/daily",
+  "title": "The Missing Piece | Epocheye Play",
+  "description": "A lost piece every day. Read the clues from the evidence, then say where it belongs.",
+  "url": "https://www.epocheye.com/play/daily",
+  "image": "https://www.epocheye.com/play/opengraph-image",
+  "imageType": "image/png",
+  "card": "summary_large_image",
+  "twitterImage": "https://www.epocheye.com/play/twitter-image",
+  "imageBytes": 39993,
+  "imageSize": "1200x630",
+  "imageContentType": "image/png"
+ },
+ {
+  "path": "/play/c/4wTzdGG4y",
+  "title": "Envy of Heaven | Epocheye Play",
+  "description": "What I now know about Tipu Sultan's Summer Palace, rebuilt from its evidence, and what nobody knows.",
+  "url": "https://www.epocheye.com/play/c/4wTzdGG4y",
+  "image": "https://www.epocheye.com/play/c/4wTzdGG4y/opengraph-image?9100bcdab60e0f90",
+  "imageType": "image/png",
+  "card": "summary_large_image",
+  "twitterImage": "https://www.epocheye.com/play/c/4wTzdGG4y/twitter-image?1de2661a8bf35528",
+  "imageBytes": 62595,
+  "imageSize": "1200x630",
+  "imageContentType": "image/png"
+ }
+]

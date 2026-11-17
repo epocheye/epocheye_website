@@ -1,0 +1,44 @@
+[
+ {
+  "path": "/play",
+  "anon": "test-q5-30b17399dcb1b615",
+  "performance": 79,
+  "accessibility": 100,
+  "bestPractices": 96,
+  "seo": 69,
+  "fcp": "1.2 s",
+  "lcp": "5.0 s",
+  "tbt": "190 ms",
+  "cls": "0",
+  "si": "1.2 s",
+  "bytes": 933
+ },
+ {
+  "path": "/play/tipu-summer-palace-bengaluru",
+  "anon": "test-q5-6ea68edd250cbab8",
+  "performance": 49,
+  "accessibility": 100,
+  "bestPractices": 96,
+  "seo": 66,
+  "fcp": "1.4 s",
+  "lcp": "6.8 s",
+  "tbt": "1,530 ms",
+  "cls": "0",
+  "si": "3.6 s",
+  "bytes": 4768
+ },
+ {
+  "path": "/play/daily",
+  "anon": "test-q5-4e1fd1f633e70ad4",
+  "performance": 86,
+  "accessibility": 100,
+  "bestPractices": 96,
+  "seo": 66,
+  "fcp": "1.2 s",
+  "lcp": "3.8 s",
+  "tbt": "170 ms",
+  "cls": "0",
+  "si": "1.2 s",
+  "bytes": 593
+ }
+]

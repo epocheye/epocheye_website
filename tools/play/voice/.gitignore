@@ -1,0 +1,9 @@
+# Python environments (one per engine family, see README.md)
+.venv/
+.venv-*/
+
+# Caches
+__pycache__/
+*.pyc
+.cache/
+*.wav

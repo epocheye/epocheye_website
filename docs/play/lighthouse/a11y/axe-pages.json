@@ -1,0 +1,48 @@
+{
+ "card": "4wTzdGG4y",
+ "anon": "test-q5-e1de496bb8ac4e68",
+ "pages": {
+  "/play": {
+   "serious": [],
+   "other": [],
+   "hscroll": false,
+   "small": [],
+   "errors": []
+  },
+  "/play/daily": {
+   "serious": [],
+   "other": [],
+   "hscroll": false,
+   "small": [],
+   "errors": []
+  },
+  "/play/vote": {
+   "serious": [],
+   "other": [],
+   "hscroll": false,
+   "small": [],
+   "errors": []
+  },
+  "/play/leaderboards": {
+   "serious": [],
+   "other": [],
+   "hscroll": false,
+   "small": [],
+   "errors": []
+  },
+  "/play/c/4wTzdGG4y": {
+   "serious": [],
+   "other": [],
+   "hscroll": false,
+   "small": [],
+   "errors": []
+  },
+  "/play/privacy": {
+   "serious": [],
+   "other": [],
+   "hscroll": false,
+   "small": [],
+   "errors": []
+  }
+ }
+}
