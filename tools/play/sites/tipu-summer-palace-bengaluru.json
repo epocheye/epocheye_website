@@ -418,12 +418,7 @@
    ],
    "piece": "pieces/painted-ceiling.glb",
    "turn": {
-    "axis": [
-     0,
-     0,
-     1
-    ],
-    "start_deg": -70
+    "start_deg": 60
    },
    "evidence": [
     "Epocheye photograph 37, September 2026: the surviving painted ceiling"

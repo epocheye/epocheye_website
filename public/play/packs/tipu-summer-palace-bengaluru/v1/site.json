@@ -442,12 +442,7 @@
    ],
    "piece": "pieces/painted-ceiling.glb",
    "turn": {
-    "axis": [
-     0,
-     0,
-     1
-    ],
-    "start_deg": -70
+    "start_deg": 60
    },
    "evidence": [
     "Epocheye photograph 37, September 2026: the surviving painted ceiling"
@@ -571,14 +566,16 @@
     "tier": "record",
     "status": "verified",
     "claim": "The palace inscription gives two dates, 1781 and 1791. Rice reads them as begun in Hyder Ali's time and completed under Tipu Sultan. The ASI board at the entrance gives 1778 to 1789. The palace stood inside Bangalore Fort.",
-    "source": "B. L. Rice, Epigraphia Carnatica IX (1905), Bangalore no. 7 and introduction p. 27; Mackenzie's survey of Bangalore, March 1791, key 14; palace research file palace-dimensions.json (dates tiered disputed)"
+    "source": "B. L. Rice, Epigraphia Carnatica IX (1905), Bangalore no. 7 and introduction p. 27; Mackenzie's survey of Bangalore, March 1791; the ASI board at the entrance, as recorded in Epocheye's palace research notes",
+    "source_internal": "B. L. Rice, Epigraphia Carnatica IX (1905), Bangalore no. 7 and introduction p. 27; Mackenzie's survey of Bangalore, March 1791, key 14; palace research file palace-dimensions.json (dates tiered disputed)"
    },
    {
     "id": "F01b",
     "tier": "reading",
     "status": "verified",
     "claim": "From its completion in 1791 to the death of Tipu Sultan in 1799 is about eight years.",
-    "source": "Arithmetic on F01 and F10"
+    "source": "Worked out from the dates above: completed 1791, Tipu Sultan killed 1799",
+    "source_internal": "Arithmetic on F01 and F10"
    },
    {
     "id": "F02",
@@ -599,7 +596,8 @@
     "tier": "record",
     "status": "verified",
     "claim": "Teak framing and pillars, stone pillar bases and stone platform; the outer walls of mud.",
-    "source": "Palace research file palace-dimensions.json (materials, confirmed); ASI display board as recorded in photos_own/MANIFEST.md; Rice, Mysore Gazetteer (1897) II p. 47"
+    "source": "Epocheye's palace research notes; the ASI display board at the palace; B. L. Rice, Mysore Gazetteer (1897), vol. II p. 47",
+    "source_internal": "Palace research file palace-dimensions.json (materials, confirmed); ASI display board as recorded in photos_own/MANIFEST.md; Rice, Mysore Gazetteer (1897) II p. 47"
    },
    {
     "id": "F05",
@@ -704,7 +702,8 @@
     "tier": "record",
     "status": "verified",
     "claim": "Tipu Sultan dismantled Bangalore Fort after the peace of 1792. It was rebuilt after 1799. From the 1860s an entrance was cut beside the Delhi Gate and roads were driven through the walls. A gateway and a short run of wall are what survive.",
-    "source": "Buchanan (1807), vol. 1 p. 44; B. L. Rice, Mysore Gazetteer (1897), vol. II pp. 46 to 47; fort research file evidence.md; palace narration"
+    "source": "Buchanan (1807), vol. 1 p. 44; B. L. Rice, Mysore Gazetteer (1897), vol. II pp. 46 to 47; Epocheye's research notes on Bangalore Fort",
+    "source_internal": "Buchanan (1807), vol. 1 p. 44; B. L. Rice, Mysore Gazetteer (1897), vol. II pp. 46 to 47; fort research file evidence.md; palace narration"
    },
    {
     "id": "F17",
@@ -725,7 +724,8 @@
     "tier": "record",
     "status": "verified",
     "claim": "Today the timber is dark and polished, and faded floral painting survives in places on walls, ceilings and niches.",
-    "source": "Palace research file palace-measurements.md; own photographs 37 and 41, September 2026"
+    "source": "Epocheye's palace research notes, and our own photographs of the palace, September 2026",
+    "source_internal": "Palace research file palace-measurements.md; own photographs 37 and 41, September 2026"
    },
    {
     "id": "F19",
@@ -746,14 +746,16 @@
     "tier": "record",
     "status": "verified",
     "claim": "Robert Home's engraving \"Inside View of the Palace at Bangalore\", published 1 February 1794, shows the timber colonnade.",
-    "source": "Robert Home, Select Views in Mysore (1794); palace research file palace-measurements.md"
+    "source": "Robert Home, Select Views in Mysore (1794)",
+    "source_internal": "Robert Home, Select Views in Mysore (1794); palace research file palace-measurements.md"
    },
    {
     "id": "F25",
     "tier": "record",
     "status": "verified",
     "claim": "The hall's columns rise the full height of the building, as high as the roof of the upper storey.",
-    "source": "Buchanan (1807), vol. 1 p. 45; palace research file palace_viewpoints.json, viewpoint P6"
+    "source": "Buchanan (1807), vol. 1 p. 45; Epocheye's palace research notes",
+    "source_internal": "Buchanan (1807), vol. 1 p. 45; palace research file palace_viewpoints.json, viewpoint P6"
    },
    {
     "id": "M1",
@@ -767,49 +769,56 @@
     "tier": "reconstruction",
     "status": "verified",
     "claim": "The exterior colours in our model follow Hunter's watercolour of February 1792. Hunter painted a different front from the one modelled, so their placement here is our reconstruction. The 1804 plates of the palace are not on disk and were not used.",
-    "source": "Palace research files palace-measurements.md and TSP_period_assumptions.md; tools/play/AUDIT.md, sections 5 and 7"
+    "source": "Epocheye's palace research notes and the record of our reconstruction",
+    "source_internal": "Palace research files palace-measurements.md and TSP_period_assumptions.md; tools/play/AUDIT.md, sections 5 and 7"
    },
    {
     "id": "M3",
     "tier": "reconstruction",
     "status": "verified",
     "claim": "The painted walls of the upper hall in our model follow the idiom of the fragments that survive. What was painted in each room is not recorded.",
-    "source": "Palace research file palace-measurements.md, section 7.4; tools/play/AUDIT.md, section 4"
+    "source": "Epocheye's palace research notes: the style of the painting is recorded, what was on each wall is not",
+    "source_internal": "Palace research file palace-measurements.md, section 7.4; tools/play/AUDIT.md, section 4"
    },
    {
     "id": "M4",
     "tier": "reconstruction",
     "status": "verified",
     "claim": "For panels with nothing left, our model repeats the one recorded pattern across the upper floor and labels its extent as inferred. It leaves the ground floor plain. It never invents a pattern.",
-    "source": "tools/play/AUDIT.md, section 4; docs/play/STORY_CHECK.md, section 6"
+    "source": "The record of our reconstruction",
+    "source_internal": "tools/play/AUDIT.md, section 4; docs/play/STORY_CHECK.md, section 6"
    },
    {
     "id": "R1",
     "tier": "reading",
     "status": "verified",
     "claim": "We take the outlines of the plates as Hunter's, because his views were taken on the spot. We do not credit every colour of the plates to him, because they were engraved and hand-coloured for a London publisher twelve years after he died. That he served in the army that took the fort is, in our reading, no reason to doubt what his views show standing where.",
-    "source": "Our reading of F08, F08c, F08d and F08e"
+    "source": "Our reading of Hunter's watercolour (1792) and the London plates (1804)",
+    "source_internal": "Our reading of F08, F08c, F08d and F08e"
    },
    {
     "id": "R2",
     "tier": "reading",
     "status": "verified",
     "claim": "Read as a diagram, Buchanan's account arranges the court by height: the ruler on an upper balcony with a few guards, officers by rank, the people in the open court below. That the decoration was meant for the rooms where the ruler was seen is our inference from the same passage.",
-    "source": "Our reading of F12 and F13"
+    "source": "Our reading of Buchanan's account (1807)",
+    "source_internal": "Our reading of F12 and F13"
    },
    {
     "id": "R3",
     "tier": "reading",
     "status": "verified",
     "claim": "The offices kept the surviving block in use until 1868, and we think that use is a good part of why it was kept. No record says so.",
-    "source": "Our reading of F14, F15 and F19"
+    "source": "Our reading of the office records: Rice (1897), Bowring (1871) and Sankey (1873)",
+    "source_internal": "Our reading of F14, F15 and F19"
    },
    {
     "id": "R4",
     "tier": "reading",
     "status": "verified",
     "claim": "Hunter's two dated views of the palace, of February 1792, are the oldest dated pictures of it that we know of. Robert Home's view was published on 1 February 1794 and the date he drew it is not recorded, so we do not call Hunter's the oldest pictures outright. We do not hold the 1804 plates of the palace.",
-    "source": "Our reading of F08, F08b and F24; palace research file palace-measurements.md, section 0.3; tools/play/AUDIT.md, section 7"
+    "source": "Our reading of Hunter's watercolour (1792), the London plates (1804) and Robert Home's views (1794)",
+    "source_internal": "Our reading of F08, F08b and F24; palace research file palace-measurements.md, section 0.3; tools/play/AUDIT.md, section 7"
    },
    {
     "id": "O1",
@@ -844,7 +853,8 @@
     "tier": "unknown",
     "status": "verified",
     "claim": "The colours of anything Hunter did not draw and the building did not keep. The painted composition of each individual room is unrecorded.",
-    "source": "Palace research file palace-measurements.md, section 7.4"
+    "source": "Epocheye's palace research notes: the painting of each room is not recorded",
+    "source_internal": "Palace research file palace-measurements.md, section 7.4"
    }
   ],
   "witnesses": [
