@@ -5,7 +5,7 @@
 	--play-rule: rgba(255, 255, 255, 0.14);
 	--play-rule-strong: rgba(255, 255, 255, 0.4);
 	--play-dim: rgba(255, 255, 255, 0.55);
-	--play-faint: rgba(255, 255, 255, 0.38);
+	--play-faint: rgba(255, 255, 255, 0.52); /* 4.5:1 or better on the panel black (WCAG AA) */
 	--play-serif: var(--font-instrument-serif), Georgia, "Times New Roman", serif;
 	--play-display: var(--font-montserrat-alternates), system-ui, sans-serif;
 	--play-ui: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
@@ -616,7 +616,9 @@
 	/* The scrim holds down to the last label, then fades: small text needs it over a bright sky.
 	   Fixed lengths, so a status note under the labels does not stretch it over the look controls. */
 	--play-top-in: max(12px, env(safe-area-inset-top));
-	background: linear-gradient(to bottom, rgba(8, 8, 8, 0.78) 0, rgba(8, 8, 8, 0.62) min(calc(var(--play-top-in) + 104px), 66%), rgba(8, 8, 8, 0) min(calc(var(--play-top-in) + 146px), 100%));
+	/* Strong enough for 4.5:1 over a white sky (brief 5.7, Phase 5 contrast check): the labels end
+	   about 120 px down. */
+	background: linear-gradient(to bottom, rgba(8, 8, 8, 0.84) 0, rgba(8, 8, 8, 0.8) min(calc(var(--play-top-in) + 120px), 72%), rgba(8, 8, 8, 0) min(calc(var(--play-top-in) + 164px), 100%));
 	pointer-events: none;
 }
 
@@ -706,7 +708,9 @@
 	right: 0;
 	bottom: 0;
 	padding: 72px max(16px, env(safe-area-inset-right)) max(18px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
-	background: linear-gradient(to top, rgba(8, 8, 8, 0.95) 0%, rgba(8, 8, 8, 0.88) 48%, rgba(8, 8, 8, 0.55) 78%, rgba(8, 8, 8, 0) 100%);
+	/* The fade lives in the top padding; from the first line of content down the scrim holds at
+	   0.84 or more, which keeps every label 4.5:1 or better over a white panorama. */
+	background: linear-gradient(to top, rgba(8, 8, 8, 0.95) 0%, rgba(8, 8, 8, 0.88) 48%, rgba(8, 8, 8, 0.84) calc(100% - 64px), rgba(8, 8, 8, 0) 100%);
 	pointer-events: none;
 	transition: opacity 0.6s var(--play-ease);
 }
@@ -1578,7 +1582,7 @@
 	grid-template-columns: 22px 1fr;
 	align-items: center;
 	width: 100%;
-	min-height: 38px;
+	min-height: 44px; /* a tap target: brief 5.7, one-handed on a phone */
 	padding: 0 12px 0 8px;
 	border: 1px dashed var(--play-rule-strong);
 	border-radius: 10px;

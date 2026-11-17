@@ -1,6 +1,6 @@
 // POST /api/play/vote/me  { anon }  ->  { ok, mine: slug|null, email: "none"|"pending"|"confirmed", name|null }
 // This player's vote this week and where their email stands. Creates nothing.
-import { fail, handler, limitAnon, limitIp, ok, readJson } from "@/lib/server/play/http";
+import { fail, featureOff, handler, limitAnon, limitIp, ok, readJson } from "@/lib/server/play/http";
 import { emailStateOf } from "@/lib/server/play/email";
 import { findPlayer } from "@/lib/server/play/players";
 import { anonOf } from "@/lib/server/play/validate";
@@ -9,6 +9,8 @@ import { myVote } from "@/lib/server/play/vote";
 export const runtime = "nodejs";
 
 export const POST = handler("vote-me", async (request) => {
+	const off = featureOff("vote");
+	if (off) return off;
 	const ipLimited = limitIp(request, "vote-me", 60);
 	if (ipLimited) return ipLimited;
 	const { body, response } = await readJson(request, 512);

@@ -4,7 +4,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { LOCKED_LABELS, liveSites, lockedSites } from "@/lib/play/sites";
 import { packBase } from "@/lib/play/pack";
+import { playFeatures } from "@/lib/play/features";
 import LockedActions from "@/components/play/sites/LockedActions";
+import PlayOff from "@/components/play/sites/PlayOff";
+import { PLAY_LINE, playMeta } from "@/lib/play/meta";
+
+export const metadata = playMeta({ title: "Epocheye Play", description: PLAY_LINE, path: "/play" });
 import "@/components/play/sites/community.css";
 
 // The card picture is a file inside the published pack. Show it only when it is really there.
@@ -33,12 +38,18 @@ function BuildClip({ site }) {
 	);
 }
 
-// Which sites are live or locked follows each site's opens_at, so the page is rebuilt now and then.
-export const revalidate = 300;
-
+// Which sites are live or locked follows each site's opens_at, and the feature switches are read
+// per request, so this page is rendered per request (the /play layout asks for that).
 export default function PlayHome() {
+	const features = playFeatures();
+	if (!features.enabled) return <PlayOff />;
 	const live = liveSites();
 	const locked = lockedSites();
+	const links = [
+		features.daily ? { href: "/play/daily", text: "Daily puzzle" } : null,
+		features.vote ? { href: "/play/vote", text: "Vote for the next site" } : null,
+		features.leaderboards ? { href: "/play/leaderboards", text: "Leaderboards" } : null,
+	].filter(Boolean);
 	return (
 		<main className="play-home">
 			<div className="play-home-bar">
@@ -53,17 +64,15 @@ export default function PlayHome() {
 				<p className="play-logline">Rebuild a lost monument from its evidence.</p>
 			</header>
 
-			<nav className="play-home-links" aria-label="More to play">
-				<Link href="/play/daily" className="play-pill is-small">
-					Daily puzzle
-				</Link>
-				<Link href="/play/vote" className="play-pill is-small">
-					Vote for the next site
-				</Link>
-				<Link href="/play/leaderboards" className="play-pill is-small">
-					Leaderboards
-				</Link>
-			</nav>
+			{links.length ? (
+				<nav className="play-home-links" aria-label="More to play">
+					{links.map((l) => (
+						<Link key={l.href} href={l.href} className="play-pill is-small">
+							{l.text}
+						</Link>
+					))}
+				</nav>
+			) : null}
 
 			<ul className="play-cards" aria-label="Sites">
 				{live.map((site) => {
@@ -99,7 +108,7 @@ export default function PlayHome() {
 							<h2 className="play-site-name">{site.name}</h2>
 							<p className="play-site-place">{site.place}</p>
 							<div className="play-site-row">
-								<LockedActions slug={site.slug} name={site.name} />
+								<LockedActions slug={site.slug} name={site.name} vote={features.vote} email={features.email} />
 							</div>
 						</div>
 					</li>

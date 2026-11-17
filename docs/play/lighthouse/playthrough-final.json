@@ -1,0 +1,210 @@
+{
+ "mode": "click",
+ "reduce": false,
+ "reachedEnd": true,
+ "seconds": 86,
+ "anon": "test-q5-edaf15866196b0aa",
+ "errors": [],
+ "axe": {},
+ "axeMinor": {},
+ "notReachable": [],
+ "noFocusRing": {},
+ "sheet": null,
+ "smallTargets": {},
+ "primaryInUpperHalf": {},
+ "horizontalScroll": [],
+ "contrastMin": {
+  "at": "look at 1791 to 1792 · Corner of the forecourt",
+  "ratio": 14.53,
+  "text": [
+   255,
+   255,
+   255
+  ],
+  "brightest": [
+   42,
+   41,
+   39
+  ]
+ },
+ "contrast": [
+  {
+   "at": "line at today · Forecourt",
+   "ratio": 17.04,
+   "text": [
+    255,
+    255,
+    255
+   ],
+   "brightest": [
+    29,
+    28,
+    25
+   ]
+  },
+  {
+   "at": "line at 1781 to 1791 · Ground colonnade",
+   "ratio": 17.49,
+   "text": [
+    255,
+    255,
+    255
+   ],
+   "brightest": [
+    28,
+    25,
+    23
+   ]
+  },
+  {
+   "at": "look at 1781 to 1791 · End of the colonnade",
+   "ratio": 14.69,
+   "text": [
+    255,
+    255,
+    255
+   ],
+   "brightest": [
+    42,
+    40,
+    38
+   ]
+  },
+  {
+   "at": "line at 1791 to 1792 · Forecourt",
+   "ratio": 17.17,
+   "text": [
+    255,
+    255,
+    255
+   ],
+   "brightest": [
+    29,
+    27,
+    25
+   ]
+  },
+  {
+   "at": "look at 1791 to 1792 · Corner of the forecourt",
+   "ratio": 14.53,
+   "text": [
+    255,
+    255,
+    255
+   ],
+   "brightest": [
+    42,
+    41,
+    39
+   ]
+  },
+  {
+   "at": "line at 1792 to 1799 · Floor of the hall",
+   "ratio": 15.59,
+   "text": [
+    255,
+    255,
+    255
+   ],
+   "brightest": [
+    34,
+    36,
+    37
+   ]
+  },
+  {
+   "at": "line at 1831 to 1868 · Floor of the hall",
+   "ratio": 16.15,
+   "text": [
+    255,
+    255,
+    255
+   ],
+   "brightest": [
+    31,
+    33,
+    35
+   ]
+  },
+  {
+   "at": "line at 1868 to today · Upper hall",
+   "ratio": 19.19,
+   "text": [
+    255,
+    255,
+    255
+   ],
+   "brightest": [
+    14,
+    15,
+    16
+   ]
+  },
+  {
+   "at": "look at 1868 to today · Corner room",
+   "ratio": 18.56,
+   "text": [
+    255,
+    255,
+    255
+   ],
+   "brightest": [
+    25,
+    18,
+    8
+   ]
+  }
+ ],
+ "animations": [],
+ "counts": {
+  "line": 84,
+  "lens": 1,
+  "look": 47,
+  "choice": 30,
+  "answer": 2,
+  "know": 8,
+  "hook": 7,
+  "restore": 39,
+  "order": 8,
+  "reveal": 5,
+  "proof": 3,
+  "vote": 2
+ },
+ "endButtons": [
+  "Share",
+  "See it for real",
+  "Next site"
+ ],
+ "markerOnPanel": [],
+ "doubledStops": [],
+ "goToOpens": [
+  true,
+  true,
+  true,
+  true,
+  true,
+  true
+ ],
+ "nothingMoreHints": [
+  {
+   "count": "4 of 5",
+   "hint": "Nothing more to find here. The rest are at: End of the colonnade."
+  },
+  {
+   "count": "0 of 5",
+   "hint": "Nothing more to find here. The rest are at: Corner of the forecourt. Or open a card below."
+  },
+  {
+   "count": "4 of 5",
+   "hint": "Nothing more to find here. The rest are at: Corner of the forecourt."
+  },
+  {
+   "count": "0 of 6",
+   "hint": "Nothing more to find here. Open a card below."
+  },
+  {
+   "count": "4 of 5",
+   "hint": "Nothing more to find here. The rest are at: Upper hall."
+  }
+ ]
+}

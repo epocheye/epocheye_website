@@ -7,7 +7,7 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { currentStep, orderSlots, textFor } from "@/lib/play/story/engine";
+import { currentStep, joinSentences, orderSlots, textFor } from "@/lib/play/story/engine";
 import { directionFrom, nodeById } from "@/lib/play/pack";
 import { Icon, Pill, Switch, TierChip } from "@/components/play/ui";
 import OrderBoard from "@/components/play/OrderBoard";
@@ -33,6 +33,7 @@ export function factsOf(story, beat) {
 }
 
 const ROLE_LABELS = { question: "The question", answer: "The answer", hook: "Next" };
+
 
 // The text of a story line, never more than two lines at a time (brief 5.3).
 //
@@ -324,7 +325,7 @@ export default function StoryPanel({ slug, site, urls, chapters, state: s, lens,
 		const open = s.open ? step.beats.find((b) => b.id === s.open) : null;
 		const item = (b) => (story.evidence || []).find((e) => e.id === b.evidence);
 		if (open) {
-			announce = [item(open)?.title, lineText(open)].filter(Boolean).join(". ");
+			announce = joinSentences([item(open)?.title, lineText(open)]);
 			body = (
 				<>
 					<Line story={story} beat={open} lens={lens} label="Evidence" paging={paging} onSources={onSources}>
@@ -340,13 +341,21 @@ export default function StoryPanel({ slug, site, urls, chapters, state: s, lens,
 			const loose = step.beats.filter((b) => !placedAt(b));
 			const elsewhere = [...new Set(step.beats.filter((b) => placedAt(b) && b.at.node !== node?.id && !g.found.includes(b.id)).map((b) => b.at.node))];
 			const here = step.beats.filter((b) => placedAt(b) && b.at.node === node?.id && !g.found.includes(b.id)).length;
-			const hint =
-				found === total
-					? "You have found all of it."
-					: here > 0
-						? "Look around. Tap each marker in the view."
-						: "Nothing more to find from here. Open a card or move on.";
-			announce = `Find the evidence. ${found} of ${total}. ${hint}`;
+			// "Nothing more here" only once nothing unfound is at this viewpoint, and then where the
+			// rest are, by the viewpoints' own names (the Go to buttons below take the player there).
+			const looseLeft = loose.some((b) => !g.found.includes(b.id));
+			const names = elsewhere.map((id) => nodeById(site, id)?.name || id);
+			const at = names.length > 1 ? `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}` : names[0];
+			let hint = "Look around. Tap each marker in the view.";
+			if (found === total) hint = "You have found all of it.";
+			else if (here === 0) {
+				hint = joinSentences([
+					"Nothing more to find here.",
+					names.length ? `The rest are at: ${at}.` : null,
+					looseLeft ? (names.length ? "Or open a card below." : "Open a card below.") : null,
+				]);
+			}
+			announce = joinSentences(["Find the evidence", `${found} of ${total}`, hint]);
 			body = (
 				<>
 					<div className="play-meta">
@@ -431,7 +440,7 @@ export default function StoryPanel({ slug, site, urls, chapters, state: s, lens,
 		const placed = g.restored.includes(id);
 		const place = () => dispatch({ type: "restore", id, look: r?.target && node ? directionFrom(node, r.target) : null });
 		if (!placed) {
-			announce = [r?.name, lineText(step.beat)].filter(Boolean).join(". ");
+			announce = joinSentences([r?.name, lineText(step.beat)]);
 			body = (
 				<>
 					<div className="play-meta">
@@ -475,8 +484,8 @@ export default function StoryPanel({ slug, site, urls, chapters, state: s, lens,
 		// A gap card is never the line: once the order is solved it is read where it stands, in the list.
 		const told = (beat.cards || []).find((c) => c.id === g.placed[g.placed.length - 1]) || null;
 		const gaps = solved ? (beat.cards || []).filter((c) => c.gap) : [];
-		const heard = [told, ...gaps].filter(Boolean).map((c) => [c.label, lineText(c)].filter(Boolean).join(". "));
-		announce = told ? heard.join(". ") : lineText(beat);
+		const heard = [told, ...gaps].filter(Boolean).flatMap((c) => [c.label, lineText(c)]);
+		announce = told ? joinSentences(heard) : lineText(beat);
 		body = (
 			<>
 				{told ? (

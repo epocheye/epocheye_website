@@ -1,13 +1,23 @@
 import Link from "next/link";
 import { LOCKED_LABELS, lockedSites } from "@/lib/play/sites";
 import WeeklyVote from "@/components/play/sites/WeeklyVote";
+import PlayOff from "@/components/play/sites/PlayOff";
+import { playMeta } from "@/lib/play/meta";
+import { playFeatures } from "@/lib/play/features";
 import "@/components/play/sites/community.css";
 
-export const metadata = { title: "Vote for the next site | Epocheye Play" };
+export const metadata = playMeta({
+	title: "Vote for the next site | Epocheye Play",
+	description: "Which lost monument gets rebuilt next? Cast your vote.",
+	path: "/play/vote",
+});
 
 // /play/vote             the weekly vote: which locked site gets built next
 // /play/vote?site=<slug> the same, with that site picked (from a locked card's Vote button)
 export default async function PlayVotePage({ searchParams }) {
+	const features = playFeatures();
+	if (!features.enabled) return <PlayOff />;
+	if (!features.vote) return <PlayOff title="The weekly vote is not available right now" />;
 	const query = await searchParams;
 	const sites = lockedSites().map((s) => ({ slug: s.slug, name: s.name, place: s.place, label: LOCKED_LABELS[s.status] }));
 	const picked = typeof query.site === "string" && sites.some((s) => s.slug === query.site) ? query.site : null;

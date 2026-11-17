@@ -8,13 +8,15 @@
 import { getSite } from "@/lib/play/sites";
 import { checkCreatorCode } from "@/lib/server/play/creator";
 import { EVENT_NAMES, MAX_EVENTS, recordEvents } from "@/lib/server/play/events";
-import { fail, handler, limitAnon, limitIp, ok, readJson } from "@/lib/server/play/http";
+import { fail, featureOff, handler, limitAnon, limitIp, ok, readJson } from "@/lib/server/play/http";
 import { notTracked } from "@/lib/server/play/request";
 import { anonOf, intOf, isPlainObject, pathOf, propsOf, slugOf, sourceOf, tokenOf } from "@/lib/server/play/validate";
 
 export const runtime = "nodejs";
 
 export const POST = handler("event", async (request) => {
+	const off = featureOff("analytics");
+	if (off) return off;
 	const ipLimited = limitIp(request, "event", 60);
 	if (ipLimited) return ipLimited;
 	const { body, response } = await readJson(request, 16 * 1024);

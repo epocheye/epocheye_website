@@ -5,11 +5,12 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Icon } from "@/components/play/ui";
-
-// Kept in step with FULL_REVEAL_MS in panoCore.js, which is loaded on the client only.
-const FULL_REVEAL_MS = 3200;
+import { FULL_REVEAL_MS, PanoCore } from "./panoCore";
 
 const HOTSPOT_SHAPES = { move: "is-move", evidence: "is-evidence", restore: "is-restore" };
+// What markers must not cover: the story panel's content, while it shows (Level.jsx, StoryPanel.jsx).
+const COVER = ".play-panel:not(.is-clear) .play-panel-in";
+const COVER_BOX = ".play-panel .play-panel-in";
 const NO_HOTSPOTS = [];
 
 export default function PanoViewer({
@@ -51,11 +52,19 @@ export default function PanoViewer({
 		const place = (c) => {
 			const box = layer.current;
 			if (box) {
-				for (const btn of box.children) {
-					const raw = btn.dataset.dir;
+				// A marker never sits on the story panel's text or controls: one that would is hidden
+				// until the view turns it clear. (Every move and every piece of evidence can also be
+				// reached from the Chapters and List sheets.) All reads come before the writes.
+				const panel = document.querySelector(COVER)?.getBoundingClientRect() || null;
+				const origin = box.getBoundingClientRect();
+				const items = [...box.children].map((btn) => ({ btn, raw: btn.dataset.dir, w: btn.offsetWidth, h: btn.offsetHeight }));
+				for (const { btn, raw, w, h } of items) {
 					if (!raw) continue;
 					const p = c.project(raw.split(",").map(Number));
-					if (!p) {
+					const x = p ? origin.left + p.x : 0;
+					const y = p ? origin.top + p.y : 0;
+					const covered = !!p && !!panel && panel.height > 0 && y + h / 2 > panel.top - 6 && x + w / 2 > panel.left && x - w / 2 < panel.right;
+					if (!p || covered) {
 						btn.style.visibility = "hidden";
 						continue;
 					}
@@ -68,8 +77,9 @@ export default function PanoViewer({
 				readout.current.textContent = `yaw ${v.yaw.toFixed(0)}  pitch ${v.pitch.toFixed(0)}  fov ${v.fov.toFixed(0)}  faces ${v.size}${v.thenSize ? ` / then ${v.thenSize}` : ""}  all ${v.all.toFixed(2)}  proof ${v.proof.toFixed(2)}${v.tier ? " tier" : ""}`;
 			}
 		};
-		import("./panoCore")
-			.then(({ PanoCore }) => {
+		// A browser with no WebGL throws here; the level then plays from the lists.
+		Promise.resolve()
+			.then(() => {
 				if (cancelled || !el) return;
 				core = new PanoCore(el, {
 					site,
@@ -192,6 +202,20 @@ export default function PanoViewer({
 	useEffect(() => {
 		if (env.ready) coreRef.current?.invalidate();
 	}, [env.ready, hotspots, shownHere, debug]);
+
+	// The story panel grows and shrinks on its own (a card opens, the piece loads): place the
+	// markers again whenever it does, so none is left sitting on it.
+	const watched = useRef({ el: null, ro: null });
+	useEffect(() => {
+		const w = watched.current;
+		const el = env.ready ? document.querySelector(COVER_BOX) : null;
+		if (el === w.el) return;
+		w.ro?.disconnect();
+		w.el = el;
+		w.ro = el && typeof ResizeObserver !== "undefined" ? new ResizeObserver(() => coreRef.current?.invalidate()) : null;
+		w.ro?.observe(el);
+	});
+	useEffect(() => () => watched.current.ro?.disconnect(), []);
 
 	const nudge = (dyaw, dpitch) => coreRef.current?.nudge(dyaw, dpitch);
 	const zoom = (d) => coreRef.current?.zoomBy(d);

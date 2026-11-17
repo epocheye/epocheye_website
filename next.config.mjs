@@ -21,6 +21,8 @@ const nextConfig = {
     '/play/c/**': ['./public/play/packs/*/v*/site.json'],
     // The Play API checks every id a player sends against the pack's story.
     '/api/play/**': ['./public/play/packs/*/v*/site.json'],
+    // The level page reads site.json on the server and hands it to the page (no second request).
+    '/play/*': ['./public/play/packs/*/v*/site.json'],
   },
 
   // Performance optimizations
@@ -80,9 +82,21 @@ const nextConfig = {
           },
         ],
       },
-      // Play site packs: only the big pictures (panorama faces, masks, tier masks) are cached
-      // for good. site.json, audio and pieces are republished in place under the same version,
-      // so they keep the default and are checked with the server on every load.
+      // Play site packs: only the big pictures (panorama faces, masks, tier masks) under a
+      // versioned path are cached for good. Everything else under /play/packs (site.json, audio,
+      // pieces, evidence and option images, and any path without a version) is republished in
+      // place, so it is checked with the server on every load. This rule comes after the
+      // site-wide image rule above and before the versioned one below: for the same header the
+      // last matching rule wins (brief 5.7: no immutable header on anything unversioned).
+      {
+        source: '/play/packs/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=0, must-revalidate',
+          },
+        ],
+      },
       {
         source: '/play/packs/:slug/:version(v\\d+)/:kind(pano|mask|tier)/:path*',
         headers: [

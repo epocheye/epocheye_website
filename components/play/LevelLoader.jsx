@@ -1,6 +1,7 @@
 "use client";
 
-// Fetches a pack's site.json, compiles its story and mounts the level.
+// Fetches a pack's site.json (unless the server already handed it over), compiles its story and
+// mounts the level.
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -9,17 +10,23 @@ import { loadSite, packUrls } from "@/lib/play/pack";
 import { Pill } from "@/components/play/ui";
 import Level from "@/components/play/Level";
 
-export default function LevelLoader({ slug, version, name, chapterNumber = null, debug = false }) {
+function compiled(slug, version, site) {
+	const chapters = compileStory(site.story);
+	if (chapters.length === 0) throw new Error("This pack has no story yet.");
+	return { slug, site, chapters, urls: packUrls(slug, version), error: null };
+}
+
+// initialSite: the pack's site.json as the server read it, or null to fetch it here.
+export default function LevelLoader({ slug, version, name, chapterNumber = null, debug = false, initialSite = null }) {
 	const [loaded, setLoaded] = useState({ slug: null, site: null, chapters: null, urls: null, error: null });
 
 	useEffect(() => {
 		let cancelled = false;
-		loadSite(slug, version)
+		// The level reads this browser's save, so it is mounted after hydration either way.
+		const given = initialSite && initialSite.mode === "pano" && Array.isArray(initialSite.nodes) && initialSite.nodes.length ? initialSite : null;
+		(given ? Promise.resolve(given) : loadSite(slug, version))
 			.then((site) => {
-				if (cancelled) return;
-				const chapters = compileStory(site.story);
-				if (chapters.length === 0) throw new Error("This pack has no story yet.");
-				setLoaded({ slug, site, chapters, urls: packUrls(slug, version), error: null });
+				if (!cancelled) setLoaded(compiled(slug, version, site));
 			})
 			.catch((err) => {
 				if (!cancelled) setLoaded({ slug, site: null, chapters: null, urls: null, error: err?.message || "The level did not load." });
@@ -27,7 +34,7 @@ export default function LevelLoader({ slug, version, name, chapterNumber = null,
 		return () => {
 			cancelled = true;
 		};
-	}, [slug, version]);
+	}, [slug, version, initialSite]);
 
 	if (loaded.slug !== slug || (!loaded.site && !loaded.error)) {
 		return (

@@ -9,7 +9,7 @@
 // database, across instances: one send per player every 2 minutes, 3 a day per player and 3 a
 // day per address.
 import { rateLimit, clientIp } from "@/lib/server/rateLimit";
-import { fail, handler, limitAnon, ok, readJson } from "@/lib/server/play/http";
+import { fail, featureOff, handler, limitAnon, ok, readJson } from "@/lib/server/play/http";
 import { emailOf, emailReady, requestEmail } from "@/lib/server/play/email";
 import { arrival } from "@/lib/server/play/request";
 import { anonOf } from "@/lib/server/play/validate";
@@ -25,6 +25,8 @@ function limited(r) {
 }
 
 export const POST = handler("email", async (request) => {
+	const off = featureOff("email");
+	if (off) return off;
 	const byIp = limited(rateLimit(`play:email:ip:${clientIp(request)}`, { limit: 5, windowMs: TEN_MIN }));
 	if (byIp) return byIp;
 	const { body, response } = await readJson(request, 1024);

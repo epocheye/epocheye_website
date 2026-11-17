@@ -1,5 +1,6 @@
 import { ImageResponse } from "next/og";
 import { readCard } from "@/lib/play/card.server";
+import { playFeatures } from "@/lib/play/features";
 
 // The share image of a card. Same plain style as app/opengraph-image.js. The site name, the line
 // and both counts come from the pack's story; nothing here is written per site.
@@ -22,7 +23,8 @@ const small = { fontSize: 22, letterSpacing: 4, textTransform: "uppercase", colo
 
 export default async function CardImage({ params }) {
 	const { id } = await params;
-	const card = await readCard(id);
+	// With Play switched off (lib/play/features.js) every card gets the plain picture.
+	const card = playFeatures().enabled ? await readCard(id) : null;
 	if (!card) {
 		// A card that cannot be read still gets a picture, never an error.
 		return new ImageResponse(

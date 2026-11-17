@@ -10,7 +10,7 @@
 // A run with no accuracy, or faster than a person could play it (the story's minSeconds), is
 // recorded as completed but has no time, so it is not on the leaderboard. Any chapters, choices
 // or duration in the body are ignored. The lens and the year vote are checked against the story.
-import { fail, handler, limitAnon, limitIp, ok, readJson } from "@/lib/server/play/http";
+import { fail, featureOff, handler, limitAnon, limitIp, ok, readJson } from "@/lib/server/play/http";
 import { arrival, playerAndSite, runOf } from "@/lib/server/play/request";
 import { findRun, finishRun } from "@/lib/server/play/runs";
 import { voteBeatFor } from "@/lib/server/play/story";
@@ -20,6 +20,8 @@ import { clearYearVoteCache } from "@/lib/server/play/yearVotes";
 export const runtime = "nodejs";
 
 export const POST = handler("run-finish", async (request) => {
+	const off = featureOff();
+	if (off) return off;
 	const ipLimited = limitIp(request, "finish", 20);
 	if (ipLimited) return ipLimited;
 	const { body, response } = await readJson(request, 4096);

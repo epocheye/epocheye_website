@@ -5,13 +5,15 @@
 // GET  /api/play/card?id=<short id>  ->  { ok, card: { site, version, lens, choices, vote } }
 import { cardView, isShortCardId } from "@/lib/play/card";
 import { createCard, getCardPayload } from "@/lib/server/play/cards";
-import { fail, handler, limitAnon, limitIp, ok, readJson } from "@/lib/server/play/http";
+import { fail, featureOff, handler, limitAnon, limitIp, ok, readJson } from "@/lib/server/play/http";
 import { storyFor } from "@/lib/server/play/story";
 import { anonOf, isPlainObject, slugOf, tokenOf } from "@/lib/server/play/validate";
 
 export const runtime = "nodejs";
 
 export const POST = handler("card", async (request) => {
+	const off = featureOff();
+	if (off) return off;
 	const ipLimited = limitIp(request, "card", 20);
 	if (ipLimited) return ipLimited;
 	const { body, response } = await readJson(request, 4096);
@@ -40,6 +42,8 @@ export const POST = handler("card", async (request) => {
 });
 
 export const GET = handler("card-get", async (request) => {
+	const off = featureOff();
+	if (off) return off;
 	const ipLimited = limitIp(request, "card-get", 120);
 	if (ipLimited) return ipLimited;
 	const id = new URL(request.url).searchParams.get("id");

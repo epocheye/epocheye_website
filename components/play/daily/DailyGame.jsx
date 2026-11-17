@@ -13,6 +13,7 @@ import DailyBoard from "@/components/play/daily/DailyBoard";
 import DailyReveal from "@/components/play/daily/DailyReveal";
 import { myDaily, sendAnswers, startDaily, todaysPuzzle } from "@/components/play/daily/dailyApi";
 import { track } from "@/lib/play/api";
+import { usePlayFeatures } from "@/components/play/PlayFeatures";
 import { formatDay, formatDuration, shareText } from "@/lib/play/daily";
 
 const CHECK_TIMEOUT_MS = 4000;
@@ -103,6 +104,7 @@ function QuestionResult({ q }) {
 }
 
 export default function DailyGame({ initial }) {
+	const features = usePlayFeatures(); // the daily board follows PLAY_LEADERBOARDS
 	const [data, setData] = useState(initial);
 	// checking: asking the server whether this player has already played today
 	const [stage, setStage] = useState(initial ? "checking" : "missing");
@@ -415,9 +417,9 @@ export default function DailyGame({ initial }) {
 			</section>
 
 			<section className="play-page-section">
-				<DailyBoard board={outcome.board} max={res.max} />
+				{features.leaderboards ? <DailyBoard board={outcome.board} max={res.max} /> : null}
 				<p className="play-fine">
-					A new piece every day. <Link href="/play/leaderboards">All leaderboards</Link>
+					A new piece every day.{features.leaderboards ? <> <Link href="/play/leaderboards">All leaderboards</Link></> : null}
 				</p>
 			</section>
 		</>

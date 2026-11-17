@@ -1,7 +1,7 @@
 // POST /api/play/email/status  { anon }  ->  { ok, email: "none"|"pending"|"confirmed", unsubscribed, early: [slug] }
 // Where this player's email stands, and the sites open to them early (a confirmed email and a site
 // that opens within a week, lib/play/sites.js earlySite). Creates nothing.
-import { fail, handler, limitAnon, limitIp, ok, readJson } from "@/lib/server/play/http";
+import { fail, featureOff, handler, limitAnon, limitIp, ok, readJson } from "@/lib/server/play/http";
 import { earlySlugsFor, emailStateOf } from "@/lib/server/play/email";
 import { findPlayer } from "@/lib/server/play/players";
 import { anonOf } from "@/lib/server/play/validate";
@@ -9,6 +9,8 @@ import { anonOf } from "@/lib/server/play/validate";
 export const runtime = "nodejs";
 
 export const POST = handler("email-status", async (request) => {
+	const off = featureOff("email");
+	if (off) return off;
 	const ipLimited = limitIp(request, "email-status", 60);
 	if (ipLimited) return ipLimited;
 	const { body, response } = await readJson(request, 512);

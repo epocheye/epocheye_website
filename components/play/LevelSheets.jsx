@@ -202,11 +202,10 @@ export function EvidenceSheet({ site, chapters, state, dispatch, onClose }) {
 								type="button"
 								className="play-list-row"
 								onClick={() => {
+									// One tap: move there if it is elsewhere, turn to it, and open its card.
 									if (away) dispatch({ type: "go", node: at.node, target: at.target });
-									else {
-										if (at) dispatch({ type: "aim", target: at.target });
-										dispatch({ type: "find", id: b.id });
-									}
+									else if (at) dispatch({ type: "aim", target: at.target });
+									dispatch({ type: "find", id: b.id });
 									onClose();
 								}}
 							>

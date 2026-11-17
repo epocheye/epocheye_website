@@ -4,7 +4,7 @@
 // how many play, and the asking player is marked only within the top rows. No totals.
 // site rows carry accuracy (0 to 1) and durationS; streak rows carry days.
 // The daily board is the daily feature's (/play/daily).
-import { fail, handler, limitIp, ok, readJson } from "@/lib/server/play/http";
+import { fail, featureOff, handler, limitIp, ok, readJson } from "@/lib/server/play/http";
 import { siteLeaders, streakLeaders } from "@/lib/server/play/leaderboard";
 import { findPlayer } from "@/lib/server/play/players";
 import { anonOf, slugOf } from "@/lib/server/play/validate";
@@ -13,6 +13,8 @@ import { getPlayableSite } from "@/lib/play/sites";
 export const runtime = "nodejs";
 
 export const POST = handler("leaderboard", async (request) => {
+	const off = featureOff("leaderboards");
+	if (off) return off;
 	const ipLimited = limitIp(request, "leaderboard", 30);
 	if (ipLimited) return ipLimited;
 	const { body, response } = await readJson(request, 512);

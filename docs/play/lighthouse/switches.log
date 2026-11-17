@@ -1,0 +1,83 @@
+
+PLAY_ENABLED=off
+  PASS  /play: Coming soon, no game
+  PASS  /play/tipu-summer-palace-bengaluru: Coming soon, no game
+  PASS  /play/daily: Coming soon, no game
+  PASS  /play/vote: Coming soon, no game
+  PASS  /play/leaderboards: Coming soon, no game
+  PASS  /play/c/4wTzdGG4y: Coming soon, no game
+  PASS  /play/unlock: Coming soon, no game
+  PASS  /play/privacy still answers
+  PASS  /play/unlock/stop still answers
+  PASS  POST /api/play/player answers 404 (got 404)
+  PASS  POST /api/play/card answers 404 (got 404)
+  PASS  POST /api/play/run/progress answers 404 (got 404)
+  PASS  POST /api/play/run/finish answers 404 (got 404)
+  PASS  POST /api/play/year-vote answers 404 (got 404)
+  PASS  GET /api/play/year-vote?site=tipu-summer-palace-bengaluru answers 404 (got 404)
+  PASS  GET /api/play/daily answers 404 (got 404)
+  PASS  POST /api/play/daily/me answers 404 (got 404)
+  PASS  POST /api/play/daily/start answers 404 (got 404)
+  PASS  GET /api/play/vote answers 404 (got 404)
+  PASS  POST /api/play/vote answers 404 (got 404)
+  PASS  POST /api/play/vote/me answers 404 (got 404)
+  PASS  POST /api/play/leaderboard answers 404 (got 404)
+  PASS  POST /api/play/email answers 404 (got 404)
+  PASS  POST /api/play/email/status answers 404 (got 404)
+  PASS  POST /api/play/email/confirm answers 404 (got 404)
+  PASS  POST /api/play/email/restore answers 404 (got 404)
+  PASS  POST /api/play/event answers 404 (got 404)
+  PASS  unsubscribe API still answers (503)
+  PASS  /play in Chrome: no errors, no API calls ()
+  PASS  no links into the game
+
+PLAY_DAILY=off
+  PASS  /play/daily: not available page
+  PASS  GET /api/play/daily answers 404 (got 404)
+  PASS  POST /api/play/daily/me answers 404 (got 404)
+  PASS  POST /api/play/daily/start answers 404 (got 404)
+  PASS  /play has no daily link
+  PASS  /play/leaderboards has no daily link and no streak board
+
+PLAY_VOTE=off
+  PASS  /play/vote: not available page
+  PASS  GET /api/play/vote answers 404 (got 404)
+  PASS  POST /api/play/vote answers 404 (got 404)
+  PASS  POST /api/play/vote/me answers 404 (got 404)
+  PASS  /play has no vote links (header or locked cards)
+  PASS  /play in Chrome: no errors ()
+
+PLAY_LEADERBOARDS=off
+  PASS  /play/leaderboards: not available page
+  PASS  POST /api/play/leaderboard answers 404 (got 404)
+  PASS  /play has no leaderboards link
+  PASS  the daily API sends no board
+  PASS  /play/daily in Chrome: no board link, no errors ()
+
+PLAY_EMAIL=off
+  PASS  /play/unlock: not available page
+  PASS  /play/unlock/stop still answers
+  PASS  POST /api/play/email answers 404 (got 404)
+  PASS  POST /api/play/email/status answers 404 (got 404)
+  PASS  POST /api/play/email/confirm answers 404 (got 404)
+  PASS  POST /api/play/email/restore answers 404 (got 404)
+  PASS  GET /api/play/vote answers 404 (got 404)
+  PASS  POST /api/play/vote answers 404 (got 404)
+  PASS  POST /api/play/vote/me answers 404 (got 404)
+  PASS  /play: no email offer and no email call ()
+  PASS  /play: no vote links (the vote needs email)
+  PASS  /play in Chrome: no errors ()
+
+PLAY_NARRATION=off
+  PASS  level: no Sound button
+  PASS  level: no audio fetched
+  PASS  level in Chrome: no errors ()
+
+PLAY_ANALYTICS=off
+  PASS  POST /api/play/event answers 404 (got 404)
+  PASS  no analytics event sent (/api/play/run/progress, /api/play/player, /api/play/email/status)
+  PASS  game records still kept (run progress)
+  PASS  no errors ()
+
+test player test-q5-79819b66cfd0cb4a
+all checks passed

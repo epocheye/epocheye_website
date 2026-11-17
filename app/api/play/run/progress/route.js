@@ -5,7 +5,7 @@
 // choice beat and its option, must be in the pack's story. Repeating a call changes nothing: the
 // run is keyed by its start time, a finished chapter is recorded once, and a beat keeps its first
 // pick. These records, not the finish call, are what the leaderboard ranks.
-import { fail, handler, limitAnon, limitIp, ok, readJson } from "@/lib/server/play/http";
+import { fail, featureOff, handler, limitAnon, limitIp, ok, readJson } from "@/lib/server/play/http";
 import { arrival, playerAndSite, runOf } from "@/lib/server/play/request";
 import { recordProgress } from "@/lib/server/play/runs";
 import { tokenOf } from "@/lib/server/play/validate";
@@ -15,6 +15,8 @@ export const runtime = "nodejs";
 const KINDS = new Set(["start", "finish", "pick"]);
 
 export const POST = handler("run-progress", async (request) => {
+	const off = featureOff();
+	if (off) return off;
 	const ipLimited = limitIp(request, "progress", 120);
 	if (ipLimited) return ipLimited;
 	const { body, response } = await readJson(request, 2048);

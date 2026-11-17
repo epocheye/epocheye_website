@@ -1,0 +1,617 @@
+{
+ "url": "http://localhost:3105/play/tipu-summer-palace-bengaluru",
+ "profile": "good4g",
+ "network": {
+  "offline": false,
+  "latency": 60,
+  "downloadThroughput": 1179648,
+  "uploadThroughput": 196608
+ },
+ "cpuSlowdown": 4,
+ "viewport": {
+  "width": 412,
+  "height": 823,
+  "deviceScaleFactor": 1.75,
+  "isMobile": true,
+  "hasTouch": true
+ },
+ "runs": 3,
+ "firstViewMedianMs": 3248,
+ "bytesBeforeMedian": 920446,
+ "results": [
+  {
+   "run": 1,
+   "anon": "test-q5-f970f2038fbe790a",
+   "firstViewMs": 3331,
+   "panoMs": 3331,
+   "lineMs": 2232,
+   "fcpMs": 652,
+   "bytesBefore": 920446,
+   "requestsBefore": 37,
+   "list": [
+    {
+     "name": "/play/tipu-summer-palace-bengaluru",
+     "bytes": 24483,
+     "end": 97.5
+    },
+    {
+     "name": "/_next/static/media/47185047d9bf99cc-s.p.14898fg2_eo7j.woff2",
+     "bytes": 16120,
+     "end": 240
+    },
+    {
+     "name": "/_next/static/media/9c25569e5bfeaac2-s.p.0jt81_0uq1n.f.woff2",
+     "bytes": 16104,
+     "end": 265
+    },
+    {
+     "name": "/_next/static/media/a3b21dc8e8180cb3-s.p.0w942~e22v-7-.woff2",
+     "bytes": 16172,
+     "end": 264
+    },
+    {
+     "name": "/_next/static/media/a6fa2da6a1aa1b4a-s.p.15wrk82pv0juo.woff2",
+     "bytes": 16000,
+     "end": 267
+    },
+    {
+     "name": "/_next/static/media/b66541dc5358997a-s.p.18d7sdg2qe8pf.woff2",
+     "bytes": 16088,
+     "end": 268
+    },
+    {
+     "name": "/_next/static/media/caa3a2e1cccd8315-s.p.09~u27dqhyhd6.woff2",
+     "bytes": 29588,
+     "end": 286
+    },
+    {
+     "name": "/_next/static/media/e41d5df559864f9e-s.p.0gq7fw9.sy_5..woff2",
+     "bytes": 15340,
+     "end": 391
+    },
+    {
+     "name": "/_next/static/media/f06bf9da926bae75-s.p.0pz0x0eczp58u.woff2",
+     "bytes": 30204,
+     "end": 426
+    },
+    {
+     "name": "/_next/static/chunks/0.37f3lk63fql.css",
+     "bytes": 2393,
+     "end": 304
+    },
+    {
+     "name": "/_next/static/chunks/0wmvg888g155s.css",
+     "bytes": 24325,
+     "end": 418
+    },
+    {
+     "name": "/_next/static/chunks/12ek95.utnlwv.css",
+     "bytes": 6758,
+     "end": 367
+    },
+    {
+     "name": "/_next/static/chunks/02dfb1mx8~7rb.css",
+     "bytes": 1792,
+     "end": 347
+    },
+    {
+     "name": "/_next/static/chunks/0dv8xd0_dai4m.js",
+     "bytes": 2562,
+     "end": 384
+    },
+    {
+     "name": "/_next/static/chunks/0a~o7212lg.n1.js",
+     "bytes": 10390,
+     "end": 442
+    },
+    {
+     "name": "/_next/static/chunks/0japrmd30fy5n.js",
+     "bytes": 72765,
+     "end": 574
+    },
+    {
+     "name": "/_next/static/chunks/06pk.ea8nytpq.js",
+     "bytes": 37321,
+     "end": 552
+    },
+    {
+     "name": "/_next/static/chunks/0~74w51l_bjmf.js",
+     "bytes": 7573,
+     "end": 491
+    },
+    {
+     "name": "/_next/static/chunks/turbopack-0pzxaklb7rg6d.js",
+     "bytes": 4463,
+     "end": 507
+    },
+    {
+     "name": "/_next/static/chunks/0x.73w57rn4ou.js",
+     "bytes": 1756,
+     "end": 508
+    },
+    {
+     "name": "/_next/static/chunks/0i.l9589uvx0j.js",
+     "bytes": 13238,
+     "end": 550
+    },
+    {
+     "name": "/_next/static/chunks/0e.gg85i83lug.js",
+     "bytes": 3184,
+     "end": 559
+    },
+    {
+     "name": "/_next/static/chunks/0bsp93-f31q~4.js",
+     "bytes": 12917,
+     "end": 601
+    },
+    {
+     "name": "/_next/static/chunks/07ats6xdf0z3y.js",
+     "bytes": 169001,
+     "end": 1089
+    },
+    {
+     "name": "/_next/static/chunks/07pxhewj1rh.f.js",
+     "bytes": 1639,
+     "end": 631
+    },
+    {
+     "name": "/_next/static/chunks/0_b7xjy8.5wz5.js",
+     "bytes": 5580,
+     "end": 634
+    },
+    {
+     "name": "/_next/static/chunks/05e-b6xqg2bqm.js",
+     "bytes": 1574,
+     "end": 636
+    },
+    {
+     "name": "/_next/static/chunks/17o2z17~fa2c0.js",
+     "bytes": 21309,
+     "end": 689
+    },
+    {
+     "name": "/_next/static/chunks/0cg5fw01z.f.8.js",
+     "bytes": 36832,
+     "end": 813
+    },
+    {
+     "name": "/play/packs/tipu-summer-palace-bengaluru/v1/pano/forecourt/now/512/px.webp",
+     "bytes": 43720,
+     "end": 894
+    },
+    {
+     "name": "/play/packs/tipu-summer-palace-bengaluru/v1/pano/forecourt/now/512/nx.webp",
+     "bytes": 54308,
+     "end": 943
+    },
+    {
+     "name": "/play/packs/tipu-summer-palace-bengaluru/v1/pano/forecourt/now/512/py.webp",
+     "bytes": 10322,
+     "end": 755
+    },
+    {
+     "name": "/play/packs/tipu-summer-palace-bengaluru/v1/pano/forecourt/now/512/ny.webp",
+     "bytes": 77076,
+     "end": 1072
+    },
+    {
+     "name": "/play/packs/tipu-summer-palace-bengaluru/v1/pano/forecourt/now/512/pz.webp",
+     "bytes": 63106,
+     "end": 1075
+    },
+    {
+     "name": "/play/packs/tipu-summer-palace-bengaluru/v1/pano/forecourt/now/512/nz.webp",
+     "bytes": 38408,
+     "end": 1039
+    },
+    {
+     "name": "/favicon.ico?favicon.10ozsqcl6cxdp.ico",
+     "bytes": 15706,
+     "end": 1691
+    },
+    {
+     "name": "/api/play/run/progress",
+     "bytes": 329,
+     "end": 3063
+    }
+   ],
+   "errors": []
+  },
+  {
+   "run": 2,
+   "anon": "test-q5-d6f53733d268e37a",
+   "firstViewMs": 3227,
+   "panoMs": 3227,
+   "lineMs": 2111,
+   "fcpMs": 580,
+   "bytesBefore": 920446,
+   "requestsBefore": 37,
+   "list": [
+    {
+     "name": "/play/tipu-summer-palace-bengaluru",
+     "bytes": 24483,
+     "end": 91
+    },
+    {
+     "name": "/_next/static/media/47185047d9bf99cc-s.p.14898fg2_eo7j.woff2",
+     "bytes": 16120,
+     "end": 263
+    },
+    {
+     "name": "/_next/static/media/9c25569e5bfeaac2-s.p.0jt81_0uq1n.f.woff2",
+     "bytes": 16104,
+     "end": 261
+    },
+    {
+     "name": "/_next/static/media/a3b21dc8e8180cb3-s.p.0w942~e22v-7-.woff2",
+     "bytes": 16172,
+     "end": 260
+    },
+    {
+     "name": "/_next/static/media/a6fa2da6a1aa1b4a-s.p.15wrk82pv0juo.woff2",
+     "bytes": 16000,
+     "end": 263
+    },
+    {
+     "name": "/_next/static/media/b66541dc5358997a-s.p.18d7sdg2qe8pf.woff2",
+     "bytes": 16088,
+     "end": 265
+    },
+    {
+     "name": "/_next/static/media/caa3a2e1cccd8315-s.p.09~u27dqhyhd6.woff2",
+     "bytes": 29588,
+     "end": 290
+    },
+    {
+     "name": "/_next/static/media/e41d5df559864f9e-s.p.0gq7fw9.sy_5..woff2",
+     "bytes": 15340,
+     "end": 373
+    },
+    {
+     "name": "/_next/static/media/f06bf9da926bae75-s.p.0pz0x0eczp58u.woff2",
+     "bytes": 30204,
+     "end": 413
+    },
+    {
+     "name": "/_next/static/chunks/0.37f3lk63fql.css",
+     "bytes": 2393,
+     "end": 340
+    },
+    {
+     "name": "/_next/static/chunks/0wmvg888g155s.css",
+     "bytes": 24325,
+     "end": 383
+    },
+    {
+     "name": "/_next/static/chunks/12ek95.utnlwv.css",
+     "bytes": 6758,
+     "end": 346
+    },
+    {
+     "name": "/_next/static/chunks/02dfb1mx8~7rb.css",
+     "bytes": 1792,
+     "end": 337
+    },
+    {
+     "name": "/_next/static/chunks/0dv8xd0_dai4m.js",
+     "bytes": 2562,
+     "end": 417
+    },
+    {
+     "name": "/_next/static/chunks/0a~o7212lg.n1.js",
+     "bytes": 10390,
+     "end": 446
+    },
+    {
+     "name": "/_next/static/chunks/0japrmd30fy5n.js",
+     "bytes": 72765,
+     "end": 586
+    },
+    {
+     "name": "/_next/static/chunks/06pk.ea8nytpq.js",
+     "bytes": 37321,
+     "end": 526
+    },
+    {
+     "name": "/_next/static/chunks/0~74w51l_bjmf.js",
+     "bytes": 7573,
+     "end": 477
+    },
+    {
+     "name": "/_next/static/chunks/turbopack-0pzxaklb7rg6d.js",
+     "bytes": 4463,
+     "end": 492
+    },
+    {
+     "name": "/_next/static/chunks/0x.73w57rn4ou.js",
+     "bytes": 1756,
+     "end": 494
+    },
+    {
+     "name": "/_next/static/chunks/0i.l9589uvx0j.js",
+     "bytes": 13238,
+     "end": 555
+    },
+    {
+     "name": "/_next/static/chunks/0e.gg85i83lug.js",
+     "bytes": 3184,
+     "end": 558
+    },
+    {
+     "name": "/_next/static/chunks/0bsp93-f31q~4.js",
+     "bytes": 12917,
+     "end": 591
+    },
+    {
+     "name": "/_next/static/chunks/07ats6xdf0z3y.js",
+     "bytes": 169001,
+     "end": 1007
+    },
+    {
+     "name": "/_next/static/chunks/07pxhewj1rh.f.js",
+     "bytes": 1639,
+     "end": 598
+    },
+    {
+     "name": "/_next/static/chunks/0_b7xjy8.5wz5.js",
+     "bytes": 5580,
+     "end": 635
+    },
+    {
+     "name": "/_next/static/chunks/05e-b6xqg2bqm.js",
+     "bytes": 1574,
+     "end": 633
+    },
+    {
+     "name": "/_next/static/chunks/17o2z17~fa2c0.js",
+     "bytes": 21309,
+     "end": 757
+    },
+    {
+     "name": "/_next/static/chunks/0cg5fw01z.f.8.js",
+     "bytes": 36832,
+     "end": 819
+    },
+    {
+     "name": "/play/packs/tipu-summer-palace-bengaluru/v1/pano/forecourt/now/512/px.webp",
+     "bytes": 43720,
+     "end": 850
+    },
+    {
+     "name": "/play/packs/tipu-summer-palace-bengaluru/v1/pano/forecourt/now/512/nx.webp",
+     "bytes": 54308,
+     "end": 929
+    },
+    {
+     "name": "/play/packs/tipu-summer-palace-bengaluru/v1/pano/forecourt/now/512/py.webp",
+     "bytes": 10322,
+     "end": 757
+    },
+    {
+     "name": "/play/packs/tipu-summer-palace-bengaluru/v1/pano/forecourt/now/512/ny.webp",
+     "bytes": 77076,
+     "end": 1068
+    },
+    {
+     "name": "/play/packs/tipu-summer-palace-bengaluru/v1/pano/forecourt/now/512/pz.webp",
+     "bytes": 63106,
+     "end": 1053
+    },
+    {
+     "name": "/play/packs/tipu-summer-palace-bengaluru/v1/pano/forecourt/now/512/nz.webp",
+     "bytes": 38408,
+     "end": 1038
+    },
+    {
+     "name": "/favicon.ico?favicon.10ozsqcl6cxdp.ico",
+     "bytes": 15706,
+     "end": 1583
+    },
+    {
+     "name": "/api/play/run/progress",
+     "bytes": 329,
+     "end": 2807
+    }
+   ],
+   "errors": []
+  },
+  {
+   "run": 3,
+   "anon": "test-q5-66d5c6faa2fca793",
+   "firstViewMs": 3248,
+   "panoMs": 3248,
+   "lineMs": 2115,
+   "fcpMs": 652,
+   "bytesBefore": 920446,
+   "requestsBefore": 37,
+   "list": [
+    {
+     "name": "/play/tipu-summer-palace-bengaluru",
+     "bytes": 24483,
+     "end": 91.5
+    },
+    {
+     "name": "/_next/static/media/47185047d9bf99cc-s.p.14898fg2_eo7j.woff2",
+     "bytes": 16120,
+     "end": 266
+    },
+    {
+     "name": "/_next/static/media/9c25569e5bfeaac2-s.p.0jt81_0uq1n.f.woff2",
+     "bytes": 16104,
+     "end": 300
+    },
+    {
+     "name": "/_next/static/media/a3b21dc8e8180cb3-s.p.0w942~e22v-7-.woff2",
+     "bytes": 16172,
+     "end": 303
+    },
+    {
+     "name": "/_next/static/media/a6fa2da6a1aa1b4a-s.p.15wrk82pv0juo.woff2",
+     "bytes": 16000,
+     "end": 302
+    },
+    {
+     "name": "/_next/static/media/b66541dc5358997a-s.p.18d7sdg2qe8pf.woff2",
+     "bytes": 16088,
+     "end": 305
+    },
+    {
+     "name": "/_next/static/media/caa3a2e1cccd8315-s.p.09~u27dqhyhd6.woff2",
+     "bytes": 29588,
+     "end": 326
+    },
+    {
+     "name": "/_next/static/media/e41d5df559864f9e-s.p.0gq7fw9.sy_5..woff2",
+     "bytes": 15340,
+     "end": 435
+    },
+    {
+     "name": "/_next/static/media/f06bf9da926bae75-s.p.0pz0x0eczp58u.woff2",
+     "bytes": 30204,
+     "end": 461
+    },
+    {
+     "name": "/_next/static/chunks/0.37f3lk63fql.css",
+     "bytes": 2393,
+     "end": 342
+    },
+    {
+     "name": "/_next/static/chunks/0wmvg888g155s.css",
+     "bytes": 24325,
+     "end": 448
+    },
+    {
+     "name": "/_next/static/chunks/12ek95.utnlwv.css",
+     "bytes": 6758,
+     "end": 403
+    },
+    {
+     "name": "/_next/static/chunks/02dfb1mx8~7rb.css",
+     "bytes": 1792,
+     "end": 393
+    },
+    {
+     "name": "/_next/static/chunks/0dv8xd0_dai4m.js",
+     "bytes": 2562,
+     "end": 435
+    },
+    {
+     "name": "/_next/static/chunks/0a~o7212lg.n1.js",
+     "bytes": 10390,
+     "end": 482
+    },
+    {
+     "name": "/_next/static/chunks/0japrmd30fy5n.js",
+     "bytes": 72765,
+     "end": 638
+    },
+    {
+     "name": "/_next/static/chunks/06pk.ea8nytpq.js",
+     "bytes": 37321,
+     "end": 593
+    },
+    {
+     "name": "/_next/static/chunks/0~74w51l_bjmf.js",
+     "bytes": 7573,
+     "end": 528
+    },
+    {
+     "name": "/_next/static/chunks/turbopack-0pzxaklb7rg6d.js",
+     "bytes": 4463,
+     "end": 530
+    },
+    {
+     "name": "/_next/static/chunks/0x.73w57rn4ou.js",
+     "bytes": 1756,
+     "end": 535
+    },
+    {
+     "name": "/_next/static/chunks/0i.l9589uvx0j.js",
+     "bytes": 13238,
+     "end": 597
+    },
+    {
+     "name": "/_next/static/chunks/0e.gg85i83lug.js",
+     "bytes": 3184,
+     "end": 607
+    },
+    {
+     "name": "/_next/static/chunks/0bsp93-f31q~4.js",
+     "bytes": 12917,
+     "end": 642
+    },
+    {
+     "name": "/_next/static/chunks/07ats6xdf0z3y.js",
+     "bytes": 169001,
+     "end": 1092
+    },
+    {
+     "name": "/_next/static/chunks/07pxhewj1rh.f.js",
+     "bytes": 1639,
+     "end": 686
+    },
+    {
+     "name": "/_next/static/chunks/0_b7xjy8.5wz5.js",
+     "bytes": 5580,
+     "end": 688
+    },
+    {
+     "name": "/_next/static/chunks/05e-b6xqg2bqm.js",
+     "bytes": 1574,
+     "end": 685
+    },
+    {
+     "name": "/_next/static/chunks/17o2z17~fa2c0.js",
+     "bytes": 21309,
+     "end": 764
+    },
+    {
+     "name": "/_next/static/chunks/0cg5fw01z.f.8.js",
+     "bytes": 36832,
+     "end": 856
+    },
+    {
+     "name": "/play/packs/tipu-summer-palace-bengaluru/v1/pano/forecourt/now/512/px.webp",
+     "bytes": 43720,
+     "end": 964
+    },
+    {
+     "name": "/play/packs/tipu-summer-palace-bengaluru/v1/pano/forecourt/now/512/nx.webp",
+     "bytes": 54308,
+     "end": 1011
+    },
+    {
+     "name": "/play/packs/tipu-summer-palace-bengaluru/v1/pano/forecourt/now/512/py.webp",
+     "bytes": 10322,
+     "end": 840
+    },
+    {
+     "name": "/play/packs/tipu-summer-palace-bengaluru/v1/pano/forecourt/now/512/ny.webp",
+     "bytes": 77076,
+     "end": 1124
+    },
+    {
+     "name": "/play/packs/tipu-summer-palace-bengaluru/v1/pano/forecourt/now/512/pz.webp",
+     "bytes": 63106,
+     "end": 1121
+    },
+    {
+     "name": "/play/packs/tipu-summer-palace-bengaluru/v1/pano/forecourt/now/512/nz.webp",
+     "bytes": 38408,
+     "end": 1089
+    },
+    {
+     "name": "/favicon.ico?favicon.10ozsqcl6cxdp.ico",
+     "bytes": 15706,
+     "end": 1542
+    },
+    {
+     "name": "/api/play/run/progress",
+     "bytes": 329,
+     "end": 2747
+    }
+   ],
+   "errors": []
+  }
+ ]
+}

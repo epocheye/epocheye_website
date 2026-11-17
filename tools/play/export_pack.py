@@ -351,6 +351,8 @@ def cmd_assemble(site, a):
         if v.returncode != 0:
             sys.exit("story.json failed validation; pack not assembled.")
         story = json.loads(story_path.read_text(encoding="utf-8"))
+        for f in story.get("facts", []):
+            f.pop("source_internal", None)   # internal working notes stay in the repo, not in the public pack
     evidence = write_evidence(site, pack)
     # A restoration is listed for exactly the viewpoints that carry its mask. A viewpoint named in the
     # config whose mask came out empty cannot see it; say so, so the config can be put right.

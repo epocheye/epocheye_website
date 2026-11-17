@@ -2,7 +2,7 @@
 //   The player has seen the day's first clue. The server notes the time, and the board's time is
 //   measured from it (lib/server/play/daily.js recordDaily). The first start of the day stands;
 //   calling it again changes nothing. Answers are never sent here or back.
-import { fail, handler, limitAnon, limitIp, ok, readJson } from "@/lib/server/play/http";
+import { fail, featureOff, handler, limitAnon, limitIp, ok, readJson } from "@/lib/server/play/http";
 import { arrival } from "@/lib/server/play/request";
 import { answerableDays, puzzleOn, startDaily } from "@/lib/server/play/daily";
 import { anonOf } from "@/lib/server/play/validate";
@@ -12,6 +12,8 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export const POST = handler("daily-start", async (request) => {
+	const off = featureOff("daily");
+	if (off) return off;
 	const ipLimited = limitIp(request, "daily-start", 20);
 	if (ipLimited) return ipLimited;
 	const { body, response } = await readJson(request, 1024);

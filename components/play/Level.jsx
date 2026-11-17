@@ -4,7 +4,6 @@
 // narration timing, and the layout: panorama behind, story panel at the bottom.
 // No site-specific code: everything shown comes from site.json.
 
-import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useEffect, useEffectEvent, useReducer, useRef, useState } from "react";
 import {
@@ -16,12 +15,16 @@ import { ensurePlayer, reportGame, setQuiet } from "@/lib/play/api";
 import { captureArrival } from "@/lib/play/player";
 import { directionFrom, nodeById } from "@/lib/play/pack";
 import { Icon, Pill, Switch } from "@/components/play/ui";
+import { usePlayFeatures } from "@/components/play/PlayFeatures";
 import StoryPanel from "@/components/play/StoryPanel";
 import EndScreen, { endView } from "@/components/play/EndScreen";
 import { voteOptionsOf } from "@/components/play/YearVoteShares";
 import { ChaptersSheet, CreditsSheet, DebugSheet, EvidenceSheet, NoteSheet, SourcesSheet } from "@/components/play/LevelSheets";
+import PanoViewer from "@/components/play/engine/PanoViewer";
 
-const PanoViewer = dynamic(() => import("./engine/PanoViewer"), { ssr: false });
+// The panorama engine is part of the level's first scripts, not loaded on demand: the first view
+// cannot happen without it, and fetching it after the page had started cost about a second on a
+// slow phone (docs/play/QUALITY.md). The piece canvas stays on demand (StoryPanel.jsx).
 
 // After the full reveal has settled the voice stays silent this long, then the next beat plays
 // (brief 8.11). A reveal beat may set its own pause_after_ms.
@@ -329,6 +332,9 @@ export default function Level({ slug, version, site, chapters, urls, startChapte
 	const [readyKey, setReadyKey] = useState("");
 	const [seg, setSeg] = useState({ key: "", i: 0 }); // which segment of the current telling has started
 	const [sheet, setSheet] = useState(null); // null | "chapters" | "credits" | "note" | "evidence" | "debug" | { beat }
+	// PLAY_NARRATION off (lib/play/features.js): no Sound button, so sound is never on and no clip
+	// is fetched. The directed pauses still run on reading time.
+	const { narration } = usePlayFeatures();
 
 	const story = site.story;
 	const g = s.game;
@@ -567,14 +573,16 @@ export default function Level({ slug, version, site, chapters, urls, startChapte
 
 			<header className="play-top">
 				<div className="play-top-row">
-					<Link href="/play" className="play-back" aria-label="Back to all sites">
+					<Link href="/play" className="play-back" aria-label="Back to all sites" prefetch={false}>
 						<Icon name="left" size={16} />
 						<span>Sites</span>
 					</Link>
 					<div className="play-top-actions">
-						<Pill small aria-pressed={soundOn} onClick={toggleSound} aria-label={soundOn ? "Sound is on. Turn sound off" : "Sound is off. Turn sound on"}>
-							{soundOn ? "Sound on" : "Sound off"}
-						</Pill>
+						{narration ? (
+							<Pill small aria-pressed={soundOn} onClick={toggleSound} aria-label={soundOn ? "Sound is on. Turn sound off" : "Sound is off. Turn sound on"}>
+								{soundOn ? "Sound on" : "Sound off"}
+							</Pill>
+						) : null}
 						<Pill small onClick={() => setSheet("chapters")}>
 							Chapters
 						</Pill>

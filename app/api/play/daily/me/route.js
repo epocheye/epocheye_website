@@ -3,15 +3,18 @@
 // The player's own counted result for the day (today when day is left out, or a day still open
 // for answers), their streak and the day's board (lib/server/play/daily.js dailyBoard), display
 // names only. Never creates a player: someone who has not played gets played: false and the board.
-import { fail, handler, limitIp, ok, readJson } from "@/lib/server/play/http";
+import { fail, featureOff, handler, limitIp, ok, readJson } from "@/lib/server/play/http";
 import { answerableDays, dailyBoard, dailyFor, puzzleOn, resultOf, streakFor, today, unrankedReason } from "@/lib/server/play/daily";
 import { findPlayer } from "@/lib/server/play/players";
 import { anonOf } from "@/lib/server/play/validate";
+import { featureOn } from "@/lib/play/features";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export const POST = handler("daily-me", async (request) => {
+	const off = featureOff("daily");
+	if (off) return off;
 	const limited = limitIp(request, "daily-me", 40);
 	if (limited) return limited;
 	const { body, response } = await readJson(request, 512);
@@ -26,7 +29,8 @@ export const POST = handler("daily-me", async (request) => {
 	const [row, streak, board] = await Promise.all([
 		playerId ? dailyFor(playerId, day) : null,
 		playerId ? streakFor(playerId, day) : 0,
-		dailyBoard(day, playerId),
+		// With the leaderboards switched off there is no board to send.
+		featureOn("leaderboards") ? dailyBoard(day, playerId) : null,
 	]);
 	let result = null;
 	if (row?.result?.answers) {

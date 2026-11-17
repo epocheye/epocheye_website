@@ -8,16 +8,19 @@
 //   the counted one and attempt the one just sent. The time is the server's, from the start it
 //   recorded (POST /api/play/daily/start) to now; any time the browser sends is ignored.
 //   unranked says why the counted result is not on the board: "new", "time" or null.
-import { fail, handler, limitAnon, limitIp, ok, readJson } from "@/lib/server/play/http";
+import { fail, featureOff, handler, limitAnon, limitIp, ok, readJson } from "@/lib/server/play/http";
 import { arrival } from "@/lib/server/play/request";
 import { answerableDays, dailyBoard, dailyFor, publicDaily, puzzleOn, recordDaily, resultOf, streakFor, unrankedReason } from "@/lib/server/play/daily";
 import { anonOf, isPlainObject, tokenOf } from "@/lib/server/play/validate";
 import { answersComplete, DAY_RE } from "@/lib/play/daily";
+import { featureOn } from "@/lib/play/features";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export const GET = handler("daily", async (request) => {
+	const off = featureOff("daily");
+	if (off) return off;
 	const limited = limitIp(request, "daily-get", 60);
 	if (limited) return limited;
 	const daily = publicDaily();
@@ -41,6 +44,8 @@ function answersOf(value) {
 }
 
 export const POST = handler("daily", async (request) => {
+	const off = featureOff("daily");
+	if (off) return off;
 	const ipLimited = limitIp(request, "daily-post", 20);
 	if (ipLimited) return ipLimited;
 	const { body, response } = await readJson(request, 2048);
@@ -77,7 +82,8 @@ export const POST = handler("daily", async (request) => {
 		const firstAnswers = first?.result?.answers;
 		if (first && first.puzzle_id === found.puzzle.id && firstAnswers) result = resultOf(found.file, found.puzzle, firstAnswers);
 	}
-	const [streak, board] = await Promise.all([streakFor(playerId, day), dailyBoard(day, playerId)]);
+	// With the leaderboards switched off there is no board to send.
+	const [streak, board] = await Promise.all([streakFor(playerId, day), featureOn("leaderboards") ? dailyBoard(day, playerId) : null]);
 	return ok({
 		counted: stored, day, result, attempt: stored ? undefined : attempt,
 		durationMs: first?.duration_ms ?? null, unranked: unrankedReason(first), streak, board,

@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { readCard } from "@/lib/play/card.server";
 import KnowCard from "@/components/play/KnowCard";
+import PlayOff from "@/components/play/sites/PlayOff";
+import { PLAY_LINE, playMeta } from "@/lib/play/meta";
+import { playFeatures } from "@/lib/play/features";
 
 // /play/c/<id>   a player's "What you now know" card. Public and shareable, with its own share
 // image (opengraph-image.js). Until the Phase 3 database exists the id is the card itself:
@@ -10,21 +13,26 @@ const NO_INDEX = { index: false, follow: false }; // until launch
 
 export async function generateMetadata({ params }) {
 	const { id } = await params;
+	if (!playFeatures().enabled) return { ...playMeta({ title: "Epocheye Play", description: PLAY_LINE, path: "/play" }), robots: NO_INDEX };
 	const card = await readCard(id);
-	if (!card) return { title: "Card | Epocheye Play", robots: NO_INDEX };
+	if (!card) return { ...playMeta({ title: "Card | Epocheye Play", description: PLAY_LINE, path: `/play/c/${id}` }), robots: NO_INDEX };
 	const { view } = card;
-	const title = `${view.title || view.siteName} | Epocheye Play`;
-	const description = view.shareLine || `${view.know.length} things learned at ${view.siteName}.`;
+	// The tags carry no counts (Phase 5 copy rule), so not the share line, which counts chapters
+	// and facts: the page itself still leads with it.
 	return {
-		title,
-		description,
+		...playMeta({
+			title: `${view.title || view.siteName} | Epocheye Play`,
+			description: `What I now know about ${view.siteName}, rebuilt from its evidence, and what nobody knows.`,
+			path: `/play/c/${id}`,
+			type: "article",
+			picture: false,
+		}),
 		robots: NO_INDEX,
-		openGraph: { title, description, type: "article" },
-		twitter: { card: "summary_large_image", title, description },
 	};
 }
 
 export default async function PlayCardPage({ params }) {
+	if (!playFeatures().enabled) return <PlayOff />;
 	const { id } = await params;
 	const card = await readCard(id);
 	return (

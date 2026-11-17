@@ -3,7 +3,7 @@
 // GET  /api/play/year-vote?site=<slug>  ->  { ok, enough: false } or { ok, enough: true, shares: [{ id, pct }] }
 //   Live shares, cached for 30 seconds per server instance (cleared there by a vote or a finished run). Only once there are enough votes (MIN_VOTES) that a share
 //   cannot give away how many people voted; no count is ever returned.
-import { fail, handler, limitAnon, limitIp, ok, readJson } from "@/lib/server/play/http";
+import { fail, featureOff, handler, limitAnon, limitIp, ok, readJson } from "@/lib/server/play/http";
 import { arrival, playerAndSite } from "@/lib/server/play/request";
 import { storyFor, voteBeatFor } from "@/lib/server/play/story";
 import { slugOf } from "@/lib/server/play/validate";
@@ -12,6 +12,8 @@ import { castYearVote, clearYearVoteCache, yearVoteResults } from "@/lib/server/
 export const runtime = "nodejs";
 
 export const POST = handler("year-vote", async (request) => {
+	const off = featureOff();
+	if (off) return off;
 	const ipLimited = limitIp(request, "year-vote", 30);
 	if (ipLimited) return ipLimited;
 	const { body, response } = await readJson(request, 1024);
@@ -28,6 +30,8 @@ export const POST = handler("year-vote", async (request) => {
 });
 
 export const GET = handler("year-vote-results", async (request) => {
+	const off = featureOff();
+	if (off) return off;
 	const ipLimited = limitIp(request, "year-vote-get", 60);
 	if (ipLimited) return ipLimited;
 	const slug = slugOf(new URL(request.url).searchParams.get("site"));

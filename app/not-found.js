@@ -2,9 +2,12 @@
 
 import React, { useEffect, useState, startTransition } from "react";
 import Link from "next/link";
-import LiquidEther from "@/components/LiquidEther";
+import dynamic from "next/dynamic";
 import ShinyText from "@/components/ShinyText";
 import { ArrowLeft, Home, Clock } from "lucide-react";
+
+// The WebGL background pulls in three.js. Loaded on demand so it stays out of every other page's bundle.
+const LiquidEther = dynamic(() => import("@/components/LiquidEther"), { ssr: false });
 
 export default function NotFound() {
 	const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });

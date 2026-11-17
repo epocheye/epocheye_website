@@ -6,7 +6,7 @@
 // All card copy comes from site.json. The text written here is generic interface text.
 
 import { useRef, useState } from "react";
-import { orderDeck, orderRows, orderSlots, textFor } from "@/lib/play/story/engine";
+import { joinSentences, orderDeck, orderRows, orderSlots, textFor } from "@/lib/play/story/engine";
 
 const DRAG_START_PX = 8;
 
@@ -114,7 +114,7 @@ export default function OrderBoard({ beat, lens, fallbackLens, placed, telling, 
 	}
 	if (!status) {
 		if (solved) status = "All in order.";
-		else if (chosenCard) status = `${chosenCard.label}. Now tap its place.`;
+		else if (chosenCard) status = joinSentences([chosenCard.label, "Now tap its place."]);
 		else status = "Tap a card, then tap its place. Or drag it there.";
 	}
 

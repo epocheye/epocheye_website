@@ -4,7 +4,7 @@
 // POST /api/play/vote/founding  { email, founding: boolean }  ->  { ok }  (404 when no player has that address)
 //   Marks or unmarks a founding member. A founding member's vote is recorded as binding.
 import { verifyAdminJWTFromRequest } from "@/lib/server/adminAuth";
-import { fail, handler, limitIp, ok, readJson } from "@/lib/server/play/http";
+import { fail, featureOff, handler, limitIp, ok, readJson } from "@/lib/server/play/http";
 import { emailOf, setFoundingMember } from "@/lib/server/play/email";
 import { adminTally, weekOfKolkata } from "@/lib/server/play/vote";
 
@@ -16,6 +16,8 @@ function admin(request) {
 }
 
 export const GET = handler("vote-founding-get", async (request) => {
+	const off = featureOff();
+	if (off) return off;
 	const limited = limitIp(request, "vote-founding", 30) || admin(request);
 	if (limited) return limited;
 	const week = weekOfKolkata();
@@ -23,6 +25,8 @@ export const GET = handler("vote-founding-get", async (request) => {
 });
 
 export const POST = handler("vote-founding", async (request) => {
+	const off = featureOff();
+	if (off) return off;
 	const limited = limitIp(request, "vote-founding", 30) || admin(request);
 	if (limited) return limited;
 	const { body, response } = await readJson(request, 1024);

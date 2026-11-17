@@ -48,18 +48,28 @@ uniform float uFade;
 varying vec2 vUv;
 void main() {
 	vec3 now = texture2D(tNow, vUv).rgb;
-	vec3 then = texture2D(tThen, vUv).rgb;
-	// Masks are one strip of faces side by side. Stay half a texel inside this face.
-	vec2 m = vec2((uFace + clamp(vUv.x, uHalf, 1.0 - uHalf)) / uFaces, vUv.y);
-	float k = max(
-		max(texture2D(tMask0, m).r * uReveal.x, texture2D(tMask1, m).r * uReveal.y),
-		max(texture2D(tMask2, m).r * uReveal.z, texture2D(tMask3, m).r * uReveal.w));
-	k = clamp(k + uAll, 0.0, 1.0) * uHasThen;
-	// Proof: where THEN is our reconstruction, fade it to a plain neutral.
-	float p = texture2D(tTier, m).r * uHasTier * uProof;
-	float l = dot(then, vec3(0.299, 0.587, 0.114));
-	then = mix(then, vec3(mix(l, 0.6, 0.3)), p);
-	gl_FragColor = vec4(mix(now, then, k) * uFade, 1.0);
+	vec3 color = now;
+	// Only what is switched on is sampled: NOW alone is one lookup, which is what keeps a drag
+	// smooth on a weak GPU. Every branch here is on uniforms, the same for the whole draw.
+	if (uHasThen > 0.5 && (uAll > 0.0 || uReveal.x > 0.0 || uReveal.y > 0.0 || uReveal.z > 0.0 || uReveal.w > 0.0)) {
+		// Masks are one strip of faces side by side. Stay half a texel inside this face.
+		vec2 m = vec2((uFace + clamp(vUv.x, uHalf, 1.0 - uHalf)) / uFaces, vUv.y);
+		float k = 0.0;
+		if (uReveal.x > 0.0) k = max(k, texture2D(tMask0, m).r * uReveal.x);
+		if (uReveal.y > 0.0) k = max(k, texture2D(tMask1, m).r * uReveal.y);
+		if (uReveal.z > 0.0) k = max(k, texture2D(tMask2, m).r * uReveal.z);
+		if (uReveal.w > 0.0) k = max(k, texture2D(tMask3, m).r * uReveal.w);
+		k = clamp(k + uAll, 0.0, 1.0);
+		vec3 then = texture2D(tThen, vUv).rgb;
+		// Proof: where THEN is our reconstruction, fade it to a plain neutral.
+		if (uHasTier > 0.5 && uProof > 0.0) {
+			float p = texture2D(tTier, m).r * uProof;
+			float l = dot(then, vec3(0.299, 0.587, 0.114));
+			then = mix(then, vec3(mix(l, 0.6, 0.3)), p);
+		}
+		color = mix(now, then, k);
+	}
+	gl_FragColor = vec4(color * uFade, 1.0);
 }`;
 
 export function siteToThree(v, out = new THREE.Vector3()) {
@@ -73,8 +83,63 @@ function loadImage(url) {
 	return img.decode().then(() => img);
 }
 
-function faceTexture(img, mip) {
-	const t = new THREE.Texture(img);
+// Pictures are decoded off the main thread where the browser can: fetched, then turned into an
+// ImageBitmap already flipped for WebGL, with no colour conversion. Uploading an <img> made the
+// main thread decode and flip every face (the long tasks in the Phase 5 Lighthouse report).
+// A browser that cannot flip a bitmap gets the <img> path, which WebGL flips on upload.
+const BITMAP = { imageOrientation: "flipY", premultiplyAlpha: "none", colorSpaceConversion: "none" };
+let bitmapCheck = null;
+
+function bitmapsFlip() {
+	if (!bitmapCheck) {
+		bitmapCheck = (async () => {
+			if (typeof createImageBitmap !== "function" || typeof ImageData === "undefined" || typeof document === "undefined") return false;
+			// One pixel above another: red on top. Flipped, blue must come out on top.
+			const data = new ImageData(new Uint8ClampedArray([255, 0, 0, 255, 0, 0, 255, 255]), 1, 2);
+			const bmp = await createImageBitmap(data, BITMAP);
+			const canvas = document.createElement("canvas");
+			canvas.width = 1;
+			canvas.height = 2;
+			const ctx = canvas.getContext("2d");
+			if (!ctx) return false;
+			ctx.drawImage(bmp, 0, 0);
+			bmp.close?.();
+			const top = ctx.getImageData(0, 0, 1, 1).data;
+			return top[2] > 200 && top[0] < 50;
+		})().catch(() => false);
+	}
+	return bitmapCheck;
+}
+
+// { src: ImageBitmap | HTMLImageElement, flipped }. Rejects when the file does not load.
+// The fetch matches the <link rel="preload" as="fetch"> the level page sends for its first faces.
+async function loadPicture(url) {
+	if (await bitmapsFlip()) {
+		const res = await fetch(url, { credentials: "same-origin" });
+		if (!res.ok) throw new Error(`HTTP ${res.status}`);
+		const blob = await res.blob();
+		try {
+			return { src: await createImageBitmap(blob, BITMAP), flipped: true };
+		} catch {
+			// This file will not decode as a bitmap: let an <img> try it.
+		}
+	}
+	return { src: await loadImage(url), flipped: false };
+}
+
+const widthOf = (src) => src.naturalWidth || src.width;
+const heightOf = (src) => src.naturalHeight || src.height;
+
+function disposeTexture(t) {
+	if (!t) return;
+	const img = t.image;
+	t.dispose();
+	if (img && typeof img.close === "function") img.close(); // an ImageBitmap: free its pixels now
+}
+
+function faceTexture(pic, mip) {
+	const t = new THREE.Texture(pic.src);
+	t.flipY = !pic.flipped;
 	t.colorSpace = THREE.NoColorSpace;
 	t.wrapS = t.wrapT = THREE.ClampToEdgeWrapping;
 	t.generateMipmaps = mip;
@@ -85,8 +150,9 @@ function faceTexture(img, mip) {
 	return t;
 }
 
-function maskTexture(img) {
-	const t = new THREE.Texture(img);
+function maskTexture(src, flipped) {
+	const t = new THREE.Texture(src);
+	t.flipY = !flipped;
 	t.colorSpace = THREE.NoColorSpace;
 	t.format = THREE.RedFormat;
 	t.wrapS = t.wrapT = THREE.ClampToEdgeWrapping;
@@ -437,8 +503,8 @@ export class PanoCore {
 	// ---------------------------------------------------------------- node loading
 
 	async loadFaces(nodeId, state, size) {
-		const imgs = await Promise.all(this.site.faces.map((f) => loadImage(this.urls.face(nodeId, state, size, f))));
-		return imgs.map((img) => faceTexture(img, size <= 1024));
+		const pics = await Promise.all(this.site.faces.map((f) => loadPicture(this.urls.face(nodeId, state, size, f))));
+		return pics.map((pic) => faceTexture(pic, size <= 1024));
 	}
 
 	async setNode(node, { state = "now", look = null, keepView = false } = {}) {
@@ -459,7 +525,7 @@ export class PanoCore {
 			[faces, thenFaces, maskImgs] = await Promise.all([
 				this.loadFaces(node.id, primary, this.sizes[0]),
 				shows ? this.loadFaces(node.id, "then", this.sizes[0]).catch(() => null) : null,
-				shows ? Promise.all(slots.map((id) => loadImage(this.urls.mask(node.id, id)).catch(() => null))) : [],
+				shows ? Promise.all(slots.map((id) => loadPicture(this.urls.mask(node.id, id)).catch(() => null))) : [],
 			]);
 		} catch {
 			if (my === this.gen && !this.disposed) {
@@ -473,8 +539,9 @@ export class PanoCore {
 			return false;
 		}
 		if (my !== this.gen || this.disposed) {
-			faces.forEach((t) => t.dispose());
-			thenFaces?.forEach((t) => t.dispose());
+			faces.forEach(disposeTexture);
+			thenFaces?.forEach(disposeTexture);
+			maskImgs.forEach((pic) => pic?.src?.close?.());
 			return false;
 		}
 		this.disposeNodeTextures();
@@ -487,8 +554,8 @@ export class PanoCore {
 		this.failed.clear();
 		this.tex.primary = { size: this.sizes[0], faces };
 		if (thenFaces) this.tex.then = { size: this.sizes[0], faces: thenFaces };
-		maskImgs.forEach((img, i) => {
-			if (img) this.tex.masks.set(slots[i], this.maskFrom(img));
+		maskImgs.forEach((pic, i) => {
+			if (pic) this.tex.masks.set(slots[i], this.maskFrom(pic));
 		});
 		this.applyTextures();
 		if (!keepView) {
@@ -522,29 +589,31 @@ export class PanoCore {
 		this.kick();
 	}
 
-	maskFrom(img) {
+	maskFrom(pic) {
+		const img = pic.src;
 		const n = this.site.faces.length;
 		const max = this.renderer.capabilities.maxTextureSize || 4096;
 		let src = img;
-		let faceW = img.naturalWidth / n;
-		if (img.naturalWidth > max) {
+		let faceW = widthOf(img) / n;
+		if (widthOf(img) > max) {
 			// The strip is wider than this GPU takes, and a plain shrink would smear each face into
 			// the next. Redraw it face by face, a whole number of pixels to a face.
 			const w = Math.max(1, Math.floor(max / n));
-			const h = Math.max(1, Math.round((img.naturalHeight * w) / faceW));
+			const h = Math.max(1, Math.round((heightOf(img) * w) / faceW));
 			const canvas = document.createElement("canvas");
 			canvas.width = w * n;
 			canvas.height = h;
 			const ctx = canvas.getContext("2d");
 			if (ctx) {
-				for (let i = 0; i < n; i++) ctx.drawImage(img, i * faceW, 0, faceW, img.naturalHeight, i * w, 0, w, h);
-				src = canvas;
+				for (let i = 0; i < n; i++) ctx.drawImage(img, i * faceW, 0, faceW, heightOf(img), i * w, 0, w, h);
+				src = canvas; // keeps the orientation of the picture it was drawn from
 				faceW = w;
+				img.close?.();
 			}
 		}
 		// half a texel of one face, in face units
 		this.shared.uHalf.value = 0.5 / Math.max(1, faceW);
-		return maskTexture(src);
+		return maskTexture(src, pic.flipped);
 	}
 
 	applyTextures() {
@@ -566,10 +635,10 @@ export class PanoCore {
 
 	disposeNodeTextures() {
 		const { primary, then, masks, tier } = this.tex;
-		primary.faces.forEach((t) => t.dispose());
-		then.faces.forEach((t) => t.dispose());
-		masks.forEach((t) => t.dispose());
-		tier?.dispose();
+		primary.faces.forEach(disposeTexture);
+		then.faces.forEach(disposeTexture);
+		masks.forEach(disposeTexture);
+		disposeTexture(tier);
 		this.tex = { primary: { size: 0, faces: [] }, then: { size: 0, faces: [] }, masks: new Map(), tier: null };
 	}
 
@@ -614,19 +683,19 @@ export class PanoCore {
 		});
 		const facesJob = (state, slot, size) => guarded(`${state}:${size}`, async () => {
 			const faces = await this.loadFaces(node.id, state, size);
-			if (stale()) return faces.forEach((t) => t.dispose());
+			if (stale()) return faces.forEach(disposeTexture);
 			if (size > this.sizes[0]) {
 				// upload one face a frame so the swap does not stall the view
 				for (const t of faces) {
 					this.renderer.initTexture(t);
 					await nextFrame();
-					if (stale()) return faces.forEach((x) => x.dispose());
+					if (stale()) return faces.forEach(disposeTexture);
 				}
 			}
 			const old = this.tex[slot].faces;
 			this.tex[slot] = { size, faces };
 			this.applyTextures();
-			old.forEach((t) => t.dispose());
+			old.forEach(disposeTexture);
 			this.onStatus({ loading: false, node: node.id, shown: node.id, size: this.tex.primary.size });
 		});
 		const up = (cur) => this.sizes.find((s) => s > cur && s <= this.targetSize());
@@ -639,9 +708,9 @@ export class PanoCore {
 			for (const id of this.maskSlots) {
 				if (masks.has(id)) continue;
 				const job = guarded(`mask:${id}`, async () => {
-					const img = await loadImage(this.urls.mask(node.id, id));
-					if (stale()) return;
-					this.tex.masks.set(id, this.maskFrom(img));
+					const pic = await loadPicture(this.urls.mask(node.id, id));
+					if (stale()) return pic.src.close?.();
+					this.tex.masks.set(id, this.maskFrom(pic));
 					this.applyTextures();
 				});
 				if (job) return job;
@@ -649,9 +718,9 @@ export class PanoCore {
 		}
 		if ((this.proof.to > 0 || this.proof.value > 0) && node.tier && !this.tex.tier) {
 			const job = guarded("tier", async () => {
-				const img = await loadImage(this.urls.tier(node.id));
-				if (stale()) return;
-				this.tex.tier = this.maskFrom(img);
+				const pic = await loadPicture(this.urls.tier(node.id));
+				if (stale()) return pic.src.close?.();
+				this.tex.tier = this.maskFrom(pic);
 				this.applyTextures();
 			});
 			if (job) return job;
