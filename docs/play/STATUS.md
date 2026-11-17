@@ -1,6 +1,6 @@
 # Epocheye Play: status
 
-**GATE 2: waiting for the owner.** Phases 2, 3 and 4 are built on branch `feat/play`. Nothing further happens until you answer this gate. (The GATE 1 record is in git history: commit `de8a203`.)
+**WAITING.** GATE 2 was shown on 2026-11-17 and has not been answered. Phases 2, 3 and 4 are built on branch `feat/play`. Nothing further happens until you answer this gate. (The GATE 1 record is in git history: commit `de8a203`.)
 
 GATE 1 was answered on 2026-11-16: the voice is Kokoro. The other GATE 1 rulings were not given, so the build went ahead on the proposals in STORY_CHECK.md. They are listed again below.
 
