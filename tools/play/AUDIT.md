@@ -4,6 +4,8 @@ Date: 2026-11-16. Everything here was read-only: Blender ran in the background (
 
 ## Verdict: NEEDS WORK
 
+**Update, Phase 2 (2026-11-16).** This verdict is the Phase 0 one. Since then a NOW state is derived by the exporter (owner's choice at the audit) and the interiors render with their own exposure. Sections 2, 3 and 5 below describe the scene as it stands now. Item 3 has not changed.
+
 The THEN state is ready. Three things are not:
 
 1. **There is no NOW state.** This is the blocker, and it is more than a day of work. Details in section 3.
@@ -38,25 +40,27 @@ Why: the sun is low in the WSW and the open front faces ESE, so the interior onl
 
 ## 3. THEN and NOW
 
-**THEN: present.** `TSP_Palace_rebuilt` (1,298 objects) with the Hunter 1792 exterior scheme, madder interior walls on the upper floor, the painted ceiling, gilt arch heads, the packed-earth court, the fort around it.
+**THEN: present, rendered as saved.** `TSP_Palace_rebuilt` (1,298 objects) with the Hunter 1792 exterior scheme, madder interior walls on the upper floor, the painted ceiling, gilt arch heads, the packed-earth court, the fort around it. The exporter hides the tiger throne, the inferred furnishings and the inferred people, and changes nothing else.
 
-**NOW: missing.** The build has two states, `COURT_1791` and `SIEGE_1791`. Nothing renders the building as it is today.
+**NOW: derived by the exporter, in memory.** The .blend still has no present-day state of its own (its two states are `COURT_1791` and `SIEGE_1791`). The owner chose a derived NOW at the audit. The recipe is `states.now` in `tools/play/sites/tipu-summer-palace-bengaluru.json`, and the .blend is never edited or saved:
 
-What exists towards a NOW:
-- `TSP_OFF_present_state`: today's garden only (lawn, hedges, brick walk, beds), 20 objects, flat materials.
-- Present-state materials already inside the THEN model: `PILLAR_SHAFT_TIMBER__CONFIRMED`, `CEILING_TIMBER__CONFIRMED`, `WALL_INT_OCHRE__PRESENT-STATE`, `WALL_INT_DADO__PRESENT-STATE`, `FLOOR_TERRACOTTA__PRESENT-STATE`.
-- A present-state painted-wall texture from our own photo (`output/tex/own_wall_floral.jpg`), kept out of THEN on purpose.
-- 48 own photographs of the building today (unencumbered), not shot from the viewpoints.
+| What | THEN | NOW |
+|---|---|---|
+| Exterior walls, arches, shafts, bases, caps, eave fringe | Hunter 1792 colours | Plaster from our own photo; dark timber; carved stone |
+| Upper-floor walls (`WALL_INT_MADDER`) | Madder ground with floral painting | Plain plaster from our own photo (`own_plaster_clean.jpg`) |
+| Upper-floor ceiling (`CEILING_PAINTED`) | Painted, maroon with rosettes | Plain timber (`CEILING_TIMBER__CONFIRMED`) |
+| Court | Packed earth, tree platform, planting, props | Today's garden (`TSP_OFF_present_state`) with own-photo lawn and hedge, Poly Haven brick |
+| Fort | Mackenzie 1791 | Hidden |
+| Beyond the garden | The fort | A haze shell, radius 62 m. Today's surroundings are not modelled |
 
-I tested a NOW derived in memory by swapping the reconstructed materials for the present-state ones and showing the garden (`probe_P0_now.png`). It is not good enough to ship: the garden is flat CG, and beyond it there is nothing, because today's surroundings (the city, the temple next door, the road) are not modelled and must not be invented. It would be a fake NOW.
+Unchanged between the two states: the timber pillars and entablature, the gilt arch heads (gilding survives today: it shows in own photos 19, 30 and 36), the terracotta upper floor, the stone flags, the ground-floor ochre walls and dado, which are already present-state materials.
 
-**What an honest NOW would take** (my estimate: two to three days, so I am stopping to ask before doing it, as the brief requires):
-1. A present-state material set built from our own photos: polished dark timber, today's plaster, the sooted surviving paint where it survives, gilding where it survives today. About a day, with a check against the photos for each surface.
-2. Today's garden with real materials (grass, hedge, brick), from photos 01 and 02. Half a day.
-3. A rule for what lies beyond the compound. Options: fade to haze and say so, or keep NOW viewpoints inside and under the colonnade only. Owner's call.
-4. Per-viewpoint exposure for interiors. Needed anyway.
-
-The alternative is real 360 photos shot on site, but the design needs NOW and THEN from the same camera so the masks line up, so photos cannot replace a rendered NOW. They would be the reference to match it against.
+**What NOW gets right and where it stops.**
+- Checked against own photos 19, 30 and 36: today's upper floor is dark timber overhead, plaster on the walls, terracotta underfoot. The derived NOW shows that.
+- **Where paint survives today is not mapped, so NOW shows plain surfaces.** Own photographs 37 (a painted ceiling) and 41 (a painted wall panel with its niche) prove paint survives in at least one room. No file says which room or which panels, and photo 40 only shows a small room with a terracotta floor and a door. Placing the surviving paint on a chosen wall would be a guess, so NOW carries plain plaster and plain timber everywhere and the pack credits say so. The present-state texture `output/tex/own_wall_floral.jpg` stays unused for the same reason. The two photographs ship as evidence images instead.
+- The NOW plaster is one pale tile. The photographs show weathered, pinkish and grey plaster. It is honest as "plaster where the paint is lost", not a match for each wall.
+- The NOW ceiling and the long upper walls are single very large objects whose textures the scene maps once across the whole object, so they read as smooth and slightly smeared rather than as boards. See section 2.
+- The garden is still flat: lawn, hedge blocks and brick walk with photo textures and no planting.
 
 ## 4. Lost elements, with evidence
 
@@ -81,21 +85,32 @@ From `research/palace-measurements.md`, `palace-dimensions.json`, `TSP_period_as
 
 ## 5. Viewpoints
 
-Twelve authored viewpoints in `output/palace_viewpoints.json` (P0 to P10, P0b), eye height 1.6 m. The exporter can place a panorama at any point, so the list below is what already exists.
+Twelve authored viewpoints in `output/palace_viewpoints.json` (P0 to P10, P0b), eye height 1.6 m. The pack has eight. Positions are in the building frame: X along the front, Y into the building, Z up; the plinth floor is z 0, the upper floor z 2.6, the forecourt ground z -0.7.
 
-| Script place | Existing viewpoint |
+| Pack viewpoint | From | Position | Links | Notes |
+|---|---|---|---|---|
+| `forecourt` | P0 | 0, -14, 0.9 | forecourt-corner, colonnade | |
+| `forecourt-corner` | P0b | -8, -14, 0.9 | forecourt | Beside the tree platform |
+| `colonnade` | P1 | 0, 1.9, 1.6 | forecourt, colonnade-end, hall-floor | |
+| `colonnade-end` | P2 | 7.5, 1.9, 1.6 | colonnade, upper-hall | The link to the upper hall is the stair |
+| `hall-floor` | new | 0, 11, 1.6 | colonnade | Middle of the two-storey hall, galleries on all four sides, ceiling 3.4 m above the eye |
+| `upper-hall` | P5 | 0.94, 2.9, 4.2 | colonnade-end, balcony, corner-room | On the front gallery, looking into the hall |
+| `balcony` | P7, moved | 0, 1.5, 4.2 | upper-hall | See below |
+| `corner-room` | P9, moved | 7.5, 20.6, 4.2 | upper-hall | Centre of the far corner room. P9 itself is 0.5 m from the outer wall |
+
+**The balcony viewpoint is not on a balcony.** P7 is authored 0.8 m outside the front, on a projecting balcony. In `TSP_period_world.blend` the balcony objects (`Balcony_ESE_floor`, brackets, rail, arch) are switched off for render, and the palace files tier the projection as unrecorded. A test frame at P7 hangs in the air beside a pillar head with the ground 4.9 m below. The exporter does not switch hidden geometry on, so the viewpoint was moved 2.3 m back to the front arcade of the upper floor, on the building's centre line, looking out over the forecourt through the middle arch. The floor there ends 0.5 m in front of the eye with no rail. The pack credits say the projecting balcony is not shown.
+
+**Each position was checked** with 26 rays (`tools/play/blender/probe_points.py`, results in `tools/play/out/audit/probe_points.json`) and a test frame. All eight stand in free air.
+
+| Script place | State |
 |---|---|
-| Forecourt | P0, P0b |
-| Ground colonnade | P1, P2 |
-| The stair | P4 (top only) |
-| Upper hall | P5 |
-| The ceiling | P6 (same point as P5, looking up) |
-| Balcony | P7, P8 (never shipped: nothing to look out at) |
-| Ground floor rooms | P3 (a sealed room, no doorway modelled), P10 |
+| Forecourt, ground colonnade, upper hall, the ceiling, a small private room | In the pack |
+| The stair | No viewpoint on it. `colonnade-end` to `upper-hall` is the walk up it |
+| Ground floor rooms | `hall-floor` is the hall. P3 is a sealed room with no doorway modelled; P10 faces the hidden throne. Neither is used |
 | North front, west front | **None.** The model's fronts are ESE and WNW. Hunter drew a front and wings this model does not cover |
 | Open court looking up, with fountains | **None.** Not modelled |
 
-So Chapter 2 cannot stand at "the north and west fronts" and Chapter 3 cannot start in "the open court with fountains". Both become evidence shown on a card at a viewpoint that does exist. See STORY_CHECK.md.
+So Chapter 2 cannot stand at "the north and west fronts" and Chapter 3 cannot start in "the open court with fountains". Both are evidence shown on a card at a viewpoint that does exist. See STORY_CHECK.md.
 
 ## 6. Figures and voice lines
 

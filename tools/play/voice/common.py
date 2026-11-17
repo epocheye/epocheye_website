@@ -155,6 +155,13 @@ def expand_story(story: dict, chapters: list[str] | None = None) -> list[dict]:
         for opt in beat.get("options") or []:
             for line in opt.get("after") or []:
                 push(chapter_id, line, f"{beat['id']}/{opt['id']}", "after")
+        # Mirrors walkBeats() in lib/play/story/engine.js: the cards of an order beat speak
+        # when they land, and a proof beat's lines play once the switch is pressed.
+        for card in beat.get("cards") or []:
+            push(chapter_id, card, beat["id"], "gap" if card.get("gap") else "card")
+        if beat.get("type") == "proof":
+            for line in beat.get("after") or []:
+                push(chapter_id, line, beat["id"], "after")
 
     for ch in story.get("chapters") or []:
         if chapters and ch["id"] not in chapters:

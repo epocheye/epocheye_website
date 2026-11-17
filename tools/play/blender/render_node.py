@@ -3,6 +3,11 @@
 blender -b scene.blend --python tools/play/blender/render_node.py -- \
     --site tools/play/sites/<slug>.json --node <id> --out <dir> \
     --what then,now,masks,tier [--face 2048] [--samples N] [--device GPU|CPU]
+    [--exposure EV] [--set key=value,key=value] [--faces px,pz] [--loc x,y,z]   (look development only)
+
+A node may carry "cycles": {setting: value} in the site config. Those Cycles sampling, bounce,
+clamp and denoiser settings are applied in memory for that node's beauty passes only and put
+back before the masks. They never add a light or touch the sun, the sky or a material.
 
 Read-only on the .blend: every change below is in memory and is never saved.
 Output: <out>/<node>/<state>_<face>.png (px,nx,py,ny,pz,nz), mask_<restoration>_<face>.png, tier_<face>.png
@@ -38,7 +43,7 @@ cam_data.angle = math.radians(90)
 cam_data.clip_start = 0.05; cam_data.clip_end = 5000
 cam = bpy.data.objects.new("PLAY_cube", cam_data)
 scene.collection.objects.link(cam)
-cam.location = node["loc"]
+cam.location = [float(v) for v in str(a["loc"]).split(",")] if a.get("loc") else node["loc"]
 scene.camera = cam
 scene.render.resolution_x = scene.render.resolution_y = face_px
 scene.render.resolution_percentage = 100
@@ -68,9 +73,14 @@ def apply_state(name):
         C.add_haze(st["haze"])
 
 
+ONLY_FACES = [f for f in str(a.get("faces", "")).split(",") if f]
+
+
 def render_faces(prefix):
     secs = 0
     for f, rot in FACES.items():
+        if ONLY_FACES and f not in ONLY_FACES:
+            continue
         path = os.path.join(out, f"{prefix}_{f}.png")
         if os.path.exists(path) and not a.get("force"):
             continue
@@ -83,13 +93,61 @@ times = {}
 orig_exposure = scene.view_settings.exposure
 samples = int(a.get("samples", node.get("samples", site.get("samples", scene.cycles.samples))))
 
+# Per-node Cycles settings for the beauty passes (sampling, bounces, clamping, denoiser only).
+CYCLES_ALLOWED = {
+    "max_bounces", "diffuse_bounces", "glossy_bounces", "transmission_bounces", "transparent_max_bounces",
+    "sample_clamp_direct", "sample_clamp_indirect", "blur_glossy",
+    "use_adaptive_sampling", "adaptive_threshold", "adaptive_min_samples",
+    "use_denoising", "denoiser", "denoising_input_passes", "denoising_prefilter", "denoising_quality",
+    "use_light_tree", "light_sampling_threshold", "use_guiding", "guiding_training_samples",
+}
+
+
+def _coerce(v):
+    if not isinstance(v, str):
+        return v
+    if v.lower() in ("true", "false"):
+        return v.lower() == "true"
+    try:
+        return int(v)
+    except ValueError:
+        try:
+            return float(v)
+        except ValueError:
+            return v
+
+
+cycles_over = dict(node.get("cycles", {}))
+for pair in str(a.get("set", "")).split(","):
+    if "=" in pair:
+        k, v = pair.split("=", 1)
+        cycles_over[k.strip()] = _coerce(v.strip())
+bad = sorted(set(cycles_over) - CYCLES_ALLOWED)
+if bad:
+    C.report("NODE", {"node": node["id"], "error": f"cycles settings not allowed: {bad}"}); sys.exit(1)
+cycles_saved = {k: getattr(scene.cycles, k) for k in cycles_over}
+
+
+def beauty_settings(on):
+    for k, v in (cycles_over if on else cycles_saved).items():
+        setattr(scene.cycles, k, v)
+
+
+def exposure_for(state):
+    if "exposure" in a:
+        return float(a["exposure"])
+    ex = node.get("exposure", {})
+    return ex.get(state, ex.get("then", orig_exposure))
+
 # 1. Beauty passes. THEN first: the scene as saved is the THEN state. NOW is derived last
 #    because its material swaps are not undone.
 if "then" in what:
     apply_state("then")
     scene.cycles.samples = samples
-    scene.view_settings.exposure = node.get("exposure", {}).get("then", orig_exposure)
+    scene.view_settings.exposure = exposure_for("then")
+    beauty_settings(True)
     times["then"] = render_faces("then")
+    beauty_settings(False)
 
 # 2. Masks: flat emission, white on the selected objects, black elsewhere. Geometry is the
 #    THEN geometry, so masks line up with the THEN panorama pixel for pixel.
@@ -186,7 +244,11 @@ if "now" in what:
     else:
         apply_state("now")
         scene.cycles.samples = samples
-        scene.view_settings.exposure = node.get("exposure", {}).get("now", node.get("exposure", {}).get("then", orig_exposure))
+        scene.view_settings.exposure = exposure_for("now")
+        beauty_settings(True)
         times["now"] = render_faces("now")
+        beauty_settings(False)
 
-C.report("NODE", {"node": node["id"], "backend": backend, "face_px": face_px, "samples": samples, "seconds": times})
+C.report("NODE", {"node": node["id"], "backend": backend, "face_px": face_px, "samples": samples, "seconds": times,
+                  "cycles": cycles_over, "simplify": bool(scene.render.use_simplify),
+                  "exposure": {st: exposure_for(st) for st in ("then", "now")}})
