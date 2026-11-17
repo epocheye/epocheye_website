@@ -1,6 +1,6 @@
 # Epocheye Play: status
 
-**WAITING.** GATE 3 was shown on 2026-11-18 and has not been answered. Phase 5 is done on branch `feat/play`. You launch it yourself. Nothing further happens until you answer this gate.
+**Launched.** GATE 3 answered on 2026-11-18 ("Merge and launch"): `feat/play` was merged into `main` and deleted, so `main` is the only branch and `/play` is on production. The launch checklist items below were not done before launch and are still open.
 
 GATE 1 (2026-11-16): voice chosen, Kokoro. GATE 2 (2026-11-17): approved. Story rulings have not been given at either gate, so the proposals stand; they are item 1 of the launch checklist.
 
