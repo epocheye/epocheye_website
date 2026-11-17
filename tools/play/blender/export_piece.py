@@ -31,7 +31,9 @@ MAX_TEX = int(src.get("max_texture_px", 1024))
 MAX_BYTES = 2_000_000
 TMP = a.get("tmp") or os.path.join(os.path.dirname(a["out"]), "_tex")
 C.remap_missing_images(site.get("search_dirs", []))
-col = bpy.data.collections[src["collection"]]
+# No collection, or the scene's root ("Scene Collection"), means every object in the scene.
+_cname = src.get("collection")
+col = bpy.context.scene.collection if _cname in (None, "", "Scene Collection") else bpy.data.collections[_cname]
 picked = []
 if src.get("objects"):
     picked = [o for o in col.all_objects if o.type == "MESH" and o.name in src["objects"]]

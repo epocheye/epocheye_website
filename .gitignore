@@ -75,3 +75,6 @@ tools/play/voice/.venv/
 
 # Play: synthetic dev pack
 public/play/packs/_dev/
+
+# Play: Phase 4 throwaway format-test pack (never ships)
+public/play/packs/_test-*/

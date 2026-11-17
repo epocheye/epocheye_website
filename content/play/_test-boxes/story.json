@@ -1,0 +1,100 @@
+{
+ "slug": "_test-boxes",
+ "title": "Format test",
+ "logline": "Three boxes and one lost red cap.",
+ "question": "Can a new site be added with no engine change?",
+ "default_lens": "traveller",
+ "lenses": [
+  {
+   "id": "traveller",
+   "name": "Traveller",
+   "blurb": "The test wording."
+  }
+ ],
+ "tiers": {
+  "record": "From the record",
+  "reconstruction": "Our reconstruction",
+  "legend": "Legend",
+  "unknown": "Not known",
+  "reading": "Our reading"
+ },
+ "facts": [
+  {
+   "id": "T1",
+   "tier": "record",
+   "status": "verified",
+   "claim": "This test scene has three boxes.",
+   "source": "tools/play/test/make_test_scene.py"
+  },
+  {
+   "id": "T2",
+   "tier": "reconstruction",
+   "status": "verified",
+   "claim": "In the test scene's THEN state the middle box has a red cap.",
+   "source": "tools/play/test/make_test_scene.py"
+  }
+ ],
+ "witnesses": [
+  {
+   "id": "script",
+   "name": "The scene script",
+   "who": "tools/play/test/make_test_scene.py",
+   "record_date": "2026",
+   "source": "this repo"
+  }
+ ],
+ "evidence": [],
+ "chapters": [
+  {
+   "id": "t1",
+   "n": 1,
+   "title": "The red cap",
+   "years": "test",
+   "witness": "script",
+   "state": "now",
+   "nodes": [
+    "front",
+    "side"
+   ],
+   "start_node": "front",
+   "beats": [
+    {
+     "id": "t-01",
+     "type": "line",
+     "facts": [
+      "T1"
+     ],
+     "pace": "steady",
+     "pause_after_ms": 600,
+     "text": {
+      "traveller": "Three boxes. The middle one has lost its cap."
+     },
+     "say": "Three boxes. The middle one has lost its cap."
+    },
+    {
+     "id": "t-restore",
+     "type": "restore",
+     "restoration": "red-cap",
+     "ui": true,
+     "text": {
+      "traveller": "Turn the cap until it matches the outline. Then set it in place."
+     }
+    },
+    {
+     "id": "t-know",
+     "type": "know",
+     "facts": [
+      "T2"
+     ],
+     "pace": "slow",
+     "pause_after_ms": 1100,
+     "text": {
+      "traveller": "In THEN, the middle box wears a red cap."
+     },
+     "say": "In then, the middle box wears a red cap."
+    }
+   ]
+  }
+ ],
+ "ending": null
+}
