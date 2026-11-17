@@ -231,6 +231,42 @@ export default function TermsPage() {
 							.
 						</p>
 					</section>
+
+					{/* [SAMBIT: legal review before launch] Epocheye Play section, added 2026-11-17. */}
+					<section id="play" className="scroll-mt-24">
+						<h2 className="font-instrument-serif text-2xl text-white mb-4">
+							13. Epocheye Play
+						</h2>
+						<p className="mb-3">
+							These points apply to Epocheye Play, the history game at{" "}
+							<Link
+								href="/play"
+								className="text-white/80 underline underline-offset-4 hover:text-white transition-colors">
+								/play
+							</Link>
+							. The rest of these Terms apply to it too.
+						</p>
+						<ul className="space-y-3 list-disc pl-5">
+							<li>Play is free. There is nothing to buy in it.</li>
+							<li>
+								Display names come from a fixed list of made-up names. You cannot
+								choose or type your own.
+							</li>
+							<li>
+								We may reset leaderboards, streaks and votes at any time.
+							</li>
+							<li>
+								The choices you make in the game are about evidence and method.
+								They do not change history. The facts the game tells are the same
+								for every player.
+							</li>
+							<li>
+								The game, its story, its renders and its narration belong to
+								Epocheye or its licensors. The sources and images we use are
+								credited in the game.
+							</li>
+						</ul>
+					</section>
 				</div>
 			</article>
 		</main>

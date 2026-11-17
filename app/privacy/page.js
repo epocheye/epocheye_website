@@ -200,6 +200,184 @@ export default function PrivacyPage() {
 							.
 						</p>
 					</section>
+
+					{/*
+					  [SAMBIT: legal review before launch] Epocheye Play section, written from the code on
+					  2026-11-17: db/015_play.sql, db/016_play_email_votes.sql, lib/server/play/*,
+					  lib/play/player.js, lib/play/api.js and app/api/play/*. If the code changes what Play
+					  stores or sends, change this section with it. /play/privacy summarises it.
+					*/}
+					<section id="play" className="scroll-mt-24">
+						<h2 className="font-instrument-serif text-2xl text-white mb-4">
+							11. Epocheye Play
+						</h2>
+						<p>
+							Epocheye Play is a free history game at{" "}
+							<Link
+								href="/play"
+								className="text-white/80 underline underline-offset-4 hover:text-white transition-colors">
+								/play
+							</Link>
+							. You can play it without an account and without giving your
+							name. This section says what Play keeps, and why.
+						</p>
+
+						<h3 className="font-instrument-serif text-xl text-white mt-8 mb-3">
+							What Play stores
+						</h3>
+						<ul className="space-y-3 list-disc pl-5">
+							<li>
+								<span className="text-white/80">A random id.</span> Your browser
+								makes it and keeps it in its local storage. It is not linked to
+								your name. Play sets no cookies.
+							</li>
+							<li>
+								<span className="text-white/80">A display name.</span> Each id
+								gets a made-up name from a fixed list. You cannot type your own.
+								Leaderboards show only that name.
+							</li>
+							<li>
+								<span className="text-white/80">Your progress.</span> Your place
+								in each level stays in your browser. Our server keeps the chapters
+								you finish, the first answer you pick at each choice, how long the
+								level took, the lens you chose and your year vote.
+							</li>
+							<li>
+								<span className="text-white/80">The daily puzzle and votes.</span>{" "}
+								Your daily answers and their times, and your weekly vote for the
+								next site.
+							</li>
+							<li>
+								<span className="text-white/80">Where you came from.</span> The
+								creator code from the link you followed, and the site or tag that
+								sent you. Your browser holds them for the open tab only, and sends
+								them with your game records.
+							</li>
+							<li>
+								<span className="text-white/80">Your email, only if you give it.</span>{" "}
+								With the time you gave consent. See &ldquo;Email&rdquo; below.
+							</li>
+						</ul>
+
+						<h3 className="font-instrument-serif text-xl text-white mt-8 mb-3">
+							What Play does not store
+						</h3>
+						<ul className="space-y-3 list-disc pl-5">
+							<li>
+								No IP address and no browser or device details in Play&apos;s
+								records. Our server holds your IP address in memory for a short
+								time, to limit how many requests it takes from one connection. It
+								is not saved.
+							</li>
+							<li>No free-text names and no chat. There is nowhere in Play to type a message.</li>
+							<li>
+								A shared card holds the site, your lens, your choices and your
+								year vote. It does not hold your id or your name.
+							</li>
+						</ul>
+
+						<h3 className="font-instrument-serif text-xl text-white mt-8 mb-3">
+							Analytics
+						</h3>
+						<ul className="space-y-3 list-disc pl-5">
+							<li>
+								Play counts what happens in the game, without cookies: a level
+								started, a chapter started and finished, a choice, the proof
+								switch, a share, an email given, a tap on a button to the app.
+								Each event carries your random id, the page, the time, where you
+								came from and the creator code.
+							</li>
+							<li>
+								If your browser sends Do Not Track or Global Privacy Control, Play
+								sends no events and does not record your progress through a level.
+								Our server also ignores the creator code and the source from that
+								browser.
+							</li>
+							<li>
+								What you choose to send still counts with those signals on: daily
+								answers, votes, a shared card, and an email if you give one.
+							</li>
+							<li>
+								The website also counts page views with Vercel Web Analytics,
+								which does not use cookies.
+							</li>
+						</ul>
+
+						<h3 className="font-instrument-serif text-xl text-white mt-8 mb-3">
+							Email
+						</h3>
+						<ul className="space-y-3 list-disc pl-5">
+							<li>
+								Play asks for an email for three things only: so your vote for the
+								next site counts, to let you play a new site a week early, and to
+								move your Play name, votes and daily streak to another device.
+							</li>
+							<li>
+								We keep it only if you tick the consent box. The box starts
+								unticked. We keep the address and the time you gave consent.
+							</li>
+							<li>
+								We send you an email with a link. Your address is confirmed only
+								when you open the link and tap Confirm. A request nobody confirms
+								stops working after 14 days, and is then deleted.
+							</li>
+							<li>
+								Every Play email has a link to stop all Play emails. On that page
+								you can also tick a box to delete your address.
+							</li>
+							<li>
+								After you stop Play emails, we keep a short one-way code made from
+								the address, not the address itself, so that we never email it
+								again. We also keep a log of when each Play email was sent, under
+								the same code.
+							</li>
+						</ul>
+
+						<h3 className="font-instrument-serif text-xl text-white mt-8 mb-3">
+							Creator codes
+						</h3>
+						<p>
+							A Play link can carry a creator&apos;s code. We keep the code only if
+							it is an active creator code. It is stored with your random id, your
+							runs and your events, so the creator who brought you is credited. The
+							first code you arrive with is the one we keep.
+						</p>
+
+						<h3 className="font-instrument-serif text-xl text-white mt-8 mb-3">
+							Where it is kept, and for how long
+						</h3>
+						<ul className="space-y-3 list-disc pl-5">
+							<li>
+								Play&apos;s records are kept in our Neon Postgres database. Play
+								emails are sent through Resend.
+							</li>
+							<li>
+								We keep Play data for [SAMBIT: retention period for Play data]. An
+								email request nobody confirms is deleted after 14 days.
+							</li>
+						</ul>
+
+						<h3 className="font-instrument-serif text-xl text-white mt-8 mb-3">
+							Deleting your Play data
+						</h3>
+						<ul className="space-y-3 list-disc pl-5">
+							<li>
+								To remove the random id from your device, clear this site&apos;s
+								data in your browser. Your place in each level goes with it.
+							</li>
+							<li>To delete your email, use the link at the foot of any Play email.</li>
+							<li>
+								To ask us to delete your Play records, email{" "}
+								<a
+									href="mailto:support@epocheye.app"
+									className="text-white/80 underline underline-offset-4 hover:text-white transition-colors">
+									support@epocheye.app
+								</a>
+								. If you gave an email, write from that address so we can find your
+								records. Without an email we cannot tell which records are yours.
+							</li>
+						</ul>
+					</section>
 				</div>
 			</article>
 		</main>
