@@ -1,6 +1,6 @@
 # Epocheye Play: status
 
-**GATE 3: waiting for the owner.** Phase 5 is done on branch `feat/play`. You launch it yourself. Nothing further happens until you answer this gate.
+**WAITING.** GATE 3 was shown on 2026-11-18 and has not been answered. Phase 5 is done on branch `feat/play`. You launch it yourself. Nothing further happens until you answer this gate.
 
 GATE 1 (2026-11-16): voice chosen, Kokoro. GATE 2 (2026-11-17): approved. Story rulings have not been given at either gate, so the proposals stand; they are item 1 of the launch checklist.
 
@@ -30,7 +30,7 @@ It is behind Vercel sign-in, so every check below ran on a local production buil
 | `/play` live on a preview URL with the Summer Palace level (five chapters, ending, proof toggle, year vote, final card), daily mode, vote, locked cards, share cards, leaderboards and email unlock | **Done** on the preview URL. Not played on the deployed copy (sign-in) |
 | Every line of story has a fact id; every fact verified with a source and a tier; STORY_CHECK.md lists every change | **Done.** The validator enforces it: 40 facts, 158 beats, 0 errors. One placeholder line (p-02) is yours to keep or cut |
 | A test player who has never seen the palace answers the eight questions after one play | **8 of 8, by an AI model standing in for a player**, not a person. The end card lists the answers just before the test, so this proves less than it looks. A real player should take it (launch checklist) |
-| Every spoken line of the default lens has a clip, a pace and a pause per 8.11; the round-trip check passes; the voice swaps with one command | **Mostly.** 188 clips, every one with its pace and pause. 182 of 188 heard word for word by both speech models, 2 fail on both (`c2-01`, `c3-C-1`), 4 on one. 19 lines run over their pace target because Kokoro adds words when slowed. Swap: `python tools/play/voice/render.py --voice <name> --make-default` |
+| Every spoken line of the default lens has a clip, a pace and a pause per 8.11; the round-trip check passes; the voice swaps with one command | **Mostly.** 188 clips, every one with its pace and pause. 184 of 188 heard word for word by both speech models, the other 4 by one of them; none fails on both (`c2-01` and `c3-C-1` were reshaped for the ear on 2026-11-18, with no change to their facts). 19 lines run over their pace target because Kokoro adds words when slowed. Swap: `python tools/play/voice/render.py --voice <name> --make-default` |
 | A new site is added by running the exporter and adding a story file, no code change; proven with the throwaway pack | **Done.** `_test-boxes` loaded with zero engine changes (`git diff 7fcbaee` on app, components, lib, next.config is empty) |
 | Panoramas on a phone match the Blender renders | **Matched on a phone-size screen in headless Chrome**: the faces are the Cycles renders, passed through with no colour change. Not checked on a real phone |
 | The quality bar in 5.7 is met, with a Lighthouse mobile report | **All but one item passes.** First view on slow 4G with a 4x slower CPU: **5.3 s against 5 s** (was 8.0 s). Under 3 MB before the first view, 60 fps, keyboard, tap-only, reduced motion, screen-reader labels and cache headers pass. Lighthouse reports are in `docs/play/lighthouse/` |

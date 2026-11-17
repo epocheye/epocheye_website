@@ -1338,7 +1338,7 @@
      },
      "say": [
       {
-       "text": "The twenty first of March, seventeen ninety one.",
+       "text": "On the twenty first day of March, seventeen ninety one.",
        "pace": "slow",
        "pause_after_ms": 1100
       },
@@ -2375,7 +2375,7 @@
           "traveller": "Not a later story. Buchanan wrote of \"false gilding\" in 1800.",
           "child": "Not a later story. Buchanan wrote of \"false gilding\" in 1800."
          },
-         "say": "Not a later story. Buchanan wrote of false gilding in eighteen hundred."
+         "say": "Not a later story. In eighteen hundred, Buchanan wrote the words false gilding."
         }
        ]
       }
