@@ -19,6 +19,8 @@ const nextConfig = {
   // site.json is listed here. Only that one small file per pack: never the panoramas.
   outputFileTracingIncludes: {
     '/play/c/**': ['./public/play/packs/*/v*/site.json'],
+    // The Play API checks every id a player sends against the pack's story.
+    '/api/play/**': ['./public/play/packs/*/v*/site.json'],
   },
 
   // Performance optimizations

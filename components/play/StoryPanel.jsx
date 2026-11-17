@@ -11,6 +11,8 @@ import { currentStep, orderSlots, textFor } from "@/lib/play/story/engine";
 import { directionFrom, nodeById } from "@/lib/play/pack";
 import { Icon, Pill, Switch, TierChip } from "@/components/play/ui";
 import OrderBoard from "@/components/play/OrderBoard";
+import YearVoteShares from "@/components/play/YearVoteShares";
+import { track } from "@/lib/play/api";
 
 const PieceCanvas = dynamic(() => import("./engine/PieceCanvas"), { ssr: false });
 
@@ -170,6 +172,7 @@ function ShareButton({ slug, chapter, story, text }) {
 	const [note, setNote] = useState("");
 	const share = async () => {
 		const url = `${window.location.origin}/play/${slug}?ch=${chapter.n ?? chapter.index}`;
+		track("share", { site: slug, chapter: chapter.id, props: { what: "chapter" } });
 		if (navigator.share) {
 			try {
 				await navigator.share({ title: story.title, text, url });
@@ -543,9 +546,9 @@ export default function StoryPanel({ slug, site, urls, chapters, state: s, lens,
 						);
 					})}
 				</div>
-				{/* Phase 3: the share of players behind each option goes here, from the server. Until
-				    then only the pick of this player is shown. No figure is ever made up. */}
 				<p className="play-ui-text">{mine ? "No answer is marked right. Your pick is kept." : "No answer is marked right."}</p>
+				{/* The share behind each option, from the server, once there are enough votes. */}
+				{mine ? <YearVoteShares slug={slug} vote={g.vote} options={options.map((o) => ({ id: o.id, text: optionText(o) }))} /> : null}
 				{mine ? <Continue ready={ready} onClick={advance} /> : null}
 			</>
 		);

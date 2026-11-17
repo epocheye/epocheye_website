@@ -1,11 +1,15 @@
 import { notFound } from "next/navigation";
-import { getPlayableSite } from "@/lib/play/sites";
+import { earlySite, getPlayableSite } from "@/lib/play/sites";
 import { verifyAdminJWT } from "@/lib/server/adminAuth";
 import LevelLoader from "@/components/play/LevelLoader";
+import EarlyGate from "@/components/play/sites/EarlyGate";
+
+// Which sites are open changes with the clock (a site's opens_at), so this page is never cached.
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }) {
 	const { slug } = await params;
-	const site = getPlayableSite(slug);
+	const site = getPlayableSite(slug) || earlySite(slug);
 	return { title: site ? `${site.name} | Epocheye Play` : "Epocheye Play" };
 }
 
@@ -26,8 +30,17 @@ export default async function PlayLevelPage({ params, searchParams }) {
 	const { slug } = await params;
 	const query = await searchParams;
 	const site = getPlayableSite(slug);
-	if (!site) notFound();
+	const early = site ? null : earlySite(slug);
+	if (!site && !early) notFound();
+	const open = site || early;
 	const ch = typeof query.ch === "string" && /^\d{1,3}$/.test(query.ch) ? Number(query.ch) : null;
 	const debug = query.debug === "1" && (await debugAllowed());
-	return <LevelLoader slug={site.slug} version={site.version} name={site.name} chapterNumber={ch} debug={debug} />;
+	const level = <LevelLoader slug={open.slug} version={open.version} name={open.name} chapterNumber={ch} debug={debug} />;
+	// A site that opens within a week plays only for players with a confirmed email; the server
+	// decides who (lib/server/play/request.js), and EarlyGate asks it.
+	return site ? level : (
+		<EarlyGate slug={open.slug} name={open.name}>
+			{level}
+		</EarlyGate>
+	);
 }

@@ -4,6 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { LOCKED_LABELS, liveSites, lockedSites } from "@/lib/play/sites";
 import { packBase } from "@/lib/play/pack";
+import LockedActions from "@/components/play/sites/LockedActions";
+import "@/components/play/sites/community.css";
 
 // The card picture is a file inside the published pack. Show it only when it is really there.
 function coverFor(site) {
@@ -12,6 +14,27 @@ function coverFor(site) {
 	const onDisk = join(/* turbopackIgnore: true */ process.cwd(), "public", "play", "packs", site.slug, `v${site.version}`, ...site.cover.split("/"));
 	return existsSync(onDisk) ? `${packBase(site.slug, site.version)}/${site.cover}` : null;
 }
+
+// A locked card's build-progress clip. Shown only when the registry entry gives one: clip (a
+// video URL, with an optional still as its poster) or a still alone. No entry has either yet, so
+// no card shows anything here. Never a stand-in picture.
+function BuildClip({ site }) {
+	const clip = typeof site.clip === "string" && site.clip ? site.clip : null;
+	const still = typeof site.still === "string" && site.still ? site.still : null;
+	if (!clip && !still) return null;
+	return (
+		<figure className="play-site-clip">
+			{clip ? (
+				<video src={clip} poster={still || undefined} muted loop playsInline autoPlay preload="metadata" aria-label={`Build progress, ${site.name}`} />
+			) : (
+				<Image src={still} alt={`Build progress, ${site.name}`} fill sizes="(max-width: 700px) 100vw, 360px" unoptimized />
+			)}
+		</figure>
+	);
+}
+
+// Which sites are live or locked follows each site's opens_at, so the page is rebuilt now and then.
+export const revalidate = 300;
 
 export default function PlayHome() {
 	const live = liveSites();
@@ -29,6 +52,18 @@ export default function PlayHome() {
 				<h1>Epocheye Play</h1>
 				<p className="play-logline">Rebuild a lost monument from its evidence.</p>
 			</header>
+
+			<nav className="play-home-links" aria-label="More to play">
+				<Link href="/play/daily" className="play-pill is-small">
+					Daily puzzle
+				</Link>
+				<Link href="/play/vote" className="play-pill is-small">
+					Vote for the next site
+				</Link>
+				<Link href="/play/leaderboards" className="play-pill is-small">
+					Leaderboards
+				</Link>
+			</nav>
 
 			<ul className="play-cards" aria-label="Sites">
 				{live.map((site) => {
@@ -56,6 +91,7 @@ export default function PlayHome() {
 				})}
 				{locked.map((site) => (
 					<li key={site.slug} className="play-site is-locked">
+						<BuildClip site={site} />
 						<div className="play-site-status">
 							<span className="play-label">{LOCKED_LABELS[site.status]}</span>
 						</div>
@@ -63,10 +99,7 @@ export default function PlayHome() {
 							<h2 className="play-site-name">{site.name}</h2>
 							<p className="play-site-place">{site.place}</p>
 							<div className="play-site-row">
-								<button type="button" className="play-pill" disabled aria-label={`Vote for ${site.name}. Voting is not open yet`}>
-									Vote
-								</button>
-								<span className="play-note">Voting is not open yet.</span>
+								<LockedActions slug={site.slug} name={site.name} />
 							</div>
 						</div>
 					</li>

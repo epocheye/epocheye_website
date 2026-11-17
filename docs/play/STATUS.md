@@ -88,3 +88,22 @@ Vercel asks you to sign in first (preview deployments are protected). I could no
 ## After the gate
 
 Phase 2: chapters 2 to 5, the ending, proof toggle, year vote, final card, lenses, the `order` step, interior lighting for the upper floor.
+
+## Phase 3 review (2026-11-17)
+
+Three reviewers' findings were checked against the code; the confirmed ones are fixed (DECISIONS.md, 2026-11-17 "Phase 3 review" rows). Verified on a local production build at 375x812: the full palace level to the end card with year-vote percentages, `/play/daily` right and wrong, `/play/vote` with the email flow in dry run, a `?c=` link landing in `play_events`, `/play/admin` signed out and in, `/play/c/<short id>` and its share image. Every test row was deleted afterwards.
+
+Still open:
+
+- **Progress across devices (brief 5.4) is not built.** The email link carries the name, votes and daily streak; a player's place in a level stays on each device. Copy now says only that.
+- **The daily runs out on 2026-12-10.** The pack has 24 elements, fewer than the 30 the rule needs. `[SAMBIT: publish more elements and rerun tools/play/daily/generate.mjs, or choose a shorter --min-gap.]`
+- **Leaderboard anti-cheat is a raised cost, not a wall.** Times are the server's and first picks are locked as they happen, but the accepted options ship in the public `site.json`, and ids can be prepared a day ahead.
+- **Someone who stopped Play emails from a link nobody else confirmed cannot sign up again** from another player. A support path is needed if that matters.
+- **Unlocking a site still needs an entry in `lib/play/sites.js`** (now a `version` and an `opens_at` date). A build-time pack index would remove it.
+- Not tested: real email delivery (dry run only), early access in a browser (rules checked in Node), a real phone.
+
+Placeholders added in this review:
+
+- `[SAMBIT: privacy wording for Play, to go into the privacy notice at /privacy before launch.]` on `/play/privacy`.
+- `[SAMBIT: build clip for Konark Sun Temple]`, `[SAMBIT: build clip for Victoria Memorial]`, `[SAMBIT: build clip for Hampi]`: locked cards show a clip only when the registry entry has `clip` or `still`.
+- `[SAMBIT: opens_at for the next site]`: early access starts a week before it.

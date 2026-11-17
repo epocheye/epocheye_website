@@ -1,4 +1,5 @@
 import "./play.css";
+import PlayArrival from "@/components/play/PlayArrival";
 
 // Not linked from the nav, the footer or the sitemap yet, and kept out of search until launch.
 export const metadata = {
@@ -8,5 +9,10 @@ export const metadata = {
 };
 
 export default function PlayLayout({ children }) {
-	return <div className="play">{children}</div>;
+	return (
+		<div className="play">
+			<PlayArrival />
+			{children}
+		</div>
+	);
 }

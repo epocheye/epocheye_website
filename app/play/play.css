@@ -1987,3 +1987,81 @@
 		display: none;
 	}
 }
+
+/* ------------------------------------------------------------------ year vote shares */
+/* Shown only once the server has enough votes. Percentages, never counts. */
+
+.play-shares {
+	display: grid;
+	gap: 10px;
+}
+
+.play-shares-list {
+	display: grid;
+	gap: 9px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.play-shares-list li {
+	display: grid;
+	gap: 5px;
+}
+
+.play-shares-row {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 12px;
+	color: rgba(255, 255, 255, 0.78);
+	font-size: 13.5px;
+}
+
+.play-shares-list li.is-mine .play-shares-row {
+	color: #fff;
+}
+
+.play-shares-pct {
+	font-variant-numeric: tabular-nums;
+	color: var(--play-dim);
+}
+
+.play-shares-list li.is-mine .play-shares-pct {
+	color: #fff;
+}
+
+.play-shares-bar {
+	display: block;
+	height: 2px;
+	background: var(--play-rule);
+	border-radius: 2px;
+	overflow: hidden;
+}
+
+.play-shares-bar > span {
+	display: block;
+	height: 100%;
+	background: rgba(255, 255, 255, 0.55);
+	transform-origin: left center;
+	animation: play-share-in 0.9s var(--play-ease) both;
+}
+
+.play-shares-list li.is-mine .play-shares-bar > span {
+	background: #fff;
+}
+
+@keyframes play-share-in {
+	from { transform: scaleX(0); }
+	to { transform: scaleX(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.play-shares-bar > span {
+		animation: none;
+	}
+}
+
+.play-end-scroll > .play-shares {
+	margin-top: 26px;
+}

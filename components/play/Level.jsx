@@ -6,16 +6,19 @@
 
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { useEffect, useEffectEvent, useReducer, useState } from "react";
+import { useEffect, useEffectEvent, useReducer, useRef, useState } from "react";
 import {
 	currentStep, initialState, orderSlots, pagedSentences, reduce, restore as restoreSave, restoredBefore, revealedBefore, saveKey, serialise,
 	spokenFor, textFor,
 } from "@/lib/play/story/engine";
 import { clipUsable, createNarrator, discoverVoices } from "@/lib/play/audio";
+import { ensurePlayer, reportGame, setQuiet } from "@/lib/play/api";
+import { captureArrival } from "@/lib/play/player";
 import { directionFrom, nodeById } from "@/lib/play/pack";
 import { Icon, Pill, Switch } from "@/components/play/ui";
 import StoryPanel from "@/components/play/StoryPanel";
 import EndScreen, { endView } from "@/components/play/EndScreen";
+import { voteOptionsOf } from "@/components/play/YearVoteShares";
 import { ChaptersSheet, CreditsSheet, DebugSheet, EvidenceSheet, NoteSheet, SourcesSheet } from "@/components/play/LevelSheets";
 
 const PanoViewer = dynamic(() => import("./engine/PanoViewer"), { ssr: false });
@@ -384,6 +387,30 @@ export default function Level({ slug, version, site, chapters, urls, startChapte
 
 	useEffect(() => () => narrator.dispose(), [narrator]);
 
+	// The server side of the level (lib/play/api.js). Nothing is recorded in the debug view.
+	useEffect(() => {
+		setQuiet(debug);
+		return () => setQuiet(false);
+	}, [debug]);
+
+	// Make sure the server knows this anonymous player, once the first view is up.
+	useEffect(() => {
+		captureArrival();
+		const timer = setTimeout(() => ensurePlayer(), 1500);
+		return () => clearTimeout(timer);
+	}, []);
+
+	// Report what changed in the story: chapters started and finished, choices, lens, proof switch,
+	// the year vote and the end of the run. Only real changes: a re-render with the same state
+	// reports nothing.
+	const reported = useRef(null);
+	const screen = s.screen;
+	useEffect(() => {
+		const prev = reported.current;
+		reported.current = g;
+		reportGame(prev, g, { slug, chapters, screen });
+	}, [g, slug, chapters, screen]);
+
 	// The full reveal. While the picture crossfades nothing is said. Once it has settled the
 	// silence holds a little longer, then the story moves on by itself.
 	const full = s.screen === "play" && step?.kind === "reveal" ? s.full : null;
@@ -579,7 +606,7 @@ export default function Level({ slug, version, site, chapters, urls, startChapte
 			) : null}
 
 			{card ? (
-				<EndScreen slug={slug} version={version} view={card} game={g} />
+				<EndScreen slug={slug} version={version} view={card} game={g} voteOptions={card.vote ? voteOptionsOf(story, lens, defaultLens) : []} />
 			) : (
 				<StoryPanel
 					slug={slug}
