@@ -53,4 +53,5 @@ Real phones (iOS and Android), frame rate on a real mid-range Android, gyroscope
 - Progress across devices is not built; the email link carries the name, votes and streak, not a place in the level.
 - Leaderboard anti-cheat raises the cost but does not stop a determined player.
 - NOW shows plain plaster and timber on the upper floor, because no file says which painted panels survive. The front balcony is not modelled.
+- Test rows: all deleted on 2026-11-18 with the owner's go-ahead; every `play_` table started empty at launch.
 - `PLAY_SIGNING_SECRET` is probably not set on Vercel yet; email unlock fails closed without it (launch checklist).
