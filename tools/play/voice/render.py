@@ -226,6 +226,20 @@ def atempo(x, tempo: float, tmp: Path):
     return y
 
 
+def rubberband(x, tempo: float, tmp: Path):
+    """Time-stretch with Rubber Band (ffmpeg), pitch and formants preserved. tempo < 1 is slower."""
+    import soundfile as sf
+    a, b = tmp.with_suffix(".in.wav"), tmp.with_suffix(".out.wav")
+    sf.write(str(a), x, C.SR, subtype="FLOAT")
+    C.run(["ffmpeg", "-y", "-v", "error", "-i", str(a), "-filter:a",
+           f"rubberband=tempo={tempo:.5f}:pitchq=quality:formant=preserved:transients=smooth:detector=soft",
+           "-ar", str(C.SR), "-ac", "1", "-c:a", "pcm_f32le", str(b)])
+    y, _ = sf.read(str(b), dtype="float64")
+    a.unlink(missing_ok=True)
+    b.unlink(missing_ok=True)
+    return y
+
+
 def fade(x):
     import numpy as np
     n = int(C.SR * C.FADE_MS / 1000)
@@ -372,9 +386,17 @@ def render_clip(worker: Worker, voice: str, cfg: dict, seg: dict, lexicon: dict,
     speech, ratio = best["speech"], best["ratio"]
 
     tempo = 1.0
+    stretch_min = float(cfg.get("stretch_min", 0) or 0)
     if not exempt and abs(ratio - 1) > 0.02:
-        tempo = min(max(ratio, C.ATEMPO_MIN), C.ATEMPO_MAX)
-        speech = cut_speech(pad(atempo(speech, tempo, tmp), 20))
+        if stretch_min and ratio < C.ATEMPO_MIN and not override.get("no_stretch"):
+            # Still too fast at the speed floor (the voice adds words below it). Slow the read itself
+            # with Rubber Band, pitch and formants kept, no further than stretch_min. A time stretch
+            # cannot add or drop a word, so the round trip only has to confirm the sound is clean.
+            tempo = max(ratio, stretch_min)
+            speech = cut_speech(pad(rubberband(speech, tempo, tmp), 20))
+        else:
+            tempo = min(max(ratio, C.ATEMPO_MIN), C.ATEMPO_MAX)
+            speech = cut_speech(pad(atempo(speech, tempo, tmp), 20))
 
     final, norm = normalise(pad(fade(speech)))
     encode(final, out, tmp)

@@ -52,7 +52,8 @@
         },
         "c5-e3": {
           "min": 0.9,
-          "why": "Slow line. At the usual floor Kokoro added or changed a word that both recognisers heard (2026-11-17 check). Words come before pace, so the floor is raised for this clip only."
+          "why": "Slow line. At the usual floor Kokoro added or changed a word that both recognisers heard (2026-11-17 check). Words come before pace, so the floor is raised for this clip only. Rubber Band below 0.85 made \"a niche\" sound like \"an inch\" to both recognisers (2026-11-18), so this clip is not stretched.",
+          "no_stretch": true
         },
         "c5-e5": {
           "min": 0.72,
@@ -66,7 +67,9 @@
           "min": 0.84,
           "why": "Last line. At 0.72 and 0.78 a recogniser heard \"So\" before it; at 0.84 both hear it word for word (trial 2026-11-17)."
         }
-      }
+      },
+      "stretch_min": 0.7,
+      "_stretch_note": "stretch_min: when a clip is still too fast at its speed floor, render.py slows it with Rubber Band (pitch and formants kept) down to this tempo. Checked 2026-11-18: 17 of 22 fast clips came into pace and every word survived but one (c5-e3, now no_stretch). Nobody has listened to the stretched clips."
     },
     "melo-india": {
       "engine": "melo",
