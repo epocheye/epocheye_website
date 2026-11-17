@@ -4,6 +4,7 @@
 // and the debug view. Generic interface text only.
 
 import Link from "next/link";
+import { useState } from "react";
 import { currentStep, debugBeats, textFor } from "@/lib/play/story/engine";
 import { nodeById } from "@/lib/play/pack";
 import { Icon, Pill, Sheet, TierChip } from "@/components/play/ui";
@@ -42,13 +43,34 @@ export function ChaptersSheet({ site, chapters, state, dispatch, onClose }) {
 	};
 	const main = chapters.filter((c) => !c.preview);
 	const previews = chapters.filter((c) => c.preview);
+	// With every chapter finished, the card at the end can be opened again from here.
+	const hasCard = !!story.ending?.know?.length && main.every((c) => g.chaptersDone.includes(c.id));
+	const atCard = state.screen === "done";
 	// Every way to move is also here, so no drag is ever needed to find a marker.
 	const here = nodeById(site, state.view.node);
 	const links = (here?.links || []).map((id) => nodeById(site, id)).filter(Boolean);
 	return (
 		<Sheet title="Chapters" onClose={onClose}>
 			<p className="play-sheet-lead">{story.title}</p>
-			<ul className="play-list">{main.map(row)}</ul>
+			<ul className="play-list">
+				{main.map(row)}
+				{hasCard ? (
+					<li>
+						<button
+							type="button"
+							className={`play-list-row${atCard ? " is-current" : ""}`}
+							aria-current={atCard ? "step" : undefined}
+							onClick={() => {
+								dispatch({ type: "end" });
+								onClose();
+							}}
+						>
+							<span className="play-list-kicker">The end</span>
+							<span className="play-list-title">What you now know</span>
+						</button>
+					</li>
+				) : null}
+			</ul>
 			{previews.length ? (
 				<>
 					<h3 className="play-sheet-sub">Preview</h3>
@@ -170,17 +192,19 @@ export function EvidenceSheet({ site, chapters, state, dispatch, onClose }) {
 				{step.beats.map((b) => {
 					const item = (story.evidence || []).find((e) => e.id === b.evidence);
 					const done = state.game.found.includes(b.id);
-					const away = b.at && b.at.node !== state.view.node;
-					const where = b.at ? nodeById(site, b.at.node)?.name || b.at.node : "A card";
+					// Evidence set at a viewpoint this pack does not have is a card: it opens from anywhere.
+					const at = b.at && nodeById(site, b.at.node) ? b.at : null;
+					const away = at && at.node !== state.view.node;
+					const where = at ? nodeById(site, at.node).name : "A card";
 					return (
 						<li key={b.id}>
 							<button
 								type="button"
 								className="play-list-row"
 								onClick={() => {
-									if (away) dispatch({ type: "go", node: b.at.node, target: b.at.target });
+									if (away) dispatch({ type: "go", node: at.node, target: at.target });
 									else {
-										if (b.at) dispatch({ type: "aim", target: b.at.target });
+										if (at) dispatch({ type: "aim", target: at.target });
 										dispatch({ type: "find", id: b.id });
 									}
 									onClose();
@@ -198,32 +222,139 @@ export function EvidenceSheet({ site, chapters, state, dispatch, onClose }) {
 	);
 }
 
+// The test of the level (brief 8.10): questions drawn from the card. Debug view only, never shown
+// to players. Marks and the score appear once every question has an answer.
+function Quiz({ items, lens, fallbackLens }) {
+	const [answers, setAnswers] = useState({});
+	const say = (value) => textFor(value, lens, fallbackLens);
+	const answered = items.filter((q) => answers[q.id] != null).length;
+	const all = answered === items.length;
+	const score = items.filter((q) => answers[q.id] === q.answer).length;
+	return (
+		<div className="play-quiz">
+			<p className="play-quiz-score" role="status" aria-live="polite">
+				{all ? `Score: ${score} of ${items.length}` : `Answered ${answered} of ${items.length}. The score shows when all are answered.`}
+			</p>
+			<ol className="play-quiz-list">
+				{items.map((q) => {
+					const mine = answers[q.id];
+					return (
+						<li key={q.id}>
+							<p className="play-quiz-q">{say(q.q)}</p>
+							<div className="play-options" role="group" aria-label={say(q.q)}>
+								{(q.options || []).map((option, i) => {
+									const on = mine === i;
+									const mark = all ? (i === q.answer ? "Right answer" : on ? "Wrong" : "") : on ? "Picked" : "";
+									return (
+										<button
+											key={i}
+											type="button"
+											className={`play-option is-row is-quiz${on ? " is-current" : ""}`}
+											aria-pressed={on}
+											disabled={all}
+											onClick={() => setAnswers({ ...answers, [q.id]: i })}
+										>
+											<span className="play-option-id" aria-hidden="true">{String.fromCharCode(65 + i)}</span>
+											<span>{say(option)}</span>
+											{mark ? <span className="play-tag">{mark}</span> : null}
+										</button>
+									);
+								})}
+							</div>
+							<p className="play-dim">{`From card item ${q.item}`}</p>
+						</li>
+					);
+				})}
+			</ol>
+			<div className="play-actions is-left">
+				<Pill small onClick={() => setAnswers({})}>
+					Start the test again
+				</Pill>
+			</div>
+		</div>
+	);
+}
+
+// What the story asks for that this pack does not have. The level copes with each of these;
+// this is where it says so.
+function packGaps(site, chapters) {
+	const out = [];
+	const has = (id) => !!nodeById(site, id);
+	const restorations = new Set((site.restorations || []).map((r) => r.id));
+	for (const c of chapters) {
+		if (c.start_node && !has(c.start_node)) out.push(`${c.id}: start viewpoint "${c.start_node}" is not in this pack. The chapter stays on the viewpoint the player is on.`);
+		for (const st of c.steps) {
+			for (const b of st.beats || []) {
+				if (b.at?.node && !has(b.at.node)) out.push(`${c.id} ${b.id}: evidence viewpoint "${b.at.node}" is not in this pack. It is offered as a card.`);
+			}
+			if (st.kind === "restore" && !restorations.has(st.beat.restoration)) out.push(`${c.id} ${st.beat.id}: restoration "${st.beat.restoration}" is not in this pack. A placeholder piece is shown.`);
+		}
+	}
+	return out;
+}
+
 export function DebugSheet({ site, chapters, state, dispatch, onClose }) {
 	const g = state.game;
 	const step = currentStep(g, chapters);
-	const rows = debugBeats(site.story);
+	const story = site.story;
+	const rows = debugBeats(story);
+	const gaps = packGaps(site, chapters);
+	const quiz = story.ending?.quiz || [];
+	const last = chapters[chapters.length - 1];
 	const snapshot = {
 		chapter: chapters[g.chapter]?.id, step: g.step, kind: step?.kind, stepId: step?.id, lens: g.lens, node: state.view.node,
-		found: g.found, picked: g.picked, afterIndex: g.afterIndex, choices: g.choices, restored: g.restored,
-		chaptersDone: g.chaptersDone, complete: g.complete, proof: g.proof, revealAll: state.revealAll, screen: state.screen,
+		found: g.found, picked: g.picked, afterIndex: g.afterIndex, placed: g.placed, pressed: g.pressed, choices: g.choices, vote: g.vote,
+		restored: g.restored, revealed: g.revealed, chaptersDone: g.chaptersDone, complete: g.complete, proof: g.proof, proofSeen: g.proofSeen,
+		revealAll: state.debugAll, fullReveal: state.full, screen: state.screen, missingStartNode: state.missing,
 	};
 	return (
 		<Sheet title="Debug" onClose={onClose} wide>
 			<div className="play-actions is-left">
 				{chapters.map((c) => (
-					<Pill key={c.id} small strong={c.index === g.chapter} onClick={() => dispatch({ type: "jump", chapter: c.index })}>
+					<Pill key={c.id} small strong={c.index === g.chapter && state.screen === "play"} onClick={() => dispatch({ type: "jump", chapter: c.index })}>
 						{`Jump: ${c.id}`}
 					</Pill>
 				))}
+				{last?.endingAt != null ? (
+					<Pill small onClick={() => dispatch({ type: "jump", chapter: last.index, step: last.endingAt })}>
+						Jump: ending beats
+					</Pill>
+				) : null}
+				<Pill
+					small
+					strong={state.screen === "done"}
+					onClick={() => {
+						dispatch({ type: "end", force: true });
+						onClose();
+					}}
+				>
+					Jump to ending
+				</Pill>
 			</div>
 			<div className="play-actions is-left">
-				<Pill small aria-pressed={state.revealAll} strong={state.revealAll} onClick={() => dispatch({ type: "revealAll", on: !state.revealAll })}>
-					{state.revealAll ? "Reveal all: on" : "Reveal all: off"}
+				<Pill small aria-pressed={state.debugAll} strong={state.debugAll} onClick={() => dispatch({ type: "revealAll", on: !state.debugAll })}>
+					{state.debugAll ? "Reveal all: on" : "Reveal all: off"}
 				</Pill>
 				<Pill small aria-pressed={g.proof} strong={g.proof} onClick={() => dispatch({ type: "proof", on: !g.proof })}>
 					{g.proof ? "Proof: on" : "Proof: off"}
 				</Pill>
 			</div>
+			{gaps.length ? (
+				<>
+					<h3 className="play-sheet-sub">{`Not in this pack (${gaps.length})`}</h3>
+					<ul className="play-credits play-debug-gaps">
+						{gaps.map((line) => (
+							<li key={line}>{line}</li>
+						))}
+					</ul>
+				</>
+			) : null}
+			{quiz.length ? (
+				<>
+					<h3 className="play-sheet-sub">{`The test (${quiz.length} questions)`}</h3>
+					<Quiz items={quiz} lens={g.lens || story.default_lens} fallbackLens={story.default_lens} />
+				</>
+			) : null}
 			<h3 className="play-sheet-sub">State</h3>
 			<pre className="play-pre">{JSON.stringify(snapshot, null, 1)}</pre>
 			<h3 className="play-sheet-sub">{`Beats (${rows.length})`}</h3>

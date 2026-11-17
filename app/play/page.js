@@ -8,7 +8,8 @@ import { packBase } from "@/lib/play/pack";
 // The card picture is a file inside the published pack. Show it only when it is really there.
 function coverFor(site) {
 	if (!site.cover) return null;
-	const onDisk = join(process.cwd(), "public", "play", "packs", site.slug, `v${site.version}`, ...site.cover.split("/"));
+	// turbopackIgnore: without it the build traces every file of every pack into this route.
+	const onDisk = join(/* turbopackIgnore: true */ process.cwd(), "public", "play", "packs", site.slug, `v${site.version}`, ...site.cover.split("/"));
 	return existsSync(onDisk) ? `${packBase(site.slug, site.version)}/${site.cover}` : null;
 }
 

@@ -6,6 +6,9 @@
 import { useEffect, useRef, useState } from "react";
 import { Icon } from "@/components/play/ui";
 
+// Kept in step with FULL_REVEAL_MS in panoCore.js, which is loaded on the client only.
+const FULL_REVEAL_MS = 3200;
+
 const HOTSPOT_SHAPES = { move: "is-move", evidence: "is-evidence", restore: "is-restore" };
 const NO_HOTSPOTS = [];
 
@@ -18,7 +21,9 @@ export default function PanoViewer({
 	restored = [],   // restoration ids that show THEN through their masks
 	animateId = null, // the restoration to reveal with the long fade
 	onRevealDone,
-	revealAll = false,
+	revealAll = false, // THEN everywhere
+	animateAll = false, // the full reveal: play it as the long fade, then call onAllDone
+	onAllDone,
 	proof = false,
 	preloadThen = false,
 	hotspots = [],   // [{ id, kind, dir, label, text, done }]
@@ -31,6 +36,8 @@ export default function PanoViewer({
 	const readout = useRef(null);
 	const coreRef = useRef(null);
 	const applied = useRef(new Set());
+	const allShown = useRef(null); // the last "THEN everywhere" value handed to the engine
+	const allFading = useRef(false); // the full reveal is playing
 	const [env, setEnv] = useState({ ready: false, failed: false, canGyro: false });
 	const [status, setStatus] = useState({ loading: true, error: null, shown: null }); // shown: the node whose picture is up
 	const [gyro, setGyro] = useState("off"); // off | asking | on | denied | unsupported
@@ -58,7 +65,7 @@ export default function PanoViewer({
 			}
 			if (readout.current) {
 				const v = c.view();
-				readout.current.textContent = `yaw ${v.yaw.toFixed(0)}  pitch ${v.pitch.toFixed(0)}  fov ${v.fov.toFixed(0)}  faces ${v.size}${v.thenSize ? ` / then ${v.thenSize}` : ""}`;
+				readout.current.textContent = `yaw ${v.yaw.toFixed(0)}  pitch ${v.pitch.toFixed(0)}  fov ${v.fov.toFixed(0)}  faces ${v.size}${v.thenSize ? ` / then ${v.thenSize}` : ""}  all ${v.all.toFixed(2)}  proof ${v.proof.toFixed(2)}${v.tier ? " tier" : ""}`;
 			}
 		};
 		import("./panoCore")
@@ -93,12 +100,41 @@ export default function PanoViewer({
 		return () => {
 			cancelled = true;
 			applied.current = new Set();
+			allShown.current = null;
+			allFading.current = false;
 			coreRef.current = null;
 			core?.dispose();
 		};
 		// The engine is built once per pack. onFirstView is only read when the first picture lands.
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [site, urls]);
+
+	// THEN everywhere. Set before the first node loads, so a level reopened after its reveal
+	// arrives complete. The full reveal plays as one long fade and reports when it has settled;
+	// a level that was already revealed is simply shown that way.
+	useEffect(() => {
+		const core = coreRef.current;
+		if (env.failed) {
+			if (revealAll && animateAll) onAllDone?.();
+			return;
+		}
+		if (!env.ready || !core) return;
+		if (revealAll && animateAll) {
+			if (allFading.current) return; // this fade is already running
+			allFading.current = true;
+			allShown.current = true;
+			// Already complete (the debug view can do that): the engine settles at once.
+			core.setAll(true, { animate: true, ms: FULL_REVEAL_MS }).then(() => {
+				allFading.current = false;
+				onAllDone?.();
+			});
+			return;
+		}
+		const first = allShown.current === null;
+		if (allShown.current === revealAll) return;
+		allShown.current = revealAll;
+		core.setAll(revealAll, { animate: !first });
+	}, [env.ready, env.failed, revealAll, animateAll, onAllDone]);
 
 	// Move to a node, or re-aim on the same node.
 	useEffect(() => {
@@ -138,10 +174,6 @@ export default function PanoViewer({
 			});
 		}
 	}, [env.ready, env.failed, restored, animateId, onRevealDone]);
-
-	useEffect(() => {
-		if (env.ready) coreRef.current?.setAll(revealAll);
-	}, [env.ready, revealAll]);
 
 	useEffect(() => {
 		if (env.ready) coreRef.current?.setProof(proof);

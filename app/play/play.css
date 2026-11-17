@@ -1362,6 +1362,578 @@
 	accent-color: #fff;
 }
 
+/* ================================================================== Phase 2 */
+
+/* ------------------------------------------------------------------ text that pages with its clips */
+
+.play-line-block {
+	position: relative;
+}
+
+/* A hidden copy of the line, out of the flow, used to measure how many sentences fit on two lines. */
+.play-line.play-line-measure {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	display: block;
+	visibility: hidden;
+	pointer-events: none;
+	animation: none;
+}
+
+.play-sentence {
+	animation: play-fade 0.6s var(--play-ease) both;
+}
+
+/* ------------------------------------------------------------------ switch */
+
+/* ".play button" sets font: inherit and outranks a single class, so the button styles in this
+   part that set a font name .play as well. */
+.play .play-switch {
+	display: inline-flex;
+	align-items: center;
+	gap: 12px;
+	justify-self: start;
+	min-height: 52px;
+	padding: 8px 18px 8px 10px;
+	border: 1px solid #fff;
+	border-radius: 999px;
+	background: rgba(8, 8, 8, 0.45);
+	color: #fff;
+	font-size: 14.5px;
+	line-height: 1.25;
+	text-align: left;
+	backdrop-filter: blur(8px);
+	-webkit-backdrop-filter: blur(8px);
+}
+
+.play-switch-track {
+	position: relative;
+	flex: none;
+	width: 44px;
+	height: 26px;
+	border: 1px solid rgba(255, 255, 255, 0.75);
+	border-radius: 999px;
+	transition: background-color 0.3s var(--play-ease);
+}
+
+.play-switch-thumb {
+	position: absolute;
+	top: 3px;
+	left: 3px;
+	width: 18px;
+	height: 18px;
+	border-radius: 50%;
+	background: rgba(255, 255, 255, 0.75);
+	transition: transform 0.3s var(--play-ease), background-color 0.3s var(--play-ease);
+}
+
+.play-switch.is-on .play-switch-track {
+	background: #fff;
+}
+
+.play-switch.is-on .play-switch-thumb {
+	background: #080808;
+	transform: translateX(18px);
+}
+
+.play-switch.is-compact {
+	gap: 8px;
+	min-height: 36px;
+	padding: 4px 12px 4px 5px;
+	border-color: var(--play-rule-strong);
+	background: rgba(8, 8, 8, 0.6);
+	color: rgba(255, 255, 255, 0.9);
+	font-size: 12px;
+}
+
+.play-switch.is-compact .play-switch-track {
+	width: 34px;
+	height: 20px;
+}
+
+.play-switch.is-compact .play-switch-thumb {
+	top: 2px;
+	left: 2px;
+	width: 14px;
+	height: 14px;
+}
+
+.play-switch.is-compact.is-on .play-switch-thumb {
+	transform: translateX(14px);
+}
+
+.play-top .play-top-proof {
+	position: relative;
+	max-width: calc(100% - 150px); /* clear of the look controls */
+}
+
+/* The compact switch keeps its look and gets a 44 px touch area. */
+.play-top .play-top-proof::after {
+	content: "";
+	position: absolute;
+	inset: -4px 0;
+}
+
+.play-debug-line {
+	position: absolute;
+	left: 12px;
+	top: calc(max(12px, env(safe-area-inset-top)) + 146px);
+	max-width: calc(100% - 170px);
+	margin: 0;
+	padding: 3px 8px;
+	border-radius: 6px;
+	background: rgba(8, 8, 8, 0.7);
+	color: rgba(255, 255, 255, 0.8);
+	font-family: var(--font-geist-mono), ui-monospace, monospace;
+	font-size: 10.5px;
+	overflow-wrap: anywhere;
+	pointer-events: none;
+}
+
+/* ------------------------------------------------------------------ order step */
+
+.play-order {
+	display: grid;
+	gap: 8px;
+}
+
+/* The order step is tall and is read closely: it sits on a plate, like a card. */
+.play-panel.is-order .play-panel-in {
+	padding: 14px;
+	border: 1px solid var(--play-rule);
+	border-radius: 14px;
+	background: rgba(8, 8, 8, 0.74);
+	backdrop-filter: blur(14px);
+	-webkit-backdrop-filter: blur(14px);
+}
+
+.play-order-tray {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.play .play-order-card {
+	position: relative;
+	min-height: 44px;
+	padding: 0 14px;
+	border: 1px solid var(--play-rule-strong);
+	border-radius: 10px;
+	background: rgba(8, 8, 8, 0.6);
+	font-family: var(--play-serif);
+	font-size: 18px;
+	line-height: 1.1;
+	white-space: nowrap;
+	touch-action: none; /* the card is dragged: the page must not scroll under the finger */
+	user-select: none;
+	-webkit-user-select: none;
+	cursor: grab;
+	transition: border-color 0.3s var(--play-ease), background-color 0.3s var(--play-ease);
+}
+
+.play-order-card:hover,
+.play-order-card.is-selected {
+	border-color: #fff;
+	background: rgba(255, 255, 255, 0.1);
+}
+
+.play-order-card.is-held {
+	z-index: 5;
+	border-color: #fff;
+	background: rgba(24, 24, 24, 0.95);
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+	cursor: grabbing;
+}
+
+.play-order-list {
+	display: grid;
+	gap: 4px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.play-order-row {
+	display: grid;
+	grid-template-columns: 22px auto 1fr;
+	align-items: baseline;
+	gap: 4px 10px;
+	min-height: 38px;
+	padding: 8px 12px 8px 8px;
+	border: 1px solid var(--play-rule);
+	border-radius: 10px;
+}
+
+.play-order-row.is-open {
+	display: block;
+	min-height: 0;
+	padding: 0;
+	border: 0;
+}
+
+.play-order-slot {
+	display: grid;
+	grid-template-columns: 22px 1fr;
+	align-items: center;
+	width: 100%;
+	min-height: 38px;
+	padding: 0 12px 0 8px;
+	border: 1px dashed var(--play-rule-strong);
+	border-radius: 10px;
+	background: rgba(8, 8, 8, 0.25);
+	text-align: left;
+	transition: border-color 0.3s var(--play-ease), background-color 0.3s var(--play-ease);
+}
+
+.play-order-slot:hover,
+.play-order-slot.is-over {
+	border-color: #fff;
+	background: rgba(255, 255, 255, 0.09);
+}
+
+.play-order-slot.is-missed {
+	animation: play-miss 0.4s var(--play-ease) both;
+}
+
+@keyframes play-miss {
+	0% { transform: translateX(0); }
+	25% { transform: translateX(-5px); }
+	60% { transform: translateX(4px); }
+	100% { transform: translateX(0); }
+}
+
+.play-order-n {
+	color: var(--play-dim);
+	font-family: var(--play-display);
+	font-size: 11px;
+	font-variant-numeric: tabular-nums;
+}
+
+.play-order-row.is-placed {
+	border-color: rgba(255, 255, 255, 0.45);
+	background: rgba(255, 255, 255, 0.04);
+	animation: play-line-in 0.5s var(--play-ease) both;
+}
+
+.play-order-label {
+	font-family: var(--play-serif);
+	font-size: 18px;
+	line-height: 1.1;
+	white-space: nowrap;
+}
+
+.play-order-text {
+	min-width: 0;
+	color: rgba(255, 255, 255, 0.72);
+	font-size: 13px;
+	line-height: 1.3;
+}
+
+/* What the record does not say: a blank card, fixed between its neighbours. */
+.play-order-row.is-gap {
+	border-style: dashed;
+	border-color: var(--play-rule-strong);
+	animation: play-line-in 0.7s var(--play-ease) both;
+}
+
+.play-order-row.is-gap .play-order-label {
+	color: var(--play-dim);
+	font-style: italic;
+}
+
+.play-order-row.is-gap {
+	grid-template-columns: 22px 1fr auto;
+}
+
+.play-order-row.is-gap .play-order-text {
+	grid-column: 2 / -1;
+	color: rgba(255, 255, 255, 0.8);
+}
+
+.play-order-row.is-gap.is-telling {
+	border-color: #fff;
+}
+
+.play .play-order-source {
+	padding: 0 2px;
+	font-size: 12px;
+}
+
+.play-order-status {
+	min-height: 18px;
+	margin: 0;
+	color: var(--play-dim);
+	font-size: 12.5px;
+}
+
+.play-option.is-vote .play-option-id {
+	color: #fff;
+}
+
+.play-option.is-vote.is-current .play-option-id {
+	border-color: #fff;
+	background: rgba(255, 255, 255, 0.14);
+}
+
+/* ------------------------------------------------------------------ evidence pictures */
+
+.play-evidence-image {
+	display: block;
+	width: 100%;
+	height: auto;
+	max-height: 34dvh;
+	border-radius: 8px;
+	background: rgba(255, 255, 255, 0.04);
+	object-fit: contain;
+}
+
+/* ------------------------------------------------------------------ the card */
+
+.play-know {
+	display: grid;
+	gap: 22px;
+}
+
+.play-know-head {
+	display: grid;
+	gap: 10px;
+}
+
+.play-know-lead {
+	margin: 0;
+	color: rgba(255, 255, 255, 0.86);
+	font-family: var(--play-serif);
+	font-size: clamp(20px, 4.8vw, 26px);
+	font-style: italic;
+	line-height: 1.2;
+	text-wrap: balance;
+}
+
+.play-know-title {
+	margin: 0;
+	font-family: var(--play-display);
+	font-size: clamp(28px, 7vw, 44px);
+	font-weight: 300;
+	line-height: 1.02;
+	letter-spacing: -0.02em;
+}
+
+.play-know-list {
+	display: grid;
+	gap: 0;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	border-top: 1px solid var(--play-rule);
+}
+
+.play-know-list li {
+	display: grid;
+	grid-template-columns: 28px 1fr;
+	gap: 10px;
+	padding: 12px 0;
+	border-bottom: 1px solid var(--play-rule);
+	font-family: var(--play-serif);
+	font-size: clamp(18px, 4.6vw, 21px);
+	line-height: 1.22;
+}
+
+.play-know-n {
+	padding-top: 4px;
+	color: var(--play-dim);
+	font-family: var(--play-display);
+	font-size: 11px;
+	font-variant-numeric: tabular-nums;
+	letter-spacing: 0.08em;
+}
+
+.play-know-part {
+	display: grid;
+	gap: 10px;
+}
+
+.play-know-sub {
+	margin: 0;
+	color: var(--play-dim);
+	font-family: var(--play-display);
+	font-size: 10.5px;
+	font-weight: 500;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+}
+
+.play-know-plain {
+	display: grid;
+	gap: 8px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	color: rgba(255, 255, 255, 0.86);
+	font-size: 14.5px;
+	line-height: 1.4;
+}
+
+.play-know-plain li {
+	padding-left: 14px;
+	border-left: 1px solid var(--play-rule-strong);
+}
+
+.play-know-plain.is-unknown li {
+	border-left-style: dashed;
+	color: rgba(255, 255, 255, 0.74);
+}
+
+.play-know-q {
+	color: var(--play-dim);
+}
+
+/* The end of a level: the card over the finished building, and three ways on. */
+.play-end {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	display: flex;
+	flex-direction: column;
+	max-height: min(78dvh, calc(100dvh - 150px));
+	padding: 56px max(16px, env(safe-area-inset-right)) max(14px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+	background: linear-gradient(to top, rgba(8, 8, 8, 0.97) 0%, rgba(8, 8, 8, 0.94) 70%, rgba(8, 8, 8, 0.7) 90%, rgba(8, 8, 8, 0) 100%);
+	pointer-events: none;
+	animation: play-fade 0.9s var(--play-ease) both;
+}
+
+.play-end-scroll {
+	flex: 1 1 auto;
+	width: min(680px, 100%);
+	min-height: 0;
+	margin: 0 auto;
+	padding: 4px 2px 18px;
+	overflow-y: auto;
+	overscroll-behavior: contain;
+	pointer-events: auto;
+}
+
+.play .play-end-scroll:focus-visible {
+	outline: none;
+}
+
+.play-end-actions {
+	flex: none;
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 8px;
+	width: min(680px, 100%);
+	margin: 0 auto;
+	padding-top: 12px;
+	border-top: 1px solid var(--play-rule);
+	pointer-events: auto;
+}
+
+.play-end-actions .play-pill {
+	flex: 1 1 auto;
+	padding: 0 12px;
+}
+
+.play-end-note {
+	flex: 1 0 100%;
+}
+
+.play-end-note:empty {
+	display: none;
+}
+
+/* The card on its own page (/play/c/<id>). */
+.play-cardpage {
+	display: grid;
+	gap: 28px;
+	width: min(720px, 100%);
+	margin: 0 auto;
+	padding: max(20px, env(safe-area-inset-top)) 20px max(56px, env(safe-area-inset-bottom));
+}
+
+.play-cardpage-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	padding-top: 20px;
+	border-top: 1px solid var(--play-rule);
+}
+
+.play-cardpage-plain {
+	display: grid;
+	gap: 18px;
+	justify-items: start;
+	padding: clamp(48px, 16vh, 140px) 0;
+}
+
+.play-cardpage-plain h1 {
+	margin: 0;
+	font-family: var(--play-serif);
+	font-size: clamp(30px, 7vw, 44px);
+	font-weight: 400;
+	line-height: 1.08;
+}
+
+.play-cardpage-plain p {
+	margin: 0;
+	color: var(--play-dim);
+}
+
+/* ------------------------------------------------------------------ the test (debug view) */
+
+.play-quiz,
+.play-quiz-list {
+	display: grid;
+	gap: 16px;
+}
+
+.play-quiz-list {
+	margin: 0;
+	padding: 0 0 0 22px;
+}
+
+.play-quiz-list li {
+	display: grid;
+	gap: 8px;
+}
+
+.play-quiz-q {
+	margin: 0;
+	font-family: var(--play-serif);
+	font-size: 20px;
+	line-height: 1.15;
+}
+
+.play-quiz-score {
+	margin: 0;
+	font-size: 14.5px;
+}
+
+.play-option.is-quiz {
+	min-height: 44px;
+	padding: 7px 12px;
+	font-size: 14px;
+}
+
+.play-option.is-quiz:disabled {
+	opacity: 1;
+}
+
+.play-debug-gaps {
+	font-size: 12.5px;
+}
+
+@media (max-width: 980px) {
+	/* The card and the order step reach up to the look controls, which neither needs. */
+	.play-level.is-ended .play-look,
+	.play-level.is-ordering .play-look {
+		visibility: hidden;
+	}
+}
+
 /* ------------------------------------------------------------------ small screens, motion */
 
 @media (max-height: 520px) {

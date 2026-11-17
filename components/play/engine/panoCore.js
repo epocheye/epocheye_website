@@ -16,6 +16,8 @@ const DEG = Math.PI / 180;
 const PITCH_MAX = 85 * DEG;
 const MAX_MASKS = 4;
 const REVEAL_MS = 2500;
+const ALL_MS = 1800;
+export const FULL_REVEAL_MS = 3200; // the full reveal at the end of a level
 const QUICK_MS = 350;
 
 const VERT = /* glsl */ `
@@ -185,7 +187,7 @@ export class PanoCore {
 
 		// Blend state
 		this.reveal = new Map(); // restoration id -> { value, from, to, t0, dur, waiting, resolve }
-		this.all = { value: 0, from: 0, to: 0, t0: 0, dur: 0 };
+		this.all = { value: 0, from: 0, to: 0, t0: 0, dur: 0, waiting: false, resolve: null };
 		this.proof = { value: 0, from: 0, to: 0, t0: 0, dur: 0 };
 		this.fade = { value: 1, t0: 0, dur: 0 };
 
@@ -371,7 +373,10 @@ export class PanoCore {
 	}
 
 	view() {
-		return { yaw: this.yaw / DEG, pitch: this.pitch / DEG, fov: this.fov, size: this.tex.primary.size, thenSize: this.tex.then.size };
+		return {
+			yaw: this.yaw / DEG, pitch: this.pitch / DEG, fov: this.fov, size: this.tex.primary.size, thenSize: this.tex.then.size,
+			all: this.all.value, proof: this.proof.value, tier: !!this.tex.tier,
+		};
 	}
 
 	// ---------------------------------------------------------------- gyroscope
@@ -463,6 +468,7 @@ export class PanoCore {
 				this.loadError = true;
 				this.onStatus({ loading: false, node: node.id, shown: this.node?.id || null, error: "load" });
 				this.kick();
+				this.startWaiting(); // a full reveal must not wait for a picture that is not coming
 			}
 			return false;
 		}
@@ -708,9 +714,22 @@ export class PanoCore {
 		return thenOk && maskOk;
 	}
 
+	// Is everything the full reveal needs on screen (or known to be missing)?
+	allReady() {
+		if (this.loadError) return true;
+		if (!this.node || this.pending) return false;
+		if (!this.secondary) return true;
+		return this.tex.then.size > 0 || this.failed.has(`then:${this.sizes[0]}`);
+	}
+
 	startWaiting() {
 		const now = performance.now();
 		let any = false;
+		if (this.all.waiting && this.allReady()) {
+			this.all.waiting = false;
+			this.all.t0 = now;
+			any = true;
+		}
 		for (const [id, r] of this.reveal) {
 			if (r.waiting && this.readyFor(id)) {
 				r.waiting = false;
@@ -748,13 +767,24 @@ export class PanoCore {
 		this.invalidate();
 	}
 
-	setAll(on, { animate = true } = {}) {
-		const to = on ? 1 : 0;
-		const dur = !animate ? 0 : this.reduced ? QUICK_MS : 1800;
-		this.all = { ...this.all, from: this.all.value, to, t0: performance.now(), dur };
-		if (!dur) this.all.value = to;
-		this.kick();
-		this.invalidate();
+	// Show THEN everywhere (or NOW again). Resolves when the picture has settled. A fade towards
+	// THEN waits for the THEN faces of the viewpoint on screen, so it never starts on a blank.
+	setAll(on, { animate = true, ms = ALL_MS } = {}) {
+		return new Promise((resolve) => {
+			this.all.resolve?.();
+			const to = on ? 1 : 0;
+			const from = this.all.value;
+			const dur = !animate || from === to ? 0 : this.reduced ? QUICK_MS : ms;
+			if (!dur) {
+				this.all = { value: to, from: to, to, t0: 0, dur: 0, waiting: false, resolve: null };
+				resolve();
+			} else {
+				this.all = { value: from, from, to, t0: performance.now(), dur, waiting: to > from, resolve };
+			}
+			this.kick();
+			this.startWaiting();
+			this.invalidate();
+		});
 	}
 
 	setProof(on) {
@@ -802,7 +832,12 @@ export class PanoCore {
 			if (t >= 1) a.value = a.to;
 			else busy = true;
 		};
-		step(this.all);
+		if (!this.all.waiting) step(this.all);
+		if (this.all.value === this.all.to && this.all.resolve) {
+			const done = this.all.resolve;
+			this.all.resolve = null;
+			done();
+		}
 		step(this.proof);
 		for (const r of this.reveal.values()) {
 			if (r.waiting) continue;
@@ -855,6 +890,8 @@ export class PanoCore {
 		el.removeEventListener("webglcontextrestored", this.onRestored);
 		for (const r of this.reveal.values()) r.resolve?.();
 		this.reveal.clear();
+		this.all.resolve?.();
+		this.all.resolve = null;
 		this.disposeNodeTextures();
 		this.black.dispose();
 		for (const mesh of this.meshes) {

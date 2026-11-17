@@ -31,6 +31,24 @@ export function TierChip({ tier, tiers }) {
 	);
 }
 
+// A real switch: on or off, named by its label.
+export function Switch({ label, on, onChange, compact = false, className = "" }) {
+	return (
+		<button
+			type="button"
+			role="switch"
+			aria-checked={on}
+			className={`play-switch${on ? " is-on" : ""}${compact ? " is-compact" : ""}${className ? ` ${className}` : ""}`}
+			onClick={() => onChange(!on)}
+		>
+			<span className="play-switch-track" aria-hidden="true">
+				<span className="play-switch-thumb" />
+			</span>
+			<span className="play-switch-label">{label}</span>
+		</button>
+	);
+}
+
 const PATHS = {
 	left: "M14.5 5.5 8 12l6.5 6.5",
 	right: "M9.5 5.5 16 12l-6.5 6.5",

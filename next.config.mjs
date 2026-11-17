@@ -14,6 +14,13 @@ const nextConfig = {
     ],
   },
 
+  // Play: the shared card (/play/c/<id>) and its share images are rendered on the server from a
+  // pack's site.json. A Vercel function only has the files traced into it, so each pack's
+  // site.json is listed here. Only that one small file per pack: never the panoramas.
+  outputFileTracingIncludes: {
+    '/play/c/**': ['./public/play/packs/*/v*/site.json'],
+  },
+
   // Performance optimizations
   poweredByHeader: false,
   compress: true,

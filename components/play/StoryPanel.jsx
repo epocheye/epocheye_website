@@ -4,11 +4,13 @@
 // All story copy comes from site.json. The text written here is generic interface text.
 
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { currentStep, textFor } from "@/lib/play/story/engine";
+import { currentStep, orderSlots, textFor } from "@/lib/play/story/engine";
 import { directionFrom, nodeById } from "@/lib/play/pack";
-import { Icon, Pill, TierChip } from "@/components/play/ui";
+import { Icon, Pill, Switch, TierChip } from "@/components/play/ui";
+import OrderBoard from "@/components/play/OrderBoard";
 
 const PieceCanvas = dynamic(() => import("./engine/PieceCanvas"), { ssr: false });
 
@@ -30,10 +32,113 @@ export function factsOf(story, beat) {
 
 const ROLE_LABELS = { question: "The question", answer: "The answer", hook: "Next" };
 
-function Line({ story, beat, lens, role, label, onSources, onAdvance, children }) {
+// The text of a story line, never more than two lines at a time (brief 5.3).
+//
+// A line that pages with its clips is given as its sentences: sentence i appears as spoken
+// segment i starts. Sentences share a page while they fit on two lines together; the next one
+// turns the page. Any other line is one page. A page that would still run to a third line is set
+// a little smaller, down to a floor, so it fits. All of this is measured in the browser, with the
+// real font at the real width, in a hidden copy of the line.
+const FIT_SCALES = [1, 0.94, 0.88, 0.83];
+
+function FittedText({ id, sentences, upto, className, onClick }) {
+	const measure = useRef(null);
+	const [fit, setFit] = useState({ key: "", sig: "", pages: null, heights: null, sizes: null });
+	const key = `${id}\n${sentences.join("\n")}`;
+
+	useEffect(() => {
+		const el = measure.current;
+		const box = el?.parentElement;
+		if (!el || !box || typeof ResizeObserver === "undefined") return undefined;
+		const list = key.split("\n").slice(1);
+		let width = -1;
+		let alive = true;
+		const run = () => {
+			if (!alive) return;
+			el.style.fontSize = "";
+			const base = parseFloat(window.getComputedStyle(el).fontSize) || 0;
+			// Height of some sentences set together at a scale, and whether that is two lines or fewer.
+			const at = (items, scale) => {
+				el.style.fontSize = scale === 1 || !base ? "" : `${(base * scale).toFixed(2)}px`;
+				el.textContent = "A";
+				const one = el.offsetHeight;
+				el.textContent = items.map((i) => list[i]).join(" ");
+				const h = el.offsetHeight;
+				return { h, fits: one > 0 && h <= one * 2 + 2 };
+			};
+			if (!at([0], 1).h) return; // not laid out yet
+			const pages = [];
+			let page = [];
+			list.forEach((_, i) => {
+				if (page.length && !at([...page, i], 1).fits) {
+					pages.push(page);
+					page = [];
+				}
+				page.push(i);
+			});
+			if (page.length) pages.push(page);
+			const heights = [];
+			const sizes = [];
+			for (const items of pages) {
+				let pick = null;
+				for (const scale of FIT_SCALES) {
+					const r = at(items, scale);
+					pick = { h: r.h, size: scale === 1 || !base ? null : Number((base * scale).toFixed(2)) };
+					if (r.fits) break;
+				}
+				heights.push(pick.h);
+				sizes.push(pick.size);
+			}
+			el.style.fontSize = "";
+			el.textContent = "";
+			const sig = JSON.stringify([pages, heights, sizes]);
+			setFit((prev) => (prev.key === key && prev.sig === sig ? prev : { key, sig, pages, heights, sizes }));
+		};
+		// The measuring copy is out of the flow, so filling it never resizes the box being watched.
+		const ro = new ResizeObserver((entries) => {
+			const w = Math.round(entries[0]?.contentRect?.width ?? 0);
+			if (w === width) return;
+			width = w;
+			run();
+		});
+		ro.observe(box);
+		// A web font that arrives late changes where the lines break.
+		document.fonts?.ready?.then(run).catch(() => {});
+		return () => {
+			alive = false;
+			ro.disconnect();
+		};
+	}, [key]);
+
+	// Until the fit is known, one sentence to a page: never more than was measured.
+	const measured = fit.key === key && fit.pages;
+	const pages = measured ? fit.pages : sentences.map((_, i) => [i]);
+	const at = Math.max(0, Math.min(upto, sentences.length - 1));
+	const pi = Math.max(0, pages.findIndex((p) => p.includes(at)));
+	const page = pages[pi] || [at];
+	const style = {};
+	if (measured && fit.heights?.[pi]) style.minHeight = fit.heights[pi];
+	if (measured && fit.sizes?.[pi]) style.fontSize = fit.sizes[pi];
+	return (
+		<>
+			<p key={`${id}:${pi}`} className={className} onClick={onClick} style={style} data-paged={sentences.length > 1 ? `${pi + 1}/${pages.length}` : undefined}>
+				{page.filter((i) => i <= at).map((i) => (
+					<span key={i} className="play-sentence">
+						{sentences[i]}{" "}
+					</span>
+				))}
+			</p>
+			<span ref={measure} className={`${className} play-line-measure`} aria-hidden="true" />
+		</>
+	);
+}
+
+// paging: { id, sentences, upto } when the line on screen pages with its clips (see Level.jsx).
+function Line({ story, beat, lens, role, label, paging, onSources, onAdvance, children }) {
 	const text = textFor(beat.text, lens, story.default_lens);
 	const kind = role || beat.role || "line";
 	const shown = label || ROLE_LABELS[kind];
+	const paged = paging && paging.id === beat.id ? paging : null;
 	return (
 		<div className="play-line-block">
 			<div className="play-meta">
@@ -46,9 +151,7 @@ function Line({ story, beat, lens, role, label, onSources, onAdvance, children }
 				) : null}
 				{children}
 			</div>
-			<p key={beat.id} className={`play-line is-${kind}`} onClick={onAdvance}>
-				{text}
-			</p>
+			<FittedText id={beat.id} sentences={paged ? paged.sentences : [text]} upto={paged ? paged.upto : 0} className={`play-line is-${kind}`} onClick={onAdvance} />
 		</div>
 	);
 }
@@ -92,11 +195,37 @@ function ShareButton({ slug, chapter, story, text }) {
 	);
 }
 
-function EvidenceCard({ item }) {
+// The picture of an evidence item: a path inside the pack. Its box is reserved before it loads,
+// from the size the pack gives (image_width and image_height, or image_size), else three by two.
+// A file that is not there, or does not load, leaves no trace.
+function EvidenceImage({ item, urls }) {
+	const src = item.image ? urls.file(item.image) : null;
+	const [failed, setFailed] = useState(null);
+	if (!src || failed === src) return null;
+	const size = Array.isArray(item.image_size) ? item.image_size : [item.image_width ?? item.width, item.image_height ?? item.height];
+	const ok = size.length === 2 && size.every((n) => Number.isFinite(n) && n > 0);
+	const [w, h] = ok ? size : [1200, 800];
+	return (
+		<Image
+			className="play-evidence-image"
+			src={src}
+			alt={item.image_alt || item.title || ""}
+			width={w}
+			height={h}
+			style={{ aspectRatio: `${w} / ${h}` }}
+			loading="lazy"
+			unoptimized
+			onError={() => setFailed(src)}
+		/>
+	);
+}
+
+function EvidenceCard({ item, urls }) {
 	if (!item) return null;
 	return (
 		<figure className="play-evidence">
 			<figcaption className="play-evidence-title">{item.title}</figcaption>
+			<EvidenceImage item={item} urls={urls} />
 			{item.quote ? <blockquote className="play-evidence-quote">{`“${item.quote}”`}</blockquote> : null}
 			{item.caption ? <p className="play-evidence-caption">{item.caption}</p> : null}
 			{item.credit ? <p className="play-evidence-credit">{item.credit}</p> : null}
@@ -104,7 +233,7 @@ function EvidenceCard({ item }) {
 	);
 }
 
-export default function StoryPanel({ slug, site, urls, chapters, state: s, lens, ready, advance, dispatch, onSources, onSheet }) {
+export default function StoryPanel({ slug, site, urls, chapters, state: s, lens, ready, paging, telling, advance, dispatch, onSources, onSheet }) {
 	const story = site.story;
 	const g = s.game;
 	const chapter = chapters[g.chapter];
@@ -115,7 +244,7 @@ export default function StoryPanel({ slug, site, urls, chapters, state: s, lens,
 	const started = useRef(false);
 
 	// What is on the panel now, as a key: it changes when the panel shows something new.
-	const showing = done ? "done" : `${g.chapter}|${g.step}|${s.open || ""}|${g.picked || ""}|${g.afterIndex}|${s.revealing || ""}|${g.restored.length}`;
+	const showing = done ? "done" : `${g.chapter}|${g.step}|${s.open || ""}|${g.picked || ""}|${g.afterIndex}|${s.revealing || ""}|${g.restored.length}|${g.placed.length}|${g.pressed ? 1 : 0}`;
 
 	// The control just used is often removed with the step it belonged to (an option, "Set it in
 	// place"). Focus then falls to the page. Bring it back to the panel so the next Tab starts here.
@@ -195,17 +324,19 @@ export default function StoryPanel({ slug, site, urls, chapters, state: s, lens,
 			announce = [item(open)?.title, lineText(open)].filter(Boolean).join(". ");
 			body = (
 				<>
-					<Line story={story} beat={open} lens={lens} label="Evidence" onSources={onSources}>
+					<Line story={story} beat={open} lens={lens} label="Evidence" paging={paging} onSources={onSources}>
 						<span className="play-count">{`${found} of ${total}`}</span>
 					</Line>
-					<EvidenceCard item={item(open)} />
+					<EvidenceCard item={item(open)} urls={urls} />
 					<Continue ready={ready} onClick={advance} label={found === total ? "Continue" : "Keep looking"} />
 				</>
 			);
 		} else {
-			const loose = step.beats.filter((b) => !b.at);
-			const elsewhere = [...new Set(step.beats.filter((b) => b.at && b.at.node !== node?.id && !g.found.includes(b.id)).map((b) => b.at.node))];
-			const here = step.beats.filter((b) => b.at && b.at.node === node?.id && !g.found.includes(b.id)).length;
+			// Evidence set at a viewpoint this pack does not have is offered as a card instead.
+			const placedAt = (b) => (b.at && nodeById(site, b.at.node) ? b.at : null);
+			const loose = step.beats.filter((b) => !placedAt(b));
+			const elsewhere = [...new Set(step.beats.filter((b) => placedAt(b) && b.at.node !== node?.id && !g.found.includes(b.id)).map((b) => b.at.node))];
+			const here = step.beats.filter((b) => placedAt(b) && b.at.node === node?.id && !g.found.includes(b.id)).length;
 			const hint =
 				found === total
 					? "You have found all of it."
@@ -286,7 +417,7 @@ export default function StoryPanel({ slug, site, urls, chapters, state: s, lens,
 			body = (
 				<>
 					<p className="play-picked">{`You picked: ${textFor(opt?.text, lens, story.default_lens)}`}</p>
-					{line ? <Line story={story} beat={line} lens={lens} onSources={onSources} onAdvance={advance} /> : null}
+					{line ? <Line story={story} beat={line} lens={lens} paging={paging} onSources={onSources} onAdvance={advance} /> : null}
 					<Continue ready={ready} onClick={advance} label={last && !opt?.accepted ? "Choose again" : "Continue"} />
 				</>
 			);
@@ -333,6 +464,91 @@ export default function StoryPanel({ slug, site, urls, chapters, state: s, lens,
 				</>
 			);
 		}
+	} else if (step.kind === "order") {
+		const beat = step.beat;
+		const total = orderSlots(beat).length;
+		const solved = g.placed.length >= total;
+		// The card that has just landed is the line on the panel. Before the first, the instruction.
+		// A gap card is never the line: once the order is solved it is read where it stands, in the list.
+		const told = (beat.cards || []).find((c) => c.id === g.placed[g.placed.length - 1]) || null;
+		const gaps = solved ? (beat.cards || []).filter((c) => c.gap) : [];
+		const heard = [told, ...gaps].filter(Boolean).map((c) => [c.label, lineText(c)].filter(Boolean).join(". "));
+		announce = told ? heard.join(". ") : lineText(beat);
+		body = (
+			<>
+				{told ? (
+					<Line story={story} beat={told} lens={lens} label={told.label} paging={paging} onSources={onSources}>
+						<span className="play-count">{`${g.placed.length} of ${total}`}</span>
+					</Line>
+				) : (
+					<>
+						<div className="play-meta">
+							<span className="play-label">Put them in order</span>
+							<span className="play-count">{`${g.placed.length} of ${total}`}</span>
+							{noteButton}
+						</div>
+						<p className="play-ui-text">{lineText(beat)}</p>
+					</>
+				)}
+				<OrderBoard
+					beat={beat}
+					lens={lens}
+					fallbackLens={story.default_lens}
+					placed={g.placed}
+					telling={telling}
+					miss={s.miss}
+					onSources={onSources}
+					onPlace={(id, slot) => dispatch({ type: "place", id, slot })}
+				/>
+				{solved ? <Continue ready={ready} onClick={advance} /> : null}
+			</>
+		);
+	} else if (step.kind === "reveal") {
+		// The whole site is changing. Nothing is said and nothing covers the view.
+		announce = "The view is changing.";
+	} else if (step.kind === "proof") {
+		const beat = step.beat;
+		const after = beat.after || [];
+		const line = g.pressed ? after[g.afterIndex] || after[after.length - 1] : null;
+		announce = lineText(line || beat);
+		body = (
+			<>
+				<Line story={story} beat={line || beat} lens={lens} paging={paging} onSources={onSources} onAdvance={g.pressed ? advance : undefined}>
+					{noteButton}
+				</Line>
+				<Switch label={textFor(beat.toggle_label, lens, story.default_lens)} on={g.proof} onChange={(on) => dispatch({ type: "proof", on })} />
+				{g.pressed ? <Continue ready={ready} onClick={advance} /> : null}
+			</>
+		);
+	} else if (step.kind === "vote") {
+		const beat = step.beat;
+		const options = beat.options || [];
+		const mine = options.find((o) => o.id === g.vote);
+		const optionText = (o) => textFor(o.text, lens, story.default_lens);
+		announce = mine ? `${lineText(beat)} Your pick: ${optionText(mine)}` : lineText(beat);
+		body = (
+			<>
+				<Line story={story} beat={beat} lens={lens} role="question" label="Your vote" onSources={onSources}>
+					{noteButton}
+				</Line>
+				<div className="play-options" role="group" aria-label="Your vote">
+					{options.map((o) => {
+						const on = g.vote === o.id;
+						return (
+							<button key={o.id} type="button" className={`play-option is-row is-vote${on ? " is-current" : ""}`} aria-pressed={on} onClick={() => dispatch({ type: "vote", option: o.id })}>
+								<span className="play-option-id" aria-hidden="true">{on ? <Icon name="check" size={14} /> : null}</span>
+								<span className="play-option-name">{optionText(o)}</span>
+								{on ? <span className="play-tag">Your pick</span> : null}
+							</button>
+						);
+					})}
+				</div>
+				{/* Phase 3: the share of players behind each option goes here, from the server. Until
+				    then only the pick of this player is shown. No figure is ever made up. */}
+				<p className="play-ui-text">{mine ? "No answer is marked right. Your pick is kept." : "No answer is marked right."}</p>
+				{mine ? <Continue ready={ready} onClick={advance} /> : null}
+			</>
+		);
 	} else if (step.kind === "know") {
 		const text = textFor(step.beat.text, lens, story.default_lens);
 		announce = `You now know. ${text}`;
@@ -362,7 +578,7 @@ export default function StoryPanel({ slug, site, urls, chapters, state: s, lens,
 		announce = lineText(step.beat);
 		body = (
 			<>
-				<Line story={story} beat={step.beat} lens={lens} role={role} onSources={onSources} onAdvance={advance}>
+				<Line story={story} beat={step.beat} lens={lens} role={role} paging={paging} onSources={onSources} onAdvance={advance}>
 					{noteButton}
 				</Line>
 				<Continue ready={ready} onClick={advance} />
@@ -371,7 +587,7 @@ export default function StoryPanel({ slug, site, urls, chapters, state: s, lens,
 	}
 
 	return (
-		<section className={`play-panel is-${done ? "done" : step.kind}${s.revealing ? " is-clear" : ""}`} aria-label="Story">
+		<section className={`play-panel is-${done ? "done" : step.kind}${s.revealing || (!done && step.kind === "reveal") ? " is-clear" : ""}`} aria-label="Story">
 			<div className="play-sr" aria-live="polite" aria-atomic="true">
 				{announce}
 			</div>

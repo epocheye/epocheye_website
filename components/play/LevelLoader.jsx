@@ -61,7 +61,7 @@ export default function LevelLoader({ slug, version, name, chapterNumber = null,
 	return (
 		<main>
 			<h1 className="play-sr">{loaded.site.site.name}</h1>
-			<Level key={slug} slug={slug} site={loaded.site} chapters={loaded.chapters} urls={loaded.urls} startChapter={startChapter} debug={debug} />
+			<Level key={slug} slug={slug} version={version} site={loaded.site} chapters={loaded.chapters} urls={loaded.urls} startChapter={startChapter} debug={debug} />
 		</main>
 	);
 }
