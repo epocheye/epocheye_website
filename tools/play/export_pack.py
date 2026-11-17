@@ -407,6 +407,28 @@ def cmd_publish(site, a):
             shutil.rmtree(dst / owned)
     shutil.copytree(src, dst, dirs_exist_ok=True)
     print("published", dst)
+    register_site(site)
+
+
+def register_site(site):
+    """Add or update this site's entry in content/play/sites.json, the registry the engine reads.
+    Status comes from the site config ("live" unless it says "dev", "building" or "coming")."""
+    reg_path = ROOT / "content" / "play" / "sites.json"
+    reg = json.loads(reg_path.read_text(encoding="utf-8"))
+    entry = next((e for e in reg["sites"] if e["slug"] == site["slug"]), None)
+    if entry is None:
+        entry = {"slug": site["slug"]}
+        reg["sites"].append(entry)
+    entry["status"] = site.get("status", entry.get("status") if entry.get("status") not in (None, "building", "coming") else "live")
+    entry["version"] = site["version"]
+    entry["name"] = site["name"]
+    if site.get("place"):
+        entry["place"] = site["place"]
+    for k in ("cover", "opens_at", "clip"):
+        if site.get(k):
+            entry[k] = site[k]
+    reg_path.write_text(json.dumps(reg, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+    print(f"registered {site['slug']} as {entry['status']} v{entry['version']} in {reg_path.relative_to(ROOT)}")
 
 
 if __name__ == "__main__":
