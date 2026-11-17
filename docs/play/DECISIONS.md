@@ -90,3 +90,4 @@ Choices made outside the gates, newest last. Each has a date and a reason.
 | 2026-11-18 | The root layout's font preloads were left alone. | Trimming them would likely close the last 0.3 s of the first-view target, but it changes every page of the site. Put to the owner at GATE 3. |
 | 2026-11-18 | `source_internal` (the original research-file sources) stays in the repo's story.json and is stripped from the published pack. | Internal file names are not for players. |
 | 2026-11-18 | Test rows written by the Phase 5 quality run (anon ids starting `test-q5-`, card `4wTzdGG4y`, and the cards its play-throughs made) are still in the production database. | The agent's request to delete them was refused by the session's permission check. Not deleted on its behalf; put to the owner at GATE 3 with the cleanup command. |
+| 2026-11-18 | GATE 3 shown. | Phase 5 complete. Launch, the test-row cleanup and the site-wide font preloads put to the owner. |
