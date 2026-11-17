@@ -30,6 +30,14 @@ export function launch(extra = []) {
 export async function testPage(browser, { viewport = PHONE, anon = testAnon(), reduce = false } = {}) {
 	const page = await browser.newPage();
 	await page.setViewport(viewport);
+	// PLAY_BLOCK_API=1: answer every Play API call locally, so a run against production writes nothing.
+	if (process.env.PLAY_BLOCK_API === "1") {
+		await page.setRequestInterception(true);
+		page.on("request", (r) => {
+			if (r.url().includes("/api/play/")) r.respond({ status: 200, contentType: "application/json", body: '{"ok":false}' });
+			else r.continue();
+		});
+	}
 	if (reduce) await page.emulateMediaFeatures([{ name: "prefers-reduced-motion", value: "reduce" }]);
 	await page.evaluateOnNewDocument((id) => {
 		try {

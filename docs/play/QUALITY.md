@@ -8,7 +8,7 @@ Phase 5, measured 2026-11-17 and 18 on a local production build (`npm run build`
 
 | 5.7 item | Measured | Bar | Result |
 |---|---|---|---|
-| First playable view, slow 4G (150 ms, 1.6 Mbps), 4x CPU, cold cache | **5.3 s** median (5.26, 5.33, 5.42) on `next start`, after 256 px first faces were added (2026-11-18). Before: 6.5 s; at the start of Phase 5: 8.0 s | under 5 s | **FAIL by 0.3 s** |
+| First playable view, slow 4G (150 ms, 1.6 Mbps), 4x CPU, cold cache | **4.7 s** median (4.70, 4.74, 4.85) on **live production** (www.epocheye.com, Vercel edge, 2026-11-18, `first-view-production.json`). On local `next start`: 5.3 s. At the start of Phase 5: 8.0 s | under 5 s | **PASS on production** |
 | Same, Lighthouse's own slow 4G latency (562.5 ms) | 8.1 s median | under 5 s | FAIL |
 | Same, a good 4G link (9 Mbps, 60 ms), 4x CPU | 3.2 s median | under 5 s | pass (for comparison only) |
 | Bytes before the first view, cold cache | **899 KB** (gzip, HTTP/1.1); 827 KB (brotli, HTTP/2) | under 3 MB | **PASS** |
@@ -44,6 +44,8 @@ How to read them:
 - **Level TBT** fell from 4.3 s to 1.5 s. What is left is React hydrating the page and mounting the level (the `0japrmd...` chunk) and the engine starting up; the sharper faces now decode off the main thread.
 
 ## First playable view
+
+**Production, 2026-11-18.** After launch the same first-view script ran against https://www.epocheye.com with the same slow-4G and 4x CPU throttling and every Play API call answered locally (`PLAY_BLOCK_API=1`, so no rows were written). Median 4.7 s, 705 KB before the first view, no errors. The local server measured 5.3 s for the same bytes; Vercel's edge serves them faster. The target is met where players actually load the game.
 
 **Update 2026-11-18.** Two more changes after this section was written:
 - The pack now carries 256 px faces as its first size (88 KB for the six start faces instead of 316 KB at 512). The engine already loads the smallest size first and sharpens from there, so this was a pack change only. Bytes before the first view fell from 916 KB to 706 KB, and the median first view from 6.6 s to 5.3 s (`first-view-256.json`).
