@@ -1,8 +1,8 @@
 # Epocheye Play: status
 
-## Open world: WAITING at GATE 1 (2026-11-22)
+## Open world: Phase 2 in progress (2026-11-22)
 
-Phase 1 is built on `feat/open-world`. Nothing is merged and live `/play` is unchanged. **I have stopped and am waiting for the owner's answer.**
+GATE 1 was answered: "Yes, start Phase 2". Phase 1 is on `feat/open-world`. Nothing is merged and live `/play` is unchanged. The notes below describe the state at GATE 1.
 
 **Preview (needs your Vercel sign-in):** https://epocheye-website-git-feat-open-world-sambit-singhas-projects.vercel.app/play/tipu-summer-palace-bengaluru/world
 
