@@ -386,7 +386,8 @@ def render_ground(state, g, px):
     prefixes = tuple(g["sources"][state])
     changed = []
     for o in bpy.data.objects:
-        if o.name.startswith(prefixes) or not hasattr(o, "visible_camera"):
+        # Meshes only: an instancer's flag also applies to everything it instances, ground included.
+        if o.type != "MESH" or o.name.startswith(prefixes):
             continue
         if o.visible_camera:
             o.visible_camera = False

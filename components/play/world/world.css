@@ -132,9 +132,15 @@
 	border-radius: 14px;
 	background: rgba(21, 11, 24, 0.9);
 	pointer-events: auto;
+	max-width: calc(100vw - 28px);
+	max-height: calc(100dvh - 76px);
+	overflow-y: auto;
+	touch-action: pan-y;
 }
 .w-menu-h { margin: 0; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--w-gold); }
 .w-menu-row { display: flex; gap: 6px; }
+.w-credits { display: grid; gap: 6px; max-width: 320px; padding-top: 6px; border-top: 1px solid var(--w-line); font-size: 12px; line-height: 1.4; color: rgba(255, 255, 255, 0.78); user-select: text; -webkit-user-select: text; }
+.w-credits p { margin: 0; }
 
 .w-prompt {
 	position: absolute;
@@ -155,6 +161,7 @@
 	white-space: nowrap;
 }
 .w-prompt kbd { display: inline-grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: #fff; color: var(--w-ink); font: inherit; }
+.w-action kbd { display: inline-grid; place-items: center; width: 30px; height: 30px; margin-right: 10px; border-radius: 50%; background: #fff; color: var(--w-ink); font: inherit; font-size: 18px; vertical-align: 2px; }
 .w-action {
 	position: absolute;
 	left: 50%;
@@ -204,12 +211,11 @@
 }
 .w-stick-knob { width: 56px; height: 56px; border-radius: 50%; background: rgba(255, 255, 255, 0.85); box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4); }
 
-@media (pointer: coarse) {
-	.w-minimap { width: 112px; height: 112px; left: auto; right: max(14px, env(safe-area-inset-right)); top: 62px; bottom: auto; }
-	.w-keys { bottom: 176px; max-width: calc(100vw - 32px); }
-	.w-prompt, .w-action { bottom: 172px; }
-	.w-objective { max-width: calc(100vw - 190px); font-size: 13px; }
-}
+/* Follows the same touch flag that mounts the stick, so a touchscreen laptop gets this layout too. */
+.w-hud.is-touch .w-minimap { width: 112px; height: 112px; left: auto; right: max(14px, env(safe-area-inset-right)); top: 62px; bottom: auto; }
+.w-hud.is-touch .w-keys { bottom: 176px; max-width: calc(100vw - 32px); }
+.w-hud.is-touch .w-prompt, .w-hud.is-touch .w-action { bottom: 172px; }
+.w-hud.is-touch .w-objective { max-width: calc(100vw - 190px); font-size: 13px; }
 
 /* ---- story */
 
@@ -223,14 +229,26 @@
 	gap: 5px;
 	width: min(680px, calc(100vw - 32px));
 	padding: 10px 16px;
-	border: 0;
 	border-radius: 12px;
 	background: rgba(21, 11, 24, 0.74);
 	color: #fff;
 	font-size: 18px;
 	line-height: 1.32;
 	text-align: center;
+	pointer-events: auto;
 }
+/* Clear of the stick: above it when upright, beside it when the phone is on its side. */
+.w-hud.is-touch .w-subtitle { bottom: calc(max(26px, env(safe-area-inset-bottom)) + 142px); font-size: 16px; }
+@media (orientation: landscape) {
+	.w-hud.is-touch .w-subtitle {
+		left: calc(max(22px, env(safe-area-inset-left)) + 144px);
+		right: max(14px, env(safe-area-inset-right));
+		bottom: max(12px, env(safe-area-inset-bottom));
+		width: auto;
+		transform: none;
+	}
+}
+.w-subtitle-tap { display: grid; justify-items: center; gap: 3px; width: 100%; padding: 0; border: 0; background: none; color: inherit; font: inherit; }
 .w-subtitle-text { animation: w-in 0.32s cubic-bezier(0.22, 1, 0.36, 1); }
 @keyframes w-in { from { opacity: 0; transform: translateY(5px); } }
 .w-speaker { font-family: var(--w-display); font-size: 15px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--w-gold); }
@@ -256,6 +274,23 @@
 .w-evidence blockquote { margin: 0 0 8px; font-family: var(--font-instrument-serif), Georgia, serif; font-size: 20px; line-height: 1.2; }
 .w-evidence-title { font-family: var(--w-display); font-size: 20px; letter-spacing: 0.03em; text-transform: uppercase; color: var(--w-gold); }
 .w-credit { font-size: 11px; color: rgba(255, 255, 255, 0.62); }
+.w-evidence .w-placement { display: grid; justify-items: start; gap: 4px; margin: 8px 0 0; font-size: 12px; color: rgba(255, 255, 255, 0.82); }
+.w-note {
+	position: absolute;
+	top: calc(max(14px, env(safe-area-inset-top)) + 52px);
+	left: max(16px, env(safe-area-inset-left));
+	display: grid;
+	gap: 8px;
+	width: min(320px, calc(100vw - 160px));
+	padding: 10px 12px;
+	border-left: 3px solid var(--w-gold);
+	border-radius: 8px;
+	background: rgba(21, 11, 24, 0.82);
+	font-size: 13px;
+	line-height: 1.35;
+	animation: w-in 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.w-note p { margin: 0 0 4px; }
 .w-choice {
 	position: absolute;
 	left: 50%;
@@ -267,6 +302,32 @@
 	pointer-events: auto;
 }
 .w-choice-q { margin: 0 0 4px; font-family: var(--w-display); font-size: 34px; text-align: center; text-transform: uppercase; text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6); }
+/* A choice takes the stick away, so on a phone the subtitle drops to the bottom edge and the card
+   keeps clear of it: above it when upright, beside it when the phone is on its side. */
+.w-hud.is-touch:has(.w-choice) .w-subtitle { bottom: max(12px, env(safe-area-inset-bottom)); }
+.w-hud.is-touch .w-choice-q { font-size: 26px; }
+@media (orientation: portrait) {
+	.w-hud.is-touch .w-choice { top: max(182px, calc(50% - 170px)); transform: translateX(-50%); }
+}
+@media (orientation: landscape) and (max-height: 520px) {
+	.w-hud.is-touch .w-choice {
+		--w-choice-w: min(420px, 50vw);
+		left: max(16px, env(safe-area-inset-left));
+		top: 58px;
+		gap: 6px;
+		width: var(--w-choice-w);
+		transform: none;
+	}
+	.w-hud.is-touch .w-choice-q { margin: 0; font-size: 22px; }
+	.w-hud.is-touch .w-choice .w-btn { min-height: 44px; padding: 6px 16px; font-size: 14px; }
+	.w-hud.is-touch:has(.w-choice) .w-subtitle {
+		left: calc(max(16px, env(safe-area-inset-left)) + min(420px, 50vw) + 12px);
+		right: max(14px, env(safe-area-inset-right));
+		width: auto;
+		transform: none;
+		font-size: 15px;
+	}
+}
 
 /* ---- cards */
 
@@ -320,6 +381,6 @@
 .w-splash-count { font-size: 14px; color: rgba(255, 255, 255, 0.82); }
 
 @media (prefers-reduced-motion: reduce) {
-	.w-action, .w-subtitle-text, .w-evidence, .w-mission, .w-shift, .w-splash { animation: none; }
+	.w-action, .w-subtitle-text, .w-evidence, .w-note, .w-mission, .w-shift, .w-splash { animation: none; }
 	.w-mission { opacity: 1; }
 }

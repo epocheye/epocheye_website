@@ -17,7 +17,7 @@ export async function generateMetadata({ params }) {
 	if (!site?.world_version) return playMeta({ title: "Epocheye Play", description: "A history game.", path: "/play" });
 	return playMeta({
 		title: `${site.name}, open world | Epocheye Play`,
-		description: `Walk ${site.name} as it stood in 1791, and bring back what was lost.`,
+		description: `Walk our reconstruction of ${site.name} and bring back what was lost.`,
 		path: `/play/${site.slug}/world`,
 	});
 }

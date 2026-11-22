@@ -1,6 +1,22 @@
 {
   "slug": "tipu-summer-palace-bengaluru",
   "version": 1,
+  "title": "Envy of Heaven",
+  "tagline": "Bangalore Fort. 1 March 1791. Walk it.",
+  "eras": { "past": "1791" },
+  "credits": [
+    "World and reconstruction: Epocheye.",
+    "People: bodies, skin, eyes and hair from MakeHuman and MPFB assets (CC0). Clothes made for Epocheye.",
+    "People's walk, idle and talk: motion by Quaternius, Universal Animation Library (CC0), adapted to these figures.",
+    "Bullock cart: model created with Meshy (meshy.ai), simplified for the web. CC BY 4.0 (creativecommons.org/licenses/by/4.0) if made on Meshy's free plan.",
+    "You, the restorer: body and animation by Quaternius, Universal Animation Library (CC0), recoloured.",
+    "Tamarind tree: Tree Small 02 by Rico Cilliers, Poly Haven (CC0).",
+    "Palm trees: made for Epocheye.",
+    "Surfaces: textures from Poly Haven (CC0), Epocheye's own photographs, and pattern tiles used in the reconstruction.",
+    "Voices: synthetic, made with Kokoro (hexgrad/Kokoro-82M, Apache 2.0).",
+    "Titles set in Anton (SIL Open Font License 1.1).",
+    "Physics: Rapier by Dimforge (Apache 2.0)."
+  ],
   "_note": "Hand-written open-world layer. Positions are Blender metres [x, y]. Story beats are referenced by id from story.json and never copied. A dialogue line that states a fact carries a fact id from story.json or world_facts.",
   "world_facts": [
     {
@@ -26,8 +42,8 @@
       "id": "carpenter",
       "role": "The carpenter",
       "figure": "bearer",
-      "at": [-6.5, -5.0],
-      "face_deg": 20,
+      "at": [-12.5, -6.5],
+      "face_deg": 200,
       "dialogue": "d-carpenter"
     },
     {
@@ -53,7 +69,7 @@
       { "beat": "c1-e2" },
       { "id": "w-mas-3", "speaker": "mason", "text": "The outer walls? Mud, under the plaster.", "facts": ["F04"], "pace": "steady", "pause_after_ms": 600 },
       { "beat": "c1-e3" },
-      { "id": "w-mas-4", "speaker": "mason", "text": "There is a written record of all this. Take the cart, it is a long walk.", "pace": "steady", "pause_after_ms": 400 }
+      { "id": "w-mas-4", "speaker": "mason", "text": "The rest is further on. Take the cart, it is a long walk.", "pace": "steady", "pause_after_ms": 400 }
     ]
   },
   "records": [
@@ -80,7 +96,7 @@
       "id": "cart-1",
       "type": "cart",
       "at": [-31.0, 37.0],
-      "face_deg": -155,
+      "face_deg": 60,
       "note_facts": ["W01"],
       "label": "Bullock cart"
     }

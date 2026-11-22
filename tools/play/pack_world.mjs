@@ -1,12 +1,14 @@
-// Packs a baked open-world cell into web assets.
-//   node tools/play/pack_world.mjs <slug> <cell> [--version 1]
+// Packs a baked open-world cell into web assets. Run by `export_world.py publish`, which swaps the
+// finished folder into public/ only after checking it.
+//   node tools/play/pack_world.mjs <cell> --out <version-dir> --groups a,b --textures a_now,b_then
 //
-// Reads tools/play/out/world/<cell>/ and writes public/play/worlds/<slug>/v<version>/<cell>/:
+// Reads tools/play/out/world/<cell>/ and writes <version-dir>/<cell>/. Only the named groups and
+// textures are packed, and a missing one is an error:
 //   <group>.glb                 positions, uvs and a material class per vertex (meshopt)
 //   tex/<group>_<state>_<px>.ktx2   baked atlases, a phone size and a full size
 //   manifest.json               every file with its size, so the loader can budget
 import { existsSync } from "node:fs";
-import { mkdir, readdir, readFile, stat, writeFile } from "node:fs/promises";
+import { mkdir, readFile, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { Accessor, Document, NodeIO } from "@gltf-transform/core";
 import { EXTMeshoptCompression, KHRMeshQuantization } from "@gltf-transform/extensions";
@@ -15,15 +17,17 @@ import { encodeToKTX2 } from "ktx2-encoder";
 import { MeshoptDecoder, MeshoptEncoder } from "meshoptimizer";
 import sharp from "sharp";
 
-const [slug, cell] = process.argv.slice(2);
-if (!slug || !cell) {
-	console.error("Usage: node tools/play/pack_world.mjs <slug> <cell> [--version 1]");
+const cell = process.argv[2];
+const flag = (name) => (process.argv.includes(name) ? process.argv[process.argv.indexOf(name) + 1] : "");
+const versionDir = flag("--out");
+const groups = flag("--groups").split(",").filter(Boolean);
+const textures = flag("--textures").split(",").filter(Boolean);
+if (!cell || cell.startsWith("--") || !versionDir || !groups.length || !textures.length) {
+	console.error("Usage: node tools/play/pack_world.mjs <cell> --out <version-dir> --groups a,b --textures a_now,b_then");
 	process.exit(1);
 }
-const vAt = process.argv.indexOf("--version");
-const version = vAt > 0 ? process.argv[vAt + 1] : "1";
 const SRC = path.join("tools/play/out/world", cell);
-const OUT = path.join("public/play/worlds", slug, `v${version}`, cell);
+const OUT = path.join(versionDir, cell);
 const imageDecoder = async (buffer) => {
 	const { data, info } = await sharp(buffer).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
 	return { data: new Uint8Array(data), width: info.width, height: info.height };
@@ -75,42 +79,47 @@ async function buildGlb(name) {
 
 await mkdir(path.join(OUT, "tex"), { recursive: true });
 const manifest = { cell, groups: {}, textures: {}, bytes: {} };
-const entries = await readdir(SRC);
-for (const f of entries.filter((e) => e.endsWith(".bin"))) {
-	const name = f.replace(".bin", "");
+for (const name of groups) {
+	if (!existsSync(path.join(SRC, `${name}.bin`))) throw new Error(`No baked geometry for group ${name} in ${SRC}`);
+}
+const texDir = path.join(SRC, "tex");
+for (const name of textures) {
+	if (!existsSync(path.join(texDir, `${name}.png`))) throw new Error(`No baked texture ${name} in ${texDir}`);
+}
+for (const name of groups) {
 	manifest.groups[name] = await buildGlb(name);
 	const size = (await stat(path.join(OUT, `${name}.glb`))).size;
 	manifest.bytes[`${name}.glb`] = size;
 	console.log(`${name}.glb ${(size / 1024).toFixed(0)} KB, ${manifest.groups[name].tris} tris`);
 }
-const texDir = path.join(SRC, "tex");
-if (existsSync(texDir)) {
-	for (const f of (await readdir(texDir)).filter((e) => e.endsWith(".png"))) {
-		const name = f.replace(".png", "");
-		const src = await readFile(path.join(texDir, f));
-		const { width } = await sharp(src).metadata();
-		const sizes = [...new Set([Math.max(256, width >> 1), width])];
-		manifest.textures[name] = sizes;
-		for (const px of sizes) {
-			const png = await sharp(src).resize(px, px, { fit: "fill" }).png().toBuffer();
-			const out = await encodeToKTX2(new Uint8Array(png), KTX);
-			const file = `${name}_${px}.ktx2`;
-			await writeFile(path.join(OUT, "tex", file), out);
-			manifest.bytes[`tex/${file}`] = out.byteLength;
-			console.log(`${file} ${(out.byteLength / 1024).toFixed(0)} KB`);
-		}
+for (const name of textures) {
+	const src = await readFile(path.join(texDir, `${name}.png`));
+	const { width } = await sharp(src).metadata();
+	const sizes = [...new Set([Math.max(256, width >> 1), width])];
+	manifest.textures[name] = sizes;
+	for (const px of sizes) {
+		const png = await sharp(src).resize(px, px, { fit: "fill" }).png().toBuffer();
+		const out = await encodeToKTX2(new Uint8Array(png), KTX);
+		const file = `${name}_${px}.ktx2`;
+		await writeFile(path.join(OUT, "tex", file), out);
+		manifest.bytes[`tex/${file}`] = out.byteLength;
+		console.log(`${file} ${(out.byteLength / 1024).toFixed(0)} KB`);
 	}
 }
-// Tree cards are shared by every cell.
+// Tree cards are shared by every cell. Only the cards world.json will name are packed.
 const cardDir = "tools/play/out/world/cards";
-if (existsSync(cardDir)) {
-	const dest = path.join(path.dirname(OUT), "cards");
+const cardsJson = path.join(cardDir, "cards.json");
+if (existsSync(cardsJson)) {
+	const dest = path.join(versionDir, "cards");
 	await mkdir(dest, { recursive: true });
-	for (const f of (await readdir(cardDir)).filter((e) => e.endsWith(".png"))) {
-		const png = await sharp(path.join(cardDir, f)).resize(512, 512, { fit: "fill" }).png().toBuffer();
-		const out = await encodeToKTX2(new Uint8Array(png), KTX);
-		await writeFile(path.join(dest, f.replace(".png", ".ktx2")), out);
-		console.log(`card ${f} ${(out.byteLength / 1024).toFixed(0)} KB`);
+	for (const key of Object.keys(JSON.parse(await readFile(cardsJson, "utf8")))) {
+		for (const view of ["front", "side"]) {
+			const f = `${key}_${view}.png`;
+			const png = await sharp(path.join(cardDir, f)).resize(512, 512, { fit: "fill" }).png().toBuffer();
+			const out = await encodeToKTX2(new Uint8Array(png), KTX);
+			await writeFile(path.join(dest, f.replace(".png", ".ktx2")), out);
+			console.log(`card ${f} ${(out.byteLength / 1024).toFixed(0)} KB`);
+		}
 	}
 }
 await writeFile(path.join(OUT, "manifest.json"), JSON.stringify(manifest, null, 1));

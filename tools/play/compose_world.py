@@ -70,8 +70,14 @@ def main():
         print(name, report["atlases"][name], flush=True)
     for f in beauty:
         name = f.name.replace("_beauty.npy", "")
-        x = np.nan_to_num(np.load(f)[::-1, :, :3], posinf=0, neginf=0)
-        rgb = agx(x * exposure)
+        raw = np.nan_to_num(np.load(f)[::-1], posinf=0, neginf=0)
+        x, alpha = raw[:, :, :3], np.clip(raw[:, :, 3:], 0, 1)
+        rgb = agx(x / np.maximum(alpha, 1e-3) * exposure)
+        # Beyond the modelled ground: today's paved city, plain and low in contrast.
+        rng = np.random.default_rng(7)
+        grain = ndimage.gaussian_filter(rng.random(alpha.shape[:2]), 3)[..., None]
+        paved = np.array([0.40, 0.40, 0.39]) + (grain - grain.mean()) * 0.5
+        rgb = rgb * alpha + paved * (1 - alpha)
         Image.fromarray((rgb * 255 + 0.5).astype(np.uint8)).save(cell / "tex" / f"{name}.png", optimize=False)
         report["atlases"][name] = {"px": x.shape[0], "mean": round(float(rgb.mean()), 3)}
         print(name, report["atlases"][name], flush=True)

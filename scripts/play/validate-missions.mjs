@@ -7,6 +7,7 @@
 //   - a line with no fact id holds no number, year or date
 //   - only role figures speak: no real person is ever a speaker or an NPC
 //   - every beat, NPC, record, ride, voice and evidence reference resolves
+//   - the game's title, tagline, past era and credit lines are present
 //   - no em or en dashes, no prices, none of the other game's name or on-screen phrases
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -56,6 +57,18 @@ export function validateMissions(data, story) {
 		if (!beats.has(id)) errors.push(`${where}: unknown story beat ${id}`);
 	};
 
+	for (const field of ["title", "tagline"]) {
+		if (typeof data[field] !== "string" || !data[field].trim()) errors.push(`${field}: required`);
+		checkCopy(field, data[field], errors);
+	}
+	const past = data.eras?.past;
+	if (typeof past !== "string" || !past.trim()) errors.push("eras.past: required");
+	else if (!(data.missions || []).some((m) => m.era === past)) errors.push(`eras.past: no mission is set in ${past}`);
+	if (!Array.isArray(data.credits) || !data.credits.length) errors.push("credits: needs at least one line");
+	for (const [i, line] of (Array.isArray(data.credits) ? data.credits : []).entries()) {
+		if (typeof line !== "string" || !line.trim()) errors.push(`credits[${i}]: must be a line of text`);
+		checkCopy(`credits[${i}]`, line, errors);
+	}
 	for (const f of data.world_facts || []) {
 		if (!f.claim || !f.source || !f.tier) errors.push(`world fact ${f.id}: needs claim, source and tier`);
 		checkCopy(`world fact ${f.id}`, f.claim, errors);

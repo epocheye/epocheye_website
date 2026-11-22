@@ -133,8 +133,8 @@
     {
       "id": "player",
       "kind": "player",
-      "src": "C:/Users/Sambit/AppData/Local/Temp/claude/40b4808ff4be65dd/2c67dfbf-1f73-4497-89fc-53c3c977f963/scratchpad/cc0/ual/Animation Library[Standard]/Godot/AnimationLibrary_Godot_Standard.glb",
-      "tris": 9000,
+      "src": "tools/play/assets/cc0/universal-animation-library/AnimationLibrary_Godot_Standard.glb",
+      "tris": 14000,
       "clips": {
         "Idle_Loop": "idle",
         "Walk_Loop": "walk",
@@ -143,32 +143,35 @@
         "Interact": "interact",
         "Sitting_Idle_Loop": "sit",
         "Idle_Talking_Loop": "talk"
+      },
+      "strides": {
+        "walk": 1.083,
+        "run": 5.305
       }
     },
     {
       "id": "bearer",
       "kind": "figure",
       "src": "E:/heritage_assets/tipu-summer-palace-bengaluru/assets/tsp_town/humans/bearer.glb",
-      "tris": 4500
+      "atlas": 1024
     },
     {
       "id": "mysore_man",
       "kind": "figure",
       "src": "E:/heritage_assets/tipu-summer-palace-bengaluru/assets/tsp_town/humans/mysore_man.glb",
-      "tris": 4500
+      "atlas": 1024
     },
     {
       "id": "merchant",
       "kind": "figure",
       "src": "E:/heritage_assets/tipu-summer-palace-bengaluru/assets/tsp_town/humans/merchant.glb",
-      "tris": 4500
+      "atlas": 1024
     },
     {
       "id": "mysore_woman",
       "kind": "figure",
       "src": "E:/heritage_assets/tipu-summer-palace-bengaluru/assets/tsp_town/humans/mysore_woman.glb",
-      "tris": 4500,
-      "error": 0.09
+      "atlas": 1024
     },
     {
       "id": "bullock_cart",
@@ -216,12 +219,12 @@
     "rides": {
       "cart": {
         "id": "bullock_cart",
-        "scale": 1.0,
-        "yaw": 0,
+        "length": 5.2,
+        "yaw": 180,
         "seat": [
           0,
-          1.25,
-          0.4
+          1.45,
+          1.3
         ]
       }
     }

@@ -59,9 +59,10 @@ for key, spec in SPECIES.items():
     scene.render.film_transparent = True
     scene.render.image_settings.file_format = "PNG"
     scene.render.image_settings.color_mode = "RGBA"
-    scene.view_settings.view_transform = "Standard"
-    scene.view_settings.look = "None"
-    scene.view_settings.exposure = float(spec.get("exposure", 0))
+    # The scene's own view, so a card matches the baked world around it.
+    scene.view_settings.view_transform = src_scene.view_settings.view_transform
+    scene.view_settings.look = src_scene.view_settings.look
+    scene.view_settings.exposure = src_scene.view_settings.exposure + float(spec.get("exposure", 0))
     lo, hi = Vector((1e9,) * 3), Vector((-1e9,) * 3)
     for name, mats in f["parts"].items():
         # The instance of this part closest to the anchor belongs to the same tree.

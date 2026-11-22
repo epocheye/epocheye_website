@@ -106,6 +106,17 @@ const nextConfig = {
           },
         ],
       },
+      // Play open worlds: v<N> is republished in place, so nothing under it may be cached for
+      // good, including the minimap images the site-wide image rule above would otherwise match.
+      {
+        source: '/play/worlds/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=0, must-revalidate',
+          },
+        ],
+      },
       {
         source: '/api/creator/:path*',
         headers: [

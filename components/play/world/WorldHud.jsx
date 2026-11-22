@@ -5,11 +5,21 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { pastEraOf } from "@/lib/play/world/missions";
 import { PRESETS } from "@/lib/play/world/quality";
 
 const MAP_SPAN = 120; // metres across the round minimap
 
-function Minimap({ rt, world, era }) {
+// Keeps a drag on its control when the thumb slides off it. Optional: some browsers refuse it.
+function capture(el, id) {
+	try {
+		el.setPointerCapture?.(id);
+	} catch {
+		// The drag still works while the thumb stays on the control.
+	}
+}
+
+function Minimap({ rt, world, inPast }) {
 	const ref = useRef(null);
 	useEffect(() => {
 		const canvas = ref.current;
@@ -35,13 +45,13 @@ function Minimap({ rt, world, era }) {
 			c.beginPath();
 			c.arc(size / 2, size / 2, size / 2 - 2, 0, Math.PI * 2);
 			c.clip();
-			c.fillStyle = era === "1791" ? "#3a2230" : "#28343a";
+			c.fillStyle = inPast ? "#3a2230" : "#28343a";
 			c.fillRect(0, 0, size, size);
 			// North-up in the model, turned with the camera.
 			c.translate(size / 2, size / 2);
 			c.rotate(h.camYaw);
 			const toMap = (x, y) => [(x - h.x) * scale, -(y - h.y) * scale];
-			const img = images[era === "1791" ? "then" : "now"];
+			const img = images[inPast ? "then" : "now"];
 			if (img?.complete && img.naturalWidth) {
 				const [x0, y0] = toMap(b[0], b[3]);
 				c.globalAlpha = 0.95;
@@ -99,7 +109,7 @@ function Minimap({ rt, world, era }) {
 		};
 		const t = setInterval(draw, 66);
 		return () => clearInterval(t);
-	}, [rt, world, era]);
+	}, [rt, world, inPast]);
 	return <canvas ref={ref} className="w-minimap" aria-hidden="true" />;
 }
 
@@ -108,16 +118,17 @@ function Joystick({ input }) {
 	const knob = useRef(null);
 	useEffect(() => {
 		const el = zone.current;
+		const dot = knob.current;
 		if (!el || !input) return undefined;
 		let id = null, cx = 0, cy = 0;
 		const R = 52;
 		const set = (x, y) => {
-			if (knob.current) knob.current.style.transform = `translate(${x}px, ${y}px)`;
+			if (dot) dot.style.transform = `translate(${x}px, ${y}px)`;
 		};
 		const down = (e) => {
 			if (id !== null) return;
 			id = e.pointerId;
-			el.setPointerCapture?.(id);
+			capture(el, id);
 			const r = el.getBoundingClientRect();
 			cx = r.left + r.width / 2;
 			cy = r.top + r.height / 2;
@@ -149,6 +160,9 @@ function Joystick({ input }) {
 			el.removeEventListener("pointermove", move);
 			el.removeEventListener("pointerup", up);
 			el.removeEventListener("pointercancel", up);
+			// Hidden with a thumb still on it: its release never arrives, so let go here.
+			set(0, 0);
+			input.setStick(0, 0);
 		};
 	}, [input]);
 	return (
@@ -169,7 +183,7 @@ function LookPad({ input }) {
 			id = e.pointerId;
 			x = e.clientX;
 			y = e.clientY;
-			el.setPointerCapture?.(id);
+			capture(el, id);
 		};
 		const move = (e) => {
 			if (e.pointerId !== id) return;
@@ -213,6 +227,7 @@ function MissionCard({ mission, onBegin }) {
 function Chip({ chip }) {
 	const [open, setOpen] = useState(false);
 	if (!chip) return null;
+	if (!chip.source) return <span className={`w-chip is-${chip.tier}`}>{chip.label}</span>;
 	return (
 		<span className="w-chipwrap">
 			<button type="button" className={`w-chip is-${chip.tier}`} onClick={(e) => {
@@ -227,16 +242,21 @@ function Chip({ chip }) {
 }
 
 export default function WorldHud(p) {
-	const { slug, rt, world, input, touch, phase, progress, state, mission, objective, prompt, riding, line, card, choice, shifting, restoring, talking, sound, presetId } = p;
+	const { slug, rt, world, missions, input, touch, phase, progress, state, mission, objective, prompt, riding, line, card, note, choice, shifting, restoring, talking, sound, presetId } = p;
 	const [menu, setMenu] = useState(false);
+	const [showCredits, setShowCredits] = useState(false);
 	const era = state.era || mission?.era || "today";
+	const pastEra = pastEraOf(missions);
+	const inPast = era === pastEra;
+	const credits = missions.credits || [];
+	const keyHint = touch ? null : <kbd>E</kbd>;
 
 	if (phase === "title") {
 		return (
 			<div className="w-title">
 				<p className="w-kicker">Epocheye Play</p>
-				<h1 className="w-title-h">Envy of Heaven</h1>
-				<p className="w-title-sub">Bangalore Fort. 1 March 1791. Walk it.</p>
+				<h1 className="w-title-h">{missions.title || "Open world"}</h1>
+				{missions.tagline ? <p className="w-title-sub">{missions.tagline}</p> : null}
 				<div className="w-title-actions">
 					<button type="button" className="w-btn is-hot" onClick={() => p.onEnter(true)}>Play with sound</button>
 					<button type="button" className="w-btn" onClick={() => p.onEnter(false)}>Play muted</button>
@@ -258,12 +278,12 @@ export default function WorldHud(p) {
 
 	const showControls = !choice && !shifting && !restoring && state.phase === "play";
 	return (
-		<div className={`w-hud is-${era === "1791" ? "then" : "now"}`}>
+		<div className={`w-hud is-${inPast ? "then" : "now"}${touch ? " is-touch" : ""}`}>
 			{touch ? <LookPad input={input} /> : null}
-			<Minimap rt={rt} world={world} era={era} />
+			<Minimap rt={rt} world={world} inPast={inPast} />
 			{objective ? (
 				<div className="w-objective" aria-live="polite">
-					<span className="w-objective-era">{era === "1791" ? "1791" : "Today"}</span>
+					<span className="w-objective-era">{inPast ? pastEra : "Today"}</span>
 					<span>{objective.text}</span>
 				</div>
 			) : null}
@@ -283,20 +303,29 @@ export default function WorldHud(p) {
 						))}
 					</div>
 					<Link className="w-btn is-small" href={`/play/${slug}?view=story`}>Open Story view</Link>
+					{credits.length ? (
+						<button type="button" className="w-btn is-small" onClick={() => setShowCredits((v) => !v)} aria-expanded={showCredits}>Credits</button>
+					) : null}
 					<button type="button" className="w-btn is-small" onClick={p.onReplay}>Start again</button>
+					{showCredits && credits.length ? (
+						<div className="w-credits">
+							<p className="w-menu-h">Credits</p>
+							{credits.map((c) => <p key={c}>{c}</p>)}
+						</div>
+					) : null}
 				</div>
 			) : null}
 
 			{state.phase === "intro" && mission ? <MissionCard mission={mission} onBegin={p.onBegin} /> : null}
 
-			{objective?.kind === "era" && !shifting ? (
-				<button type="button" className="w-action is-hot" onClick={p.onWake}>Wake the Epocheye</button>
+			{objective?.kind === "era" && !shifting && !riding && !talking ? (
+				<button type="button" className="w-action is-hot" onClick={p.onWake}>{keyHint}Wake the Epocheye</button>
 			) : null}
-			{objective?.kind === "restore" && !restoring ? (
-				<button type="button" className="w-action is-hot" onClick={p.onRestore}>Restore the structure</button>
+			{objective?.kind === "restore" && !restoring && !riding && !talking ? (
+				<button type="button" className="w-action is-hot" onClick={p.onRestore}>{keyHint}Restore the structure</button>
 			) : null}
 
-			{showControls && prompt ? (
+			{showControls && prompt && prompt.kind !== "action" && !(touch && line) ? (
 				<button type="button" className="w-prompt" onClick={() => input?.press("interact")}>
 					{touch ? null : <kbd>E</kbd>}
 					{prompt.label}
@@ -307,7 +336,18 @@ export default function WorldHud(p) {
 			{!touch && showControls && state.mission === 0 && state.objective === 0 ? (
 				<p className="w-keys">WASD to walk. Shift to run. Mouse to look. E to interact.</p>
 			) : null}
-			{riding && showControls ? <p className="w-keys">{touch ? "Push the stick to drive" : "W to drive, A and D to steer"}. People step aside, and the cart stops for them.</p> : null}
+			{riding && showControls && !(touch && line) ? <p className="w-keys">{touch ? "Push the stick to drive" : "W to drive, A and D to steer"}. People step aside, and your ride stops for them.</p> : null}
+
+			{note && !card ? (
+				<aside className="w-note">
+					{note.items.map((n) => (
+						<div key={n.id} className="w-note-item">
+							<p>{n.text}</p>
+							<Chip chip={n.chip} />
+						</div>
+					))}
+				</aside>
+			) : null}
 
 			{card ? (
 				<aside className="w-evidence">
@@ -315,15 +355,23 @@ export default function WorldHud(p) {
 					{card.quote ? <blockquote>{card.quote}</blockquote> : null}
 					{card.caption ? <p>{card.caption}</p> : null}
 					{card.credit ? <p className="w-credit">{card.credit}</p> : null}
+					{card.placement ? (
+						<p className="w-placement">
+							<span className="w-chip is-reconstruction">Our reconstruction</span>
+							<span>{card.placement}</span>
+						</p>
+					) : null}
 				</aside>
 			) : null}
 
 			{line ? (
-				<button type="button" className="w-subtitle" onClick={p.onSkip}>
-					{line.role ? <span className="w-speaker">{line.role}</span> : null}
-					<span key={line.key} className="w-subtitle-text">{line.text}</span>
+				<div className="w-subtitle">
+					<button type="button" className="w-subtitle-tap" onClick={p.onSkip} aria-label={`${line.role ? `${line.role}: ` : ""}${line.text}. Next line`}>
+						{line.role ? <span className="w-speaker">{line.role}</span> : null}
+						<span key={line.key} className="w-subtitle-text">{line.text}</span>
+					</button>
 					<Chip chip={line.chip} />
-				</button>
+				</div>
 			) : null}
 
 			{choice ? (
@@ -343,18 +391,18 @@ export default function WorldHud(p) {
 				<button type="button" className="w-splash" onClick={p.onEndDismiss}>
 					<span className="w-splash-h">{mission.end.splash}</span>
 					<span className="w-splash-place">{mission.end.place}, {mission.end.year}</span>
-					<span className="w-splash-count">Mission {mission.n} of 5 complete</span>
-					<span className="w-link">Tap to continue</span>
+					<span className="w-splash-count">Mission {mission.n} complete</span>
+					<span className="w-link">{touch ? "Tap to continue" : "Press E or click to continue"}</span>
 				</button>
 			) : null}
 
 			{state.phase === "done" ? (
 				<div className="w-title is-over">
 					<p className="w-kicker">End of this preview</p>
-					<h2 className="w-title-h">More of the fort is coming</h2>
-					<p className="w-title-sub">The next mission follows the year it was finished.</p>
+					<h2 className="w-title-h">More is coming</h2>
+					<p className="w-title-sub">The next mission is on its way.</p>
 					<div className="w-title-actions">
-						<Link className="w-btn is-hot" href={`/play/${slug}?view=story&ch=2`}>Carry on in Story view</Link>
+						<Link className="w-btn is-hot" href={`/play/${slug}?view=story&ch=${(mission?.n ?? 0) + 1}`}>Carry on in Story view</Link>
 						<button type="button" className="w-btn" onClick={p.onReplay}>Play again</button>
 					</div>
 				</div>

@@ -14,6 +14,7 @@ import { pagedSentences, spokenFor, textFor } from "@/lib/play/story/engine";
 import { createAmbience } from "@/lib/play/world/ambience";
 import { createInput } from "@/lib/play/world/input";
 import {
+	allowsRoaming,
 	initialWorldState,
 	missionAt,
 	objectiveAt,
@@ -25,6 +26,7 @@ import {
 } from "@/lib/play/world/missions";
 import { detectPreset, isTouchDevice, PRESETS, savedPreset, savePreset, worldSupport } from "@/lib/play/world/quality";
 import { WorldRuntime } from "@/lib/play/world/runtime";
+import { createScriptOwner } from "@/lib/play/world/script";
 import WorldHud from "@/components/play/world/WorldHud";
 import "./world.css";
 
@@ -61,9 +63,13 @@ function indexBeats(story) {
 	return out;
 }
 
-function chipFor(ids, facts) {
+// An owner's open note, written as a bracketed name and colon, is never shown to a player.
+const isOwnerNote = (text) => /\[[A-Z][A-Z _-]*:/.test(text || "");
+
+function chipFor(ids, facts, placeholder = false) {
 	const f = (ids || []).map((id) => facts.get(id)).find(Boolean);
-	return f ? { tier: f.tier, label: TIER_LABEL[f.tier] || f.tier, source: f.source } : null;
+	if (!f) return null;
+	return { tier: f.tier, label: TIER_LABEL[f.tier] || f.tier, source: placeholder || isOwnerNote(f.source) ? null : f.source };
 }
 
 export default function WorldGame({ slug, packVersion, worldVersion }) {
@@ -138,6 +144,7 @@ function Game({ slug, packVersion, base, world, missions, story, presetId, touch
 	const [restoring, setRestoring] = useState(false);
 	const [sound, setSound] = useState(false);
 	const [talking, setTalking] = useState(false);
+	const [note, setNote] = useState(null); // a silent world fact, with its tier
 
 	// Latest handlers for callbacks the runtime holds from its first frame.
 	const handlers = useRef({});
@@ -153,6 +160,7 @@ function Game({ slug, packVersion, base, world, missions, story, presetId, touch
 					onInteract: (p) => handlers.current.interact?.(p),
 					onArrive: (o, r) => handlers.current.arrive?.(o, r),
 					onRide: (id) => handlers.current.ride?.(id),
+					onPlace: (place) => handlers.current.place?.(place),
 				},
 			}),
 	);
@@ -190,6 +198,10 @@ function Game({ slug, packVersion, base, world, missions, story, presetId, touch
 
 	useEffect(() => () => input?.dispose(), [input]);
 	useEffect(() => () => rt.dispose(), [rt]);
+	// For automated play-throughs. Never on in production without ?debug=1.
+	useEffect(() => {
+		if (process.env.NODE_ENV !== "production" || new URLSearchParams(window.location.search).get("debug") === "1") window.__playWorld = rt;
+	}, [rt]);
 
 	useEffect(() => {
 		try {
@@ -201,13 +213,7 @@ function Game({ slug, packVersion, base, world, missions, story, presetId, touch
 
 	// ---- playing lines
 
-	const script = useRef({ token: 0 });
-	const stopScript = useCallback(() => {
-		script.current.token++;
-		voices.narrator.stop();
-		for (const n of voices.roles.values()) n.stop();
-		voices.ambience.duck(false);
-	}, [voices]);
+	const [scripts] = useState(() => createScriptOwner({ voices, setLine, setCard }));
 
 	const beatItem = useCallback(
 		(id) => {
@@ -221,7 +227,7 @@ function Game({ slug, packVersion, base, world, missions, story, presetId, touch
 				text,
 				paged,
 				segments: spokenFor(b),
-				chip: chipFor(b.facts, facts),
+				chip: chipFor(b.facts, facts, !!b.placeholder),
 				evidence: b.evidence ? evidence.get(b.evidence) : null,
 			};
 		},
@@ -245,40 +251,22 @@ function Game({ slug, packVersion, base, world, missions, story, presetId, touch
 		[beatItem, facts, missions],
 	);
 
-	const playItems = useCallback(
-		(items, onDone) => {
-			stopScript();
-			const my = ++script.current.token;
-			const list = items.filter(Boolean);
-			const next = (i) => {
-				if (my !== script.current.token) return;
-				if (i >= list.length) {
-					setLine(null);
-					setCard(null);
-					voices.ambience.duck(false);
-					script.current.skip = null;
-					onDone?.();
-					return;
-				}
-				const item = list[i];
-				const voice = item.speaker ? voices.roles.get(item.speaker) || voices.narrator : voices.narrator;
-				script.current.skip = () => {
-					voice.stop();
-					next(i + 1);
-				};
-				setCard(item.evidence || null);
-				voices.ambience.duck(true);
-				voice.play(item.segments, {
-					onSegment: (seg, k) => setLine({ key: `${item.key}:${k}`, text: item.paged ? item.paged[k] : item.text, role: item.role, chip: item.chip }),
-					onDone: () => next(i + 1),
-				});
-			};
-			next(0);
+	// World facts for a ride or a place: shown once, silently, with their tier.
+	const noted = useRef(new Set());
+	const showFacts = useCallback(
+		(ids) => {
+			const fresh = (ids || []).filter((id) => facts.has(id) && !noted.current.has(id) && !isOwnerNote(facts.get(id).claim));
+			if (!fresh.length) return;
+			for (const id of fresh) noted.current.add(id);
+			setNote({ key: fresh.join(":"), items: fresh.map((id) => ({ id, text: facts.get(id).claim, chip: chipFor([id], facts) })) });
 		},
-		[stopScript, voices],
+		[facts],
 	);
-
-	const skipLine = useCallback(() => script.current.skip?.(), []);
+	useEffect(() => {
+		if (!note) return undefined;
+		const t = setTimeout(() => setNote(null), 10000);
+		return () => clearTimeout(t);
+	}, [note]);
 
 	// ---- the live objective
 
@@ -289,7 +277,7 @@ function Game({ slug, packVersion, base, world, missions, story, presetId, touch
 	useEffect(() => {
 		if (!loaded) return undefined;
 		const o = objectiveAt(state, missions);
-		rt.setObjective(o, waypointFor(state, missions, riding));
+		rt.setObjective(o, waypointFor(state, missions, riding, (id) => rt.ridePosition(id)));
 		return undefined;
 	}, [loaded, state, missions, riding, rt]);
 
@@ -302,8 +290,9 @@ function Game({ slug, packVersion, base, world, missions, story, presetId, touch
 		if (!placed.current) {
 			placed.current = true;
 			rt.setEra(state.era || m.era);
-			voices.ambience.setEra(rt.era === "1791" ? 1 : 0, 0.1);
+			voices.ambience.setEra(rt.isPast(rt.era) ? 1 : 0, 0.1);
 			rt.setResolved(state.resolved);
+			rt.markVisited(state.visited);
 			rt.teleport(m.start, m.start_face_deg ?? 0);
 		}
 	}, [loaded, state, missions, rt, voices]);
@@ -312,19 +301,18 @@ function Game({ slug, packVersion, base, world, missions, story, presetId, touch
 		if (!loaded || phase !== "world" || !objectiveId) return undefined;
 		const o = objectiveAt(state, missions);
 		if (o?.kind === "story") {
-			const t = setTimeout(() => playItems(o.beats.map(beatItem), () => dispatch({ type: "story-done", objective: o.id })), 500);
+			const t = setTimeout(() => scripts.play(o.beats.map(beatItem), { done: () => dispatch({ type: "story-done", objective: o.id }) }), 500);
 			return () => {
 				clearTimeout(t);
-				stopScript();
+				scripts.stop();
 			};
 		}
 		if (o?.kind === "choice") {
 			const t = setTimeout(() => {
-				rt.hold(true);
-				input?.releasePointer();
+				rt.hold("choice", true);
 				const b = beats.get(o.beat);
 				setChoice({ beat: b, picked: null, wrong: [] });
-				playItems([beatItem(o.beat)]);
+				scripts.play([beatItem(o.beat)]);
 			}, 400);
 			return () => clearTimeout(t);
 		}
@@ -336,79 +324,121 @@ function Game({ slug, packVersion, base, world, missions, story, presetId, touch
 	const pickOption = useCallback(
 		(opt) => {
 			const b = choice.beat;
-			setChoice((c) => ({ ...c, picked: opt.id }));
-			playItems((opt.after || []).map((a) => beatItem(a.id)), () => {
-				if (opt.accepted) {
-					setChoice(null);
-					rt.hold(false);
-					dispatch({ type: "chose", beat: b.id, option: opt.id });
-				} else {
-					setChoice((c) => ({ ...c, picked: null, wrong: [...c.wrong, opt.id] }));
-				}
+			scripts.play((opt.after || []).map((a) => beatItem(a.id)), {
+				setup: () => setChoice((c) => ({ ...c, picked: opt.id })),
+				cleanup: () => setChoice((c) => (c ? { ...c, picked: null } : c)),
+				done: () => {
+					if (opt.accepted) {
+						setChoice(null);
+						rt.hold("choice", false);
+						dispatch({ type: "chose", beat: b.id, option: opt.id });
+					} else {
+						setChoice((c) => ({ ...c, wrong: [...c.wrong, opt.id] }));
+					}
+				},
 			});
 		},
-		[choice, playItems, beatItem, rt],
+		[choice, scripts, beatItem, rt],
 	);
-
-	handlers.current.prompt = setPrompt;
-	handlers.current.ride = setRiding;
-	handlers.current.arrive = (o, r) => {
-		if (o.kind === "goto") dispatch({ type: "arrive" });
-		if (o.kind === "ride") dispatch({ type: "arrive", riding: r });
-	};
-	handlers.current.interact = (p) => {
-		const o = objectiveAt(state, missions);
-		if (p.kind === "npc") {
-			const npc = missions.npcs.find((n) => n.id === p.id);
-			const lines = missions.dialogue[npc.dialogue];
-			const live = o?.kind === "talk" && o.npc === p.id;
-			const items = (live ? lines : lines.filter((l) => !l.beat && !l.facts?.length).slice(0, 1)).map(lineItem);
-			rt.faceNpc(p.id, true);
-			rt.hold(true);
-			setTalking(true);
-			playItems(items, () => {
-				rt.faceNpc(p.id, false);
-				rt.hold(false);
-				setTalking(false);
-				if (live) dispatch({ type: "talked", npc: p.id });
-			});
-		}
-		if (p.kind === "record" && o?.kind === "record" && o.record === p.id) {
-			const r = missions.records.find((x) => x.id === p.id);
-			rt.hold(true);
-			setTalking(true);
-			playItems(r.beats.map(beatItem), () => {
-				rt.hold(false);
-				setTalking(false);
-				dispatch({ type: "found", record: p.id });
-			});
-		}
-	};
 
 	const wakeEra = useCallback(() => {
 		const o = objectiveAt(state, missions);
-		if (o?.kind !== "era" || shifting) return;
+		if (o?.kind !== "era" || rt.eraAnim || scripts.active) return;
+		if (rt.riding && !rt.dismount()) return;
 		setShifting(true);
-		rt.hold(true);
-		voices.ambience.setEra(o.to === "1791" ? 1 : 0, 2.2);
+		rt.hold("shift", true);
+		voices.ambience.setEra(rt.isPast(o.to) ? 1 : 0, 2.2);
 		rt.shiftEra(o.to, () => {
-			rt.hold(false);
+			rt.hold("shift", false);
 			setShifting(false);
 			dispatch({ type: "era-shifted" });
 		});
-	}, [state, missions, shifting, rt, voices]);
+	}, [state, missions, rt, voices, scripts]);
 
 	const doRestore = useCallback(() => {
 		const o = objectiveAt(state, missions);
-		if (o?.kind !== "restore" || restoring) return;
+		if (o?.kind !== "restore" || rt.restoreAnim || scripts.active) return;
+		if (rt.riding && !rt.dismount()) return;
 		setRestoring(true);
-		rt.hold(true);
+		rt.hold("restore", true);
 		rt.restore(o.classes, () => {
-			rt.hold(false);
+			rt.hold("restore", false);
 			setRestoring(false);
 			dispatch({ type: "restored" });
 		});
-	}, [state, missions, restoring, rt]);
+	}, [state, missions, rt, scripts]);
+
+	// Anything the mouse must click frees the pointer. E and gamepad A work for the same things.
+	const needsCursor = phase === "world" && (state.phase === "end" || state.phase === "done" || ["era", "restore", "choice"].includes(objective?.kind));
+	useEffect(() => {
+		input?.setCursorFree(needsCursor);
+	}, [input, needsCursor]);
+
+	// The splash stays up long enough to be seen before a key can dismiss it.
+	const endAt = useRef(0);
+	useEffect(() => {
+		if (state.phase === "end") endAt.current = performance.now();
+	}, [state.phase]);
+
+	// The runtime calls these from its frame loop, so they are refreshed after every commit.
+	useEffect(() => {
+		handlers.current = {
+			prompt: setPrompt,
+			ride: (id) => {
+				setRiding(id);
+				if (id) showFacts(missions.rides?.find((r) => r.id === id)?.note_facts);
+			},
+			place: (place) => {
+				dispatch({ type: "visited", place: place.id });
+				showFacts(place.facts);
+			},
+			arrive: (o, r) => {
+				if (o.kind === "goto") dispatch({ type: "arrive" });
+				if (o.kind === "ride") dispatch({ type: "arrive", riding: r });
+			},
+			interact: (p) => {
+				if (state.phase === "end") {
+					if (performance.now() - endAt.current > 900) dispatch({ type: "end-dismissed" });
+					return;
+				}
+				if (!p || state.phase !== "play" || scripts.active) return;
+				const o = objectiveAt(state, missions);
+				if (p.kind === "action") {
+					if (o?.kind === "era") wakeEra();
+					if (o?.kind === "restore") doRestore();
+					return;
+				}
+				if (!allowsRoaming(o)) return;
+				const holdFor = (npcId) => ({
+					setup: () => {
+						if (npcId) rt.faceNpc(npcId, true);
+						rt.hold("script", true);
+						setTalking(true);
+					},
+					cleanup: () => {
+						if (npcId) rt.faceNpc(npcId, false);
+						rt.hold("script", false);
+						setTalking(false);
+					},
+				});
+				if (p.kind === "npc") {
+					const npc = missions.npcs.find((n) => n.id === p.id);
+					const lines = missions.dialogue[npc.dialogue];
+					const live = o.kind === "talk" && o.npc === p.id;
+					const items = (live ? lines : lines.filter((l) => !l.beat && !l.facts?.length).slice(0, 1)).map(lineItem);
+					scripts.play(items, { ...holdFor(p.id), done: () => live && dispatch({ type: "talked", npc: p.id }) });
+				}
+				if (p.kind === "record" && o.kind === "record" && o.record === p.id) {
+					const r = missions.records.find((x) => x.id === p.id);
+					const items = r.beats.map(beatItem).filter(Boolean).map((item) => {
+						const base = item.evidence || evidence.get(r.evidence) || (r.placement_note ? { title: r.title } : null);
+						return { ...item, evidence: base && r.placement_note ? { ...base, placement: r.placement_note } : base };
+					});
+					scripts.play(items, { ...holdFor(null), done: () => dispatch({ type: "found", record: p.id }) });
+				}
+			},
+		};
+	}, [showFacts, missions, state, wakeEra, doRestore, rt, lineItem, scripts, beatItem, evidence]);
 
 	const enter = useCallback(
 		(withSound) => {
@@ -491,6 +521,7 @@ function Game({ slug, packVersion, base, world, missions, story, presetId, touch
 				slug={slug}
 				rt={rt}
 				world={world}
+				missions={missions}
 				input={input}
 				touch={touch}
 				phase={phase}
@@ -502,6 +533,7 @@ function Game({ slug, packVersion, base, world, missions, story, presetId, touch
 				riding={riding}
 				line={line}
 				card={card}
+				note={note}
 				choice={choice}
 				shifting={shifting}
 				restoring={restoring}
@@ -510,7 +542,7 @@ function Game({ slug, packVersion, base, world, missions, story, presetId, touch
 				presetId={presetId}
 				onEnter={enter}
 				onBegin={() => dispatch({ type: "begin" })}
-				onSkip={skipLine}
+				onSkip={scripts.skip}
 				onPick={pickOption}
 				onWake={wakeEra}
 				onRestore={doRestore}
