@@ -1,5 +1,51 @@
 # Epocheye Play: status
 
+## Open world: WAITING at GATE 1 (2026-11-22)
+
+Phase 1 is built on `feat/open-world`. Nothing is merged and live `/play` is unchanged. **I have stopped and am waiting for the owner's answer.**
+
+**Preview (needs your Vercel sign-in):** https://epocheye-website-git-feat-open-world-sambit-singhas-projects.vercel.app/play/tipu-summer-palace-bengaluru/world
+
+Vercel reports this build as Ready, but I could not open it myself because it is behind your sign-in. Every check below ran on a local production build of the same code.
+
+The three things to judge: does it feel like an open-world game, does it look good, and do you want to keep playing?
+
+### What is playable
+
+Mission 0 (today, the era shift) and Mission 1 (1791): the carpenter, the mason, a bullock cart ride up the avenue, Buchanan's journal, the inscription stone, the evidence choice, the restoration and the end splash. Walk and run on keyboard and mouse, touch or gamepad. Minimap, waypoints, quality presets, credits, local save. A scripted player finished both missions on the production build at both settings.
+
+### Measured (headless Chrome on this PC, production build)
+
+| | Target | PC, High | Phone emulation, Low |
+|---|---|---|---|
+| First playable size | under 8 MB | 5.39 MB | **4.24 MB** |
+| First playable time, slow 4G (1.6 Mbps, 4x slower CPU) | under 8 s | not throttled: 3.7 s | **28.3 s, misses** |
+| First playable time, good 4G (9 Mbps, 4x slower CPU) | under 8 s | | **9.9 s, misses** |
+| Frame rate | 60 PC, 30 phone | 59.7 | 58.6 (48 while recording, 30 at its slow moments) |
+
+**Not measured on a real device.** The phone column is emulation on this PC's AMD Radeon graphics, so its frame rate is much better than a mid-range Android would give. Load time is the main work for Phase 3.
+
+### Known gaps at this gate
+
+- The recordings are scripted headless captures at phone and PC size, not recordings of a real phone.
+- Nobody has listened to the carpenter and mason voices. The speech check heard their lines correctly.
+- Up close, some clothes still have small flaws, and the awning cloth has small tears. Large fort buildings are plain blocks, because their form is not recorded.
+- The world's "today" surroundings are simple blocks, as the brief allows.
+- Sound is generated ambience. Licensed music and recorded ambience are Phase 4.
+- `/play/<slug>` still opens the panorama level. The open world is at `/play/<slug>/world` until Phase 3 makes it the default with Story view as the fallback.
+- The app prompt, horse, elephant, full map and fast travel are later phases.
+
+### Decisions I need from you
+
+1. **GATE 1:** go on to Phase 2, or tell me what to change.
+2. **Meshy plan:** which plan were you on when the cart was made on 2026-09-09? See `docs/play/CREDITS.md`.
+3. **Gilding tile:** where did it come from? This is already open in `docs/play/LAUNCH.md`.
+4. **Display font:** buy the Typodermic game licence, or stay with Anton (OFL).
+
+---
+
+# Panorama level (launched)
+
 **Launched.** GATE 3 answered on 2026-11-18 ("Merge and launch"): `feat/play` was merged into `main` and deleted, so `main` is the only branch and `/play` is on production. The launch checklist items below were not done before launch and are still open.
 
 GATE 1 (2026-11-16): voice chosen, Kokoro. GATE 2 (2026-11-17): approved. Story rulings have not been given at either gate, so the proposals stand; they are item 1 of the launch checklist.
