@@ -1,0 +1,441 @@
+{
+  "slug": "tipu-summer-palace-bengaluru",
+  "site": "tools/play/sites/tipu-summer-palace-bengaluru.json",
+  "version": 1,
+  "_note": "Open-world export config. Read by tools/play/export_world.py. Blender coordinates, metres, Z up.",
+  "moment": {
+    "date": "1791-03-01",
+    "time": "17:10",
+    "sun_elevation_deg": 13.3,
+    "sun_azimuth_deg": 258.5,
+    "model_y_bearing_deg": 286.8
+  },
+  "ground_z": -0.7,
+  "bake_hide_modifiers": [
+    "TSP_Scatter"
+  ],
+  "bake_hide_collections": [
+    "TSP_INFERRED_people",
+    "TSP_INFERRED_people_walking",
+    "TSP_Throne_rebuilt",
+    "Throne__COURT_1791"
+  ],
+  "never_export": [
+    "TSP_fortR_guns",
+    "TSP_throne",
+    "Throne",
+    "TSP_fig_",
+    "TSP_person_",
+    "TSP_walker_",
+    "char1"
+  ],
+  "cells": {
+    "court": {
+      "bounds": [
+        -290,
+        -80,
+        90,
+        135
+      ],
+      "groups": {
+        "palace": {
+          "collections": [
+            "TSP_Palace_rebuilt",
+            "TSP_Palace_detail",
+            "TSP_Palace_columns",
+            "TSP_Palace_stairs_rebuilt"
+          ],
+          "target_tris": 70000,
+          "atlas": 2048,
+          "states": [
+            "then",
+            "now"
+          ],
+          "extra": {
+            "now": [
+              "Wall_ground_"
+            ]
+          },
+          "classes": [
+            {
+              "id": 1,
+              "name": "stone",
+              "match": "PLINTH|PILLAR_STONE|BASE_EXT|FLOOR|floor_granite|Platform"
+            },
+            {
+              "id": 2,
+              "name": "mud",
+              "match": "WALL_|lime_fresh|limewash|roof_lime"
+            },
+            {
+              "id": 3,
+              "name": "teak",
+              "match": "SHAFT|PILLAR_SHAFT|ARCH|CAP_EXT|ENTABLATURE|CEILING|BALUSTRADE|window|TIMBER|eave"
+            }
+          ],
+          "web": {
+            "collide": true,
+            "collide_min_area": 0.04
+          }
+        },
+        "near": {
+          "collections": [
+            "TSP_INFERRED_life_props",
+            "TSP_R1_grounds",
+            "TSP_R3_fort_mackenzie_1791"
+          ],
+          "match": "TSP_awning|TSP_basket|TSP_pot|TSP_sack|TSP_lota|TSP_well|TSP_hearth|TSP_tree_platform|TSP_fortR_interior|MW_INT_Courts|MW_INT_Tanks",
+          "clip": true,
+          "target_tris": 22000,
+          "atlas": 1024,
+          "states": [
+            "then"
+          ],
+          "web": {
+            "collide": true,
+            "collide_min_area": 0.25
+          }
+        },
+        "far": {
+          "collections": [
+            "TSP_R3_fort_mackenzie_1791"
+          ],
+          "match": "MW_Rampart|MW_AdditionalRampart|TSP_fortR_towers|MW_Cavaliers|MW_GateBastions",
+          "target_tris": 26000,
+          "atlas": 1024,
+          "states": [
+            "then"
+          ]
+        }
+      },
+      "ground": {
+        "atlas": 2048,
+        "states": [
+          "then",
+          "now"
+        ],
+        "sources": {
+          "then": [
+            "TSP_court_packed",
+            "TSP_verge_scatter_base",
+            "TSP_fortR_ditch_glacis",
+            "MW_INT_Avenue"
+          ],
+          "now": [
+            "Site_lawn",
+            "Garden_"
+          ]
+        }
+      }
+    }
+  },
+  "actors": [
+    {
+      "id": "player",
+      "kind": "player",
+      "src": "C:/Users/Sambit/AppData/Local/Temp/claude/40b4808ff4be65dd/2c67dfbf-1f73-4497-89fc-53c3c977f963/scratchpad/cc0/ual/Animation Library[Standard]/Godot/AnimationLibrary_Godot_Standard.glb",
+      "tris": 9000,
+      "clips": {
+        "Idle_Loop": "idle",
+        "Walk_Loop": "walk",
+        "Jog_Fwd_Loop": "run",
+        "Sprint_Loop": "sprint",
+        "Interact": "interact",
+        "Sitting_Idle_Loop": "sit",
+        "Idle_Talking_Loop": "talk"
+      }
+    },
+    {
+      "id": "bearer",
+      "kind": "figure",
+      "src": "E:/heritage_assets/tipu-summer-palace-bengaluru/assets/tsp_town/humans/bearer.glb",
+      "tris": 4500
+    },
+    {
+      "id": "mysore_man",
+      "kind": "figure",
+      "src": "E:/heritage_assets/tipu-summer-palace-bengaluru/assets/tsp_town/humans/mysore_man.glb",
+      "tris": 4500
+    },
+    {
+      "id": "merchant",
+      "kind": "figure",
+      "src": "E:/heritage_assets/tipu-summer-palace-bengaluru/assets/tsp_town/humans/merchant.glb",
+      "tris": 4500
+    },
+    {
+      "id": "mysore_woman",
+      "kind": "figure",
+      "src": "E:/heritage_assets/tipu-summer-palace-bengaluru/assets/tsp_town/humans/mysore_woman.glb",
+      "tris": 4500,
+      "error": 0.09
+    },
+    {
+      "id": "bullock_cart",
+      "kind": "prop",
+      "src": "E:/heritage_assets/hampi/assets/generated/meshy/fig_bullock_cart/fig_bullock_cart.glb",
+      "tris": 7000,
+      "atlas": 512,
+      "error": 0.3
+    }
+  ],
+  "cards": {
+    "tamarind": {
+      "parts": [
+        "tree_small_02_LOD0"
+      ],
+      "anchor": "tree_small_02_LOD0",
+      "reach": 1
+    },
+    "palm": {
+      "parts": [
+        "Tree_palm_wood",
+        "Tree_palm_leaf"
+      ],
+      "anchor": "Tree_palm_wood",
+      "reach": 14
+    }
+  },
+  "play_bounds": [
+    -285,
+    -75,
+    85,
+    130
+  ],
+  "no_ride": [
+    [
+      -25,
+      -5.5,
+      16,
+      28
+    ]
+  ],
+  "resolve_top": 9,
+  "web_actors": {
+    "player": "player",
+    "rides": {
+      "cart": {
+        "id": "bullock_cart",
+        "scale": 1.0,
+        "yaw": 0,
+        "seat": [
+          0,
+          1.25,
+          0.4
+        ]
+      }
+    }
+  },
+  "people": [
+    {
+      "figure": "merchant",
+      "route": [
+        [
+          -38,
+          -30
+        ],
+        [
+          -20,
+          -44
+        ],
+        [
+          12,
+          -46
+        ],
+        [
+          32,
+          -28
+        ]
+      ]
+    },
+    {
+      "figure": "mysore_woman",
+      "route": [
+        [
+          30,
+          -14
+        ],
+        [
+          34,
+          -34
+        ],
+        [
+          14,
+          -52
+        ],
+        [
+          -8,
+          -50
+        ]
+      ]
+    },
+    {
+      "figure": "mysore_man",
+      "route": [
+        [
+          -44,
+          -6
+        ],
+        [
+          -40,
+          12
+        ],
+        [
+          -34,
+          34
+        ],
+        [
+          -52,
+          58
+        ]
+      ]
+    },
+    {
+      "figure": "bearer",
+      "route": [
+        [
+          -20,
+          -22
+        ],
+        [
+          -2,
+          -26
+        ],
+        [
+          18,
+          -20
+        ]
+      ]
+    },
+    {
+      "figure": "mysore_woman",
+      "route": [
+        [
+          -60,
+          62
+        ],
+        [
+          -90,
+          74
+        ],
+        [
+          -124,
+          84
+        ],
+        [
+          -160,
+          92
+        ]
+      ]
+    },
+    {
+      "figure": "merchant",
+      "route": [
+        [
+          -170,
+          96
+        ],
+        [
+          -130,
+          90
+        ],
+        [
+          -96,
+          80
+        ],
+        [
+          -64,
+          70
+        ]
+      ]
+    },
+    {
+      "figure": "mysore_man",
+      "route": [
+        [
+          26,
+          8
+        ],
+        [
+          32,
+          22
+        ],
+        [
+          26,
+          38
+        ],
+        [
+          6,
+          44
+        ]
+      ]
+    },
+    {
+      "figure": "bearer",
+      "route": [
+        [
+          -12,
+          40
+        ],
+        [
+          -30,
+          46
+        ],
+        [
+          -46,
+          40
+        ]
+      ]
+    },
+    {
+      "figure": "merchant",
+      "route": [
+        [
+          -200,
+          100
+        ],
+        [
+          -150,
+          86
+        ],
+        [
+          -110,
+          78
+        ]
+      ]
+    },
+    {
+      "figure": "mysore_woman",
+      "route": [
+        [
+          40,
+          -48
+        ],
+        [
+          20,
+          -36
+        ],
+        [
+          40,
+          -22
+        ]
+      ]
+    }
+  ],
+  "today": {
+    "blocks": {
+      "count": 90,
+      "seed": 11,
+      "inner": 95,
+      "outer": 330,
+      "center": [
+        -4,
+        -15
+      ]
+    }
+  },
+  "bake_no_ray": [
+    "MW_GROUND",
+    "MW_SKY"
+  ]
+}

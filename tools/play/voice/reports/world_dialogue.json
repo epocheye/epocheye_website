@@ -1,0 +1,12 @@
+[
+ {
+  "id": "w-carp-2",
+  "voice": "kokoro-hm-omega",
+  "text": "You want to know what holds this place up? The teak does.",
+  "heard": "You want to know what holds this place up, the teak does.",
+  "match": true,
+  "wpm": 147,
+  "target_wpm": 150,
+  "speed": 0.7
+ }
+]
