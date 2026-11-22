@@ -12,9 +12,9 @@ import { mkdir, readFile, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { Accessor, Document, NodeIO } from "@gltf-transform/core";
 import { EXTMeshoptCompression, KHRMeshQuantization } from "@gltf-transform/extensions";
-import { meshopt, reorder } from "@gltf-transform/functions";
+import { meshopt, reorder, simplify, weld } from "@gltf-transform/functions";
 import { encodeToKTX2 } from "ktx2-encoder";
-import { MeshoptDecoder, MeshoptEncoder } from "meshoptimizer";
+import { MeshoptDecoder, MeshoptEncoder, MeshoptSimplifier } from "meshoptimizer";
 import sharp from "sharp";
 
 const cell = process.argv[2];
@@ -71,6 +71,12 @@ async function buildGlb(name) {
 	doc.createScene(name).addChild(doc.createNode(name).setMesh(mesh));
 	doc.createExtension(KHRMeshQuantization);
 	await MeshoptEncoder.ready;
+	// The ground is a regular grid and mostly flat. Its border stays locked so neighbouring cells meet.
+	if (name === "ground") {
+		await MeshoptSimplifier.ready;
+		await doc.transform(weld(), simplify({ simplifier: MeshoptSimplifier, ratio: 0, error: 0.00025, lockBorder: true }));
+		meta.tris = prim.getIndices().getCount() / 3;
+	}
 	await doc.transform(reorder({ encoder: MeshoptEncoder }), meshopt({ encoder: MeshoptEncoder, level: "high" }));
 	const io = new NodeIO().registerExtensions([EXTMeshoptCompression, KHRMeshQuantization]).registerDependencies({ "meshopt.decoder": MeshoptDecoder, "meshopt.encoder": MeshoptEncoder });
 	await io.write(path.join(OUT, `${name}.glb`), doc);
@@ -109,7 +115,7 @@ for (const name of textures) {
 // Tree cards are shared by every cell. Only the cards world.json will name are packed.
 const cardDir = "tools/play/out/world/cards";
 const cardsJson = path.join(cardDir, "cards.json");
-if (existsSync(cardsJson)) {
+if (existsSync(cardsJson) && !process.argv.includes("--no-cards")) {
 	const dest = path.join(versionDir, "cards");
 	await mkdir(dest, { recursive: true });
 	for (const key of Object.keys(JSON.parse(await readFile(cardsJson, "utf8")))) {

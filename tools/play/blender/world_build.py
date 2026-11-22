@@ -11,6 +11,7 @@ import bpy, bmesh, json, math, os, re, subprocess, sys, time
 import numpy as np
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import common as C
+import world_edits as E
 
 a = C.parse_kv(C.argv_after_dashes())
 cfg = json.load(open(a["world"], encoding="utf-8"))
@@ -101,7 +102,7 @@ def classify(mats, classes):
 
 def build_target(name, group, items, dg):
     """World-space low-poly mesh with a class per vertex, decimated to the group's budget."""
-    b = cell["bounds"]
+    b = group.get("clip_bounds", cell["bounds"])
     classes = group.get("classes", [])
     cache, per_class = {}, {}
     for src, mw, _owner in items:
@@ -166,21 +167,46 @@ def build_target(name, group, items, dg):
     return ob
 
 
+def terrain_sampler():
+    """Bilinear lookup into the map's height raster, or the flat ground if none was built."""
+    path = os.path.join(TOOLS, "out", "world", "terrain.npz")
+    if not os.path.exists(path):
+        return lambda x, y: GZ
+    with np.load(path) as d:
+        h, x0, y0, step = d["h"].copy(), float(d["x0"]), float(d["y0"]), float(d["step"])
+
+    def at(x, y):
+        fx = np.clip((x - x0) / step, 0, h.shape[1] - 1.001)
+        fy = np.clip((y - y0) / step, 0, h.shape[0] - 1.001)
+        i, j = int(fx), int(fy)
+        tx, ty = fx - i, fy - j
+        return float(h[j, i] * (1 - tx) * (1 - ty) + h[j, i + 1] * tx * (1 - ty) + h[j + 1, i] * (1 - tx) * ty + h[j + 1, i + 1] * tx * ty)
+    return at
+
+
 def ground_target():
+    """The ground as a height grid. Its UVs are its plan position, which is how the straight-down
+    render maps onto it. pack_world.mjs merges the flat parts."""
     b = cell["bounds"]
-    nx, ny = max(2, int((b[2] - b[0]) / 8)), max(2, int((b[3] - b[1]) / 8))
+    step = float(cell["ground"].get("grid", 4))
+    nx, ny = max(2, int(round((b[2] - b[0]) / step))), max(2, int(round((b[3] - b[1]) / step)))
+    height = terrain_sampler()
     bm = bmesh.new()
-    uvl = bm.loops.layers.uv.new("UVMap")
-    col = bm.loops.layers.float_color.new("Col")
-    grid = [[bm.verts.new((b[0] + (b[2] - b[0]) * i / nx, b[1] + (b[3] - b[1]) * j / ny, GZ + 0.02))
-             for j in range(ny + 1)] for i in range(nx + 1)]
+    grid = [[None] * (ny + 1) for _ in range(nx + 1)]
+    for i in range(nx + 1):
+        for j in range(ny + 1):
+            x, y = b[0] + (b[2] - b[0]) * i / nx, b[1] + (b[3] - b[1]) * j / ny
+            grid[i][j] = bm.verts.new((x, y, height(x, y) + 0.02))
     for i in range(nx):
         for j in range(ny):
-            f = bm.faces.new((grid[i][j], grid[i + 1][j], grid[i + 1][j + 1], grid[i][j + 1]))
-            for l in f.loops:
-                l[uvl].uv = ((l.vert.co.x - b[0]) / (b[2] - b[0]), (l.vert.co.y - b[1]) / (b[3] - b[1]))
-                l[col] = (0, 0, 0, 1)
+            bm.faces.new((grid[i][j], grid[i + 1][j], grid[i + 1][j + 1], grid[i][j + 1]))
     bmesh.ops.triangulate(bm, faces=bm.faces)
+    uvl = bm.loops.layers.uv.new("UVMap")
+    col = bm.loops.layers.float_color.new("Col")
+    for f in bm.faces:
+        for l in f.loops:
+            l[uvl].uv = ((l.vert.co.x - b[0]) / (b[2] - b[0]), (l.vert.co.y - b[1]) / (b[3] - b[1]))
+            l[col] = (0, 0, 0, 1)
     me = bpy.data.meshes.new("PLAY_low_ground")
     bm.to_mesh(me); bm.free()
     ob = bpy.data.objects.new(me.name, me)
@@ -386,8 +412,12 @@ def render_ground(state, g, px):
     prefixes = tuple(g["sources"][state])
     changed = []
     for o in bpy.data.objects:
-        # Meshes only: an instancer's flag also applies to everything it instances, ground included.
-        if o.type != "MESH" or o.name.startswith(prefixes):
+        # An instancer's flag also applies to everything it instances, so one is only hidden when
+        # no ground source is inside it. Trees are instanced, and must not be drawn on the ground.
+        if o.type == "EMPTY" and o.instance_type == "COLLECTION" and o.instance_collection:
+            if any(k.name.startswith(prefixes) for k in o.instance_collection.all_objects):
+                continue
+        elif o.type != "MESH" or o.name.startswith(prefixes):
             continue
         if o.visible_camera:
             o.visible_camera = False
@@ -456,6 +486,11 @@ def apply_state(name):
 
 
 print("@@scatter_hidden", hide_scatter(), flush=True)
+print("@@edits", json.dumps(E.apply(cfg)), flush=True)
+# Nothing that is never exported may leave its shadow in a bake either.
+for _o in bpy.data.objects:
+    if _o.name.startswith(NEVER) and _o.type == "MESH":
+        _o.hide_render = True
 # Scene shells (a horizon plane coplanar with the fort's ground, a sky dome) are for the film only.
 # Left in, the plane shadows every surface it touches and the ground bakes black.
 _shells = 0
@@ -496,7 +531,7 @@ for _ob, _g, _i in targets.values():
 
 for state in states_wanted:
     apply_state(state)
-    C.set_collections(scene, hide=cfg.get("bake_hide_collections", []))
+    C.set_collections(scene, hide=cfg.get("bake_hide_collections", []) + ([E.ADDED] if state == "now" else []))
     dg = bpy.context.evaluated_depsgraph_get()
     for gname, (ob, g, _items) in targets.items():
         if state not in g.get("states", ["then"]):
@@ -507,7 +542,8 @@ for state in states_wanted:
             render_ground(state, g, px)
             dg = bpy.context.evaluated_depsgraph_get()
             continue
-        live, dg = group_sources(g)
+        # A group can bake against more than it keeps, so its neighbours still cast their shadows.
+        live, dg = group_sources({**g, "match": g["hi_match"]} if g.get("hi_match") else g)
         extra = tuple(g.get("extra", {}).get(state, []))
         if extra:
             live += [(o, o.matrix_world.copy(), o) for o in bpy.data.objects

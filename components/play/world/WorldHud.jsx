@@ -28,11 +28,14 @@ function Minimap({ rt, world, inPast }) {
 		const dpr = Math.min(2, window.devicePixelRatio || 1);
 		canvas.width = canvas.height = size * dpr;
 		const c = canvas.getContext("2d");
+		// Only this era's map is fetched: the other one is not needed until the era shifts.
 		const images = {};
-		for (const [k, file] of Object.entries(world.minimap?.images || {})) {
+		const era = inPast ? "then" : "now";
+		const file = world.minimap?.images?.[era];
+		if (file) {
 			const i = new Image();
 			i.src = `${rt.base}/${file}`;
-			images[k] = i;
+			images[era] = i;
 		}
 		const b = world.minimap?.bounds || world.play_bounds;
 		const scale = size / MAP_SPAN;

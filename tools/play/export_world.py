@@ -127,7 +127,9 @@ def referenced_files(world, missions):
     """Every file the game loads for this world, relative to the version folder, and any reference
     that cannot resolve to a file at all."""
     files, problems = set(), []
-    for cid, cell in world["cells"].items():
+    for cid, cell in {**world["cells"], "base": world["base"]}.items():
+        if cell.get("terrain"):
+            files.add(cell["terrain"]["file"])
         for name, g in cell["groups"].items():
             files.add(f"{cid}/{name}.glb")
             for tex in {g["now"], g["then"]} - {None}:
@@ -165,41 +167,107 @@ def swap_into_place(staged, dest):
         raise
 
 
-def publish(slug, cfg, cell_id):
-    from PIL import Image
-    version = cfg["version"]
-    dest = ROOT / "public" / "play" / "worlds" / slug / f"v{version}"
-    staged = OUT / "_publish" / slug / f"v{version}"
-    if staged.exists():
-        shutil.rmtree(staged)
-    staged.mkdir(parents=True)
-    cell = cfg["cells"][cell_id]
+def walk_limit(cfg):
+    """The edge of the map: a closed line a set distance outside the named wall."""
+    spec = cfg["terrain"]["limit"]
+    plan = OUT / "plan"
+    rows = json.loads((plan / "objects.json").read_text(encoding="utf-8"))["objects"]
+    row = next(r for r in rows if r["name"].startswith(spec["around"]))
+    import numpy as np
+    with np.load(plan / f"{row['i']}.npz") as d:
+        v = d["v"][:, :2]
+    c = v.mean(axis=0)
+    ang = np.arctan2(v[:, 1] - c[1], v[:, 0] - c[0])
+    pts = []
+    n = int(spec.get("points", 48))
+    for k in range(n):
+        a = -math.pi + math.tau * k / n
+        hit = v[np.abs(np.arctan2(np.sin(ang - a), np.cos(ang - a))) < math.tau / n]
+        r = float(np.hypot(*(hit - c).T).max()) + float(spec["offset"])
+        pts.append([round(float(c[0] + math.cos(a) * r), 1), round(float(c[1] + math.sin(a) * r), 1)])
+    return pts
+
+
+def cell_entry(cell):
     groups = {}
     for name, g in cell["groups"].items():
         states = g.get("states", ["then"])
         web = g.get("web", {})
         now_state = "now" if "now" in states else "then"
+        mode = web.get("mode") or ("both" if "now" in states else "then")
         groups[name] = {
             "now": f"{name}_{now_state}",
             "then": f"{name}_then" if web.get("then_atlas") else None,
-            "mode": "both" if "now" in states else "then",
+            "mode": mode,
             "classes": bool(g.get("classes")),
             "collide": web.get("collide", False),
             "collide_min_area": web.get("collide_min_area", 0.03),
+            "collide_era": web.get("collide_era") or ("both" if mode == "both" else "then"),
+            "defer": bool(web.get("defer")),
+            "ring": bool(web.get("ring")),
         }
     groups["ground"] = {"now": "ground_now", "then": "ground_then", "mode": "both", "classes": False, "collide": False}
-    needed = {x for g in groups.values() for x in (g["now"], g["then"]) if x}
-    # Only what the game loads is packed, so debug and unused atlases can never reach public/.
-    subprocess.run(["node", "tools/play/pack_world.mjs", cell_id, "--out", str(staged),
-                    "--groups", ",".join(groups), "--textures", ",".join(sorted(needed))],
-                   cwd=ROOT, check=True, shell=False)
-    manifest = json.loads((staged / cell_id / "manifest.json").read_text(encoding="utf-8"))
-    # Minimap from the baked ground itself.
-    tex = OUT / cell_id / "tex"
+    return groups
+
+
+def publish(slug, cfg):
+    from PIL import Image
+    sys.path.insert(0, str(TOOLS))
+    import world_maps as M
+    version = cfg["version"]
+    worlds = ROOT / "public" / "play" / "worlds" / slug
+    dest = worlds / f"v{version}"
+    carried = worlds / f"v{cfg.get('previous_version', version)}"  # actors and audio come from here
+    if not carried.exists():
+        carried = dest
+    staged = OUT / "_publish" / slug / f"v{version}"
+    if staged.exists():
+        shutil.rmtree(staged)
+    staged.mkdir(parents=True)
+    terrain = M.load_terrain()
+
+    # Cells with no bake of today get today's plain city ground, painted from the config.
+    for cid, cell in cfg["cells"].items():
+        if "now" not in cell["ground"].get("states", []):
+            b = cell["bounds"]
+            w = int(cell["ground"].get("now_px", 512))
+            h = max(64, int(round(w * (b[3] - b[1]) / (b[2] - b[0]) / 4)) * 4)
+            M.paint_today(b, w, h, cfg["today"]).save(OUT / cid / "tex" / "ground_now.png")
+    M.write_base(cfg, terrain)
+
+    def pack(cid, groups, cards):
+        needed = {x for g in groups.values() for x in (g["now"], g["then"]) if x}
+        # Only what the game loads is packed, so debug and unused atlases can never reach public/.
+        cmd = ["node", "tools/play/pack_world.mjs", cid, "--out", str(staged), "--groups", ",".join(groups),
+               "--textures", ",".join(sorted(needed))]
+        subprocess.run(cmd + ([] if cards else ["--no-cards"]), cwd=ROOT, check=True, shell=False)
+        manifest = json.loads((staged / cid / "manifest.json").read_text(encoding="utf-8"))
+        return {k: v for k, v in manifest["textures"].items() if k in needed}
+
+    cells = {}
+    first = True
+    start = cfg.get("start_cell", "court")
+    grid = float(cfg["terrain"].get("grid", 2))
+    for cid, cell in cfg["cells"].items():
+        groups = cell_entry(cell)
+        textures = pack(cid, groups, first)
+        first = False
+        data, meta = M.cell_heights(terrain, cell["bounds"], grid)
+        (staged / cid / "height.bin").write_bytes(data)
+        cells[cid] = {"id": cid, "bounds": cell["bounds"], "keep": bool(cell.get("keep")), "groups": groups, "textures": textures,
+                      "terrain": {"file": f"{cid}/height.bin", **meta}}
+    base_groups = {"ground": {"now": "ground_now", "then": "ground_then", "mode": "both", "classes": False, "collide": False}}
+    base = {"id": "base", "groups": base_groups, "textures": pack("base", base_groups, False)}
+
+    blocks = M.make_blocks(cfg)
+    # The minimap is the whole map, from the same baked grounds.
     images = {}
     for state in ("then", "now"):
         name = f"minimap_{state}.webp"
-        Image.open(tex / f"ground_{state}.png").convert("RGB").resize((512, 512), Image.LANCZOS).save(staged / name, quality=72, method=6)
+        picture = M.map_tone(M.composite(cfg, state, int(cfg["terrain"].get("minimap_px", 900))))
+        if state == "now":
+            picture = M.mark_today(picture, cfg, blocks)
+        picture.save(staged / name, quality=int(cfg["terrain"].get("minimap_quality", 58)), method=6)
         images[state] = name
     cards = {}
     cards_json = OUT / "cards" / "cards.json"
@@ -208,30 +276,37 @@ def publish(slug, cfg, cell_id):
     missions_src = ROOT / "content" / "play" / slug / "missions.json"
     missions = json.loads(missions_src.read_text(encoding="utf-8"))
     shutil.copy(missions_src, staged / "missions.json")
+    limit = walk_limit(cfg)
+    bx, by = [p[0] for p in limit], [p[1] for p in limit]
+    today = {k: v for k, v in cfg.get("today", {}).items() if k != "blocks"}
+    today["blocks"] = {"items": blocks}
     world = {
         "slug": slug,
         "version": version,
         "ground_y": cfg["ground_z"],
         "sun": sun_vector(cfg["moment"]),
-        "start_cell": cell_id,
-        "play_bounds": cfg["play_bounds"],
+        "start_cell": start,
+        "start_bounds": cfg["play_bounds"],
+        "play_bounds": [min(bx), min(by), max(bx), max(by)],
+        "walk_limit": limit,
+        "min_walk_y": cfg["terrain"]["min_walk_y"],
         "no_ride": cfg["no_ride"],
         "resolve_top": cfg.get("resolve_top", 9),
         "era_reach": cfg.get("era_reach", 620),
-        "minimap": {"bounds": cell["bounds"], "images": images},
-        "cells": {cell_id: {"id": cell_id, "bounds": cell["bounds"], "groups": groups,
-                            "textures": {k: v for k, v in manifest["textures"].items() if k in needed}}},
+        "minimap": {"bounds": cfg["terrain"]["bounds"], "images": images},
+        "base": base,
+        "cells": cells,
         "cards": cards,
         "actors": cfg["web_actors"],
         "people": cfg.get("people", []),
-        "today": cfg.get("today", {}),
+        "today": today,
     }
     (staged / "world.json").write_text(json.dumps(world, separators=(",", ":")), encoding="utf-8")
     files, problems = referenced_files(world, missions)
     for rel in files:
-        if rel.startswith(("actors/", "audio/")) and (dest / rel).is_file():
+        if rel.startswith(("actors/", "audio/")) and (carried / rel).is_file():
             (staged / rel).parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(dest / rel, staged / rel)
+            shutil.copy2(carried / rel, staged / rel)
     problems += [f"missing file {rel}" for rel in sorted(files) if not (staged / rel).is_file()]
     if problems:
         sys.exit("Not published, the live version is unchanged:\n  " + "\n  ".join(problems))
@@ -242,23 +317,46 @@ def publish(slug, cfg, cell_id):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("slug"); ap.add_argument("cmd", choices=["estimate", "bake", "cards", "publish"])
+    ap.add_argument("slug"); ap.add_argument("cmd", choices=["estimate", "bake", "cards", "publish", "plan"])
     ap.add_argument("--cell", default="court"); ap.add_argument("--groups"); ap.add_argument("--states")
     ap.add_argument("--samples", type=int, default=96); ap.add_argument("--device", default="GPU")
-    ap.add_argument("--yes", action="store_true")
+    ap.add_argument("--yes", action="store_true"); ap.add_argument("--geometry-only", action="store_true"); ap.add_argument("--list-only", action="store_true")
     a = ap.parse_args()
     world = TOOLS / "worlds" / f"{a.slug}.json"
     cfg = json.loads(world.read_text(encoding="utf-8"))
     site = json.loads((ROOT / cfg["site"]).read_text(encoding="utf-8"))
+    all_cells = a.cell == "all"
+    cell_ids = list(cfg["cells"]) if all_cells else [a.cell]
+    if all_cells:
+        a.cell = next((c for c in cfg["cells"] if c != cfg.get("start_cell", "court")), cell_ids[0])
     cell = cfg["cells"][a.cell]
     names = list(cell["groups"]) + ["ground"]
     groups = a.groups.split(",") if a.groups else names
     OUT.mkdir(parents=True, exist_ok=True)
     log = OUT / f"{a.cell}.log"
     if a.cmd == "publish":
-        publish(a.slug, cfg, a.cell)
+        publish(a.slug, cfg)
         return
-    if a.device.upper() == "GPU":
+    if a.cmd == "plan":
+        # CPU only and read only: no render, so it needs neither the GPU nor its lock.
+        dest = OUT / "plan"
+        cmd = [BLENDER, "-b", site["blend"], "--python", str(TOOLS / "blender" / "world_plan.py"), "--",
+               "--world", str(world), "--out", str(dest)]
+        r = subprocess.run(cmd, cwd=ROOT, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, errors="replace")
+        (OUT / "plan.log").write_text(r.stdout, encoding="utf-8")
+        if "WORLD_PLAN_DONE" not in r.stdout:
+            sys.exit(f"Plan failed. See {OUT / 'plan.log'}")
+        print(next(l for l in r.stdout.splitlines() if l.startswith("WORLD_PLAN_DONE")))
+        return
+    if a.cmd == "cards" and a.list_only:
+        cmd = [BLENDER, "-b", site["blend"], "--python", str(TOOLS / "blender" / "world_cards.py"), "--", "--world", str(world),
+               "--cell", a.cell, "--out", str(OUT / "cards"), "--list-only"]
+        r = subprocess.run(cmd, cwd=ROOT, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, errors="replace")
+        if "WORLD_CARDS_DONE" not in r.stdout:
+            sys.exit("Card listing failed: " + r.stdout[-800:])
+        print(" ".join(l for l in r.stdout.splitlines() if l.startswith("@@card")))
+        return
+    if a.device.upper() == "GPU" and not a.geometry_only:
         take_lock()
 
     if a.cmd == "cards":
@@ -275,9 +373,10 @@ def main():
     if a.cmd == "estimate":
         probe = OUT / f"{a.cell}_probe"
         # Two sizes, so the fixed cost of loading the scene onto the GPU is not scaled up with the pixels.
-        small, _ = run_build(world, site, ["--cell", a.cell, "--out", str(probe), "--groups", "palace",
-                                           "--states", "then", "--scale", "0.125", "--samples", "32", "--device", a.device], log)
-        large, _ = run_build(world, site, ["--cell", a.cell, "--out", str(probe), "--groups", "palace",
+        probe_group = "palace" if "palace" in cell["groups"] else next(iter(cell["groups"]))
+        small, t_small = run_build(world, site, ["--cell", a.cell, "--out", str(probe), "--groups", probe_group,
+                                                 "--states", "then", "--scale", "0.125", "--samples", "32", "--device", a.device], log)
+        large, _ = run_build(world, site, ["--cell", a.cell, "--out", str(probe), "--groups", probe_group,
                                            "--states", "then", "--scale", "0.375", "--samples", "32", "--device", a.device], log)
 
         def fit(kind):
@@ -289,23 +388,40 @@ def main():
         light_fixed, light_px = fit("light")   # per pixel at 32 samples
         albedo_fixed, albedo_px = fit("albedo")  # per pixel at 4 samples
         total = 0
-        for g in groups:
-            spec = cell["ground"] if g == "ground" else cell["groups"][g]
-            for _state in spec.get("states", ["then"]):
-                lpx = max(128, spec["atlas"] // 2)
-                total += light_fixed + lpx ** 2 * light_px * a.samples / 32
-                total += albedo_fixed + spec["atlas"] ** 2 * albedo_px
-        print(json.dumps({"small": small, "large": large, "fixed_seconds_per_bake": round(light_fixed + albedo_fixed, 1),
-                          "estimate_hours": round(total / 3600, 2),
-                          "note": "Fitted from two probes on the palace. Other groups may differ."}, indent=1))
+        per_cell = {}
+        for cid in cell_ids:
+            c = cfg["cells"][cid]
+            # Each cell is one Blender run: scene load and build, measured from the small probe.
+            secs = max(t_small - sum(r["seconds"] for r in small), 0)
+            for g in (list(c["groups"]) + ["ground"]) if all_cells else groups:
+                spec = c["ground"] if g == "ground" else c["groups"][g]
+                for _state in spec.get("states", ["then"]):
+                    lpx = max(128, spec["atlas"] // 2)
+                    secs += light_fixed + lpx ** 2 * light_px * a.samples / 32
+                    secs += albedo_fixed + spec["atlas"] ** 2 * albedo_px
+            per_cell[cid] = round(secs / 60, 1)
+            total += secs
+        print(json.dumps({"probe": f"{a.cell}/{probe_group}", "small": small, "large": large,
+                          "fixed_seconds_per_bake": round(light_fixed + albedo_fixed, 1), "samples": a.samples,
+                          "minutes_per_cell": per_cell, "estimate_hours": round(total / 3600, 2),
+                          "note": "Fitted from two probes. Other groups may differ."}, indent=1))
         return
 
-    args = ["--cell", a.cell, "--out", str(OUT / a.cell), "--groups", ",".join(groups),
-            "--samples", str(a.samples), "--device", a.device]
-    if a.states:
-        args += ["--states", a.states]
-    reports, secs = run_build(world, site, args, log)
-    print(json.dumps({"baked": len(reports), "minutes": round(secs / 60, 1)}))
+    done = 0
+    t0 = time.time()
+    # One lock for the whole run, so another job cannot slip in between two cells.
+    for cid in cell_ids:
+        c = cfg["cells"][cid]
+        wanted = a.groups.split(",") if a.groups else list(c["groups"]) + ["ground"]
+        args = ["--cell", cid, "--out", str(OUT / cid), "--groups", ",".join(wanted),
+                "--samples", str(a.samples), "--device", a.device]
+        if a.states:
+            args += ["--states", a.states]
+        if a.geometry_only:
+            args += ["--geometry-only"]
+        reports, _ = run_build(world, site, args, OUT / f"{cid}.log")
+        done += len(reports)
+    print(json.dumps({"cells": cell_ids, "baked": done, "minutes": round((time.time() - t0) / 60, 1)}))
 
 
 if __name__ == "__main__":

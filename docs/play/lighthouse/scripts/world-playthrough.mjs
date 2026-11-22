@@ -221,9 +221,16 @@ try {
 
 	const deadline = Date.now() + Number(process.env.WORLD_MAX_MS || (isPhone ? 420000 : 300000));
 	let done = false;
+	let shot = !process.env.WORLD_SHOT;
 	while (Date.now() < deadline) {
 		done = await page.evaluate(() => window.__bot?.done);
 		if (done) break;
+		// One frame of the past era's HUD and minimap, for the proof.
+		if (!shot && (await page.evaluate(() => window.__playWorld?.objective?.kind === "ride"))) {
+			await sleep(1800);
+			await page.screenshot({ path: process.env.WORLD_SHOT, type: "jpeg", quality: 82 });
+			shot = true;
+		}
 		await sleep(500);
 	}
 	await sleep(recordTo ? 3200 : 300);

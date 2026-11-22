@@ -1,6 +1,8 @@
 # Epocheye Play, open world: how it works
 
-Draft during Phase 1. The commands below are the ones in use; sections on Phase 2 features are added as they land.
+Draft during Phase 2. The commands below are the ones in use; sections on later features are added as they land.
+
+**State of the map (2026-11-22).** Eight streamed cells cover the whole fort, from outside the Delhi Gate, round the outwork, over the causeway, through the gate, along to the palace court and up the ramp to the rampart walk. Whole world 11.52 MB. Horse, elephant, Missions 2 to 5 and the full-screen map are not built yet.
 
 A world is two things: **exported assets** in `public/play/worlds/<slug>/v<N>/`, and **one hand-written file**, `content/play/<slug>/missions.json`. The engine (`lib/play/world/`, `components/play/world/`) has no site-specific code.
 
@@ -49,7 +51,66 @@ Publish needs no GPU. It builds the whole version in `tools/play/out/world/_publ
 
 Source models that must survive a reboot live in `tools/play/assets/`, with their licence file beside them. Paths in the world config are relative to the repo root.
 
-4. Add `"world_version": 1` to the site's entry in `content/play/sites.json`. The world opens at `/play/<slug>/world`.
+4. Add `"world_version": <N>` to the site's entry in `content/play/sites.json`. The world opens at `/play/<slug>/world`. A new map is a new version folder: set `version` and `previous_version` in the world config, and publish carries the actors and audio over from the previous folder without touching it, so a server still running the old build keeps working.
+
+### A map bigger than one cell
+
+The order for a whole map:
+
+```powershell
+python tools/play/export_world.py <slug> plan
+```
+
+```powershell
+python tools/play/build_terrain.py <slug>
+```
+
+```powershell
+python tools/play/export_world.py <slug> estimate --cell all --samples 128
+```
+
+```powershell
+python tools/play/export_world.py <slug> bake --cell <id> --samples 128
+```
+
+```powershell
+python tools/play/compose_world.py tools/play/out/world/<id> --fill 0.05
+```
+
+```powershell
+python tools/play/export_world.py <slug> cards --list-only
+```
+
+```powershell
+python tools/play/export_world.py <slug> publish
+```
+
+`plan` and `cards --list-only` use the CPU only and take no lock. `plan` writes the fort as triangles, and `build_terrain.py` turns them into the height map every cell's ground, colliders and walk rules come from. `--fill` lifts deep shade by a share of the median light. Use `--fill-groups` to limit it, so a cell you are not rebaking keeps its look.
+
+What the world config holds for this:
+
+| Key | Meaning |
+|---|---|
+| `cells.<id>.bounds` | The cell's rectangle. Cells must not overlap |
+| `cells.<id>.keep` | Never unloaded. The start cell has it |
+| `groups.<g>.clip`, `clip_bounds` | Keep only triangles inside the cell, or inside these bounds |
+| `groups.<g>.hi_match` | Bake against more than the group keeps, so neighbours still cast shadows on it |
+| `web.defer` | Loaded after the first view, so it costs the first playable nothing |
+| `web.ring` | A coarse layer of the whole map. It is cut away wherever a cell's full detail is standing |
+| `web.mode` | `both` shows the group in both eras from one bake |
+| `web.collide_era` | Which era its colliders belong to: `then`, `now` or `both` |
+| `edits` | In-memory changes to the scene: `remove_faces`, `keep_inside`, `passages`, `walk_strips`, `ramps`, `causeways`. The `.blend` is never saved |
+| `terrain` | Height map bounds, which objects are ground, `no_walk` objects, `min_walk_y` (below it a person may not stand), `limit` (the map's edge, a set distance outside a named wall) |
+| `today` | Streets and generated city blocks. Blocks avoid the `clear` rectangles and the streets |
+| `people` | Routes. A third coordinate puts a route on a structure, as for sentries on a wall. The walkers in the quality preset are shared out among the routes nearest the player |
+
+The runtime loads cells within the preset's `stream` radius, nearest first, and unloads them 70 m past it. Colliders are built one piece per frame, and a cell counts as ready only when all of them exist. Until then the player is held at its edge, so nobody can walk onto ground with no collider. Check a map with:
+
+```powershell
+$env:PLAY_BASE="http://localhost:3140"; node docs/play/lighthouse/scripts/world-route.mjs <outDir> --preset high
+```
+
+It walks the route with the keyboard, tests the ditch, the map edge and the cart, and takes the screenshots.
 
 `missions.json` also needs four top-level fields, which the validator requires:
 
@@ -97,4 +158,4 @@ node scripts/play/validate-missions.mjs
 
 ## Add a ride
 
-Add the model to `actors` in the world config (`kind: "prop"`) and to `web_actors.rides` (scale, yaw, seat), then add an entry to `rides` in `missions.json`. Areas a ride may never enter are the `no_ride` rectangles in the world config. A ride stops for anyone in its path, and people step aside.
+Add the model to `actors` in the world config (`kind: "prop"`) and to `web_actors.rides` (scale, yaw, seat), then add an entry to `rides` in `missions.json`. Areas a ride may never enter are the `no_ride` rectangles in the world config. A ride also stops at the map's edge, at an unloaded cell, at anything below `min_walk_y`, at walls, and on ground steeper than 1 in 5 along its length. A ride stops for anyone in its path, and people step aside.

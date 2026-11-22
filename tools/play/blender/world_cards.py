@@ -15,7 +15,8 @@ import common as C
 a = C.parse_kv(C.argv_after_dashes())
 cfg = json.load(open(a["world"], encoding="utf-8"))
 site = json.load(open(cfg["site"], encoding="utf-8"))
-b = cfg["cells"][a["cell"]]["bounds"]
+# Trees stand anywhere on the map, so the list covers the whole terrain.
+b = cfg.get("terrain", {}).get("bounds") or cfg["cells"][a["cell"]]["bounds"]
 out = a["out"]
 os.makedirs(out, exist_ok=True)
 px = int(a.get("px", 512))
@@ -40,6 +41,18 @@ for inst in dg.object_instances:
             if b[0] <= t.x <= b[2] and b[1] <= t.y <= b[3]:
                 found[key]["at"].append({"x": round(t.x, 2), "y": round(t.y, 2), "z": round(t.z, 2),
                                          "yaw": round(r.to_euler()[2], 3), "scale": round(s.z, 3)})
+
+if a.get("list-only"):
+    # New positions for the cards already rendered. No render, so no GPU.
+    path = os.path.join(out, "cards.json")
+    report = json.load(open(path))
+    for key in SPECIES:
+        report[key]["at"] = found[key]["at"]
+        report[key]["count"] = len(found[key]["at"])
+        print("@@card", key, report[key]["count"], flush=True)
+    json.dump(report, open(path, "w"), indent=1)
+    print("WORLD_CARDS_DONE", flush=True)
+    sys.exit(0)
 
 # Sun direction and strength from the scene.
 sun = next((o for o in src_scene.objects if o.type == "LIGHT" and o.data.type == "SUN"), None)

@@ -50,7 +50,11 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("cell")
     ap.add_argument("--exposure", type=float)
+    ap.add_argument("--fill", type=float, default=0.0, help="sky fill in deep shade, as a share of the median light")
+    ap.add_argument("--fill-groups", default="", help="comma list of atlases that get the fill; empty means all")
     args = ap.parse_args()
+    fill_only = {x for x in args.fill_groups.split(",") if x}
+    wants_fill = lambda atlas: args.fill > 0 and (not fill_only or atlas.rsplit("_", 1)[0] in fill_only)
     cell = Path(args.cell)
     files = sorted(cell.glob("*_albedo.npy"))
     beauty = sorted(cell.glob("*_beauty.npy"))
@@ -64,6 +68,9 @@ def main():
     for f in files:
         name = f.name.replace("_albedo.npy", "")
         a, l = lit(f)
+        if wants_fill(name):
+            # Passages and deep shade keep some sky light, so they read as places and not as black.
+            l = l + args.fill * float(np.median(l[l.mean(axis=2) > 1e-4]))
         rgb = agx(a * l * exposure)
         Image.fromarray((rgb * 255 + 0.5).astype(np.uint8)).save(cell / "tex" / f"{name}.png", optimize=False)
         report["atlases"][name] = {"px": a.shape[0], "mean": round(float(rgb.mean()), 3)}
@@ -72,7 +79,19 @@ def main():
         name = f.name.replace("_beauty.npy", "")
         raw = np.nan_to_num(np.load(f)[::-1], posinf=0, neginf=0)
         x, alpha = raw[:, :, :3], np.clip(raw[:, :, 3:], 0, 1)
-        rgb = agx(x / np.maximum(alpha, 1e-3) * exposure)
+        x = x / np.maximum(alpha, 1e-3)
+        # Single bright pixels (fireflies, and edges divided by a tiny alpha) read as white specks at a distance.
+        x = np.minimum(x, ndimage.median_filter(x, size=(5, 5, 1)) * 1.8 + 1e-3)
+        if wants_fill(name):
+            x = x + args.fill * np.median(x[alpha[:, :, 0] > 0.5], axis=0)
+        rgb = agx(x * exposure)
+        if name.endswith("_then"):
+            # Pin holes in the period ground take the colour of the nearest solid ground, not today's paving.
+            solid = alpha[:, :, 0] >= 0.98
+            if solid.any() and not solid.all():
+                near = ndimage.distance_transform_edt(~solid, return_distances=False, return_indices=True)
+                rgb = rgb[near[0], near[1]]
+                alpha = np.ones_like(alpha)
         # Beyond the modelled ground: today's paved city, plain and low in contrast.
         rng = np.random.default_rng(7)
         grain = ndimage.gaussian_filter(rng.random(alpha.shape[:2]), 3)[..., None]
