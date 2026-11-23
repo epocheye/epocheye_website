@@ -3,14 +3,16 @@
 // The open world: canvas, mission flow, dialogue and narration. Everything site-specific comes from
 // world.json, missions.json and the pack's story. Saved after every objective.
 
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { Suspense, useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Physics, useRapier } from "@react-three/rapier";
 import { Bloom, EffectComposer, Vignette } from "@react-three/postprocessing";
+import { castYearVote, chapterProgress, choicePick, finishRun, setQuiet } from "@/lib/play/api";
 import { createNarrator, discoverVoices } from "@/lib/play/audio";
 import { loadSite, packUrls } from "@/lib/play/pack";
-import { pagedSentences, spokenFor, textFor } from "@/lib/play/story/engine";
+import { orderSlots, pagedSentences, spokenFor, textFor } from "@/lib/play/story/engine";
 import { createAmbience } from "@/lib/play/world/ambience";
 import { createInput } from "@/lib/play/world/input";
 import {
@@ -18,6 +20,7 @@ import {
 	initialWorldState,
 	missionAt,
 	objectiveAt,
+	panoFor,
 	reduceWorld,
 	restoreWorld,
 	saveKey,
@@ -29,6 +32,14 @@ import { WorldRuntime } from "@/lib/play/world/runtime";
 import { createScriptOwner } from "@/lib/play/world/script";
 import WorldHud from "@/components/play/world/WorldHud";
 import "./world.css";
+
+// Rooms and the end of the story load when the player reaches them, so they cost the first playable nothing.
+const WorldPano = dynamic(() => import("@/components/play/world/WorldPano"), { ssr: false });
+
+// After the whole building has come back, the silence holds this long before the story moves on.
+const REVEAL_HOLD_MS = 1500;
+// If a panorama never reports that a reveal has settled, the mission still moves on.
+const REVEAL_SAFETY_MS = 20000;
 
 const TIER_LABEL = { record: "From the record", reconstruction: "Our reconstruction", legend: "Legend", unknown: "Not known", reading: "Our reading" };
 
@@ -58,6 +69,8 @@ function indexBeats(story) {
 	const visit = (b) => {
 		out.set(b.id, b);
 		for (const o of b.options || []) for (const a of o.after || []) visit(a);
+		for (const a of b.after || []) visit(a);
+		for (const c of b.cards || []) visit(c);
 	};
 	for (const ch of story.chapters) for (const b of ch.beats) visit(b);
 	return out;
@@ -91,7 +104,7 @@ export default function WorldGame({ slug, packVersion, worldVersion }) {
 			.then(([world, missions, site]) => {
 				if (!live) return;
 				const presetId = savedPreset() || detectPreset(support.gpu);
-				setBoot({ status: "ready", world, missions, story: site.story, presetId, touch: isTouchDevice() });
+				setBoot({ status: "ready", world, missions, site, story: site.story, presetId, touch: isTouchDevice() });
 			})
 			.catch((e) => live && setBoot({ status: "error", message: e?.message || "The world did not load." }));
 		return () => {
@@ -117,7 +130,7 @@ export default function WorldGame({ slug, packVersion, worldVersion }) {
 	return <Game key={boot.presetId} slug={slug} packVersion={packVersion} base={base} {...boot} />;
 }
 
-function Game({ slug, packVersion, base, world, missions, story, presetId, touch }) {
+function Game({ slug, packVersion, base, world, missions, site, story, presetId, touch }) {
 	const preset = PRESETS[presetId];
 	const beats = useMemo(() => indexBeats(story), [story]);
 	const facts = useMemo(() => new Map([...story.facts, ...(missions.world_facts || [])].map((f) => [f.id, f])), [story, missions]);
@@ -145,6 +158,11 @@ function Game({ slug, packVersion, base, world, missions, story, presetId, touch
 	const [sound, setSound] = useState(false);
 	const [talking, setTalking] = useState(false);
 	const [note, setNote] = useState(null); // a silent world fact, with its tier
+	const [sketch, setSketch] = useState(null); // { objective, read }: a record held up against the view
+	const [lookHeld, setLookHeld] = useState(0); // how far through a look objective's hold, 0 to 1
+	const [revealing, setRevealing] = useState(null); // the restoration whose reveal is playing
+	const [fadingAll, setFadingAll] = useState(false); // the full reveal is playing
+	const [order, setOrder] = useState(null); // { beat, placed, miss }
 
 	// Latest handlers for callbacks the runtime holds from its first frame.
 	const handlers = useRef({});
@@ -162,6 +180,8 @@ function Game({ slug, packVersion, base, world, missions, story, presetId, touch
 					onRide: (id) => handlers.current.ride?.(id),
 					onRideStep: (kind, strength, gait) => handlers.current.rideStep?.(kind, strength, gait),
 					onPlace: (place) => handlers.current.place?.(place),
+					onLook: (k) => handlers.current.look?.(k),
+					onLooked: (o) => handlers.current.looked?.(o.id),
 				},
 			}),
 	);
@@ -222,13 +242,16 @@ function Game({ slug, packVersion, base, world, missions, story, presetId, touch
 			if (!b) return null;
 			const text = textFor(b.text, "traveller");
 			const paged = pagedSentences(b, "traveller");
+			// A beat can carry its own tier, which outranks the tier of the first fact it cites.
+			const cited = chipFor(b.facts, facts, !!b.placeholder);
+			const chip = b.tier ? { source: null, ...cited, tier: b.tier, label: TIER_LABEL[b.tier] || b.tier } : cited;
 			return {
 				key: id,
 				speaker: null,
 				text,
 				paged,
 				segments: spokenFor(b),
-				chip: chipFor(b.facts, facts, !!b.placeholder),
+				chip,
 				evidence: b.evidence ? evidence.get(b.evidence) : null,
 			};
 		},
@@ -282,6 +305,43 @@ function Game({ slug, packVersion, base, world, missions, story, presetId, touch
 		return undefined;
 	}, [loaded, state, missions, riding, rt]);
 
+	const missionId = mission?.id ?? null;
+	useEffect(() => {
+		if (loaded) rt.setMission(missionId);
+	}, [loaded, missionId, rt]);
+
+	// The room the player is standing in, if any. It follows from the save, so a reload lands there.
+	const pano = phase === "world" ? panoFor(state, missions, !!revealing) : null;
+	const panoNode = pano?.node ?? null;
+	useEffect(() => {
+		if (loaded) rt.setCovered(!!panoNode);
+	}, [loaded, panoNode, rt]);
+
+	// A mission's reconstruction note is shown once, as it starts.
+	const startNote = state.phase === "play" ? mission?.place_note_facts : null;
+	useEffect(() => {
+		if (!startNote?.length) return undefined;
+		const t = setTimeout(() => showFacts(startNote), 600);
+		return () => clearTimeout(t);
+	}, [startNote, showFacts]);
+
+	// As in Story view, the debug view records nothing, so a test run never writes a player's row.
+	useEffect(() => {
+		setQuiet(new URLSearchParams(window.location.search).get("debug") === "1");
+		return () => setQuiet(false);
+	}, []);
+
+	// The existing run records, so the year vote counts. Each call fails softly with no server.
+	const reported = useRef(state);
+	useEffect(() => {
+		const prev = reported.current;
+		reported.current = state;
+		if (prev === state) return;
+		const list = missions.missions;
+		if (prev.phase === "intro" && state.phase === "play") chapterProgress(slug, list[state.mission]?.chapter, "start");
+		if (state.mission !== prev.mission || (state.phase === "done" && prev.phase !== "done")) chapterProgress(slug, list[prev.mission]?.chapter, "finish");
+	}, [state, missions, slug]);
+
 	// A new mission: set the era, restore what is done, and on a fresh load place the player.
 	const placed = useRef(false);
 	useEffect(() => {
@@ -317,14 +377,39 @@ function Game({ slug, packVersion, base, world, missions, story, presetId, touch
 			}, 400);
 			return () => clearTimeout(t);
 		}
+		if (o?.kind === "order") {
+			const t = setTimeout(() => {
+				rt.hold("order", true);
+				setOrder({ beat: beats.get(o.beat), placed: [], miss: null });
+			}, 400);
+			return () => clearTimeout(t);
+		}
+		if (o?.kind === "reveal") {
+			const t = setTimeout(() => setFadingAll(true), 400);
+			return () => clearTimeout(t);
+		}
+		if (o?.kind === "proof" || o?.kind === "vote") {
+			const t = setTimeout(() => scripts.play([beatItem(o.beat)]), 400);
+			return () => clearTimeout(t);
+		}
+		if (o?.kind === "ending") {
+			// The story is finished here, whether or not the player presses on past the card.
+			chapterProgress(slug, mission?.chapter, "finish");
+			finishRun(slug, { lens: story.default_lens || "traveller", vote: state.vote });
+		}
 		return undefined;
 		// Runs once per objective.
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [loaded, phase, objectiveId]);
 
+	const firstPicks = useRef(new Set());
 	const pickOption = useCallback(
 		(opt) => {
 			const b = choice.beat;
+			if (!firstPicks.current.has(b.id)) {
+				firstPicks.current.add(b.id);
+				choicePick(slug, missionAt(state, missions)?.chapter, b.id, opt.id);
+			}
 			scripts.play((opt.after || []).map((a) => beatItem(a.id)), {
 				setup: () => setChoice((c) => ({ ...c, picked: opt.id })),
 				cleanup: () => setChoice((c) => (c ? { ...c, picked: null } : c)),
@@ -339,8 +424,119 @@ function Game({ slug, packVersion, base, world, missions, story, presetId, touch
 				},
 			});
 		},
-		[choice, scripts, beatItem, rt],
+		[choice, scripts, beatItem, rt, slug, state, missions],
 	);
+
+	// A card goes only in its own place. The last one is followed by what the record does not say.
+	const placeCard = useCallback(
+		(id, slot) => {
+			if (!order) return;
+			const slots = orderSlots(order.beat);
+			if (order.placed.includes(id)) return;
+			if (slots[slot]?.id !== id) {
+				setOrder((v) => ({ ...v, miss: { id, slot, n: (v.miss?.n || 0) + 1 } }));
+				return;
+			}
+			const placed = [...order.placed, id];
+			setOrder((v) => ({ ...v, placed, miss: null }));
+			const solved = placed.length === slots.length;
+			const gaps = solved ? order.beat.cards.filter((c) => c.gap).map((c) => beatItem(c.id)) : [];
+			const beatId = order.beat.id;
+			scripts.play([beatItem(id), ...gaps], {
+				done: () => {
+					if (!solved) return;
+					setOrder(null);
+					rt.hold("order", false);
+					dispatch({ type: "ordered", beat: beatId });
+				},
+			});
+		},
+		[order, beatItem, scripts, rt],
+	);
+	const showSources = useCallback(
+		(card) => setNote({ key: `src:${card.id}`, items: (card.facts || []).filter((id) => facts.has(id)).map((id) => ({ id, text: facts.get(id).claim, chip: chipFor([id], facts) })) }),
+		[facts],
+	);
+
+	const voteFor = useCallback(
+		(option) => {
+			scripts.stop();
+			castYearVote(slug, option);
+			dispatch({ type: "voted", option });
+		},
+		[scripts, slug],
+	);
+
+	const proofPlayed = useRef(false);
+	const setProof = useCallback(
+		(on) => {
+			dispatch({ type: "proof", on });
+			const o = objectiveAt(state, missions);
+			if (o?.kind !== "proof" || !on || proofPlayed.current) return;
+			proofPlayed.current = true;
+			scripts.play((beats.get(o.beat)?.after || []).map((a) => beatItem(a.id)), { done: () => dispatch({ type: "proved" }) });
+		},
+		[state, missions, beats, beatItem, scripts],
+	);
+
+	const openSketch = useCallback(
+		(o) => {
+			if (rt.riding && !rt.dismount()) return;
+			rt.hold("sketch", true);
+			setSketch({ objective: o, read: false, chip: chipFor(o.facts, facts) });
+			// The picture on screen is the evidence, so the line's own card stays out of its way.
+			scripts.play((o.beats || []).map(beatItem).filter(Boolean).map((item) => ({ ...item, evidence: null })), {
+				done: () => setSketch((v) => (v ? { ...v, read: true } : v)),
+			});
+		},
+		[rt, facts, scripts, beatItem],
+	);
+	const closeSketch = useCallback(() => {
+		scripts.stop();
+		rt.hold("sketch", false);
+		setSketch(null);
+		dispatch({ type: "sketched" });
+	}, [rt, scripts]);
+
+	const climb = useCallback(() => {
+		if (rt.riding && !rt.dismount()) return;
+		dispatch({ type: "climbed" });
+	}, [rt]);
+
+	const onLook = useCallback((k) => setLookHeld(k), []);
+	const onLooked = useCallback((id) => {
+		setLookHeld(0);
+		dispatch({ type: "looked", objective: id });
+	}, []);
+
+	// Read and written only from handlers, so a late or repeated report cannot finish it twice.
+	const revealingId = useRef(null);
+	const revealDone = useCallback(
+		(id) => {
+			if (revealingId.current !== id) return;
+			revealingId.current = null;
+			setRevealing(null);
+			setRestoring(false);
+			rt.hold("restore", false);
+			dispatch({ type: "restored" });
+		},
+		[rt],
+	);
+	useEffect(() => {
+		if (!revealing) return undefined;
+		const t = setTimeout(() => revealDone(revealing), REVEAL_SAFETY_MS);
+		return () => clearTimeout(t);
+	}, [revealing, revealDone]);
+
+	const allDone = useCallback(() => {
+		setFadingAll(false);
+		setTimeout(() => dispatch({ type: "revealed" }), REVEAL_HOLD_MS);
+	}, []);
+	useEffect(() => {
+		if (!fadingAll) return undefined;
+		const t = setTimeout(allDone, REVEAL_SAFETY_MS);
+		return () => clearTimeout(t);
+	}, [fadingAll, allDone]);
 
 	const wakeEra = useCallback(() => {
 		const o = objectiveAt(state, missions);
@@ -362,15 +558,26 @@ function Game({ slug, packVersion, base, world, missions, story, presetId, touch
 		if (rt.riding && !rt.dismount()) return;
 		setRestoring(true);
 		rt.hold("restore", true);
+		if (o.restoration) {
+			// A painted surface comes back in the panorama, which holds the real restored picture.
+			if (o.label) {
+				const base = chipFor(o.facts, facts);
+				const chip = o.tier ? { ...base, tier: o.tier, label: TIER_LABEL[o.tier] || o.tier, source: base?.source ?? null } : base;
+				setNote({ key: `restore:${o.id}`, items: [{ id: o.id, text: o.label, chip }] });
+			}
+			revealingId.current = o.restoration;
+			setRevealing(o.restoration);
+			return;
+		}
 		rt.restore(o.classes, () => {
 			rt.hold("restore", false);
 			setRestoring(false);
 			dispatch({ type: "restored" });
 		});
-	}, [state, missions, rt, scripts]);
+	}, [state, missions, rt, scripts, facts]);
 
 	// Anything the mouse must click frees the pointer. E and gamepad A work for the same things.
-	const needsCursor = phase === "world" && (state.phase === "end" || state.phase === "done" || ["era", "restore", "choice"].includes(objective?.kind));
+	const needsCursor = phase === "world" && (!!pano || !!sketch || state.phase === "end" || state.phase === "done" || ["era", "restore", "choice", "order", "proof", "vote", "ending"].includes(objective?.kind));
 	useEffect(() => {
 		input?.setCursorFree(needsCursor);
 	}, [input, needsCursor]);
@@ -394,6 +601,8 @@ function Game({ slug, packVersion, base, world, missions, story, presetId, touch
 				dispatch({ type: "visited", place: place.id });
 				showFacts(place.facts);
 			},
+			look: onLook,
+			looked: onLooked,
 			arrive: (o, r) => {
 				if (o.kind === "goto") dispatch({ type: "arrive" });
 				if (o.kind === "ride") dispatch({ type: "arrive", riding: r });
@@ -405,12 +614,6 @@ function Game({ slug, packVersion, base, world, missions, story, presetId, touch
 				}
 				if (!p || state.phase !== "play" || scripts.active) return;
 				const o = objectiveAt(state, missions);
-				if (p.kind === "action") {
-					if (o?.kind === "era") wakeEra();
-					if (o?.kind === "restore") doRestore();
-					return;
-				}
-				if (!allowsRoaming(o)) return;
 				const holdFor = (npcId) => ({
 					setup: () => {
 						if (npcId) rt.faceNpc(npcId, true);
@@ -423,24 +626,37 @@ function Game({ slug, packVersion, base, world, missions, story, presetId, touch
 						setTalking(false);
 					},
 				});
-				if (p.kind === "npc") {
-					const npc = missions.npcs.find((n) => n.id === p.id);
-					const lines = missions.dialogue[npc.dialogue];
-					const live = o.kind === "talk" && o.npc === p.id;
-					const items = (live ? lines : lines.filter((l) => !l.beat && !l.facts?.length).slice(0, 1)).map(lineItem);
-					scripts.play(items, { ...holdFor(p.id), done: () => live && dispatch({ type: "talked", npc: p.id }) });
-				}
-				if (p.kind === "record" && o.kind === "record" && o.record === p.id) {
-					const r = missions.records.find((x) => x.id === p.id);
+				const readRecord = (id) => {
+					const r = missions.records.find((x) => x.id === id);
 					const items = r.beats.map(beatItem).filter(Boolean).map((item) => {
 						const base = item.evidence || evidence.get(r.evidence) || (r.placement_note ? { title: r.title } : null);
 						return { ...item, evidence: base && r.placement_note ? { ...base, placement: r.placement_note } : base };
 					});
-					scripts.play(items, { ...holdFor(null), done: () => dispatch({ type: "found", record: p.id }) });
+					scripts.play(items, { ...holdFor(null), done: () => dispatch({ type: "found", record: id }) });
+				};
+				if (p.kind === "action") {
+					if (o?.kind === "era") wakeEra();
+					if (o?.kind === "restore") doRestore();
+					if (o?.kind === "sketch_compare") openSketch(o);
+					if (o?.kind === "climb") climb();
+					if (o?.kind === "record") readRecord(o.record);
+					return;
 				}
+				if (!allowsRoaming(o)) return;
+				if (p.kind === "npc") {
+					const npc = missions.npcs.find((n) => n.id === p.id);
+					const lines = missions.dialogue[npc.dialogue];
+					const live = o.kind === "talk" && o.npc === p.id;
+					// Someone with something to say to anyone who stops says all of it.
+					const items = (live || npc.ambient ? lines : lines.filter((l) => !l.beat && !l.facts?.length).slice(0, 1)).map(lineItem);
+					showFacts(npc.note_facts);
+					if (npc.placement_note) setNote({ key: `place:${npc.id}`, items: [{ id: npc.id, text: npc.placement_note, chip: { tier: "reconstruction", label: TIER_LABEL.reconstruction } }] });
+					scripts.play(items, { ...holdFor(p.id), done: () => live && dispatch({ type: "talked", npc: p.id }) });
+				}
+				if (p.kind === "record" && o.kind === "record" && o.record === p.id) readRecord(p.id);
 			},
 		};
-	}, [showFacts, missions, state, wakeEra, doRestore, rt, lineItem, scripts, beatItem, evidence, voices]);
+	}, [showFacts, missions, state, wakeEra, doRestore, openSketch, climb, onLook, onLooked, rt, lineItem, scripts, beatItem, evidence, voices]);
 
 	const enter = useCallback(
 		(withSound) => {
@@ -519,11 +735,35 @@ function Game({ slug, packVersion, base, world, missions, story, presetId, touch
 					) : null}
 				</Canvas>
 			) : null}
+			{pano ? (
+				<WorldPano
+					site={site}
+					urls={voices.urls}
+					nodeId={pano.node}
+					target={revealing ? site.restorations?.find((r) => r.id === revealing)?.target : pano.target}
+					restored={revealing ? [...state.restored, revealing] : state.restored}
+					animateId={revealing}
+					onRevealDone={revealDone}
+					revealAll={state.revealed || fadingAll}
+					animateAll={fadingAll}
+					onAllDone={allDone}
+					proof={state.proof}
+					lookGoal={objective?.kind === "look_at" && objective.pano_node ? objective : null}
+					onLook={onLook}
+					onLooked={onLooked}
+					onCore={(c) => {
+						rt.panoCore = c;
+					}}
+				/>
+			) : null}
 			<WorldHud
 				slug={slug}
 				rt={rt}
 				world={world}
 				missions={missions}
+				site={site}
+				packVersion={packVersion}
+				packFile={voices.urls.file}
 				input={input}
 				touch={touch}
 				phase={phase}
@@ -536,6 +776,19 @@ function Game({ slug, packVersion, base, world, missions, story, presetId, touch
 				line={line}
 				card={card}
 				note={note}
+				pano={pano}
+				sketch={sketch}
+				lookHeld={lookHeld}
+				order={order}
+				missionChip={chipFor(mission?.place_note_facts, facts)}
+				liveBeat={objective?.beat ? beats.get(objective.beat) : null}
+				onSketchClose={closeSketch}
+				onPlaceCard={placeCard}
+				onSources={showSources}
+				onVote={voteFor}
+				onProof={setProof}
+				onAction={() => handlers.current.interact?.({ kind: "action", id: objective?.id })}
+				onEnding={() => dispatch({ type: "ended" })}
 				choice={choice}
 				shifting={shifting}
 				restoring={restoring}

@@ -19,8 +19,17 @@ const PRICE = /[₹$€£]|\b(rupees?|price|cost[s]?|fanams?|pagodas?)\b/i;
 const THEIR_WORDS = /\b(gta|grand theft|rockstar|vice city|wasted|busted|mission passed|respect \+)\b/i;
 const NUMBERISH = /\d|\b(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred|thousand|year|years|century)\b/i;
 const REAL_PEOPLE = /\b(tipu|tippoo|hyder|haidar|hunter|buchanan|cornwallis|bowring|purnaiah|bahadur|mackenzie|kempe|wadiyar|rice)\b/i;
-const OBJECTIVES = new Set(["goto", "story", "talk", "record", "ride", "choice", "restore", "era"]);
+const OBJECTIVES = new Set(["goto", "story", "talk", "record", "ride", "choice", "restore", "era", "sketch_compare", "look_at", "climb", "order", "reveal", "proof", "vote", "ending"]);
+// Objectives that name a story beat of a given type.
+const BEAT_KINDS = { choice: "choice", order: "order", reveal: "reveal", proof: "proof", vote: "vote" };
+const TIERS = new Set(["record", "reconstruction", "legend", "unknown", "reading"]);
 const RIDES = new Set(["cart", "horse", "elephant"]);
+
+function beatTypes(story) {
+	const types = new Map();
+	for (const ch of story.chapters) for (const b of ch.beats) types.set(b.id, b.type || "line");
+	return types;
+}
 
 function beatIds(story) {
 	const ids = new Set();
@@ -42,9 +51,16 @@ function checkCopy(where, text, errors) {
 	if (THEIR_WORDS.test(text)) errors.push(`${where}: another game's name or phrase`);
 }
 
-export function validateMissions(data, story) {
+// site is the pack's site.json when it is on disk: panorama nodes and restorations are checked against it.
+export function validateMissions(data, story, site = null) {
 	const errors = [];
 	const beats = beatIds(story);
+	const types = beatTypes(story);
+	const panoNodes = site ? new Set(site.nodes.map((n) => n.id)) : null;
+	const restorations = site ? new Set((site.restorations || []).map((r) => r.id)) : null;
+	const needNode = (where, id) => {
+		if (id && panoNodes && !panoNodes.has(id)) errors.push(`${where}: unknown panorama node ${id}`);
+	};
 	const facts = new Set([...story.facts.map((f) => f.id), ...(data.world_facts || []).map((f) => f.id)]);
 	const evidence = new Set((story.evidence || []).map((e) => e.id));
 	const npcs = new Map((data.npcs || []).map((n) => [n.id, n]));
@@ -64,6 +80,12 @@ export function validateMissions(data, story) {
 	const past = data.eras?.past;
 	if (typeof past !== "string" || !past.trim()) errors.push("eras.past: required");
 	else if (!(data.missions || []).some((m) => m.era === past)) errors.push(`eras.past: no mission is set in ${past}`);
+	const eraIds = new Set([past, "today", ...Object.keys(data.eras?.stages || {})]);
+	for (const [id, stage] of Object.entries(data.eras?.stages || {})) {
+		if (id === past || id === "today") errors.push(`eras.stages.${id}: must be a different era`);
+		if (stage.muted != null && !(stage.muted >= 0 && stage.muted <= 1)) errors.push(`eras.stages.${id}: muted must be 0 to 1`);
+		for (const d of stage.dress || []) if (!["desk", "shelf", "chest"].includes(d.type)) errors.push(`eras.stages.${id}: unknown dress ${d.type}`);
+	}
 	if (!Array.isArray(data.credits) || !data.credits.length) errors.push("credits: needs at least one line");
 	for (const [i, line] of (Array.isArray(data.credits) ? data.credits : []).entries()) {
 		if (typeof line !== "string" || !line.trim()) errors.push(`credits[${i}]: must be a line of text`);
@@ -77,6 +99,10 @@ export function validateMissions(data, story) {
 		if (REAL_PEOPLE.test(n.role) || REAL_PEOPLE.test(n.id)) errors.push(`npc ${n.id}: a real person cannot be a talking figure`);
 		if (!data.dialogue?.[n.dialogue]) errors.push(`npc ${n.id}: no dialogue ${n.dialogue}`);
 		if (!data.voices?.[n.id]) errors.push(`npc ${n.id}: no voice`);
+		needFacts(`npc ${n.id}`, n.note_facts);
+		checkCopy(`npc ${n.id}`, n.placement_note, errors);
+		if (n.era && !eraIds.has(n.era)) errors.push(`npc ${n.id}: unknown era ${n.era}`);
+		for (const id of n.missions || []) if (!(data.missions || []).some((m) => m.id === id)) errors.push(`npc ${n.id}: unknown mission ${id}`);
 	}
 	const lineIds = new Set();
 	for (const [key, lines] of Object.entries(data.dialogue || {})) {
@@ -102,15 +128,42 @@ export function validateMissions(data, story) {
 		if (r.evidence && !evidence.has(r.evidence)) errors.push(`record ${r.id}: unknown evidence ${r.evidence}`);
 		checkCopy(`record ${r.id}`, r.title, errors);
 		checkCopy(`record ${r.id}`, r.placement_note, errors);
+		needNode(`record ${r.id}`, r.pano_node);
 	}
 	for (const r of rides.values()) {
 		if (!RIDES.has(r.type)) errors.push(`ride ${r.id}: unknown type ${r.type}`);
 		needFacts(`ride ${r.id}`, r.note_facts);
 	}
-	for (const p of data.places || []) needFacts(`place ${p.id}`, p.facts);
+	for (const p of data.places || []) {
+		needFacts(`place ${p.id}`, p.facts);
+		needNode(`place ${p.id}`, p.pano_node);
+		checkCopy(`place ${p.id}`, p.name, errors);
+	}
 	for (const m of data.missions || []) {
 		checkCopy(`mission ${m.id}`, m.title, errors);
 		checkCopy(`mission ${m.id}`, m.place_line, errors);
+		checkCopy(`mission ${m.id}`, m.place_note, errors);
+		needFacts(`mission ${m.id}`, m.place_note_facts);
+		if (m.place_note && !m.place_note_facts?.length) errors.push(`mission ${m.id}: a place note needs a fact id`);
+		if (!eraIds.has(m.era)) errors.push(`mission ${m.id}: unknown era ${m.era}`);
+		if (m.end) {
+			for (const k of ["splash", "place", "year"]) {
+				if (typeof m.end[k] !== "string" || !m.end[k].trim()) errors.push(`mission ${m.id}: end.${k} required`);
+				checkCopy(`mission ${m.id} end`, m.end[k], errors);
+			}
+		}
+		if (m.staging) {
+			needFacts(`mission ${m.id} staging`, m.staging.facts);
+			const r = m.staging.ruler;
+			if (r) {
+				// A real ruler may only ever be a distant, silent, unlabelled figure.
+				if (!r.silent || !r.no_dialogue || !r.no_label) errors.push(`mission ${m.id}: a staged ruler must be silent, with no dialogue and no label`);
+				if (!(r.min_view_distance_m >= 10)) errors.push(`mission ${m.id}: a staged ruler must be kept at a distance`);
+				if (!r.figure || REAL_PEOPLE.test(r.figure)) errors.push(`mission ${m.id}: a staged ruler uses a licensed role figure`);
+				if (r.label || r.role || r.dialogue) errors.push(`mission ${m.id}: a staged ruler has no label, role or dialogue`);
+				for (const id of r.visible_during || []) if (!m.objectives.some((o) => o.id === id)) errors.push(`mission ${m.id}: ruler visible_during ${id} is not an objective`);
+			}
+		}
 		for (const o of m.objectives || []) {
 			const where = `objective ${o.id}`;
 			if (!OBJECTIVES.has(o.kind)) errors.push(`${where}: unknown kind ${o.kind}`);
@@ -120,6 +173,26 @@ export function validateMissions(data, story) {
 			if (o.kind === "talk" && !npcs.has(o.npc)) errors.push(`${where}: unknown npc ${o.npc}`);
 			if (o.kind === "record" && !records.has(o.record)) errors.push(`${where}: unknown record ${o.record}`);
 			if (o.kind === "ride" && !rides.has(o.ride)) errors.push(`${where}: unknown ride ${o.ride}`);
+			needFacts(where, o.facts);
+			needNode(where, o.pano_node);
+			checkCopy(where, o.caption, errors);
+			checkCopy(where, o.label, errors);
+			if (o.tier && !TIERS.has(o.tier)) errors.push(`${where}: unknown tier ${o.tier}`);
+			if (BEAT_KINDS[o.kind] && types.get(o.beat) !== BEAT_KINDS[o.kind]) errors.push(`${where}: beat ${o.beat} is not a ${BEAT_KINDS[o.kind]} beat`);
+			if (o.kind === "era" && !eraIds.has(o.to)) errors.push(`${where}: unknown era ${o.to}`);
+			if (o.kind === "restore" && !o.classes?.length && !o.restoration) errors.push(`${where}: restores nothing`);
+			if (o.restoration) {
+				if (restorations && !restorations.has(o.restoration)) errors.push(`${where}: unknown restoration ${o.restoration}`);
+				if (!o.pano_node) errors.push(`${where}: a restoration needs a pano_node`);
+				if (!o.label || !o.facts?.length || !o.tier) errors.push(`${where}: a restoration needs a label, fact ids and a tier`);
+			}
+			if (o.kind === "sketch_compare") {
+				if (!evidence.has(o.evidence)) errors.push(`${where}: unknown evidence ${o.evidence}`);
+				if (!Array.isArray(o.at)) errors.push(`${where}: needs at`);
+				if (!o.caption || !o.facts?.length || !o.tier) errors.push(`${where}: needs a caption, fact ids and a tier`);
+			}
+			if (o.kind === "look_at" && (!Array.isArray(o.target) || !Array.isArray(o.from) || !(o.hold_ms > 0))) errors.push(`${where}: needs target, from and hold_ms`);
+			if (o.kind === "climb" && (!Array.isArray(o.at) || !o.pano_node)) errors.push(`${where}: needs at and pano_node`);
 		}
 	}
 	return errors;
@@ -137,7 +210,9 @@ if (isMain) {
 	for (const p of paths) {
 		const data = JSON.parse(readFileSync(p, "utf8"));
 		const story = JSON.parse(readFileSync(join(dirname(p), "story.json"), "utf8"));
-		const errors = validateMissions(data, story);
+		const sitePath = join(ROOT, "public", "play", "packs", data.slug, `v${data.version}`, "site.json");
+		const site = existsSync(sitePath) ? JSON.parse(readFileSync(sitePath, "utf8")) : null;
+		const errors = validateMissions(data, story, site);
 		const lines = Object.values(data.dialogue || {}).flat().filter((l) => !l.beat).length;
 		console.log(`${data.slug}: ${data.missions.length} missions, ${lines} dialogue lines, ${errors.length} errors`);
 		for (const e of errors) console.log("  " + e);

@@ -8,6 +8,10 @@ GATE 1 was answered: "Yes, start Phase 2". Phase 1 is on `feat/open-world`. Noth
 
 **2026-11-23, rides proved.** The three rides were put through 28 test drives (18 at limits, 4 at a standing person, 6 among walkers), once each with keyboard, touch and an emulated gamepad: no ride crossed a limit or closed to within 0.5 m of a person. The test can set a ride down closer than that by hand, and those starts are excluded unless the gap then closes. Publish now keeps the 27 new voice clips. Missions 2 to 5 are still not merged. Not measured: a real phone, a real gamepad or a production build. **Looks broken, not fixed:** the distant pettah houses are torn, jagged shapes from the open ground where the horse rides.
 
+**2026-11-23, all six missions play.** A scripted player finished Missions 0 to 5 from the title screen on PC settings (High, 59.9 fps) and phone settings (Low, emulated), with 0 stuck and 0 page errors, on a dev server with no database. The run, vote and card calls all failed and the game carried on. Phone frame rate is not reliable: 58.1 fps in the last run and 38 in an earlier one on the same scene. First playable on phone settings was 30 s on slow 4G against the 8 s target.
+
+Simplified to finish: the palace rooms are the Story view panoramas, not walkable; Mission 2 compares Hunter's watercolour with no lock; the 1831 office furniture stands in the forecourt. **Not built:** the app question, full-screen map, fast travel, side activities, photo mode. **Not tested:** a real phone, a production build, a real database, the vote counting on a real server. Nobody has listened to the 27 new voice clips. After the last runtime change the rides were rerun on keyboard only (0 failed drives) and the route passed; touch and gamepad rides were not rerun. The torn pettah houses are still there.
+
 **Preview (needs your Vercel sign-in):** https://epocheye-website-git-feat-open-world-sambit-singhas-projects.vercel.app/play/tipu-summer-palace-bengaluru/world
 
 Vercel reports this build as Ready, but I could not open it myself because it is behind your sign-in. Every check below ran on a local production build of the same code.

@@ -4,6 +4,8 @@ Draft during Phase 2. The commands below are the ones in use; sections on later 
 
 **State of the map (2026-11-23, world v3).** Eight streamed cells cover the whole fort, from outside the Delhi Gate, round the outwork, over the causeway, through the gate, along to the palace court and up the ramp to the rampart walk. Three tanks hold still water in 1791. The horse rides outside the walls and the elephant outside the palace court and on the avenue; their models load on demand. Whole world 12.66 MB plus the voice clips for Missions 2 to 5. The full-screen map is not built yet.
 
+**All six missions are playable (2026-11-23).** Rooms the player cannot walk (the stair, the upper hall, the balcony) are the Story view panoramas, opened in place over the paused world.
+
 A world is two things: **exported assets** in `public/play/worlds/<slug>/v<N>/`, and **one hand-written file**, `content/play/<slug>/missions.json`. The engine (`lib/play/world/`, `components/play/world/`) has no site-specific code.
 
 ## Add a world
@@ -129,7 +131,7 @@ It walks the route with the keyboard, tests the ditch, the map edge and the cart
 |---|---|
 | `title` | The game's name on its menu |
 | `tagline` | One short line under the title |
-| `eras` | `{ "past": "<era id>" }`. Any other era id counts as today |
+| `eras` | `{ "past": "<era id>", "stages": { ... } }`. An id in neither counts as today. See "Add an era" |
 | `credits` | The lines the game's Credits view shows. Keep them matching `docs/play/CREDITS.md` |
 
 ## Add a mission
@@ -146,12 +148,38 @@ Add an entry to `missions` in `missions.json`: `id`, `n`, `title`, `era`, `place
 | `choice` | `beat` | An accepted option is picked |
 | `restore` | `classes`, `slot` | The restoration has finished |
 | `era` | `to` | The era shift has finished |
+| `sketch_compare` | `at`, `radius`, `evidence`, `caption`, `facts`, `tier`, optional `beats` | The player holds the evidence image over the view and puts it away. There is no score and no lock |
+| `look_at` | `target` (x, y, z), `from`, `radius`, `hold_ms`, optional `pano_node` | The view has held on the target. In a panorama, `from` and `radius` are not used |
+| `climb` | `at`, `pano_node` | The player takes the stair prompt and is in that panorama |
+| `order` | `beat` (a story `order` beat) | Every dated card is in its place |
+| `reveal` | `beat` | The whole building has faded in |
+| `proof` | `beat` | The switch has been pressed and its lines have played |
+| `vote` | `beat` | An option is picked. Sent to the existing vote backend, and the game carries on if that fails |
+| `ending` | | The player leaves the "What you now know" card |
+
+A `restore` objective either names material `classes` (the world's own shader) or a `restoration` id from the pack's `site.json`. A restoration also needs `pano_node`, `label`, `facts` and `tier`, and plays in that panorama.
+
+**Rooms.** Any objective may carry `pano_node`, and `pano_look` (a point to face). From that objective to the end of the mission the player is in the panorama, and the world is hidden and paused. It follows from the save, so a reload lands in the same room. The next mission returns to the world.
+
+Other mission fields: `place_note` with `place_note_facts` (a reconstruction label on the intro card), `end` with custom `splash`, `place` and `year`, and `staging.ruler`: a distant figure with `figure`, `at`, `min_view_distance_m` and `visible_during`. The validator requires a staged ruler to be silent, unlabelled, at least 10 m away and built from a role figure.
 
 Story beats are referenced by id from `story.json` and never copied, so facts, tiers and hedges stay in one place.
 
+## Add an era
+
+`eras.stages.<id>` is a later era in the same world, with the same era shift:
+
+| Key | Meaning |
+|---|---|
+| `muted` | 0 to 1: how far the sunset drains to a flat daylight |
+| `crowd`, `rides` | Whether the walkers and the rides are there |
+| `dress` | Props built in code: `{ "type": "desk", "shelf" or "chest", "at": [x, y], "face_deg": n }`. They are solid only in this era |
+
+A mission that opens with an `era` objective keeps the era it was entered from until that shift plays.
+
 ## Add an NPC and their lines
 
-Add the figure to `npcs` (`id`, `role`, `figure`, `at`, `face_deg`, `dialogue`), give the id a voice under `voices`, and write its lines under `dialogue`. Rules the validator enforces:
+Add the figure to `npcs` (`id`, `role`, `figure`, `at`, `face_deg`, `dialogue`), give the id a voice under `voices`, and write its lines under `dialogue`. Optional: `missions` (the only missions it appears in), `era`, a third coordinate in `at` to stand on a structure, `ambient` (says all its lines to anyone, with no objective), `note_facts` and `placement_note` (shown when talked to). Rules the validator enforces:
 
 - A line that states a fact has `facts` with ids from `story.json` or `world_facts`.
 - A line with no fact id holds no number, year or date, and names no real person.

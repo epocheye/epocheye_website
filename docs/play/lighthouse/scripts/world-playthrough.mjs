@@ -1,7 +1,12 @@
-// Plays the open-world slice from the title screen to the end of Mission 1, as a player would:
-// it walks with the keys, reads the prompts, rides the cart and presses the same buttons.
+// Plays the open world from the title screen to the end of the story, all six missions, as a
+// player would: it walks with the keys, reads the prompts, rides the cart and presses the same
+// buttons. A choice is tried option by option, and the dated cards by trial, like someone who
+// does not know the answers.
 //
-//   PLAY_BASE=http://localhost:3100 node docs/play/lighthouse/scripts/world-playthrough.mjs <phone|pc> [--record out.mp4]
+//   PLAY_BASE=http://localhost:3100 node docs/play/lighthouse/scripts/world-playthrough.mjs <phone|pc> [--record out.mp4] [--shots <dir>]
+//
+// --shots saves a frame of each mission's key moment. WORLD_STOP_AFTER=<n> stops at mission n's splash.
+// WORLD_FROM=<mission>:<objective> starts from a save at that point, for working on one mission.
 //
 // phone: Lighthouse's phone size, slow 4G and a 4x CPU slowdown, Low preset.
 // pc:    1280x720, no throttling, High preset.
@@ -9,15 +14,38 @@
 // This machine's GPU is a GTX 1650, so the phone frame rate here is an emulation, not a real Android.
 
 import { spawn } from "node:child_process";
+import { mkdirSync } from "node:fs";
+import { join } from "node:path";
 import { BASE, CPU_SLOWDOWN, MOTO, NETWORK_4G, SLUG, launch, sleep } from "./common.mjs";
 
 const profile = process.argv[2] === "pc" ? "pc" : "phone";
 const recAt = process.argv.indexOf("--record");
 const recordTo = recAt > 0 ? process.argv[recAt + 1] : null;
+const shotsAt = process.argv.indexOf("--shots");
+const shotsDir = shotsAt > 0 ? process.argv[shotsAt + 1] : null;
+// The objective and what must be on screen for each frame worth keeping.
+const KEY_SHOTS = [
+	["m2-compare", ".w-sketch", "m2_compare"],
+	["m2-close", ".w-pano", "m2_restored_front"],
+	["m3-court", ".w-objective", "m3_court"],
+	["m3-look", ".w-objective", "m3_balcony_look"],
+	["m3-halls", ".w-pano", "m3_upper_hall"],
+	["m3-height", ".w-pano", "m3_height_from_balcony"],
+	["m3-close", ".w-pano", "m3_painted_walls"],
+	["m4-clerk", ".w-objective", "m4_office"],
+	["m4-order", ".w-order", "m4_order"],
+	["m5-look", ".w-pano", "m5_ceiling"],
+	["m5-reveal", ".w-pano", "m5_reveal"],
+	["m5-proof", ".w-proof", "m5_proof"],
+	["m5-vote", ".w-choice", "m5_vote"],
+	["m5-know", ".play-know", "m5_know_card"],
+];
 const isPhone = profile === "phone";
 const viewport = isPhone ? MOTO : { width: 1280, height: 720, deviceScaleFactor: 1 };
 const preset = isPhone ? "low" : "high";
-const url = `${BASE}/play/${SLUG}/world?debug=1`;
+// ?debug=1 records nothing. WORLD_RECORDS=1 leaves it off, on a dev server with no database only,
+// to prove the game carries on when its run, vote and card calls all fail.
+const url = `${BASE}/play/${SLUG}/world${process.env.WORLD_RECORDS === "1" ? "" : "?debug=1"}`;
 
 // Runs inside the page. Drives the keyboard and the on-screen buttons from the live objective.
 function installBot() {
@@ -33,7 +61,9 @@ function installBot() {
 		window.dispatchEvent(new KeyboardEvent("keyup", { code: "KeyE" }));
 	};
 	const stopAll = () => ["KeyW", "ShiftLeft", "KeyA", "KeyD"].forEach((k) => key(k, false));
-	const bot = { log: [], done: false, frames: [], sample: false, stuck: 0 };
+	const bot = { log: [], done: false, frames: [], sample: false, stuck: 0, stuckAt: [], pause: false, splashes: [] };
+	const stopAfter = window.__stopAfter ?? null;
+	let orderTry = 0, orderCount = -1;
 	window.__bot = bot;
 	let last = performance.now();
 	const onFrame = (now) => {
@@ -61,10 +91,88 @@ function installBot() {
 		return (clear.length ? clear : open.length ? open : corners).sort((p, q) => score(p) - score(q))[0];
 	};
 
-	let nextTap = 0, lastObj = null, lastPos = null, lastMoveCheck = 0;
+	// In the past era, find the way over the world's own connected-ground grid, a metre clear of
+	// anything solid, as a player would walk round a tree platform or a wall.
+	const clearCell = (m, i, j) => m._on(i, j) && m._on(i + 1, j) && m._on(i - 1, j) && m._on(i, j + 1) && m._on(i, j - 1);
+	const nearestClear = (m, x, y) => {
+		const i = Math.round((x - m.x0) / m.step), j = Math.round((y - m.y0) / m.step);
+		for (let r = 0; r <= 8; r++) {
+			for (let a = -r; a <= r; a++) {
+				for (let b = -r; b <= r; b++) {
+					if (Math.max(Math.abs(a), Math.abs(b)) === r && clearCell(m, i + a, j + b)) return [i + a, j + b];
+				}
+			}
+		}
+		return null;
+	};
+	const findPath = (m, from, to) => {
+		const s = nearestClear(m, from[0], from[1]), e = nearestClear(m, to[0], to[1]);
+		if (!s || !e) return null;
+		const id = (i, j) => j * m.nx + i;
+		const prev = new Int32Array(m.nx * m.ny).fill(-1);
+		const queue = new Int32Array(m.nx * m.ny);
+		let head = 0, tail = 0;
+		queue[tail++] = id(s[0], s[1]);
+		prev[id(s[0], s[1])] = id(s[0], s[1]);
+		const goal = id(e[0], e[1]);
+		while (head < tail && prev[goal] < 0) {
+			const c = queue[head++];
+			const i = c % m.nx, j = (c - i) / m.nx;
+			for (const [a, b] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+				const n = id(i + a, j + b);
+				if (i + a < 0 || j + b < 0 || i + a >= m.nx || j + b >= m.ny || prev[n] >= 0 || !clearCell(m, i + a, j + b)) continue;
+				prev[n] = c;
+				queue[tail++] = n;
+			}
+		}
+		if (prev[goal] < 0) return null;
+		const out = [to];
+		for (let c = goal; ; c = prev[c]) {
+			const i = c % m.nx;
+			out.push([m.x0 + i * m.step, m.y0 + ((c - i) / m.nx) * m.step]);
+			if (c === prev[c]) break;
+		}
+		return out.reverse();
+	};
+	const lineClear = (m, a, b) => {
+		const len = Math.hypot(b[0] - a[0], b[1] - a[1]);
+		for (let d = 0; d <= len; d += 0.4) {
+			const x = a[0] + ((b[0] - a[0]) * d) / (len || 1), y = a[1] + ((b[1] - a[1]) * d) / (len || 1);
+			if (!clearCell(m, Math.round((x - m.x0) / m.step), Math.round((y - m.y0) / m.step))) return false;
+		}
+		return true;
+	};
+	let path = null, pathKey = "", pathAt = 0;
+	const steerTo = (rt, h, wp) => {
+		const here = [h.x, h.y];
+		if (!rt.reach || !rt.isPast(rt.era)) return via(here, wp, [-23, -2.1, 13.5, 25]); // the palace footprint
+		const key = wp.join(",");
+		if (key !== pathKey) {
+			pathKey = key;
+			path = findPath(rt.reach, here, wp);
+			pathAt = 0;
+		}
+		if (!path) return via(here, wp, [-23, -2.1, 13.5, 25]);
+		// Pick up the path at the node nearest the player, so a path that starts a little behind them
+		// can never hand them a target they are already standing on.
+		const gap = (q) => Math.hypot(q[0] - h.x, q[1] - h.y);
+		let closest = pathAt;
+		for (let k = pathAt; k < Math.min(path.length, pathAt + 40); k++) if (gap(path[k]) < gap(path[closest])) closest = k;
+		pathAt = closest;
+		while (pathAt < path.length - 1 && gap(path[pathAt]) < 1.3) pathAt++;
+		let best = pathAt;
+		// The grid is a metre coarse, so a shortcut must also clear the real colliders.
+		const open = (q) => lineClear(rt.reach, here, q) && !rt._walkerHitsWorld(h.x, -h.y, q[0] - h.x, -(q[1] - h.y));
+		for (let k = pathAt + 1; k < Math.min(path.length - 1, pathAt + 40); k++) if (open(path[k])) best = k;
+		// The last step goes to the mark itself, which may stand closer to something than the grid allows.
+		const last = path[path.length - 1];
+		return (best >= path.length - 2 || pathAt >= path.length - 1) && (pathAt >= path.length - 2 || open(last)) ? last : path[best];
+	};
+
+	let nextTap = 0, lastObj = null, lastPos = null, lastMoveCheck = 0, lastWalk = 0, promptWanted = 0;
 	const step = () => {
 		const rt = window.__playWorld;
-		if (!rt?.ready) return;
+		if (!rt?.ready || bot.pause) return;
 		const now = performance.now();
 		const label = document.querySelector(".w-objective")?.innerText?.replace("\n", " ") || null;
 		if (label && label !== lastObj) {
@@ -77,17 +185,87 @@ function installBot() {
 			mission.click();
 			return;
 		}
-		if (document.querySelector(".w-splash")) {
+		if (document.querySelector(".w-title.is-over")) {
 			stopAll();
 			bot.done = true;
 			return;
 		}
+		const splash = document.querySelector(".w-splash");
+		if (splash) {
+			stopAll();
+			const text = splash.querySelector(".w-splash-h")?.innerText;
+			const count = splash.querySelector(".w-splash-count")?.innerText;
+			if (!bot.splashes.some((x) => x.count === count)) {
+				bot.splashes.push({ text, count, place: splash.querySelector(".w-splash-place")?.innerText });
+				nextTap = now + 1400;
+				if (stopAfter !== null && count === `Mission ${stopAfter} complete`) bot.done = true;
+			}
+			if (now > nextTap) {
+				nextTap = now + 1400;
+				splash.click();
+			}
+			return;
+		}
 		const sub = document.querySelector(".w-subtitle-tap");
-		if (sub) {
+		if (sub && !document.querySelector(".w-order")) {
 			stopAll();
 			if (now > nextTap) {
-				nextTap = now + 1250;
+				nextTap = now + 650;
 				sub.click();
+			}
+			return;
+		}
+		const finish = document.querySelector(".w-ending-go");
+		if (finish) {
+			stopAll();
+			// Long enough on the card for a person to see it, and for the frame to be kept.
+			if (document.querySelector(".play-know")) {
+				bot.cardAt ||= now;
+				if (now - bot.cardAt > 3500 && now > nextTap) {
+					nextTap = now + 1500;
+					finish.click();
+				}
+			}
+			return;
+		}
+		const tray = [...document.querySelectorAll(".play-order-tray button")];
+		if (tray.length) {
+			stopAll();
+			if (tray.length !== orderCount) {
+				orderCount = tray.length;
+				orderTry = 0;
+			}
+			if (now > nextTap) {
+				nextTap = now + 280;
+				const open = [...document.querySelectorAll("[data-slot]")];
+				tray[0].click();
+				setTimeout(() => open[orderTry++ % open.length]?.click(), 90);
+			}
+			return;
+		}
+		if (document.querySelector(".w-order")) {
+			stopAll();
+			if (sub && now > nextTap) {
+				nextTap = now + 650;
+				sub.click();
+			}
+			return;
+		}
+		const sketchDone = document.querySelector(".w-sketch-close");
+		if (sketchDone) {
+			stopAll();
+			if (now > nextTap) {
+				nextTap = now + 900;
+				sketchDone.click();
+			}
+			return;
+		}
+		const proof = document.querySelector(".w-proof button");
+		if (rt.objective?.kind === "proof" && proof) {
+			stopAll();
+			if (now > nextTap && proof.getAttribute("aria-checked") !== "true" && proof.getAttribute("aria-pressed") !== "true") {
+				nextTap = now + 1200;
+				proof.click();
 			}
 			return;
 		}
@@ -95,9 +273,25 @@ function installBot() {
 		if (choice.length) {
 			stopAll();
 			if (now > nextTap) {
-				nextTap = now + 1500;
-				choice.find((b) => b.innerText === "Both.")?.click();
+				nextTap = now + 1100;
+				(choice.find((b) => b.innerText === "Both." && !b.disabled) || choice.find((b) => !b.disabled))?.click();
 			}
+			return;
+		}
+		const lookGoal = rt.objective?.kind === "look_at" ? rt.objective : null;
+		if (lookGoal?.pano_node) {
+			stopAll();
+			const core = rt.panoCore;
+			if (core?.node?.loc && now > nextTap) {
+				nextTap = now + 500;
+				const d = lookGoal.target.map((v, i) => v - core.node.loc[i]);
+				const len = Math.hypot(...d);
+				core.lookAlong(d.map((v) => v / len), { animate: false });
+			}
+			return;
+		}
+		if (rt.objective && ["reveal", "ending"].includes(rt.objective.kind)) {
+			stopAll();
 			return;
 		}
 		const action = document.querySelector(".w-action");
@@ -137,26 +331,86 @@ function installBot() {
 		key("KeyA", false);
 		key("KeyD", false);
 		const prompt = rt.prompt;
-		const wanted = (o.kind === "talk" && prompt?.kind === "npc" && prompt.id === o.npc)
+		if (lookGoal && Math.hypot(h.x - lookGoal.from[0], h.y - lookGoal.from[1]) < lookGoal.radius * 0.7) {
+			stopAll();
+			const t = lookGoal.target;
+			const dx = t[0] - h.x, dy = t[1] - h.y;
+			rt.yaw = Math.atan2(-dx, dy);
+			rt.pitch = Math.atan2(t[2] - (rt.pos.y + 1.55), Math.hypot(dx, dy));
+			return;
+		}
+		const wanted = ((o.kind === "climb" || o.kind === "sketch_compare") && prompt?.kind === "action" && prompt.id === o.id)
+			|| (o.kind === "talk" && prompt?.kind === "npc" && prompt.id === o.npc)
 			|| (o.kind === "record" && prompt?.kind === "record" && prompt.id === o.record)
 			|| (o.kind === "ride" && prompt?.kind === "ride" && prompt.id === o.ride);
 		if (wanted) {
 			stopAll();
 			if (now > nextTap) {
 				nextTap = now + 900;
-				tapE();
+				// The on-screen prompt where there is one, so a phone's only way in is the one tested.
+				const onScreen = document.querySelector(".w-prompt");
+				if (onScreen) {
+					promptWanted = 0;
+					onScreen.click();
+				} else if (o.kind === "climb" || o.kind === "sketch_compare") {
+					// React draws the prompt a frame or two after the world raises it. Longer is a real miss.
+					promptWanted ||= now;
+					if (now - promptWanted > 2500) {
+						bot.noPrompt = (bot.noPrompt || 0) + 1;
+						promptWanted = 0;
+					}
+				} else tapE();
 			}
 			return;
 		}
-		const target = via([h.x, h.y], wp, [-23, -2.1, 13.5, 25]); // the palace footprint
-		rt.yaw = Math.atan2(-(target[0] - h.x), target[1] - h.y);
+		const target = steerTo(rt, h, wp);
+		let aim = Math.atan2(-(target[0] - h.x), target[1] - h.y);
+		// A person standing dead ahead holds a runner against them, so step round, as a player would.
+		const fx = -Math.sin(aim), fy = Math.cos(aim);
+		const crowd = [...rt.people, ...rt.storyNpcs.values()].filter((a) => a.group.visible);
+		let ahead = Infinity, side = 0;
+		for (const a of crowd) {
+			const ox = a.group.position.x - h.x, oy = -a.group.position.z - h.y;
+			const along = ox * fx + oy * fy, across = ox * fy - oy * fx;
+			if (along > 0 && along < 2.2 && Math.abs(across) < 0.9 && along < ahead) {
+				ahead = along;
+				side = across >= 0 ? 1 : -1;
+			}
+		}
+		if (side) aim += side * 0.9;
+		rt.yaw = aim;
 		rt.pitch = -0.1;
 		key("KeyW", true);
 		key("ShiftLeft", true);
+		// Only time spent walking counts. A pause to talk or read is not being stuck.
+		if (now - lastWalk > 400) {
+			lastPos = null;
+			lastMoveCheck = now;
+		}
+		lastWalk = now;
 		if (now - lastMoveCheck > 1500) {
-			if (lastPos && Math.hypot(h.x - lastPos[0], h.y - lastPos[1]) < 0.4) bot.stuck++;
+			if (lastPos && Math.hypot(h.x - lastPos[0], h.y - lastPos[1]) < 0.4) {
+				bot.stuck++;
+				bot.stuckAt.push({
+					objective: o.id,
+					at: [Math.round(h.x * 10) / 10, Math.round(h.y * 10) / 10],
+					to: wp,
+					nearest_person_m: +Math.min(...crowd.map((a) => Math.hypot(a.group.position.x - h.x, -a.group.position.z - h.y))).toFixed(2),
+					moved_m: lastPos ? +Math.hypot(h.x - lastPos[0], h.y - lastPos[1]).toFixed(3) : null,
+					window_ms: Math.round(now - lastMoveCheck),
+					frames_in_window: bot.frames.length - (bot.framesAtCheck ?? 0),
+					speed: +rt.speed.toFixed(2),
+					holds: [...rt.holds],
+					steer_to: target.map((v) => +v.toFixed(1)),
+					ahead_blocked: rt._walkerHitsWorld(h.x, -h.y, -Math.sin(aim), -Math.cos(aim)),
+					ahead_can_stand: rt._canStand(h.x - Math.sin(aim), -h.y - Math.cos(aim)),
+					cell_ready: rt.streamer.isReady(h.x - Math.sin(aim) * 2, h.y + Math.cos(aim) * 2),
+				});
+				pathKey = ""; // look for the way again from here
+			}
 			lastPos = [h.x, h.y];
 			lastMoveCheck = now;
+			bot.framesAtCheck = bot.frames.length;
 		}
 	};
 	setInterval(step, 60);
@@ -170,7 +424,13 @@ try {
 	await page.setViewport(viewport);
 	const errors = [];
 	page.on("pageerror", (e) => errors.push(String(e.message).slice(0, 200)));
-	page.on("console", (m) => m.type() === "error" && errors.push(m.text().slice(0, 200)));
+	// With no database the game's API calls fail, and the game must carry on: those are counted apart.
+	const apiFailures = [];
+	page.on("console", (m) => {
+		if (m.type() !== "error") return;
+		if ((m.location()?.url || "").includes("/api/play/")) apiFailures.push(m.location().url.replace(BASE, ""));
+		else errors.push(m.text().slice(0, 200));
+	});
 	await page.evaluateOnNewDocument((id) => {
 		try {
 			localStorage.setItem("epocheye-play:world:quality", id);
@@ -207,6 +467,18 @@ try {
 		await cdp.send("Page.startScreencast", { format: "jpeg", quality: 72, everyNthFrame: 1 });
 		ticker = setInterval(() => latest && ffmpeg.stdin.write(latest), 1000 / 24);
 	}
+	if (process.env.WORLD_FROM) {
+		const [mission, objective] = process.env.WORLD_FROM.split(":").map(Number);
+		const era = ["today", "1791", "1791", "1791", "1791", "1831"][mission];
+		const state = { mission, objective, phase: "play", era, resolved: ["stone", "mud", "teak"], restored: mission > 2 ? ["exterior-colour"] : [], choices: {}, vote: null, proof: false, proofSeen: false, revealed: false, visited: [], askedApp: false };
+		if (mission > 3) state.restored.push("painted-walls");
+		await page.evaluateOnNewDocument((slug, json) => {
+			if (sessionStorage.getItem("world-from")) return;
+			sessionStorage.setItem("world-from", "1");
+			localStorage.setItem(`epocheye-play:world:${slug}:v1`, json);
+		}, SLUG, JSON.stringify({ v: 1, state }));
+	}
+	if (process.env.WORLD_STOP_AFTER) await page.evaluateOnNewDocument((n) => { window.__stopAfter = n; }, Number(process.env.WORLD_STOP_AFTER));
 	await page.evaluateOnNewDocument(installBot);
 	const t0 = Date.now();
 	await page.goto(url, { waitUntil: "domcontentloaded", timeout: 120000 });
@@ -219,12 +491,25 @@ try {
 	out.by_type_kb = Object.fromEntries(Object.entries(byType).map(([k, v]) => [k, Math.round(v / 1024)]));
 	if (isPhone) await cdp.send("Network.emulateNetworkConditions", { offline: false, latency: 0, downloadThroughput: -1, uploadThroughput: -1 });
 
-	const deadline = Date.now() + Number(process.env.WORLD_MAX_MS || (isPhone ? 420000 : 300000));
+	const deadline = Date.now() + Number(process.env.WORLD_MAX_MS || (isPhone ? 2400000 : 1500000));
 	let done = false;
 	let shot = !process.env.WORLD_SHOT;
+	const taken = new Set();
+	if (shotsDir) mkdirSync(shotsDir, { recursive: true });
 	while (Date.now() < deadline) {
 		done = await page.evaluate(() => window.__bot?.done);
 		if (done) break;
+		if (shotsDir) {
+			const live = await page.evaluate(() => window.__playWorld?.objective?.id || null);
+			const want = KEY_SHOTS.find(([id, , name]) => id === live && !taken.has(name));
+			if (want && (await page.$(want[1]))) {
+				taken.add(want[2]);
+				await page.evaluate(() => { window.__bot.pause = true; });
+				await sleep(want[0] === "m5-reveal" ? 5200 : 1500);
+				await page.screenshot({ path: join(shotsDir, `${profile}_${want[2]}.jpg`), type: "jpeg", quality: 84 });
+				await page.evaluate(() => { window.__bot.pause = false; });
+			}
+		}
 		// One frame of the past era's HUD and minimap, for the proof.
 		if (!shot && (await page.evaluate(() => window.__playWorld?.objective?.kind === "ride"))) {
 			await sleep(1800);
@@ -244,7 +529,10 @@ try {
 		const dbg = info?.getExtension("WEBGL_debug_renderer_info");
 		return {
 			log: b.log.map((l) => l.label),
+			splashes: b.splashes,
+			missing_prompts: b.noPrompt || 0,
 			stuck: b.stuck,
+			stuck_at: b.stuckAt.slice(0, 12),
 			frames: f.length,
 			fps_avg: +(1000 / (avg || 1)).toFixed(1),
 			fps_p95_low: +(1000 / (p95 || 1)).toFixed(1),
@@ -258,7 +546,7 @@ try {
 			gpu: dbg ? info.getParameter(dbg.UNMASKED_RENDERER_WEBGL) : null,
 		};
 	});
-	Object.assign(out, res, { completed: !!done, total_mb: +(bytes / 1048576).toFixed(2), errors: [...new Set(errors)].slice(0, 6) });
+	Object.assign(out, res, { completed: !!done, total_mb: +(bytes / 1048576).toFixed(2), errors: [...new Set(errors)].slice(0, 6), api_failed_softly: [...new Set(apiFailures)] });
 } finally {
 	if (ticker) clearInterval(ticker);
 	if (ffmpeg) {

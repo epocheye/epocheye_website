@@ -383,7 +383,72 @@
 .w-splash-place { font-size: 20px; font-weight: 700; }
 .w-splash-count { font-size: 14px; color: rgba(255, 255, 255, 0.82); }
 
+/* ---- rooms, records and the end of the story */
+
+.w-pano { position: absolute; inset: 0; z-index: 5; animation: w-pano-in 0.7s ease both; touch-action: none; }
+@keyframes w-pano-in { from { opacity: 0; } }
+.w-pano .play-look { top: calc(max(14px, env(safe-area-inset-top)) + 54px); }
+/* On a touch screen the picture is dragged, and these buttons would sit under the proof switch. */
+@media (pointer: coarse) { .w-pano .play-look { display: none; } }
+.w-hud.is-touch.is-pano .w-objective { max-width: calc(100vw - 150px); }
+.w-keys.is-pano { bottom: 150px; max-width: calc(100vw - 32px); }
+.w-pano-note { position: absolute; left: 50%; bottom: max(8px, env(safe-area-inset-bottom)); transform: translateX(-50%); width: max-content; max-width: calc(100vw - 32px); margin: 0; padding: 3px 10px; border-radius: 6px; background: var(--w-glass); font-size: 12px; text-align: center; color: rgba(255, 255, 255, 0.86); }
+.w-mission-note { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 8px; font-size: 14px; color: rgba(255, 255, 255, 0.86); }
+.w-look { flex: none; width: 56px; height: 5px; border-radius: 5px; background: rgba(255, 255, 255, 0.25); overflow: hidden; }
+.w-look span { display: block; height: 100%; background: var(--w-gold); }
+.w-evidence .w-evidence-img { display: block; width: 100%; height: auto; max-height: 34dvh; object-fit: contain; margin: 0 0 8px; border-radius: 4px; background: #000; }
+
+.w-sketch { position: absolute; inset: 0; z-index: 8; pointer-events: none; }
+.w-sketch-img { object-fit: contain; opacity: 0.62; }
+.w-sketch-note {
+	position: absolute;
+	top: 70px;
+	left: 50%;
+	transform: translateX(-50%);
+	display: grid;
+	justify-items: center;
+	gap: 8px;
+	width: min(520px, calc(100vw - 32px));
+	padding: 12px 16px;
+	border-left: 3px solid var(--w-gold);
+	border-radius: 8px;
+	background: rgba(21, 11, 24, 0.86);
+	font-size: 15px;
+	line-height: 1.35;
+	text-align: center;
+	pointer-events: auto;
+}
+.w-sketch-note p { margin: 0; }
+
+.w-order {
+	position: absolute;
+	left: 50%;
+	top: 62px;
+	bottom: 12px;
+	transform: translateX(-50%);
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	width: min(560px, calc(100vw - 24px));
+	padding: 14px;
+	border-radius: 12px;
+	background: rgba(21, 11, 24, 0.92);
+	overflow-y: auto;
+	pointer-events: auto;
+	touch-action: pan-y;
+}
+.w-order-q { margin: 0; font-family: var(--w-display); font-size: 24px; text-transform: uppercase; color: var(--w-gold); }
+.w-hud:has(.w-order) .w-subtitle { bottom: 18px; z-index: 9; }
+
+.w-proof { position: absolute; left: 50%; bottom: 150px; transform: translateX(-50%); width: max-content; max-width: calc(100vw - 32px); pointer-events: auto; }
+.w-hud.is-pano:has(.w-subtitle) .w-proof { bottom: auto; top: 112px; }
+
+.w-ending { position: absolute; inset: 0; z-index: 12; background: rgba(8, 8, 8, 0.55); pointer-events: auto; touch-action: pan-y; }
+.w-ending .play-end { top: 0; max-height: none; padding-top: 72px; padding-bottom: calc(max(14px, env(safe-area-inset-bottom)) + 58px); }
+.w-ending-go { position: absolute; left: 50%; bottom: max(10px, env(safe-area-inset-bottom)); transform: translateX(-50%); z-index: 2; white-space: nowrap; }
+
 @media (prefers-reduced-motion: reduce) {
+	.w-pano,
 	.w-action, .w-subtitle-text, .w-evidence, .w-note, .w-mission, .w-shift, .w-splash { animation: none; }
 	.w-mission { opacity: 1; }
 }

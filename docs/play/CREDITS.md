@@ -23,17 +23,22 @@ Every model, animation, sound, font, texture and package added for the open worl
 | Own photographs | Present-day surfaces | Epocheye, September 2026 | Own work | Per the site config |
 | Project-made gilding tile (`gilding_512.jpg`) | Cusped arches. No swap replaces this material in the NOW state, so it is expected in `palace_now` | Recorded as made by the project | **Provenance unconfirmed, see item 3** | 2026-11-22, site config and `tools/play/AUDIT.md` |
 | Kokoro-82M, voices `af_heart`, `hm_omega`, `hm_psi` | Narration, carpenter, mason | hexgrad, see `tools/play/voice/LICENSES.md` | Apache-2.0 | 2026-11-22 for the two role voices |
-| Kokoro-82M, blends of `hm_omega`, `hm_psi` and `bf_emma` (draft, Missions 2 to 5, not merged yet) | Grain trader, sepoy, palanquin bearer, clerk. 27 clips in `tools/play/assets/world_voice/` | hexgrad, see `tools/play/voice/LICENSES.md` | Apache-2.0, as files in the model repository. `bf_emma` per the note in `LICENSES.md`; its licence was not re-read today | Not re-read on 2026-11-23 |
+| Kokoro-82M, blends of `hm_omega`, `hm_psi` and `bf_emma` (Missions 2 to 5) | Grain trader, sepoy, palanquin bearer, clerk. 27 clips in `tools/play/assets/world_voice/` | hexgrad, see `tools/play/voice/LICENSES.md` | Apache-2.0, as files in the model repository. `bf_emma` per the note in `LICENSES.md`; its licence was not re-read today | Not re-read on 2026-11-23 |
 | Anton | Display font for titles and splashes | The Anton Project Authors, [Google Fonts](https://github.com/googlefonts/AntonFont) | SIL OFL 1.1 | 2026-11-22 |
 | @react-three/rapier 2.2.0 | Physics bindings | Poimandres, [repo](https://github.com/pmndrs/react-three-rapier) | MIT (repo licence; the npm package has no licence field) | 2026-11-22 |
 | @dimforge/rapier3d-compat | Physics engine | Dimforge, [repo](https://github.com/dimforge/rapier.js) | Apache-2.0 | 2026-11-22 |
 | Tank water and stone rim | The three tanks in 1791 | Generated in code by `lib/play/world/water.js`, with no image or model file. Outlines come from Epocheye's own fort reconstruction | Own work | 2026-11-23 |
+| Panoramas of the palace (the existing Story view pack, `public/play/packs/<slug>/v1`) | The stair, the upper hall, the balcony, the three painted restorations and the full reveal in Missions 2, 3 and 5 | Epocheye renders. Every source inside them is listed in the pack's `CREDITS.md` and `LICENSES.json`, and those lines are now also in the open world's Credits view | As listed per source in the pack | 2026-11-23, the pack's credit list |
+| Interior wall texture, inside the panoramas' painted walls | Restoration S3 and the full reveal | Derived from a [photograph by Mike Prince](https://commons.wikimedia.org/wiki/File:Tipu_Sultan%27s_Summer_Palace_(16414465309).jpg) | **CC BY 2.0.** The credit is in the game's Credits view, in the pack's wording | 2026-11-23, the credit line in the pack. The licence page itself was not re-read today |
+| Hunter's watercolour of the north front | The overlay in Mission 2 and its record card | James Hunter, February 1792. Yale Center for British Art, Paul Mellon Collection, B1974.12.1168 | Public domain (CC0) | 2026-11-23, the pack's evidence entry |
+| Office desks, shelves and chests | The 1831 era | Built from boxes in code by `lib/play/world/props.js`, with no image or model file | Own work | 2026-11-23 |
+| The distant figure on the balcony in Mission 3 | Durbar staging | The existing `merchant` figure, covered by the MakeHuman, clothes and Quaternius rows above. The unchecked model in `assets/tsp_court/tipu` is **not** used | As those rows | 2026-11-23 |
 
 ## Not in the current build
 
 | Asset | Why it is listed | Status |
 |---|---|---|
-| `palace_then` atlas | Contains the interior wall texture derived from a [photograph by Mike Prince](https://commons.wikimedia.org/wiki/File:Tipu_Sultan%27s_Summer_Palace_(16414465309).jpg), CC BY 2.0 | No longer published, because the world does not use it. If a later phase uses it, the credit to Mike Prince must be added first. In the NOW state that material is swapped for plain plaster |
+| `palace_then` atlas | Contains the interior wall texture derived from a [photograph by Mike Prince](https://commons.wikimedia.org/wiki/File:Tipu_Sultan%27s_Summer_Palace_(16414465309).jpg), CC BY 2.0 | Still not published: Missions 2 to 5 restore paint in the panoramas instead. The same texture reaches the player through those panoramas, so the credit to Mike Prince is now in the game (row above). If a later phase ships this atlas, that credit already covers it. In the NOW state that material is swapped for plain plaster |
 | Poly Haven [Palm Tree Bark](https://polyhaven.com/a/palm_tree_bark) (Dimitrios Savva, Rico Cilliers, CC0) | Used by the `TSP_MAT_palm_bark` material in the mobile tree build | Not credited as part of the palm cards, because the build script for those palms does not use it |
 
 ## What the owner must confirm

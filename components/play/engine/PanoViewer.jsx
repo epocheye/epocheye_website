@@ -30,6 +30,7 @@ export default function PanoViewer({
 	hotspots = [],   // [{ id, kind, dir, label, text, done }]
 	onHotspot,
 	onFirstView,
+	onFrame,         // optional: called with the engine after each drawn frame
 	debug = false,
 }) {
 	const holder = useRef(null);
@@ -39,6 +40,10 @@ export default function PanoViewer({
 	const applied = useRef(new Set());
 	const allShown = useRef(null); // the last "THEN everywhere" value handed to the engine
 	const allFading = useRef(false); // the full reveal is playing
+	const frameHook = useRef(onFrame);
+	useEffect(() => {
+		frameHook.current = onFrame;
+	});
 	const [env, setEnv] = useState({ ready: false, failed: false, canGyro: false });
 	const [status, setStatus] = useState({ loading: true, error: null, shown: null }); // shown: the node whose picture is up
 	const [gyro, setGyro] = useState("off"); // off | asking | on | denied | unsupported
@@ -76,6 +81,7 @@ export default function PanoViewer({
 				const v = c.view();
 				readout.current.textContent = `yaw ${v.yaw.toFixed(0)}  pitch ${v.pitch.toFixed(0)}  fov ${v.fov.toFixed(0)}  faces ${v.size}${v.thenSize ? ` / then ${v.thenSize}` : ""}  all ${v.all.toFixed(2)}  proof ${v.proof.toFixed(2)}${v.tier ? " tier" : ""}`;
 			}
+			frameHook.current?.(c);
 		};
 		// A browser with no WebGL throws here; the level then plays from the lists.
 		Promise.resolve()
