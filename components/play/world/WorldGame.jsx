@@ -160,6 +160,7 @@ function Game({ slug, packVersion, base, world, missions, story, presetId, touch
 					onInteract: (p) => handlers.current.interact?.(p),
 					onArrive: (o, r) => handlers.current.arrive?.(o, r),
 					onRide: (id) => handlers.current.ride?.(id),
+					onRideStep: (kind, strength, gait) => handlers.current.rideStep?.(kind, strength, gait),
 					onPlace: (place) => handlers.current.place?.(place),
 				},
 			}),
@@ -388,6 +389,7 @@ function Game({ slug, packVersion, base, world, missions, story, presetId, touch
 				setRiding(id);
 				if (id) showFacts(missions.rides?.find((r) => r.id === id)?.note_facts);
 			},
+			rideStep: (kind, strength, gait) => voices.ambience.rideStep(kind, strength, gait),
 			place: (place) => {
 				dispatch({ type: "visited", place: place.id });
 				showFacts(place.facts);
@@ -438,7 +440,7 @@ function Game({ slug, packVersion, base, world, missions, story, presetId, touch
 				}
 			},
 		};
-	}, [showFacts, missions, state, wakeEra, doRestore, rt, lineItem, scripts, beatItem, evidence]);
+	}, [showFacts, missions, state, wakeEra, doRestore, rt, lineItem, scripts, beatItem, evidence, voices]);
 
 	const enter = useCallback(
 		(withSound) => {

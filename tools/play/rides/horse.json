@@ -1,0 +1,63 @@
+{
+  "_note": "Rig landmarks for the horse, in the source model's coordinates (head towards -Y, Z up). Read by tools/play/blender/rig_ride.py. The source is read only. The model carries no weapon and no war gear.",
+  "id": "horse",
+  "src": "E:/heritage_assets/hampi/assets/generated/meshy/fig_horse/fig_horse.glb",
+  "out": "tools/play/out/rides/horse_rigged.glb",
+  "scale": 1.05,
+  "tris": 11000,
+  "leg_radius": 0.13,
+  "leg_bind": 0.17,
+  "hair": { "saturation": 0.65, "value": 0.55, "y_min": 0.55, "z_min": -0.75 },
+  "points": {
+    "hip": [0.02, 0.44, 0.24],
+    "mid": [0.0, 0.04, 0.22],
+    "chest": [0.0, -0.3, 0.2],
+    "neck_base": [-0.02, -0.46, 0.34],
+    "poll": [-0.12, -0.68, 0.74],
+    "nose": [-0.12, -0.9, 0.48]
+  },
+  "spine": ["hip", "mid", "chest", "neck_base", "poll", "nose"],
+  "seat": [0.0, 0.02, 0.6],
+  "seat_parent": "spine",
+  "legs": {
+    "fl": { "foot": [0.052, -0.546, -0.84], "top_z": 0.02, "knee": 0.5, "ankle": 0.14 },
+    "fr": { "foot": [-0.18, -0.233, -0.84], "top_z": 0.02, "knee": 0.5, "ankle": 0.14 },
+    "hl": { "foot": [0.16, 0.369, -0.84], "top_z": 0.08, "knee": 0.62, "ankle": 0.3 },
+    "hr": { "foot": [-0.09, 0.702, -0.84], "top_z": 0.08, "knee": 0.62, "ankle": 0.3 }
+  },
+  "chains": [
+    {
+      "name": "tail",
+      "parent": "body",
+      "radius": 0.2,
+      "points": [[0.0, 0.66, 0.3], [0.0, 0.84, 0.12], [0.0, 0.86, -0.22], [0.0, 0.88, -0.62]]
+    }
+  ],
+  "moves": {
+    "tail": 0.16,
+    "idle": { "seconds": 4.0, "breath": 0.006, "nod": 0.035, "look": 0.05 },
+    "walk": {
+      "seconds": 0.92,
+      "stride": 1.55,
+      "duty": 0.62,
+      "lift": 0.11,
+      "flex": 0.55,
+      "bob": 0.012,
+      "nod": 0.05,
+      "roll": 0.012,
+      "phase": { "hr": 0.0, "fr": 0.25, "hl": 0.5, "fl": 0.75 }
+    },
+    "run": {
+      "seconds": 0.5,
+      "stride": 3.5,
+      "duty": 0.3,
+      "lift": 0.2,
+      "flex": 0.8,
+      "bob": 0.05,
+      "rock": 0.05,
+      "nod": 0.04,
+      "roll": 0.006,
+      "phase": { "hr": 0.0, "hl": 0.12, "fr": 0.42, "fl": 0.54 }
+    }
+  }
+}

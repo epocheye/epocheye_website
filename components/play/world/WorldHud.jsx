@@ -247,11 +247,14 @@ function Chip({ chip }) {
 export default function WorldHud(p) {
 	const { slug, rt, world, missions, input, touch, phase, progress, state, mission, objective, prompt, riding, line, card, note, choice, shifting, restoring, talking, sound, presetId } = p;
 	const [menu, setMenu] = useState(false);
+	// The ride being ridden, or the one the player is about to board.
+	const rideNear = missions.rides?.find((r) => r.id === (riding || (prompt?.kind === "ride" ? prompt.id : null))) || null;
 	const [showCredits, setShowCredits] = useState(false);
 	const era = state.era || mission?.era || "today";
 	const pastEra = pastEraOf(missions);
 	const inPast = era === pastEra;
-	const credits = missions.credits || [];
+	// A ride can carry its own credit line, so adding one needs no change to the list.
+	const credits = [...new Set([...(missions.credits || []), ...(missions.rides || []).map((r) => r.credit).filter(Boolean)])];
 	const keyHint = touch ? null : <kbd>E</kbd>;
 
 	if (phase === "title") {
@@ -339,7 +342,16 @@ export default function WorldHud(p) {
 			{!touch && showControls && state.mission === 0 && state.objective === 0 ? (
 				<p className="w-keys">WASD to walk. Shift to run. Mouse to look. E to interact.</p>
 			) : null}
-			{riding && showControls && !(touch && line) ? <p className="w-keys">{touch ? "Push the stick to drive" : "W to drive, A and D to steer"}. People step aside, and your ride stops for them.</p> : null}
+			{riding && showControls && !(touch && line) ? <p className="w-keys">{touch ? "Push the stick to drive" : "W to drive, A and D to steer"}. {rideNear?.[touch ? "keys_touch" : "keys"] ? `${rideNear[touch ? "keys_touch" : "keys"]}. ` : ""}People step aside, and your ride stops for them.</p> : null}
+
+			{rideNear?.notice && !note && !card ? (
+				<aside className="w-note" role="status">
+					<div className="w-note-item">
+						<p>{rideNear.notice.text}</p>
+						<Chip chip={{ tier: rideNear.notice.tier, label: "Our reconstruction" }} />
+					</div>
+				</aside>
+			) : null}
 
 			{note && !card ? (
 				<aside className="w-note">

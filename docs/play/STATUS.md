@@ -4,6 +4,8 @@
 
 GATE 1 was answered: "Yes, start Phase 2". Phase 1 is on `feat/open-world`. Nothing is merged and live `/play` is unchanged. The notes below describe the state at GATE 1.
 
+**2026-11-23, world v3 (not committed).** Fixed: the era-shift trap over the ditch and tanks, water in the three tanks, pin holes at the cell seams, and the sentry route through a block. Missions 0 and 1 finished at phone and PC settings and the full route passed, on a dev server with emulated phone settings. Not measured: a production build or a real phone. The server on port 3105 keeps its older version until it is rebuilt.
+
 **Preview (needs your Vercel sign-in):** https://epocheye-website-git-feat-open-world-sambit-singhas-projects.vercel.app/play/tipu-summer-palace-bengaluru/world
 
 Vercel reports this build as Ready, but I could not open it myself because it is behind your sign-in. Every check below ran on a local production build of the same code.

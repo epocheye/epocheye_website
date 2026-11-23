@@ -188,6 +188,66 @@ def walk_limit(cfg):
     return pts
 
 
+def outset(poly, d):
+    """A convex counter-clockwise polygon moved outward by d, keeping sharp corners."""
+    n = len(poly)
+    lines = []
+    for i in range(n):
+        (ax, ay), (bx, by) = poly[i], poly[(i + 1) % n]
+        length = math.hypot(bx - ax, by - ay)
+        nx, ny = (by - ay) / length, -(bx - ax) / length
+        lines.append((ax + nx * d, ay + ny * d, bx - ax, by - ay))
+    out = []
+    for i in range(n):
+        px, py, ux, uy = lines[i - 1]
+        qx, qy, vx, vy = lines[i]
+        t = ((qx - px) * vy - (qy - py) * vx) / (ux * vy - uy * vx)
+        out.append([round(px + ux * t, 3), round(py + uy * t, 3)])
+    return out
+
+
+def water_block(cfg):
+    """Still water from the config and the named flat objects: one convex outline per connected
+    piece, with the rim's outer edge and the line people and rides stay behind."""
+    spec = cfg.get("water")
+    if not spec:
+        return None
+    import re
+    import numpy as np
+    plan = OUT / "plan"
+    rows = json.loads((plan / "objects.json").read_text(encoding="utf-8"))["objects"]
+    block = re.compile(spec["objects"])
+    tanks = []
+    for row in rows:
+        if not block.search(row["name"]):
+            continue
+        with np.load(plan / f"{row['i']}.npz") as d:
+            v, f = d["v"][:, :2], d["f"]
+        parent = list(range(len(v)))
+        def find(a):
+            while parent[a] != a:
+                parent[a] = parent[parent[a]]
+                a = parent[a]
+            return a
+        for a, b, c in f.tolist():
+            parent[find(b)] = find(a)
+            parent[find(c)] = find(a)
+        for root in sorted({find(i) for i in range(len(v))}):
+            pts = sorted({(round(float(p[0]), 3), round(float(p[1]), 3)) for i, p in enumerate(v) if find(i) == root})
+            def half(points):
+                hull = []
+                for p in points:
+                    while len(hull) > 1 and (hull[-1][0] - hull[-2][0]) * (p[1] - hull[-2][1]) - (hull[-1][1] - hull[-2][1]) * (p[0] - hull[-2][0]) <= 0:
+                        hull.pop()
+                    hull.append(p)
+                return hull[:-1]
+            edge = [list(p) for p in half(pts) + half(pts[::-1])]
+            tanks.append({"edge": edge, "rim": outset(edge, spec["rim_width"]), "keep": outset(edge, spec["rim_width"] + spec["keep_out"])})
+    if not tanks:
+        sys.exit(f"No objects match water.objects: {spec['objects']}")
+    return {**{k: spec[k] for k in ("fact", "level", "rim_top", "rim_base", "deep", "shallow", "stone")}, "tanks": tanks}
+
+
 def cell_entry(cell):
     groups = {}
     for name, g in cell["groups"].items():
@@ -301,6 +361,13 @@ def publish(slug, cfg):
         "people": cfg.get("people", []),
         "today": today,
     }
+    water = water_block(cfg)
+    if water:
+        world["water"] = water
+    # The ground connected to the mission start, from docs/play/lighthouse/scripts/world-reach.mjs.
+    reach = TOOLS / "worlds" / f"{slug}.reach.json"
+    if reach.exists():
+        world["reach"] = json.loads(reach.read_text(encoding="utf-8"))
     (staged / "world.json").write_text(json.dumps(world, separators=(",", ":")), encoding="utf-8")
     files, problems = referenced_files(world, missions)
     for rel in files:

@@ -1208,12 +1208,31 @@ async function packProp(spec) {
 	return finish(doc, path.join(OUT, `${spec.id}.glb`), spec.tris || 7000, spec.error || 0.08);
 }
 
+// A ride animal rigged by tools/play/blender/rig_ride.py: one skinned mesh, one small texture, its
+// clips as they are. Its measured ground speeds go in the scene extras, as for the player.
+async function packRigged(spec) {
+	const doc = await io().read(spec.src);
+	const root = doc.getRoot();
+	const info = JSON.parse(await readFile(spec.src.replace(/\.glb$/, ".json"), "utf8"));
+	for (const m of root.listMaterials()) {
+		const t = m.getBaseColorTexture();
+		if (t) {
+			const png = await sharp(Buffer.from(t.getImage())).removeAlpha().resize(spec.atlas || 1024, spec.atlas || 1024).png().toBuffer();
+			m.setBaseColorTexture(await ktxTexture(doc, png, `${spec.id}_base`));
+		}
+		m.setNormalTexture(null).setMetallicRoughnessTexture(null).setOcclusionTexture(null).setMetallicFactor(0).setRoughnessFactor(0.9);
+	}
+	(root.getDefaultScene() || root.listScenes()[0]).setExtras({ strides: info.strides });
+	const out = await finish(doc, path.join(OUT, `${spec.id}.glb`), null);
+	return { ...out, strides: info.strides, clips: root.listAnimations().map((a) => a.getName()) };
+}
+
 // The report is a build record, so it stays out of public/. A partial run keeps the other actors' rows.
 const reportFile = "tools/play/out/world/actors_report.json";
 const report = existsSync(reportFile) ? JSON.parse(await readFile(reportFile, "utf8")) : {};
 for (const a of cfg.actors) {
 	if (only && !only.has(a.id)) continue;
-	report[a.id] = a.kind === "player" ? await packPlayer(a) : a.kind === "prop" ? await packProp(a) : await packFigure(a);
+	report[a.id] = a.kind === "player" ? await packPlayer(a) : a.kind === "prop" ? await packProp(a) : a.kind === "rigged" ? await packRigged(a) : await packFigure(a);
 	console.log(a.id, JSON.stringify(report[a.id]));
 }
 // A check pack to another folder is not the build, so it leaves the build record alone.

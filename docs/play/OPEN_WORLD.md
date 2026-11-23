@@ -2,7 +2,7 @@
 
 Draft during Phase 2. The commands below are the ones in use; sections on later features are added as they land.
 
-**State of the map (2026-11-22).** Eight streamed cells cover the whole fort, from outside the Delhi Gate, round the outwork, over the causeway, through the gate, along to the palace court and up the ramp to the rampart walk. Whole world 11.52 MB. Horse, elephant, Missions 2 to 5 and the full-screen map are not built yet.
+**State of the map (2026-11-23, world v3).** Eight streamed cells cover the whole fort, from outside the Delhi Gate, round the outwork, over the causeway, through the gate, along to the palace court and up the ramp to the rampart walk. Three tanks hold still water in 1791. The horse rides outside the walls and the elephant outside the palace court and on the avenue; their models load on demand. Whole world 12.66 MB plus the voice clips for Missions 2 to 5. The full-screen map is not built yet.
 
 A world is two things: **exported assets** in `public/play/worlds/<slug>/v<N>/`, and **one hand-written file**, `content/play/<slug>/missions.json`. The engine (`lib/play/world/`, `components/play/world/`) has no site-specific code.
 
@@ -103,6 +103,17 @@ What the world config holds for this:
 | `terrain` | Height map bounds, which objects are ground, `no_walk` objects, `min_walk_y` (below it a person may not stand), `limit` (the map's edge, a set distance outside a named wall) |
 | `today` | Streets and generated city blocks. Blocks avoid the `clear` rectangles and the streets |
 | `people` | Routes. A third coordinate puts a route on a structure, as for sentries on a wall. The walkers in the quality preset are shared out among the routes nearest the player |
+| `water` | Still water in the past era: `objects` (a pattern for flat source objects, one outline per connected piece), `level`, `rim_top`, `rim_base`, `rim_width`, `keep_out`, `deep`, `shallow`, `stone`, and the `fact` that backs it |
+
+After any change to walls or ground, publish, map the connected ground from the running game, and publish again. A player being placed is only ever put on this ground:
+
+```powershell
+$env:PLAY_BASE="http://localhost:3140"; node docs/play/lighthouse/scripts/world-reach.mjs
+```
+
+```powershell
+python tools/play/export_world.py <slug> publish
+```
 
 The runtime loads cells within the preset's `stream` radius, nearest first, and unloads them 70 m past it. Colliders are built one piece per frame, and a cell counts as ready only when all of them exist. Until then the player is held at its edge, so nobody can walk onto ground with no collider. Check a map with:
 
@@ -158,4 +169,41 @@ node scripts/play/validate-missions.mjs
 
 ## Add a ride
 
-Add the model to `actors` in the world config (`kind: "prop"`) and to `web_actors.rides` (scale, yaw, seat), then add an entry to `rides` in `missions.json`. Areas a ride may never enter are the `no_ride` rectangles in the world config. A ride also stops at the map's edge, at an unloaded cell, at anything below `min_walk_y`, at walls, and on ground steeper than 1 in 5 along its length. A ride stops for anyone in its path, and people step aside.
+A ride is data in two files, and the engine has no code for any one animal.
+
+1. **The model.** A static model such as a cart goes in `actors` with `kind: "prop"`. An animal needs a rig first: write `tools/play/rides/<id>.json` (source file, real-world `scale`, triangle budget, the four feet, the spine and neck points, any tail or trunk chains, the seat, and the clips), then run the rigger. It uses the CPU only and only reads the source.
+
+```powershell
+& "C:\Program Files\Blender Foundation\Blender 5.3\blender.exe" -b --factory-startup --python tools/play/blender/rig_ride.py -- --spec tools/play/rides/<id>.json --debug tools/play/out/rides/check
+```
+
+Open the check renders. The rigger writes `tools/play/out/rides/<id>_rigged.glb`, and a JSON with the footprint (`half`), the seat and the ground speed of each clip. Add it to `actors` with `kind: "rigged"`, then pack it into the live version:
+
+```powershell
+node tools/play/pack_actors.mjs <slug> --only <id> --version <N>
+```
+
+2. **`web_actors.rides.<type>` in the world config:**
+
+| Key | Meaning |
+|---|---|
+| `id`, `yaw`, `seat` | The packed model, its turn so it faces forward, and the seat offset |
+| `lazy` | Fetch the model only when the player is within `ride_load_m`, so it is not in the first playable |
+| `half`, `top` | Half width and half length of the footprint, and how tall it is for walls and arches |
+| `zone` | A name in `web_actors.ride_zones` |
+| `walk`, `speed`, `accel`, `turn`, `pivot` | Walking speed, top speed with run held, how fast it gets there, turn rate, and how much of it remains at a standstill |
+| `pose` | Directions for thigh, shin and foot, so the rider sits astride rather than on a chair |
+| `cam` | `height`, `dist` and `dist_portrait` of the camera while riding |
+| `sound` | `hoof` or `elephant`: footfalls generated in the browser |
+
+3. **Where it may go.** `ride_zones.<name>` holds `allow` (the whole footprint must be inside one of these polygons) and `deny` (no part may be inside any of them), in Blender metres. Every ride, zone or not, also stops at the `no_ride` rectangles, the map's edge, an unloaded cell, water, anything below `min_walk_y`, walls, and ground steeper than 1 in 5 along its length. It brakes for all of these and for anyone ahead, comes to rest 1.6 m short of a person, and never brings its footprint within 0.5 m of one.
+
+4. **`rides` in `missions.json`:** `id`, `type`, `at`, `face_deg`, `label`. Optional: `note_facts`, `keys` and `keys_touch` (an extra control hint), `notice` (`text` and `tier`, shown while near or riding it, for a ride that is our reconstruction), and `credit` (added to the Credits view).
+
+Publish, or if only ride data changed, update `actors` in the published `world.json` and copy `missions.json`. Publish keeps only the files `missions.json` references, so **any clip or file not yet referenced there is dropped from the version folder**. Then prove it:
+
+```powershell
+$env:PLAY_BASE="http://localhost:3140"; node docs/play/lighthouse/scripts/world-rides.mjs <outDir> --preset high
+```
+
+It drives each ride at each limit and at people with the keyboard, checks every pose against the world data at 20 cm spacing, tests boarding and leaving, and takes the screenshots. Its list of test positions is for this map.

@@ -1,0 +1,173 @@
+{
+  "slug": "tipu-summer-palace-bengaluru",
+  "version": 1,
+  "title": "Envy of Heaven",
+  "tagline": "Bangalore Fort. 1 March 1791. Walk it.",
+  "eras": { "past": "1791" },
+  "credits": [
+    "World and reconstruction: Epocheye.",
+    "People: bodies, skin, eyes and hair from MakeHuman and MPFB assets (CC0). Clothes made for Epocheye.",
+    "People's walk, idle and talk: motion by Quaternius, Universal Animation Library (CC0), adapted to these figures.",
+    "Bullock cart: model created with Meshy (meshy.ai), simplified for the web. CC BY 4.0 (creativecommons.org/licenses/by/4.0) if made on Meshy's free plan.",
+    "You, the restorer: body and animation by Quaternius, Universal Animation Library (CC0), recoloured.",
+    "Tamarind tree: Tree Small 02 by Rico Cilliers, Poly Haven (CC0).",
+    "Palm trees: made for Epocheye.",
+    "Surfaces: textures from Poly Haven (CC0), Epocheye's own photographs, and pattern tiles used in the reconstruction.",
+    "Voices: synthetic, made with Kokoro (hexgrad/Kokoro-82M, Apache 2.0).",
+    "Titles set in Anton (SIL Open Font License 1.1).",
+    "Physics: Rapier by Dimforge (Apache 2.0)."
+  ],
+  "_note": "Hand-written open-world layer. Positions are Blender metres [x, y]. Story beats are referenced by id from story.json and never copied. A dialogue line that states a fact carries a fact id from story.json or world_facts.",
+  "world_facts": [
+    {
+      "id": "W01",
+      "claim": "Bullock carts were the standard transport of the Mysore country. Where these carts stand is our guess.",
+      "source": "Epocheye's period world log, row 16: type medium confidence, position none",
+      "tier": "reconstruction"
+    },
+    {
+      "id": "W02",
+      "claim": "The avenue through the fort is drawn on Mackenzie's survey of March 1791. Its width is not stated.",
+      "source": "Mackenzie survey, March 1791 (RCIN 735001), as traced in the fort project",
+      "tier": "record"
+    },
+    {
+      "id": "W03",
+      "claim": "Mackenzie's survey of March 1791 marks three tanks of good water inside the fort. Their depth, their stone edge and the look of the water are our reconstruction.",
+      "source": "Mackenzie survey, March 1791 (RCIN 735001), key 11, as traced in the fort project",
+      "tier": "record"
+    }
+  ],
+  "voices": {
+    "narrator": "kokoro-heart",
+    "carpenter": "kokoro-hm-omega",
+    "mason": "kokoro-hm-psi"
+  },
+  "npcs": [
+    {
+      "id": "carpenter",
+      "role": "The carpenter",
+      "figure": "bearer",
+      "at": [-12.5, -6.5],
+      "face_deg": 200,
+      "dialogue": "d-carpenter"
+    },
+    {
+      "id": "mason",
+      "role": "The mason",
+      "figure": "mysore_man",
+      "at": [8.0, -4.6],
+      "face_deg": -25,
+      "dialogue": "d-mason"
+    }
+  ],
+  "dialogue": {
+    "d-carpenter": [
+      { "id": "w-carp-1", "speaker": "carpenter", "text": "Careful. Shavings everywhere.", "pace": "steady", "pause_after_ms": 600 },
+      { "id": "w-carp-2", "speaker": "carpenter", "text": "You want to know what holds this place up? Teak.", "say": "You want to know what holds this place up? The teak does.", "facts": ["F04"], "pace": "steady", "pause_after_ms": 600 },
+      { "id": "w-carp-3", "speaker": "carpenter", "text": "The pillars, the arches, the beams, the ceilings. All wood.", "facts": ["F04"], "pace": "steady", "pause_after_ms": 600 },
+      { "beat": "c1-e1" },
+      { "id": "w-carp-4", "speaker": "carpenter", "text": "Ask the mason about the rest. Masons always say it is all stone.", "pace": "steady", "pause_after_ms": 400 }
+    ],
+    "d-mason": [
+      { "id": "w-mas-1", "speaker": "mason", "text": "Mind your feet.", "pace": "steady", "pause_after_ms": 600 },
+      { "id": "w-mas-2", "speaker": "mason", "text": "Look down. Every pillar stands on a stone base.", "facts": ["F04"], "pace": "steady", "pause_after_ms": 600 },
+      { "beat": "c1-e2" },
+      { "id": "w-mas-3", "speaker": "mason", "text": "The outer walls? Mud, under the plaster.", "facts": ["F04"], "pace": "steady", "pause_after_ms": 600 },
+      { "beat": "c1-e3" },
+      { "id": "w-mas-4", "speaker": "mason", "text": "The rest is further on. Take the cart, it is a long walk.", "pace": "steady", "pause_after_ms": 400 }
+    ]
+  },
+  "records": [
+    {
+      "id": "r-buchanan",
+      "title": "Buchanan's journal",
+      "kind": "journal",
+      "at": [-118.0, 86.0],
+      "beats": ["c1-e4"],
+      "evidence": "e-buchanan"
+    },
+    {
+      "id": "r-inscription",
+      "title": "The inscription stone",
+      "kind": "stone",
+      "at": [-5.5, -2.6],
+      "beats": ["c1-e5"],
+      "evidence": "e-inscription",
+      "placement_note": "The record says only that the stone is let into the wall. Where it sits here is our placement."
+    }
+  ],
+  "rides": [
+    {
+      "id": "cart-1",
+      "type": "cart",
+      "at": [-31.0, 37.0],
+      "face_deg": 60,
+      "note_facts": ["W01"],
+      "label": "Bullock cart"
+    },
+    {
+      "id": "horse-1",
+      "type": "horse",
+      "at": [306.0, 30.0],
+      "face_deg": 10,
+      "label": "Horse",
+      "keys": "Shift to gallop",
+      "keys_touch": "Push the stick all the way to gallop",
+      "credit": "Horse: model created with Meshy (meshy.ai), simplified and rigged for the web. CC BY 4.0 (creativecommons.org/licenses/by/4.0) if made on Meshy's free plan."
+    },
+    {
+      "id": "elephant-1",
+      "type": "elephant",
+      "at": [-88.0, 42.0],
+      "face_deg": 80,
+      "label": "Elephant",
+      "notice": { "text": "Our reconstruction of court life. No record places this elephant here.", "tier": "reconstruction" },
+      "credit": "Elephant: model created with Meshy (meshy.ai), simplified and rigged for the web. CC BY 4.0 (creativecommons.org/licenses/by/4.0) if made on Meshy's free plan."
+    }
+  ],
+  "places": [
+    { "id": "court", "name": "The palace court", "at": [0, -16] },
+    { "id": "avenue", "name": "The avenue", "at": [-118, 84], "facts": ["W02"] },
+    { "id": "tank", "name": "A tank of good water", "at": [165, 35], "radius": 30, "era": "1791", "facts": ["W03"] }
+  ],
+  "missions": [
+    {
+      "id": "m0",
+      "n": 0,
+      "title": "Nice. Old.",
+      "era": "today",
+      "place_line": "Bengaluru. Today.",
+      "chapter": "prologue",
+      "start": [0, -34],
+      "start_face_deg": 0,
+      "objectives": [
+        { "id": "m0-walk", "kind": "goto", "text": "Walk up to the palace", "at": [0, -10], "radius": 6 },
+        { "id": "m0-look", "kind": "story", "text": "Look at the front", "beats": ["p-01", "p-02", "p-03", "p-04", "p-05", "p-06", "p-07", "p-08", "p-09", "p-10", "p-11"] },
+        { "id": "m0-wake", "kind": "era", "text": "Wake the Epocheye", "to": "1791" }
+      ]
+    },
+    {
+      "id": "m1",
+      "n": 1,
+      "title": "Ten Years",
+      "era": "1791",
+      "place_line": "Bangalore Fort. 1 March 1791.",
+      "chapter": "ch1",
+      "start": [0, -10],
+      "start_face_deg": 0,
+      "objectives": [
+        { "id": "m1-open", "kind": "story", "text": "Listen", "beats": ["c1-01", "c1-01-2", "c1-01-3", "c1-02", "c1-03", "c1-04", "c1-04-2", "c1-q", "c1-05"] },
+        { "id": "m1-carp", "kind": "talk", "text": "Talk to the carpenter", "npc": "carpenter" },
+        { "id": "m1-mason", "kind": "talk", "text": "Talk to the mason", "npc": "mason" },
+        { "id": "m1-cart", "kind": "ride", "text": "Take the bullock cart to the avenue", "ride": "cart-1", "at": [-112, 84], "radius": 12 },
+        { "id": "m1-journal", "kind": "record", "text": "Find Buchanan's journal", "record": "r-buchanan" },
+        { "id": "m1-stone", "kind": "record", "text": "Go back and find the inscription stone", "record": "r-inscription" },
+        { "id": "m1-choice", "kind": "choice", "text": "Decide who is right", "beat": "c1-choice" },
+        { "id": "m1-restore", "kind": "restore", "text": "Restore the structure", "classes": ["stone", "mud", "teak"], "slot": "S1" },
+        { "id": "m1-close", "kind": "story", "text": "Listen", "beats": ["c1-answer", "c1-answer-2", "c1-know", "c1-hook"] }
+      ],
+      "end": { "splash": "MONUMENT RESTORED", "place": "The Summer Palace", "year": "1791", "ask_app": true }
+    }
+  ]
+}

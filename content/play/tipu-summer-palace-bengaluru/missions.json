@@ -30,6 +30,12 @@
       "claim": "The avenue through the fort is drawn on Mackenzie's survey of March 1791. Its width is not stated.",
       "source": "Mackenzie survey, March 1791 (RCIN 735001), as traced in the fort project",
       "tier": "record"
+    },
+    {
+      "id": "W03",
+      "claim": "Mackenzie's survey of March 1791 marks three tanks of good water inside the fort. Their depth, their stone edge and the look of the water are our reconstruction.",
+      "source": "Mackenzie survey, March 1791 (RCIN 735001), key 11, as traced in the fort project",
+      "tier": "record"
     }
   ],
   "voices": {
@@ -99,11 +105,31 @@
       "face_deg": 60,
       "note_facts": ["W01"],
       "label": "Bullock cart"
+    },
+    {
+      "id": "horse-1",
+      "type": "horse",
+      "at": [306.0, 30.0],
+      "face_deg": 10,
+      "label": "Horse",
+      "keys": "Shift to gallop",
+      "keys_touch": "Push the stick all the way to gallop",
+      "credit": "Horse: model created with Meshy (meshy.ai), simplified and rigged for the web. CC BY 4.0 (creativecommons.org/licenses/by/4.0) if made on Meshy's free plan."
+    },
+    {
+      "id": "elephant-1",
+      "type": "elephant",
+      "at": [-88.0, 42.0],
+      "face_deg": 80,
+      "label": "Elephant",
+      "notice": { "text": "Our reconstruction of court life. No record places this elephant here.", "tier": "reconstruction" },
+      "credit": "Elephant: model created with Meshy (meshy.ai), simplified and rigged for the web. CC BY 4.0 (creativecommons.org/licenses/by/4.0) if made on Meshy's free plan."
     }
   ],
   "places": [
     { "id": "court", "name": "The palace court", "at": [0, -16] },
-    { "id": "avenue", "name": "The avenue", "at": [-118, 84], "facts": ["W02"] }
+    { "id": "avenue", "name": "The avenue", "at": [-118, 84], "facts": ["W02"] },
+    { "id": "tank", "name": "A tank of good water", "at": [165, 35], "radius": 30, "era": "1791", "facts": ["W03"] }
   ],
   "missions": [
     {

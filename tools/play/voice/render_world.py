@@ -26,6 +26,11 @@ ROLE_VOICES = {
     "kokoro-hm-psi": "hm_psi",
     "kokoro-hf-alpha": "hf_alpha",
     "kokoro-hf-beta": "hf_beta",
+    # Blends of voice packs already on disk (Kokoro averages a comma-separated list).
+    "kokoro-mix-trader": "hm_omega,hm_psi",
+    "kokoro-mix-sepoy": "hm_psi,hm_psi,hm_omega",
+    "kokoro-mix-bearer": "hm_omega,hm_omega,hm_psi",
+    "kokoro-mix-clerk": "hm_psi,hm_psi,hm_psi,bf_emma",
 }
 PACE_WPM = {"steady": 150, "slow": 125, "brisk": 170}
 
@@ -40,9 +45,14 @@ def main() -> int:
     ap.add_argument("--site", default="tipu-summer-palace-bengaluru")
     ap.add_argument("--version", default="1")
     ap.add_argument("--only")
+    ap.add_argument("--missions", help="Read this file instead of content/play/<site>/missions.json")
+    ap.add_argument("--audio-out", help="Write clips under this folder instead of the world version's audio folder")
+    ap.add_argument("--report", help="Write the report here instead of reports/world_dialogue.json")
+    ap.add_argument("--new-only", action="store_true", help="Never overwrite a clip that already exists")
     a = ap.parse_args()
     root = Path(__file__).resolve().parents[3]
-    data = json.loads((root / "content" / "play" / a.site / "missions.json").read_text(encoding="utf-8"))
+    source = Path(a.missions) if a.missions else root / "content" / "play" / a.site / "missions.json"
+    data = json.loads(source.read_text(encoding="utf-8"))
     lexicon = C.load_lexicon()
     only = set(a.only.split(",")) if a.only else None
     by_voice: dict[str, list[dict]] = {}
@@ -56,9 +66,13 @@ def main() -> int:
     stt = WhisperModel("small.en", device="cpu", compute_type="int8")
     tmp = C.SCRATCH / "world"
     tmp.mkdir(parents=True, exist_ok=True)
-    out_root = root / "public" / "play" / "worlds" / a.site / f"v{a.version}" / "audio"
+    out_root = Path(a.audio_out) if a.audio_out else root / "public" / "play" / "worlds" / a.site / f"v{a.version}" / "audio"
     report = []
     for voice, lines in by_voice.items():
+        if a.new_only:
+            lines = [l for l in lines if not (out_root / voice / f"{l['id']}.m4a").exists()]
+            if not lines:
+                continue
         engine_voice = ROLE_VOICES[voice]
         worker = R.Worker(voice, worker_cfg(engine_voice))
         for l in lines:
@@ -90,7 +104,7 @@ def main() -> int:
                            "wpm": round(wpm), "target_wpm": target, "speed": round(speed, 3)})
             print(f"{l['id']:10} {voice:16} {round(wpm):4} wpm  {'ok ' if ok else 'DIFF'}  {heard}", flush=True)
         worker.close()
-    rep = Path(__file__).resolve().parent / "reports" / "world_dialogue.json"
+    rep = Path(a.report) if a.report else Path(__file__).resolve().parent / "reports" / "world_dialogue.json"
     rep.write_text(json.dumps(report, indent=1, ensure_ascii=False), encoding="utf-8")
     good = sum(1 for r in report if r["match"])
     print(f"{good} of {len(report)} heard word for word")

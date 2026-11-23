@@ -1,0 +1,74 @@
+{
+  "_note": "Rig landmarks for the elephant, in the source model's coordinates (head towards -Y, Z up). Read by tools/play/blender/rig_ride.py. The source is read only. The raised rim on its back is pressed flat because a walled box on an elephant reads as war gear.",
+  "id": "elephant",
+  "src": "E:/heritage_assets/hampi/assets/generated/meshy/fig_elephant/fig_elephant.glb",
+  "out": "tools/play/out/rides/elephant_rigged.glb",
+  "scale": 2.4,
+  "tris": 12000,
+  "pillar_legs": true,
+  "foot_follow": 0.65,
+  "flatten": [{ "y": [-0.27, 0.36], "z": 0.525, "keep": 0.08 }],
+  "leg_radius": 0.14,
+  "leg_bind": 0.17,
+  "no_leg": [{ "x_abs_min": 0.23, "z_max": 0.05, "z_min": -0.52 }],
+  "points": {
+    "hip": [0.0, 0.42, 0.2],
+    "mid": [0.0, 0.05, 0.22],
+    "chest": [0.0, -0.22, 0.2],
+    "neck_base": [0.0, -0.36, 0.26],
+    "poll": [0.0, -0.5, 0.34],
+    "nose": [0.0, -0.66, 0.14]
+  },
+  "spine": ["hip", "mid", "chest", "neck_base", "poll", "nose"],
+  "seat": [0.0, -0.02, 0.56],
+  "seat_parent": "spine",
+  "legs": {
+    "fl": { "foot": [0.086, -0.388, -0.6], "top_z": -0.02, "knee": 0.46, "ankle": 0.12 },
+    "fr": { "foot": [-0.085, -0.211, -0.6], "top_z": -0.02, "knee": 0.46, "ankle": 0.12 },
+    "hl": { "foot": [0.123, 0.365, -0.6], "top_z": 0.0, "knee": 0.5, "ankle": 0.14 },
+    "hr": { "foot": [-0.117, 0.649, -0.6], "top_z": 0.0, "knee": 0.5, "ankle": 0.14 }
+  },
+  "chains": [
+    {
+      "name": "tail",
+      "parent": "body",
+      "radius": 0.09,
+      "points": [[0.0, 0.7, 0.3], [0.0, 0.8, 0.06], [0.0, 0.84, -0.2], [0.0, 0.92, -0.42]]
+    },
+    {
+      "name": "trunk",
+      "parent": "head",
+      "radius": 0.12,
+      "points": [[0.0, -0.64, 0.1], [0.0, -0.76, -0.12], [0.0, -0.78, -0.34], [0.0, -0.7, -0.5], [0.0, -0.58, -0.42]]
+    },
+    {
+      "name": "flap_l",
+      "parent": "head",
+      "radius": 0.3,
+      "points": [[0.17, -0.3, 0.32], [0.33, -0.3, 0.14]]
+    },
+    {
+      "name": "flap_r",
+      "parent": "head",
+      "radius": 0.3,
+      "points": [[-0.17, -0.3, 0.32], [-0.33, -0.3, 0.14]]
+    }
+  ],
+  "moves": {
+    "tail": 0.18,
+    "trunk": 0.06,
+    "flap": 0.12,
+    "idle": { "seconds": 5.0, "breath": 0.01, "nod": 0.02, "look": 0.025 },
+    "walk": {
+      "seconds": 1.05,
+      "stride": 1.25,
+      "duty": 0.72,
+      "lift": 0.13,
+      "flex": 0.3,
+      "bob": 0.018,
+      "nod": 0.025,
+      "roll": 0.012,
+      "phase": { "hr": 0.0, "fr": 0.25, "hl": 0.5, "fl": 0.75 }
+    }
+  }
+}

@@ -1,7 +1,7 @@
 {
   "slug": "tipu-summer-palace-bengaluru",
   "site": "tools/play/sites/tipu-summer-palace-bengaluru.json",
-  "version": 2,
+  "version": 3,
   "_note": "Open-world export config. Read by tools/play/export_world.py. Blender coordinates, metres, Z up.",
   "moment": {
     "date": "1791-03-01",
@@ -574,6 +574,18 @@
       "tris": 7000,
       "atlas": 512,
       "error": 0.3
+    },
+    {
+      "id": "horse",
+      "kind": "rigged",
+      "src": "tools/play/out/rides/horse_rigged.glb",
+      "atlas": 1024
+    },
+    {
+      "id": "elephant",
+      "kind": "rigged",
+      "src": "tools/play/out/rides/elephant_rigged.glb",
+      "atlas": 1024
     }
   ],
   "cards": {
@@ -616,6 +628,12 @@
   "resolve_top": 9,
   "web_actors": {
     "player": "player",
+    "ride_zones": {
+      "_note": "Where each animal may go, in Blender metres. allow: the whole footprint must be inside one of these. deny: no part of it may be inside any of these. A ride also obeys no_ride, the map edge, water, walls and steep ground. outside_walls: the line runs just outside the ditch, the gate outwork and every wall. court_and_avenue: the ground outside the palace court's north edge (the court is packed earth to y 26) and the avenue from Mackenzie's survey (object MW_INT_Avenue, half width 6.6 m, plus 0.9 m of verge).",
+      "outside_walls": { "deny": [[[275.7,107.6],[271.5,134.9],[265.0,161.6],[256.2,187.3],[244.3,211.6],[228.8,233.5],[212.4,254.1],[193.8,272.2],[175.5,289.5],[154.5,303.4],[134.2,316.7],[113.0,327.9],[91.7,337.9],[69.8,345.9],[47.6,351.9],[26.0,358.7],[3.7,362.6],[-18.6,367.6],[-41.3,370.6],[-64.5,372.6],[-88.2,373.5],[-112.5,373.2],[-136.7,369.8],[-161.8,365.9],[-186.8,359.6],[-211.7,350.9],[-236.7,340.5],[-260.5,326.8],[-283.4,310.7],[-305.1,292.3],[-324.5,271.1],[-341.3,247.5],[-354.2,221.5],[-363.0,193.8],[-369.3,165.4],[-373.1,136.6],[-374.3,107.6],[-371.1,78.7],[-364.3,50.6],[-353.3,24.0],[-339.2,-0.8],[-323.2,-23.9],[-305.5,-44.9],[-285.4,-63.3],[-265.0,-80.1],[-242.8,-93.9],[-221.3,-106.9],[-199.1,-117.7],[-176.8,-127.1],[-154.2,-134.4],[-131.6,-140.5],[-108.9,-144.5],[-86.5,-148.5],[-64.0,-151.4],[-41.3,-153.4],[-18.4,-154.4],[4.7,-153.4],[28.3,-152.3],[52.1,-149.0],[75.7,-143.5],[99.7,-136.6],[123.3,-127.5],[147.0,-116.9],[168.7,-102.4],[190.8,-87.2],[210.2,-68.5],[228.0,-47.9],[244.2,-25.5],[258.6,-1.6],[268.9,24.5],[275.0,51.8],[278.6,79.6]]] },
+      "court_and_avenue": { "allow": [[[-59.5,62.9],[-269.8,98.8],[-267.3,113.6],[-56.9,77.7]], [[-112,33],[-36,33],[-36,52],[-58,62],[-58,72.5],[-112,82]]] }
+    },
+    "ride_load_m": 75,
     "rides": {
       "cart": {
         "id": "bullock_cart",
@@ -625,7 +643,42 @@
           0,
           1.45,
           1.3
-        ]
+        ],
+        "speed": 3.6,
+        "turn": 0.9
+      },
+      "horse": {
+        "id": "horse",
+        "lazy": true,
+        "yaw": 180,
+        "half": [0.42, 1.0],
+        "top": 2.0,
+        "seat": [0, -0.03, 0],
+        "pose": { "thigh": [0.5, -0.74, 0.46], "shin": [0.14, -0.94, -0.3], "foot": [0.1, -0.45, 0.88] },
+        "zone": "outside_walls",
+        "walk": 2.0,
+        "speed": 7.6,
+        "accel": 2.4,
+        "turn": 1.5,
+        "pivot": 0.55,
+        "sound": "hoof",
+        "cam": { "height": 3.0, "dist": 6.6, "dist_portrait": 8.2 }
+      },
+      "elephant": {
+        "id": "elephant",
+        "lazy": true,
+        "yaw": 180,
+        "half": [0.92, 2.3],
+        "top": 3.0,
+        "seat": [0, 0.06, 0],
+        "pose": { "thigh": [0.82, -0.42, 0.4], "shin": [0.26, -0.88, -0.38], "foot": [0.15, -0.5, 0.85] },
+        "zone": "court_and_avenue",
+        "speed": 1.7,
+        "accel": 1.3,
+        "turn": 0.55,
+        "pivot": 0.6,
+        "sound": "elephant",
+        "cam": { "height": 5.2, "dist": 9.4, "dist_portrait": 11.5 }
       }
     }
   },
@@ -1225,6 +1278,16 @@
           9.14
         ],
         [
+          124.8,
+          -74.2,
+          9.14
+        ],
+        [
+          138.7,
+          -66.3,
+          9.14
+        ],
+        [
           141.6,
           -62.4,
           9.14
@@ -1243,6 +1306,19 @@
       "speed": 0.9
     }
   ],
+  "water": {
+    "_note": "Still water in the tanks, 1791 only. The tanks are key 11 on Mackenzie's sheet (fact W03). Their plan comes from the named objects. Level, rim and colours are ours: no source records them.",
+    "objects": "MW_INT_Tanks",
+    "fact": "W03",
+    "level": -0.5,
+    "rim_top": -0.34,
+    "rim_base": -0.85,
+    "rim_width": 0.6,
+    "keep_out": 0.4,
+    "deep": "#1b2c33",
+    "shallow": "#46564f",
+    "stone": "#a8927a"
+  },
   "today": {
     "_note": "Schematic. The palace in its garden, the Delhi Gate, plain city blocks. Street lines are not surveyed.",
     "roads": [
@@ -1345,7 +1421,7 @@
     "MW_GROUND",
     "MW_SKY"
   ],
-  "previous_version": 1,
+  "previous_version": 3,
   "edits": {
     "_note": "Game edits, in memory only. Every one is logged in docs/play/DECISIONS.md. The source doors are INFERRED; the opening behind them, the ramp and the causeway fill are ours.",
     "remove_faces": [
@@ -1477,7 +1553,6 @@
     ],
     "step": 1.0,
     "sources": "TSP_fortR_ditch_glacis|TSP_court_packed|TSP_verge_scatter|PLAY_causeway",
-    "no_walk": "MW_INT_Tanks",
     "min_walk_y": -1.7,
     "grid": 2.0,
     "limit": {
