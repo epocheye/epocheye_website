@@ -200,10 +200,18 @@ node tools/play/pack_actors.mjs <slug> --only <id> --version <N>
 
 4. **`rides` in `missions.json`:** `id`, `type`, `at`, `face_deg`, `label`. Optional: `note_facts`, `keys` and `keys_touch` (an extra control hint), `notice` (`text` and `tier`, shown while near or riding it, for a ride that is our reconstruction), and `credit` (added to the Credits view).
 
-Publish, or if only ride data changed, update `actors` in the published `world.json` and copy `missions.json`. Publish keeps only the files `missions.json` references, so **any clip or file not yet referenced there is dropped from the version folder**. Then prove it:
+Publish, or if only ride data changed, update `actors` in the published `world.json` and copy `missions.json`. Publish ships the files `world.json` and `missions.json` reference, plus **every dialogue clip in `tools/play/assets/world_voice/<slug>/`**, so lines rendered for a mission not merged yet survive it. Keep new clips in that folder. Any other file nothing references is dropped from the version folder. Then prove it:
 
 ```powershell
 $env:PLAY_BASE="http://localhost:3140"; node docs/play/lighthouse/scripts/world-rides.mjs <outDir> --preset high
 ```
 
-It drives each ride at each limit and at people with the keyboard, checks every pose against the world data at 20 cm spacing, tests boarding and leaving, and takes the screenshots. Its list of test positions is for this map.
+```powershell
+$env:PLAY_BASE="http://localhost:3140"; node docs/play/lighthouse/scripts/world-rides.mjs <outDir> --preset low --input touch --tests-only
+```
+
+```powershell
+$env:PLAY_BASE="http://localhost:3140"; node docs/play/lighthouse/scripts/world-rides.mjs <outDir> --preset high --input gamepad --tests-only
+```
+
+It drives each ride at each limit and at people with the chosen device, checks every pose against the world data at 20 cm spacing, checks a ride's notice stays on screen, tests boarding and leaving, and on the keyboard run takes the screenshots. `--only <text>` runs just the drives whose label contains that text. The test sets each ride down by hand, which a player cannot do, so it can land beside someone. That person counts against the 0.5 m limit only if the gap then closes. Its list of test positions is for this map.

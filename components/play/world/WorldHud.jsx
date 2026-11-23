@@ -344,18 +344,16 @@ export default function WorldHud(p) {
 			) : null}
 			{riding && showControls && !(touch && line) ? <p className="w-keys">{touch ? "Push the stick to drive" : "W to drive, A and D to steer"}. {rideNear?.[touch ? "keys_touch" : "keys"] ? `${rideNear[touch ? "keys_touch" : "keys"]}. ` : ""}People step aside, and your ride stops for them.</p> : null}
 
-			{rideNear?.notice && !note && !card ? (
+			{(rideNear?.notice || note) && !card ? (
 				<aside className="w-note" role="status">
-					<div className="w-note-item">
-						<p>{rideNear.notice.text}</p>
-						<Chip chip={{ tier: rideNear.notice.tier, label: "Our reconstruction" }} />
-					</div>
-				</aside>
-			) : null}
-
-			{note && !card ? (
-				<aside className="w-note">
-					{note.items.map((n) => (
+					{/* A place's fact can appear while riding, so it joins a ride's notice and never replaces it. */}
+					{rideNear?.notice ? (
+						<div className="w-note-item">
+							<p>{rideNear.notice.text}</p>
+							<Chip chip={{ tier: rideNear.notice.tier, label: "Our reconstruction" }} />
+						</div>
+					) : null}
+					{note?.items.map((n) => (
 						<div key={n.id} className="w-note-item">
 							<p>{n.text}</p>
 							<Chip chip={n.chip} />

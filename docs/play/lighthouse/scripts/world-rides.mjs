@@ -1,15 +1,22 @@
 // Proof for the rides: drives each one straight at each limit and at people, with the keyboard, and
 // records whether it stopped. Also takes the screenshots of each ride, mounted and not.
 //
-//   PLAY_BASE=http://localhost:3140 node docs/play/lighthouse/scripts/world-rides.mjs <outDir> [--preset low|medium|high] [--shots-only] [--tests-only]
+//   PLAY_BASE=http://localhost:3140 node docs/play/lighthouse/scripts/world-rides.mjs <outDir> [--preset low|medium|high] [--input keyboard|touch|gamepad] [--shots-only] [--tests-only]
+//
+// --input drives every test with that device: the real on-screen stick at phone size, or a fake gamepad.
 
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { BASE, SLUG, launch, sleep } from "./common.mjs";
+import { BASE, MOTO, SLUG, launch, sleep } from "./common.mjs";
 
 const outDir = process.argv[2] || "docs/play/lighthouse/rides";
 const at = process.argv.indexOf("--preset");
 const preset = at > 0 ? process.argv[at + 1] : "high";
+const inputAt = process.argv.indexOf("--input");
+const inputMode = inputAt > 0 ? process.argv[inputAt + 1] : "keyboard";
+const onlyAt = process.argv.indexOf("--only");
+const only = onlyAt > 0 ? process.argv[onlyAt + 1] : null; // run just the drives whose label contains this
+const picked = (rows) => rows.filter((row) => !only || row[0].includes(only));
 const shotsOnly = process.argv.includes("--shots-only");
 const testsOnly = process.argv.includes("--tests-only");
 const url = `${BASE}/play/${SLUG}/world?debug=1`;
@@ -55,14 +62,14 @@ const WALKERS = [
 ];
 
 const browser = await launch(["--use-angle=d3d11", "--ignore-gpu-blocklist", "--enable-gpu-rasterization"]);
-const report = { preset, first_load: {}, limits: [], people: [], walkers: [], boarding: [], shots: [] };
+const report = { preset, input: inputMode, first_load: {}, limits: [], people: [], walkers: [], boarding: [], controls: [], shots: [] };
 const errors = [];
 const glbs = [];
 let exit = 1;
 try {
 	await mkdir(outDir, { recursive: true });
 	const page = await browser.newPage();
-	await page.setViewport({ width: 1280, height: 720, deviceScaleFactor: 1 });
+	await page.setViewport(inputMode === "touch" ? MOTO : { width: 1280, height: 720, deviceScaleFactor: 1 });
 	page.on("pageerror", (e) => errors.push(String(e.message).slice(0, 240)));
 	page.on("console", (m) => m.type() === "error" && errors.push(m.text().slice(0, 240)));
 	page.on("response", (r) => {
@@ -78,6 +85,25 @@ try {
 			// storage blocked
 		}
 	}, preset);
+	if (inputMode === "gamepad") {
+		await page.evaluateOnNewDocument(() => {
+			window.__pad = null;
+			navigator.getGamepads = () => (window.__pad ? [window.__pad] : []);
+		});
+	}
+	// The real on-screen stick, through real touch events. 52 px is its full travel.
+	let thumb = null;
+	await page.exposeFunction("__stick", async (on, gallop) => {
+		if (!on) {
+			if (thumb) await page.touchscreen.touchEnd();
+			thumb = null;
+			return;
+		}
+		const box = await (await page.$(".w-stick")).boundingBox();
+		thumb = [box.x + box.width / 2, box.y + box.height / 2];
+		await page.touchscreen.touchStart(thumb[0], thumb[1]);
+		await page.touchscreen.touchMove(thumb[0], thumb[1] - (gallop ? 52 : 34));
+	});
 	await page.goto(url, { waitUntil: "domcontentloaded", timeout: 180000 });
 	await page.waitForSelector(".w-title .w-btn", { timeout: 180000 });
 	await page.evaluate(() => [...document.querySelectorAll(".w-title .w-btn")].find((b) => b.innerText === "Play muted").click());
@@ -89,7 +115,7 @@ try {
 	await page.waitForFunction(() => window.__playWorld.streamer.open, { timeout: 120000, polling: 250 });
 	report.first_load.animal_models_requested = [...glbs];
 
-	await page.evaluate(() => {
+	await page.evaluate((mode) => {
 		const rt = window.__playWorld;
 		rt.setObjective({ id: "proof", kind: "goto", at: [0, 0], radius: 0 }, null);
 		rt._arrived = true;
@@ -99,6 +125,22 @@ try {
 			if (on) keys.add(code);
 			else keys.delete(code);
 			window.dispatchEvent(new KeyboardEvent(on ? "keydown" : "keyup", { code }));
+		};
+		const pad = (y, trigger, a = false) => {
+			const btn = (p) => ({ pressed: p, value: p ? 1 : 0, touched: p });
+			const buttons = Array.from({ length: 16 }, () => btn(false));
+			buttons[0] = btn(a);
+			buttons[7] = btn(trigger);
+			window.__pad = { id: "test", index: 0, connected: true, mapping: "standard", axes: [0, y, 0, 0], buttons, timestamp: performance.now() };
+		};
+		// Forward on the chosen device. Below 0.72 of the stick is a walk, past it a gallop.
+		const control = async (on, gallop = false) => {
+			if (mode === "gamepad") pad(on ? (gallop ? -1 : -0.7) : 0, on && gallop);
+			else if (mode === "touch") await window.__stick(on, gallop);
+			else {
+				key("KeyW", on);
+				key("ShiftLeft", on && gallop);
+			}
 		};
 		const gap = (a, r) => {
 			const ox = a.group.position.x - r.group.position.x, oz = a.group.position.z - r.group.position.z;
@@ -142,6 +184,8 @@ try {
 		const crowd = () => [...rt.people, ...rt.storyNpcs.values()].filter((a) => a.group.visible);
 		window.__rides = {
 			key,
+			pad,
+			control,
 			gap,
 			wait,
 			place(id, from, to) {
@@ -158,17 +202,31 @@ try {
 				rt.mountRide(id);
 				rt.yaw = r.heading;
 				await wait(350);
-				key("KeyW", true);
-				if (gallop) key("ShiftLeft", true);
+				await control(true, gallop);
 				const t0 = performance.now();
+				let labelMissing = 0;
+				// The test sets the ride down by hand, which a player cannot do, so it can land beside
+				// someone. That person counts only if the gap then closes. Anyone else counts in full.
+				const setDown = new Map(crowd().map((a) => [a, gap(a, r)]));
+				const setDownNear = Math.min(Infinity, ...setDown.values());
+				let closestAt = null;
 				let over = 0, closest = Infinity, top = 0, lastMove = t0, px = r.group.position.x, pz = r.group.position.z, braked = false, prev = 0;
 				const seen = { no_ride: 0, water: 0, map_edge: 0, zone: 0, ditch: 0, raised: 0 };
 				while (performance.now() - t0 < seconds * 1000) {
 					rt.yaw = r.heading;
 					over = Math.max(over, rt._poseViolations(r, r.group.position.x, r.group.position.z, r.heading));
-					for (const a of crowd()) closest = Math.min(closest, gap(a, r));
+					for (const a of crowd()) {
+						const g = gap(a, r), began = setDown.get(a);
+						if (began !== undefined && began < 0.54 && g >= began - 0.02) continue;
+						if (g < closest) {
+							closest = g;
+							closestAt = { ms: Math.round(performance.now() - t0), ride_speed: +Math.abs(r.v).toFixed(2), person: rt.people.indexOf(a) };
+						}
+					}
 					top = Math.max(top, Math.abs(r.v));
 					audit(r, seen);
+					// A ride with a notice shows it the whole time it is ridden.
+					if (r.spec.notice && performance.now() - t0 > 600 && !document.querySelector(".w-note")?.innerText.includes(r.spec.notice.text)) labelMissing++;
 					if (Math.abs(r.v) < prev - 0.05 && Math.abs(r.v) > 0.05) braked = true;
 					prev = Math.abs(r.v);
 					if (Math.hypot(r.group.position.x - px, r.group.position.z - pz) > 0.03) {
@@ -181,11 +239,10 @@ try {
 					await wait(40);
 				}
 				const stopped = performance.now() - lastMove > 1500;
-				key("KeyW", false);
-				key("ShiftLeft", false);
+				await control(false);
 				await wait(350);
 				const end = [+r.group.position.x.toFixed(1), +(-r.group.position.z).toFixed(1)];
-				const out = { stopped, end, travelled_m: +Math.hypot(end[0] - from[0], end[1] - from[1]).toFixed(1), left_to_target_m: +Math.hypot(end[0] - to[0], end[1] - to[1]).toFixed(1), parts_over_a_limit: over, closest_person_m: closest === Infinity ? null : +closest.toFixed(2), top_speed: +top.toFixed(2), slowed_before_stopping: braked, audit: seen };
+				const out = { stopped, end, travelled_m: +Math.hypot(end[0] - from[0], end[1] - from[1]).toFixed(1), left_to_target_m: +Math.hypot(end[0] - to[0], end[1] - to[1]).toFixed(1), parts_over_a_limit: over, closest_person_m: closest === Infinity ? null : +closest.toFixed(2), closest_at: closestAt, set_down_beside_m: setDownNear === Infinity ? null : +setDownNear.toFixed(2), top_speed: +top.toFixed(2), slowed_before_stopping: braked, label_missing: labelMissing, audit: seen };
 				return out;
 			},
 			// Puts a walker on the ride's line and holds it still.
@@ -199,7 +256,7 @@ try {
 				rt.people[k].wait = 0.5;
 			},
 		};
-	});
+	}, inputMode);
 
 	const goTo = async (p) => {
 		await page.evaluate((q) => {
@@ -225,14 +282,14 @@ try {
 	report.first_load.after_walking_to_the_elephant = [...new Set(glbs)];
 
 	if (!shotsOnly) {
-		for (const [label, id, from, to, seconds, gallop] of LIMITS) {
+		for (const [label, id, from, to, seconds, gallop] of picked(LIMITS)) {
 			await goTo(from);
 			await sleep(400);
 			const r = await page.evaluate((a, b, c, d, e) => window.__rides.drive(a, b, c, d, e), id, from, to, seconds, gallop);
 			report.limits.push({ label, ride: id, from, to, ...r });
 			console.log(label, JSON.stringify(r));
 		}
-		for (const [label, id, from, to, seconds, gallop] of PEOPLE) {
+		for (const [label, id, from, to, seconds, gallop] of picked(PEOPLE)) {
 			await goTo(from);
 			await sleep(400);
 			const mid = [(from[0] + to[0]) / 2, (from[1] + to[1]) / 2];
@@ -257,7 +314,7 @@ try {
 			console.log(label, JSON.stringify(r));
 		}
 
-		for (const [label, id, from, to, seconds, gallop] of WALKERS) {
+		for (const [label, id, from, to, seconds, gallop] of picked(WALKERS)) {
 			await goTo(from);
 			await page.evaluate(() => window.__playWorld._shareRoutes());
 			await sleep(1600);
@@ -293,8 +350,61 @@ try {
 		}
 	}
 
-	// ---- A parked animal is solid, and walking straight at it leads round it.
+	// ---- On and off with the device itself: the prompt, a short drive, and the prompt again.
 	if (!shotsOnly) {
+		const press = async () => {
+			if (inputMode === "touch") await (await page.$(".w-prompt")).tap();
+			else if (inputMode === "gamepad") {
+				await page.evaluate(() => window.__rides.pad(0, false, true));
+				await sleep(250);
+				await page.evaluate(() => window.__rides.pad(0, false, false));
+			} else {
+				await page.keyboard.down("KeyE");
+				await sleep(80);
+				await page.keyboard.up("KeyE");
+			}
+		};
+		for (const [id, spot, face] of [["horse-1", [302, 110], [302, 60]], ["elephant-1", [-150, 86], [-110, 80]], ["cart-1", [-90, 72], [-60, 66]]]) {
+			await goTo([spot[0] + 3, spot[1] - 5]);
+			await page.evaluate((a, b, c) => {
+				const rt = window.__playWorld;
+				// The game may have put its own objective back, and only a roaming one shows ride prompts.
+				rt.setObjective({ id: "proof", kind: "goto", at: [0, 0], radius: 0 }, null);
+				rt._arrived = true;
+				const r = window.__rides.place(a, b, c);
+				const c0 = Math.cos(r.heading), s0 = Math.sin(r.heading);
+				rt.teleport([b[0] + c0 * (r.halfX + 1.2), b[1] + s0 * (r.halfX + 1.2)]);
+			}, id, spot, face);
+			await page.waitForFunction((a) => window.__playWorld.prompt?.kind === "ride" && window.__playWorld.prompt.id === a, { timeout: 15000, polling: 100 }, id);
+			await page.waitForSelector(".w-prompt", { timeout: 5000 });
+			const near = await page.evaluate((a) => {
+				const n = window.__playWorld.rides.get(a).spec.notice;
+				return { prompt: document.querySelector(".w-prompt").innerText, notice_ok: !n || !!document.querySelector(".w-note")?.innerText.includes(n.text) };
+			}, id);
+			await press();
+			await page.waitForFunction((a) => window.__playWorld.riding === a, { timeout: 6000, polling: 50 }, id);
+			await sleep(400);
+			const moved = await page.evaluate(async () => {
+				const rt = window.__playWorld, r = rt.rides.get(rt.riding);
+				rt.yaw = r.heading;
+				const from = [r.group.position.x, r.group.position.z];
+				await window.__rides.control(true, false);
+				await window.__rides.wait(1800);
+				await window.__rides.control(false);
+				await window.__rides.wait(900);
+				return +Math.hypot(r.group.position.x - from[0], r.group.position.z - from[1]).toFixed(2);
+			});
+			await page.waitForFunction(() => /Get down/.test(document.querySelector(".w-prompt")?.innerText || ""), { timeout: 6000, polling: 100 });
+			await press();
+			await page.waitForFunction(() => !window.__playWorld.riding, { timeout: 6000, polling: 50 });
+			const row = { ride: id, ...near, moved_m: moved, got_down: true };
+			report.controls.push(row);
+			console.log("controls", JSON.stringify(row));
+		}
+	}
+
+	// ---- A parked animal is solid, and walking straight at it leads round it.
+	if (!shotsOnly && inputMode === "keyboard") {
 		report.walk_round = [];
 		for (const [id, spot, face] of [["horse-1", [302, 110], [302, 60]], ["elephant-1", [-150, 86], [-110, 80]]]) {
 			for (const turn of [0, Math.PI / 2, Math.PI, -Math.PI / 2, 0.7]) {
@@ -330,7 +440,7 @@ try {
 	}
 
 	// ---- Screenshots
-	if (!testsOnly) {
+	if (!testsOnly && inputMode === "keyboard") {
 		await page.addStyleTag({ content: ".w-prompt, .w-keys { display: none !important; }" });
 		for (const [name, id, from, to] of [
 			["horse", "horse-1", [302, 110], [302, 60]],
@@ -398,16 +508,17 @@ try {
 		}
 	}
 	report.errors = [...new Set(errors)].slice(0, 12);
-	const crossed = (r) => r.parts_over_a_limit > 0 || r.audit.no_ride || r.audit.water || r.audit.map_edge || r.audit.zone || r.audit.ditch || (r.closest_person_m != null && r.closest_person_m < 0.45);
+	const crossed = (r) => r.parts_over_a_limit > 0 || r.audit.no_ride || r.audit.water || r.audit.map_edge || r.audit.zone || r.audit.ditch || r.label_missing || (r.closest_person_m != null && r.closest_person_m < 0.5);
 	const failed = [...report.limits.filter((r) => !r.stopped || crossed(r)), ...report.people.filter((r) => !r.stopped || crossed(r)), ...report.walkers.filter(crossed)];
 	const badBoard = report.boarding.filter((b) => !b.got_down || b.riding_after || b.inside_a_collider || !b.can_stand || !b.on_connected_ground);
 	report.failed = failed.map((f) => f.label);
 	report.failed_boarding = badBoard.map((b) => b.label);
 	report.failed_walk_round = (report.walk_round || []).filter((w) => !w.arrived || w.closest_m < 0.3);
-	exit = report.errors.length || failed.length || badBoard.length || report.failed_walk_round.length ? 1 : 0;
+	report.failed_controls = report.controls.filter((c) => !c.notice_ok || !(c.moved_m > 0.3));
+	exit = report.errors.length || failed.length || badBoard.length || report.failed_walk_round.length || report.failed_controls.length ? 1 : 0;
 } finally {
 	await browser.close();
 }
 await writeFile(path.join(outDir, "rides.json"), JSON.stringify(report, null, 1));
-console.log(JSON.stringify({ first_load: report.first_load, failed: report.failed, failed_boarding: report.failed_boarding, failed_walk_round: report.failed_walk_round, errors: report.errors }, null, 1));
+console.log(JSON.stringify({ first_load: report.first_load, failed: report.failed, failed_boarding: report.failed_boarding, failed_walk_round: report.failed_walk_round, failed_controls: report.failed_controls, errors: report.errors }, null, 1));
 process.exit(exit);

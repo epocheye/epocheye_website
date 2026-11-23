@@ -6,6 +6,8 @@ GATE 1 was answered: "Yes, start Phase 2". Phase 1 is on `feat/open-world`. Noth
 
 **2026-11-23, world v3 (not committed).** Fixed: the era-shift trap over the ditch and tanks, water in the three tanks, pin holes at the cell seams, and the sentry route through a block. Missions 0 and 1 finished at phone and PC settings and the full route passed, on a dev server with emulated phone settings. Not measured: a production build or a real phone. The server on port 3105 keeps its older version until it is rebuilt.
 
+**2026-11-23, rides proved.** The three rides were put through 28 test drives (18 at limits, 4 at a standing person, 6 among walkers), once each with keyboard, touch and an emulated gamepad: no ride crossed a limit or closed to within 0.5 m of a person. The test can set a ride down closer than that by hand, and those starts are excluded unless the gap then closes. Publish now keeps the 27 new voice clips. Missions 2 to 5 are still not merged. Not measured: a real phone, a real gamepad or a production build. **Looks broken, not fixed:** the distant pettah houses are torn, jagged shapes from the open ground where the horse rides.
+
 **Preview (needs your Vercel sign-in):** https://epocheye-website-git-feat-open-world-sambit-singhas-projects.vercel.app/play/tipu-summer-palace-bengaluru/world
 
 Vercel reports this build as Ready, but I could not open it myself because it is behind your sign-in. Every check below ran on a local production build of the same code.

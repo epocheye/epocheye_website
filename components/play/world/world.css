@@ -213,7 +213,10 @@
 
 /* Follows the same touch flag that mounts the stick, so a touchscreen laptop gets this layout too. */
 .w-hud.is-touch .w-minimap { width: 112px; height: 112px; left: auto; right: max(14px, env(safe-area-inset-right)); top: 62px; bottom: auto; }
-.w-hud.is-touch .w-keys { bottom: 176px; max-width: calc(100vw - 32px); }
+/* Above the prompt, so the hint shown while riding never covers "Get down", and gone after a few
+   seconds, so it does not sit over the animal for the whole ride. */
+.w-hud.is-touch .w-keys { bottom: 232px; max-width: calc(100vw - 32px); animation: w-keys-out 0.5s 6s forwards; }
+@keyframes w-keys-out { to { opacity: 0; visibility: hidden; } }
 .w-hud.is-touch .w-prompt, .w-hud.is-touch .w-action { bottom: 172px; }
 .w-hud.is-touch .w-objective { max-width: calc(100vw - 190px); font-size: 13px; }
 

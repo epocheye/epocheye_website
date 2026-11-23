@@ -13,6 +13,7 @@ Bakes write only to tools/play/out/world/. Publish builds the whole version in
 tools/play/out/world/_publish/, checks that every file world.json names is there, and only then
 swaps it into public/. The version it replaced stays in _publish/ as v<N>.previous until the next
 publish. Actors and audio are made by their own tools and are carried over from the live version.
+Dialogue clips in tools/play/assets/world_voice/<slug>/ are always published.
 """
 import argparse, atexit, json, math, os, shutil, subprocess, sys, time, uuid
 from pathlib import Path
@@ -149,6 +150,19 @@ def referenced_files(world, missions):
             if not l.get("beat"):
                 files.add(f"audio/{missions['voices'][l['speaker']]}/{l['id']}.m4a")
     return files, problems
+
+
+def carry_voice(slug, staged):
+    """Every rendered dialogue clip ships, whether or not missions.json uses it yet, so a publish
+    cannot drop lines written for a later mission. The assets folder is their source, so it wins."""
+    source = ROOT / "tools" / "play" / "assets" / "world_voice" / slug
+    carried = set()
+    for clip in sorted(source.rglob("*.m4a")) if source.is_dir() else []:
+        rel = f"audio/{clip.relative_to(source).as_posix()}"
+        (staged / rel).parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(clip, staged / rel)
+        carried.add(rel)
+    return carried
 
 
 def swap_into_place(staged, dest):
@@ -374,6 +388,7 @@ def publish(slug, cfg):
         if rel.startswith(("actors/", "audio/")) and (carried / rel).is_file():
             (staged / rel).parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(carried / rel, staged / rel)
+    files.update(carry_voice(slug, staged))
     problems += [f"missing file {rel}" for rel in sorted(files) if not (staged / rel).is_file()]
     if problems:
         sys.exit("Not published, the live version is unchanged:\n  " + "\n  ".join(problems))
