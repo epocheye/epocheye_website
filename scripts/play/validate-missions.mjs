@@ -9,6 +9,8 @@
 //   - every beat, NPC, record, ride, voice and evidence reference resolves
 //   - the game's title, tagline, past era and credit lines are present
 //   - no em or en dashes, no prices, none of the other game's name or on-screen phrases
+//   - the player is always told what to do and why: a premise, a job per mission, a plain action
+//     and a reason per objective, a marker for every place, a card for each era shift and restoration
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -24,6 +26,10 @@ const OBJECTIVES = new Set(["goto", "story", "talk", "record", "ride", "choice",
 const BEAT_KINDS = { choice: "choice", order: "order", reveal: "reveal", proof: "proof", vote: "vote" };
 const TIERS = new Set(["record", "reconstruction", "legend", "unknown", "reading"]);
 const RIDES = new Set(["cart", "horse", "elephant"]);
+// An objective must say what to do. These words alone do not.
+const VAGUE = /^(listen|look|watch|wait|continue|next|go|go on|proceed|explore|read|talk)\b[.!]?$|^listen\b/i;
+const MAX_ACTION = 60;
+const MAX_WHY = 90;
 
 function beatTypes(story) {
 	const types = new Map();
@@ -51,6 +57,24 @@ function checkCopy(where, text, errors) {
 	if (THEIR_WORDS.test(text)) errors.push(`${where}: another game's name or phrase`);
 }
 
+// New on-screen copy: an instruction needs no fact id, but a number, a date or a real person does.
+function checkStated(where, text, ids, errors) {
+	if (typeof text !== "string" || !text.trim()) return errors.push(`${where}: required`);
+	checkCopy(where, text, errors);
+	if (!ids?.length && NUMBERISH.test(text)) errors.push(`${where}: states a number or date with no fact id`);
+	if (!ids?.length && REAL_PEOPLE.test(text)) errors.push(`${where}: names a real person with no fact id`);
+}
+
+// Where an objective sends the player, or null if it is done where they stand.
+function placeOf(o, npcs, records, rides) {
+	if (o.kind === "goto" || o.kind === "sketch_compare" || o.kind === "climb") return o.at ?? null;
+	if (o.kind === "look_at") return o.from ?? null;
+	if (o.kind === "talk") return npcs.get(o.npc)?.at ?? null;
+	if (o.kind === "record") return records.get(o.record)?.at ?? null;
+	if (o.kind === "ride") return o.at && rides.get(o.ride)?.at ? o.at : null;
+	return undefined;
+}
+
 // site is the pack's site.json when it is on disk: panorama nodes and restorations are checked against it.
 export function validateMissions(data, story, site = null) {
 	const errors = [];
@@ -76,6 +100,12 @@ export function validateMissions(data, story, site = null) {
 	for (const field of ["title", "tagline"]) {
 		if (typeof data[field] !== "string" || !data[field].trim()) errors.push(`${field}: required`);
 		checkCopy(field, data[field], errors);
+	}
+	if (!Array.isArray(data.premise) || data.premise.length !== 3) errors.push("premise: needs three lines: who you are, what you carry, your job");
+	for (const [i, l] of (Array.isArray(data.premise) ? data.premise : []).entries()) {
+		checkStated(`premise[${i}].label`, l.label, ["label"], errors);
+		checkStated(`premise[${i}]`, l.text, l.facts, errors);
+		needFacts(`premise[${i}]`, l.facts);
 	}
 	const past = data.eras?.past;
 	if (typeof past !== "string" || !past.trim()) errors.push("eras.past: required");
@@ -146,6 +176,10 @@ export function validateMissions(data, story, site = null) {
 		needFacts(`mission ${m.id}`, m.place_note_facts);
 		if (m.place_note && !m.place_note_facts?.length) errors.push(`mission ${m.id}: a place note needs a fact id`);
 		if (!eraIds.has(m.era)) errors.push(`mission ${m.id}: unknown era ${m.era}`);
+		checkStated(`mission ${m.id} job`, m.job, m.job_facts, errors);
+		needFacts(`mission ${m.id} job`, m.job_facts);
+		if (m.where != null) checkStated(`mission ${m.id} where`, m.where, m.where_facts, errors);
+		needFacts(`mission ${m.id} where`, m.where_facts);
 		if (m.end) {
 			for (const k of ["splash", "place", "year"]) {
 				if (typeof m.end[k] !== "string" || !m.end[k].trim()) errors.push(`mission ${m.id}: end.${k} required`);
@@ -167,7 +201,34 @@ export function validateMissions(data, story, site = null) {
 		for (const o of m.objectives || []) {
 			const where = `objective ${o.id}`;
 			if (!OBJECTIVES.has(o.kind)) errors.push(`${where}: unknown kind ${o.kind}`);
-			checkCopy(where, o.text, errors);
+			checkStated(`${where} text`, o.text, o.why_facts, errors);
+			checkStated(`${where} why`, o.why, o.why_facts, errors);
+			needFacts(`${where} why`, o.why_facts);
+			if (typeof o.text === "string" && VAGUE.test(o.text.trim())) errors.push(`${where}: "${o.text}" does not say what to do`);
+			if (typeof o.text === "string" && o.text.length > MAX_ACTION) errors.push(`${where}: action is over ${MAX_ACTION} characters`);
+			if (typeof o.why === "string" && o.why.length > MAX_WHY) errors.push(`${where}: why is over ${MAX_WHY} characters`);
+			if (typeof o.why === "string" && typeof o.text === "string" && o.why.trim().toLowerCase() === o.text.trim().toLowerCase()) errors.push(`${where}: why only repeats the action`);
+			const place = placeOf(o, npcs, records, rides);
+			if (place !== undefined && !(Array.isArray(place) && place.length >= 2)) errors.push(`${where}: no marker position`);
+			if (o.kind === "era") {
+				const e = o.explain;
+				if (!e?.title || !e.go || !e.lines?.length) errors.push(`${where}: an era shift needs an explain card with title, lines and go`);
+				for (const [i, text] of [e?.title, e?.go, ...(e?.lines || [])].entries()) checkStated(`${where} explain[${i}]`, text, e?.facts, errors);
+				needFacts(`${where} explain`, e?.facts);
+				const last = m.objectives[m.objectives.length - 1] === o;
+				const nextMission = data.missions[data.missions.indexOf(m) + 1];
+				if (!o.arrive && !(last && nextMission?.where)) errors.push(`${where}: after the shift the player must be told where they are (arrive, or the next mission's where)`);
+				if (o.arrive) {
+					for (const [i, text] of [o.arrive.title, ...(o.arrive.lines || [])].entries()) checkStated(`${where} arrive[${i}]`, text, o.arrive.facts, errors);
+					needFacts(`${where} arrive`, o.arrive.facts);
+				}
+			}
+			if (o.kind === "restore") {
+				if (!o.done?.title || !o.done?.why || !o.done?.facts?.length) errors.push(`${where}: a restoration needs a done card with title, why and fact ids`);
+				checkStated(`${where} done title`, o.done?.title, o.done?.facts, errors);
+				checkStated(`${where} done why`, o.done?.why, o.done?.facts, errors);
+				needFacts(`${where} done`, o.done?.facts);
+			}
 			for (const b of o.beats || []) needBeat(where, b);
 			if (o.beat) needBeat(where, o.beat);
 			if (o.kind === "talk" && !npcs.has(o.npc)) errors.push(`${where}: unknown npc ${o.npc}`);

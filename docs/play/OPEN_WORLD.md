@@ -163,6 +163,17 @@ A `restore` objective either names material `classes` (the world's own shader) o
 
 Other mission fields: `place_note` with `place_note_facts` (a reconstruction label on the intro card), `end` with custom `splash`, `place` and `year`, and `staging.ruler`: a distant figure with `figure`, `at`, `min_view_distance_m` and `visible_during`. The validator requires a staged ruler to be silent, unlabelled, at least 10 m away and built from a role figure.
 
+**Telling the player what to do.** The validator fails a world that does not:
+
+- `premise` (top level): three lines on the title screen, `label` and `text`: who you are, what you carry, your job.
+- `job` on every mission: the "Your job" line on its intro card. The card stays up until the player starts it. `where` adds a line saying where and when they are, for a mission that opens straight after an era shift.
+- `text` and `why` on every objective: the action in plain words, and one short reason. A bare "Listen" fails. The panel adds "Step n of N". Any location objective needs a position, so it gets a marker and a minimap point.
+- `explain` on every `era` objective: `title`, `lines` and `go`, shown before the shift. `arrive` (`title`, `lines`, `facts`) says where they are after it, unless the shift ends the mission and the next mission has `where`.
+- `done` on every `restore` objective: `title`, `why` and `facts`. The game adds how many restorations are done and what comes next.
+- A number, date or real name in any of this needs fact ids: `why_facts`, `job_facts`, `where_facts`, or the card's `facts`.
+
+A `story` objective never plays by itself. The player presses E or taps "Hear what happened here". While it plays, E or a tap is the next line and X or "Skip all" ends it.
+
 Story beats are referenced by id from `story.json` and never copied, so facts, tiers and hedges stay in one place.
 
 ## Add an era

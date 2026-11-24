@@ -206,6 +206,16 @@ function installBot() {
 			}
 			return;
 		}
+		// A card that explains the Epocheye, says where you are, or says what you just restored.
+		const cardGo = document.querySelector(".w-explain-go");
+		if (cardGo) {
+			stopAll();
+			if (now > nextTap) {
+				nextTap = now + 900;
+				cardGo.click();
+			}
+			return;
+		}
 		const sub = document.querySelector(".w-subtitle-tap");
 		if (sub && !document.querySelector(".w-order")) {
 			stopAll();
@@ -314,6 +324,10 @@ function installBot() {
 		}
 		const h = rt.hud();
 		const wp = h.waypoint;
+		if (!rt.covered && ["goto", "talk", "record", "ride", "sketch_compare", "climb", "look_at"].includes(o?.kind) && !rt.blocked) {
+			if (!wp || !rt.beacon.visible) (bot.noMarker ||= new Set()).add(o.id);
+			else (bot.marked ||= new Set()).add(o.id);
+		}
 		if (!wp || rt.blocked) {
 			stopAll();
 			return;
@@ -531,6 +545,8 @@ try {
 			log: b.log.map((l) => l.label),
 			splashes: b.splashes,
 			missing_prompts: b.noPrompt || 0,
+			objectives_with_marker: b.marked ? b.marked.size : 0,
+			objectives_without_marker: b.noMarker ? [...b.noMarker].filter((id) => !b.marked?.has(id)) : [],
 			stuck: b.stuck,
 			stuck_at: b.stuckAt.slice(0, 12),
 			frames: f.length,

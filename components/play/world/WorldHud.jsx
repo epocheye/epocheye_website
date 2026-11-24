@@ -8,7 +8,7 @@ import NextImage from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { textFor } from "@/lib/play/story/engine";
-import { eraProfile } from "@/lib/play/world/missions";
+import { eraProfile, stepOf } from "@/lib/play/world/missions";
 import { PRESETS } from "@/lib/play/world/quality";
 import { Switch } from "@/components/play/ui";
 
@@ -218,15 +218,10 @@ function LookPad({ input }) {
 	return <div ref={ref} className="w-lookpad" aria-hidden="true" />;
 }
 
-function MissionCard({ mission, chip, onBegin }) {
-	useEffect(() => {
-		const t = setTimeout(onBegin, 3400);
-		return () => clearTimeout(t);
-		// Timed once per mission.
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [mission.id]);
+// Stays up until the player starts the mission, so the job can be read before anything moves.
+function MissionCard({ mission, chip, touch, onBegin }) {
 	return (
-		<button type="button" className="w-mission" onClick={onBegin} aria-label={`${mission.title}. Start mission`}>
+		<button type="button" className="w-mission" onClick={onBegin} aria-label={`${mission.title}. ${mission.where ? `${mission.where} ` : ""}Your job: ${mission.job || ""} Start mission`}>
 			<span className="w-mission-n">Mission {mission.n}</span>
 			<span className="w-mission-title">{mission.title}</span>
 			<span className="w-mission-place">{mission.place_line}</span>
@@ -236,7 +231,37 @@ function MissionCard({ mission, chip, onBegin }) {
 					<span>{mission.place_note}</span>
 				</span>
 			) : null}
+			{mission.where ? <span className="w-mission-where">{mission.where}</span> : null}
+			{mission.job ? (
+				<span className="w-mission-job">
+					<span className="w-mission-job-h">Your job</span>
+					<span>{mission.job}</span>
+				</span>
+			) : null}
+			<span className="w-mission-go">{touch ? null : <kbd>E</kbd>}{touch ? "Tap to start" : "Start"}</span>
 		</button>
+	);
+}
+
+// A card the player reads and closes: what the Epocheye does, where they have arrived, or what they
+// just restored. The next step comes from the live objective.
+function InfoCard({ kicker, title, lines, chip, next, go, touch, onGo }) {
+	return (
+		<div className="w-info" role="dialog" aria-label={title}>
+			<div className="w-info-card">
+				{kicker ? <p className="w-info-kicker">{kicker}</p> : null}
+				<h2 className="w-info-title">{title}</h2>
+				{(lines || []).map((l) => <p key={l} className="w-info-line">{l}</p>)}
+				{chip ? <Chip chip={chip} /> : null}
+				{next ? (
+					<p className="w-info-next">
+						<span>Next</span>
+						{next}
+					</p>
+				) : null}
+				<button type="button" className="w-btn is-hot w-explain-go" onClick={onGo}>{touch ? null : <kbd>E</kbd>}{go}</button>
+			</div>
+		</div>
 	);
 }
 
@@ -261,7 +286,7 @@ function Chip({ chip }) {
 const findProof = (story) => story.chapters.flatMap((c) => c.beats).find((b) => b.type === "proof") || null;
 
 export default function WorldHud(p) {
-	const { slug, rt, world, missions, site, packVersion, packFile, input, touch, phase, progress, state, mission, objective, prompt, riding, line, card, note, choice, shifting, restoring, talking, sound, presetId, pano, sketch, lookHeld, order, missionChip, liveBeat } = p;
+	const { slug, rt, world, missions, site, packVersion, packFile, input, touch, phase, progress, state, mission, objective, prompt, riding, line, card, note, choice, shifting, restoring, talking, sound, presetId, pano, sketch, lookHeld, order, missionChip, liveBeat, panel } = p;
 	const [menu, setMenu] = useState(false);
 	// The ride being ridden, or the one the player is about to board.
 	const rideNear = missions.rides?.find((r) => r.id === (riding || (prompt?.kind === "ride" ? prompt.id : null))) || null;
@@ -278,6 +303,16 @@ export default function WorldHud(p) {
 				<p className="w-kicker">Epocheye Play</p>
 				<h1 className="w-title-h">{missions.title || "Open world"}</h1>
 				{missions.tagline ? <p className="w-title-sub">{missions.tagline}</p> : null}
+				{missions.premise?.length ? (
+					<dl className="w-premise">
+						{missions.premise.map((l) => (
+							<div key={l.label}>
+								<dt>{l.label}</dt>
+								<dd>{l.text}</dd>
+							</div>
+						))}
+					</dl>
+				) : null}
 				<div className="w-title-actions">
 					<button type="button" className="w-btn is-hot" onClick={() => p.onEnter(true)}>Play with sound</button>
 					<button type="button" className="w-btn" onClick={() => p.onEnter(false)}>Play muted</button>
@@ -297,7 +332,9 @@ export default function WorldHud(p) {
 		);
 	}
 
-	const showControls = !choice && !shifting && !restoring && !pano && !sketch && !order && state.phase === "play";
+	const explain = objective?.kind === "era" && objective.explain && !shifting ? objective.explain : null;
+	const step = objective ? stepOf(state, missions) : null;
+	const showControls = !panel && !explain && !choice && !shifting && !restoring && !pano && !sketch && !order && state.phase === "play";
 	const lens = site.story.default_lens || "traveller";
 	const say = (value) => textFor(value, lens);
 	return (
@@ -305,9 +342,13 @@ export default function WorldHud(p) {
 			{touch && !pano ? <LookPad input={input} /> : null}
 			{pano ? null : <Minimap rt={rt} world={world} inPast={inPast} />}
 			{objective ? (
-				<div className="w-objective" aria-live="polite">
+				<div className={`w-objective${line ? " is-compact" : ""}`} aria-live="polite">
 					<span className="w-objective-era">{inPast ? era : "Today"}</span>
-					<span>{objective.text}</span>
+					<span className="w-objective-body">
+						<span className="w-objective-text">{objective.text}</span>
+						{objective.why ? <span className="w-objective-why">{objective.why}</span> : null}
+						{step ? <span className="w-objective-step">Step {step.n} of {step.of}</span> : null}
+					</span>
 					{objective.kind === "look_at" ? (
 						<span className="w-look" role="progressbar" aria-label="Holding the view" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(lookHeld * 100)}>
 							<span style={{ width: `${Math.round(lookHeld * 100)}%` }} />
@@ -344,12 +385,18 @@ export default function WorldHud(p) {
 				</div>
 			) : null}
 
-			{state.phase === "intro" && mission ? <MissionCard mission={mission} chip={missionChip} onBegin={p.onBegin} /> : null}
+			{state.phase === "intro" && mission ? <MissionCard mission={mission} chip={missionChip} touch={touch} onBegin={p.onBegin} /> : null}
 
-			{objective?.kind === "era" && !shifting && !riding && !talking ? (
+			{explain ? <InfoCard kicker={objective.text} title={explain.title} lines={explain.lines} go={explain.go} touch={touch} onGo={p.onWake} /> : null}
+			{panel ? <InfoCard kicker={panel.kicker} title={panel.title} lines={panel.lines} chip={panel.chip} next={objective?.text} go="Continue" touch={touch} onGo={p.onPanelClose} /> : null}
+
+			{objective?.kind === "story" && !panel && !talking && !line ? (
+				<button type="button" className="w-action is-hot" onClick={p.onStory}>{keyHint}Hear what happened here</button>
+			) : null}
+			{objective?.kind === "era" && !objective.explain && !shifting && !riding && !talking ? (
 				<button type="button" className="w-action is-hot" onClick={p.onWake}>{keyHint}{objective.text}</button>
 			) : null}
-			{objective?.kind === "restore" && !restoring && !riding && !talking && !line ? (
+			{objective?.kind === "restore" && !panel && !restoring && !riding && !talking && !line ? (
 				<button type="button" className="w-action is-hot" onClick={p.onRestore}>{keyHint}{objective.text}</button>
 			) : null}
 			{pano && objective?.kind === "record" && !talking ? (
@@ -366,8 +413,8 @@ export default function WorldHud(p) {
 			) : null}
 
 			{touch && showControls && !talking ? <Joystick input={input} /> : null}
-			{!touch && showControls && state.mission === 0 && state.objective === 0 ? (
-				<p className="w-keys">WASD to walk. Shift to run. Mouse to look. E to interact.</p>
+			{showControls && state.mission === 0 && state.objective === 0 ? (
+				<p className="w-keys">{touch ? "Push the stick to walk. Drag anywhere to look. Follow the glowing marker." : "WASD to walk. Shift to run. Mouse to look. E to interact. Follow the glowing marker."}</p>
 			) : null}
 			{riding && showControls && !(touch && line) ? <p className="w-keys">{touch ? "Push the stick to drive" : "W to drive, A and D to steer"}. {rideNear?.[touch ? "keys_touch" : "keys"] ? `${rideNear[touch ? "keys_touch" : "keys"]}. ` : ""}People step aside, and your ride stops for them.</p> : null}
 
@@ -407,11 +454,22 @@ export default function WorldHud(p) {
 
 			{line ? (
 				<div className="w-subtitle">
+					{line.of > 1 || line.label ? (
+						<div className="w-subtitle-head">
+							<span>{line.label || line.role}</span>
+							<span className="w-subtitle-bar" aria-hidden="true"><span style={{ width: `${Math.round((line.at / line.of) * 100)}%` }} /></span>
+							<span>{line.at} of {line.of}</span>
+						</div>
+					) : null}
 					<button type="button" className="w-subtitle-tap" onClick={p.onSkip} aria-label={`${line.role ? `${line.role}: ` : ""}${line.text}. Next line`}>
-						{line.role ? <span className="w-speaker">{line.role}</span> : null}
+						{line.role && (line.label || line.of <= 1) ? <span className="w-speaker">{line.role}</span> : null}
 						<span key={line.key} className="w-subtitle-text">{line.text}</span>
 					</button>
 					<Chip chip={line.chip} />
+					<div className="w-subtitle-foot">
+						<button type="button" onClick={p.onSkip}>{touch ? null : <kbd>E</kbd>}{touch ? "Tap for next line" : "Next line"}</button>
+						{line.of > 1 ? <button type="button" onClick={p.onSkipAll}>{touch ? null : <kbd>X</kbd>}Skip all</button> : null}
+					</div>
 				</div>
 			) : null}
 

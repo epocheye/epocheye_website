@@ -55,9 +55,10 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	justify-content: center;
+	justify-content: safe center;
 	gap: 14px;
 	padding: 24px;
+	overflow-y: auto;
 	text-align: center;
 	touch-action: auto;
 	background:
@@ -76,6 +77,20 @@
 	text-shadow: 0 4px 0 rgba(21, 11, 24, 0.45);
 }
 .w-title-sub { margin: 0; font-size: 16px; color: rgba(255, 255, 255, 0.86); }
+.w-premise {
+	display: grid;
+	gap: 10px;
+	width: min(560px, 100%);
+	margin: 6px 0 0;
+	padding: 14px 18px;
+	border-radius: 14px;
+	background: rgba(21, 11, 24, 0.5);
+	text-align: left;
+	backdrop-filter: blur(6px);
+}
+.w-premise > div { display: grid; grid-template-columns: 92px 1fr; gap: 12px; align-items: baseline; }
+.w-premise dt { font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--w-gold); }
+.w-premise dd { margin: 0; font-size: 16px; line-height: 1.35; color: #fff; }
 .w-title-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 10px; }
 .w-bar { width: min(320px, 76vw); height: 6px; border-radius: 6px; background: rgba(255, 255, 255, 0.22); overflow: hidden; }
 .w-bar span { display: block; height: 100%; background: linear-gradient(90deg, var(--w-gold), var(--w-hot)); transition: width 0.25s; }
@@ -101,15 +116,21 @@
 	top: max(14px, env(safe-area-inset-top));
 	left: max(16px, env(safe-area-inset-left));
 	display: flex;
-	align-items: center;
+	align-items: flex-start;
 	gap: 10px;
-	max-width: calc(100vw - 190px);
-	padding: 8px 14px 8px 8px;
+	width: max-content;
+	max-width: min(460px, calc(100vw - 190px));
+	padding: 8px 14px 9px 8px;
 	border-radius: 10px;
-	background: var(--w-glass);
+	background: rgba(21, 11, 24, 0.74);
 	font-weight: 600;
 	backdrop-filter: blur(6px);
 }
+.w-objective-body { display: grid; gap: 2px; min-width: 0; }
+.w-objective-text { font-size: 16px; line-height: 1.22; }
+.w-objective-why { font-size: 13px; font-weight: 500; line-height: 1.3; color: rgba(255, 255, 255, 0.82); }
+.w-objective-step { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--w-gold); }
+.w-objective.is-compact .w-objective-why, .w-objective.is-compact .w-objective-step { display: none; }
 .w-objective-era {
 	flex: none;
 	padding: 2px 8px;
@@ -167,6 +188,8 @@
 	left: 50%;
 	bottom: 150px;
 	transform: translateX(-50%);
+	width: max-content;
+	max-width: calc(100vw - 32px);
 	min-height: 56px;
 	padding: 12px 30px;
 	border: 0;
@@ -175,9 +198,9 @@
 	color: #fff;
 	font-family: var(--w-display);
 	font-size: 24px;
+	line-height: 1.1;
 	letter-spacing: 0.03em;
 	text-transform: uppercase;
-	white-space: nowrap;
 	box-shadow: 0 0 34px rgba(255, 106, 61, 0.7);
 	animation: w-pulse 1.8s ease-in-out infinite;
 }
@@ -218,7 +241,17 @@
 .w-hud.is-touch .w-keys { bottom: 232px; max-width: calc(100vw - 32px); animation: w-keys-out 0.5s 6s forwards; }
 @keyframes w-keys-out { to { opacity: 0; visibility: hidden; } }
 .w-hud.is-touch .w-prompt, .w-hud.is-touch .w-action { bottom: 172px; }
-.w-hud.is-touch .w-objective { max-width: calc(100vw - 190px); font-size: 13px; }
+.w-hud.is-touch .w-objective { max-width: calc(100vw - max(16px, env(safe-area-inset-left)) - max(14px, env(safe-area-inset-right)) - 138px); padding: 6px 10px 7px 6px; gap: 7px; }
+.w-hud.is-touch .w-objective-era { padding: 1px 6px; font-size: 13px; }
+.w-hud.is-touch .w-objective-text { font-size: 14px; }
+.w-hud.is-touch .w-objective-why { font-size: 12px; }
+.w-hud.is-touch .w-objective-step { font-size: 10px; }
+.w-hud.is-touch .w-action { padding: 10px 20px; font-size: 20px; }
+.w-hud.is-touch .w-icon { padding: 6px 9px; font-size: 12px; }
+/* Below the objective and the minimap, whatever height the objective wraps to. */
+.w-hud.is-touch .w-note { top: calc(max(14px, env(safe-area-inset-top)) + 168px); width: min(340px, calc(100vw - 32px)); }
+.w-hud.is-touch .w-evidence { top: 84px; }
+.w-hud.is-touch:has(.w-evidence) .w-minimap { visibility: hidden; }
 
 /* ---- story */
 
@@ -242,6 +275,8 @@
 }
 /* Clear of the stick: above it when upright, beside it when the phone is on its side. */
 .w-hud.is-touch .w-subtitle { bottom: calc(max(26px, env(safe-area-inset-bottom)) + 142px); font-size: 16px; }
+/* The stick is hidden while someone is speaking, so the caption can use the bottom of the screen. */
+.w-hud.is-touch:not(:has(.w-stick)) .w-subtitle { bottom: max(14px, env(safe-area-inset-bottom)); }
 @media (orientation: landscape) {
 	.w-hud.is-touch .w-subtitle {
 		left: calc(max(22px, env(safe-area-inset-left)) + 144px);
@@ -251,6 +286,14 @@
 		transform: none;
 	}
 }
+.w-subtitle-head { display: flex; align-items: center; gap: 8px; width: 100%; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--w-gold); }
+.w-subtitle-head > span:first-child { max-width: 60%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.w-subtitle-bar { flex: 1; height: 3px; border-radius: 3px; background: rgba(255, 255, 255, 0.22); overflow: hidden; }
+.w-subtitle-bar span { display: block; height: 100%; background: var(--w-gold); transition: width 0.25s; }
+.w-subtitle-foot { display: flex; justify-content: center; gap: 8px; width: 100%; }
+.w-subtitle-foot button { display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 3px 12px; border: 1px solid var(--w-line); border-radius: 999px; background: transparent; color: rgba(255, 255, 255, 0.86); font-size: 12px; font-weight: 600; }
+.w-subtitle-foot kbd { display: inline-grid; place-items: center; width: 18px; height: 18px; border-radius: 4px; background: #fff; color: var(--w-ink); font: inherit; font-size: 11px; font-weight: 700; }
+.w-subtitle .w-chip { font-size: 11px; line-height: 1.5; }
 .w-subtitle-tap { display: grid; justify-items: center; gap: 3px; width: 100%; padding: 0; border: 0; background: none; color: inherit; font: inherit; }
 .w-subtitle-text { animation: w-in 0.32s cubic-bezier(0.22, 1, 0.36, 1); }
 @keyframes w-in { from { opacity: 0; transform: translateY(5px); } }
@@ -280,7 +323,7 @@
 .w-evidence .w-placement { display: grid; justify-items: start; gap: 4px; margin: 8px 0 0; font-size: 12px; color: rgba(255, 255, 255, 0.82); }
 .w-note {
 	position: absolute;
-	top: calc(max(14px, env(safe-area-inset-top)) + 52px);
+	top: calc(max(14px, env(safe-area-inset-top)) + 104px);
 	left: max(16px, env(safe-area-inset-left));
 	display: grid;
 	gap: 8px;
@@ -340,19 +383,59 @@
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
-	justify-content: center;
+	justify-content: safe center;
 	gap: 2px;
-	padding: 0 clamp(24px, 8vw, 110px);
+	padding: 24px clamp(20px, 8vw, 110px);
 	border: 0;
-	background: linear-gradient(90deg, rgba(21, 11, 24, 0.82), rgba(106, 37, 96, 0.34) 62%, transparent);
+	overflow-y: auto;
+	background: linear-gradient(90deg, rgba(21, 11, 24, 0.9), rgba(60, 24, 62, 0.62) 62%, rgba(21, 11, 24, 0.28));
 	color: #fff;
 	text-align: left;
-	animation: w-fade 3.4s ease both;
+	animation: w-fade 0.5s ease both;
+	touch-action: pan-y;
 }
-@keyframes w-fade { 0% { opacity: 0; } 10%, 85% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes w-fade { from { opacity: 0; } }
 .w-mission-n { font-size: 13px; font-weight: 700; letter-spacing: 0.26em; text-transform: uppercase; color: var(--w-gold); }
 .w-mission-title { font-family: var(--w-display); font-size: clamp(52px, 11vw, 118px); line-height: 1; text-transform: uppercase; }
 .w-mission-place { font-size: 17px; color: rgba(255, 255, 255, 0.88); }
+.w-mission-where { max-width: 560px; margin-top: 12px; font-size: 16px; line-height: 1.35; color: rgba(255, 255, 255, 0.9); }
+.w-mission-job { display: grid; gap: 4px; max-width: 560px; margin-top: 14px; padding: 12px 14px; border-left: 3px solid var(--w-gold); border-radius: 6px; background: rgba(21, 11, 24, 0.6); font-size: 17px; line-height: 1.36; }
+.w-mission-job-h { font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--w-gold); }
+.w-mission-go { display: inline-flex; align-items: center; gap: 10px; min-height: 46px; margin-top: 16px; padding: 8px 24px; border-radius: 999px; background: linear-gradient(100deg, var(--w-hot), var(--w-pink)); font-size: 16px; font-weight: 700; }
+.w-mission-go kbd, .w-explain-go kbd { display: inline-grid; place-items: center; width: 26px; height: 26px; margin-right: 8px; border-radius: 50%; background: #fff; color: var(--w-ink); font: inherit; font-weight: 700; }
+.w-mission-go kbd { margin-right: 0; }
+
+.w-info {
+	position: absolute;
+	inset: 0;
+	z-index: 14;
+	display: grid;
+	place-items: center;
+	padding: 16px;
+	overflow-y: auto;
+	background: rgba(21, 11, 24, 0.5);
+	pointer-events: auto;
+	touch-action: pan-y;
+	animation: w-fade 0.4s ease both;
+}
+.w-info-card {
+	display: grid;
+	justify-items: start;
+	gap: 8px;
+	width: min(480px, 100%);
+	padding: 20px 22px;
+	border-left: 3px solid var(--w-gold);
+	border-radius: 12px;
+	background: rgba(21, 11, 24, 0.92);
+}
+.w-info-kicker { margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--w-gold); }
+.w-info-title { margin: 0 0 2px; font-family: var(--w-display); font-size: clamp(30px, 7vw, 42px); font-weight: 400; line-height: 1.05; text-transform: uppercase; }
+.w-info-line { margin: 0; font-size: 16px; line-height: 1.4; }
+.w-info-next { display: grid; gap: 2px; width: 100%; margin: 6px 0 0; padding-top: 10px; border-top: 1px solid var(--w-line); font-size: 15px; font-weight: 600; line-height: 1.3; }
+.w-info-next span { font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--w-gold); }
+.w-explain-go { margin-top: 8px; }
+/* A card is read on its own: the notes behind it would show through and muddle its text. */
+.w-hud:has(.w-info) .w-note { visibility: hidden; }
 
 .w-shift {
 	position: absolute;
@@ -419,6 +502,7 @@
 	pointer-events: auto;
 }
 .w-sketch-note p { margin: 0; }
+.w-hud.is-touch .w-sketch-note { top: auto; bottom: max(14px, env(safe-area-inset-bottom)); font-size: 14px; }
 
 .w-order {
 	position: absolute;
@@ -449,6 +533,6 @@
 
 @media (prefers-reduced-motion: reduce) {
 	.w-pano,
-	.w-action, .w-subtitle-text, .w-evidence, .w-note, .w-mission, .w-shift, .w-splash { animation: none; }
+	.w-action, .w-subtitle-text, .w-evidence, .w-note, .w-mission, .w-info, .w-shift, .w-splash { animation: none; }
 	.w-mission { opacity: 1; }
 }
