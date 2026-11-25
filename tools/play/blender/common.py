@@ -217,6 +217,138 @@ def add_haze(spec):
     return ob
 
 
+def split_sky_sun(scene, work_dir, device="GPU"):
+    """Move the Sky Texture's sun disc into a real Sun lamp of the same power, colour and direction.
+
+    The disc is a tiny, very bright patch of the world. Cycles samples the world by brightness, so
+    nearly every light sample goes to the disc, and a point the sun cannot reach gets almost none of
+    the sky: most texels in shade bake to exactly zero. A lamp is sampled on its own, so shade gets
+    clean sky light. In memory only. Returns what it did, or None if the world has no sun disc."""
+    import math
+    from mathutils import Vector
+    world = scene.world
+    sky = next((n for n in world.node_tree.nodes if n.type == "TEX_SKY"), None) if world and world.node_tree else None
+    if sky is None or not getattr(sky, "sun_disc", False):
+        return None
+    el, rot = sky.sun_elevation, sky.sun_rotation
+    to_sun = Vector((math.sin(rot) * math.cos(el), math.cos(rot) * math.cos(el), math.sin(el)))
+
+    # Measure the disc: a white plane square on to the sun, rendered with the disc and without it.
+    test = bpy.data.scenes.new("PLAY_sun_probe")
+    test.world = world
+    test.render.engine = "CYCLES"
+    set_device(test, device)
+    test.cycles.samples = 256
+    test.cycles.use_denoising = False
+    test.cycles.use_adaptive_sampling = False
+    test.render.resolution_x = test.render.resolution_y = 16
+    test.render.use_compositing = False
+    test.render.image_settings.file_format = "OPEN_EXR"
+    test.render.image_settings.color_mode = "RGBA"
+    test.render.image_settings.color_depth = "32"
+    white = bpy.data.materials.new("PLAY_probe_white")
+    white.use_nodes = True
+    bsdf = next(n for n in white.node_tree.nodes if n.type == "BSDF_PRINCIPLED")
+    bsdf.inputs["Base Color"].default_value = (1, 1, 1, 1)
+    bsdf.inputs["Roughness"].default_value = 1.0
+    if "Specular IOR Level" in bsdf.inputs:
+        bsdf.inputs["Specular IOR Level"].default_value = 0.0
+    me = bpy.data.meshes.new("PLAY_probe")
+    me.from_pydata([(-50, -50, 0), (50, -50, 0), (50, 50, 0), (-50, 50, 0)], [], [(0, 1, 2, 3)])
+    me.materials.append(white)
+    plane = bpy.data.objects.new("PLAY_probe", me)
+    plane.rotation_mode = "QUATERNION"
+    plane.rotation_quaternion = to_sun.to_track_quat("Z", "Y")
+    test.collection.objects.link(plane)
+    cam_d = bpy.data.cameras.new("PLAY_probe")
+    cam_d.type = "ORTHO"
+    cam_d.ortho_scale = 2
+    cam = bpy.data.objects.new("PLAY_probe_cam", cam_d)
+    cam.rotation_mode = "QUATERNION"
+    cam.rotation_quaternion = to_sun.to_track_quat("Z", "Y")
+    cam.location = to_sun * 5
+    test.collection.objects.link(cam)
+    test.camera = cam
+    window = bpy.context.window
+    before = window.scene if window else None
+    if window:
+        window.scene = test
+
+    def measure(tag):
+        path = os.path.join(work_dir, f"_sun_probe_{tag}.exr")
+        test.render.filepath = path
+        bpy.ops.render.render(write_still=True, scene=test.name)
+        img = bpy.data.images.load(path)
+        px = list(img.pixels)
+        n = len(px) // 4
+        rgb = [sum(px[i::4]) / n for i in range(3)]
+        bpy.data.images.remove(img)
+        os.remove(path)
+        return rgb
+
+    on = measure("on")
+    sky.sun_disc = False
+    off = measure("off")
+    if window and before:
+        window.scene = before
+    bpy.data.objects.remove(plane)
+    bpy.data.objects.remove(cam)
+    bpy.data.meshes.remove(me)
+    bpy.data.cameras.remove(cam_d)
+    bpy.data.materials.remove(white)
+    bpy.data.scenes.remove(test)
+
+    # A white diffuse plane leaves at E / pi, so the disc's irradiance is the difference times pi.
+    disc = [max(a - b, 0.0) for a, b in zip(on, off)]
+    peak = max(disc)
+    if peak <= 0:
+        sky.sun_disc = True
+        raise RuntimeError(f"Sun probe measured no disc: with {on}, without {off}")
+    lamp = bpy.data.lights.new("PLAY_sun", "SUN")
+    lamp.energy = peak * math.pi
+    lamp.color = [c / peak for c in disc]
+    lamp.angle = max(sky.sun_size, math.radians(0.5))
+    ob = bpy.data.objects.new("PLAY_sun", lamp)
+    ob.rotation_mode = "QUATERNION"
+    ob.rotation_quaternion = to_sun.to_track_quat("Z", "Y")
+    scene.collection.objects.link(ob)
+    return {"strength": round(lamp.energy, 3), "color": [round(c, 4) for c in lamp.color], "to_sun": [round(c, 4) for c in to_sun],
+            "elevation_deg": round(math.degrees(el), 2), "rotation_deg": round(math.degrees(rot), 2),
+            "sky_only_on_white": [round(c, 4) for c in off], "object": ob.name}
+
+
+def view_lut(scene, size=65, lo=-16.0, hi=8.0):
+    """The scene's display transform (view, look, display) sampled as a 3D table over log2 of
+    scene-linear light, from Blender's own OpenColorIO config. Exposure is not in it: the caller
+    multiplies by 2**exposure first. A table, not a fitted curve: the AgX fit compose_world.py used
+    before lifted shade and drained colour compared with what Blender shows."""
+    import numpy as np
+    import PyOpenColorIO as OCIO
+    vs, ds = scene.view_settings, scene.display_settings
+    path = os.environ.get("OCIO") or os.path.join(bpy.utils.system_resource("DATAFILES"), "colormanagement", "config.ocio")
+    cfg = OCIO.Config.CreateFromFile(path)
+    look = vs.look if vs.look and vs.look != "None" else ""
+    # Blender shows a look as "<view> - <look>". OCIO reads "a - b" as look a then the inverse of b,
+    # so the view's prefix comes off unless the config really has a look by the full name.
+    if look and cfg.getLook(look) is None and look.startswith(vs.view_transform + " - "):
+        look = look[len(vs.view_transform) + 3:]
+    if look and cfg.getLook(look) is None:
+        raise RuntimeError(f"OCIO config has no look {vs.look!r}")
+    pipe = OCIO.LegacyViewingPipeline()
+    pipe.setDisplayViewTransform(OCIO.DisplayViewTransform(src=cfg.getColorSpace("scene_linear").getName(),
+                                                           display=ds.display_device, view=vs.view_transform))
+    if look:
+        pipe.setLooksOverrideEnabled(True)
+        pipe.setLooksOverride(look)
+    cpu = pipe.getProcessor(cfg).getDefaultCPUProcessor()
+    axis = 2.0 ** np.linspace(lo, hi, size)
+    r, g, b = np.meshgrid(axis, axis, axis, indexing="ij")
+    rgb = np.ascontiguousarray(np.stack((r, g, b), -1).reshape(-1, 3).astype(np.float32))
+    cpu.applyRGB(rgb)
+    return {"table": rgb.reshape(size, size, size, 3), "lo": lo, "hi": hi, "view": vs.view_transform,
+            "look": look, "display": ds.display_device, "gamma": vs.gamma}
+
+
 def timed_render(scene, filepath):
     scene.render.filepath = filepath
     t0 = time.time()

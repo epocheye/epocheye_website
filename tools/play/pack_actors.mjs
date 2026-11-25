@@ -475,6 +475,13 @@ function samplePoses(poser, motion) {
 	const list = [null];
 	for (let k = 0; k < 6; k++) list.push(poser("walk", Math.round((walk * k) / 6)));
 	list.push(poser("idle", 0), poser("talk", Math.round(talk / 3)), poser("talk", Math.round((talk * 2) / 3)));
+	// A figure that also runs or sits (the player) is tested in those poses too, so nothing is culled
+	// that a long stride or a seat uncovers. They go after the poses the back faces are read from.
+	for (const extra of ["run", "sit"]) {
+		const c = motion.clips[extra];
+		if (!c) continue;
+		for (let k = 0; k < 4; k++) list.push(poser(extra, Math.round(((c.frames - 1) * k) / 4)));
+	}
 	return list;
 }
 
@@ -915,11 +922,11 @@ function compactPart(q) {
 
 // How fast, in metres per second, the planted foot moves back through the walk clip played at speed 1.
 // A walker covering ground at this speed does not slide. The result ships in the GLB as data.
-function measureStride(body, poser, motion, joints) {
-	const clip = motion.clips.walk, frames = clip.frames - 1, dt = 1 / motion.fps;
+function measureStride(body, poser, motion, joints, name = "walk") {
+	const clip = motion.clips[name], frames = clip.frames - 1, dt = 1 / motion.fps;
 	const names = joints.map((j) => j.getName());
 	const speeds = [];
-	const posed = Array.from({ length: frames }, (_, f) => posePart(body, poser("walk", f)).P);
+	const posed = Array.from({ length: frames }, (_, f) => posePart(body, poser(name, f)).P);
 	for (const side of ["L", "R"]) {
 		const feet = new Set(names.flatMap((n, i) => (n === `foot.${side}` || (n.startsWith("toe") && n.endsWith(`.${side}`)) ? [i] : [])));
 		const verts = [];
@@ -998,7 +1005,7 @@ function replaceWithCc0Clips(doc, motion) {
 	}
 	const buffer = root.listBuffers()[0];
 	const joints = new Map(root.listSkins()[0].listJoints().map((j) => [j.getName(), j]));
-	for (const name of FIGURE_CLIPS) {
+	for (const name of Object.keys(motion.clips)) {
 		const clip = motion.clips[name];
 		const times = Float32Array.from({ length: clip.frames }, (_, i) => i / motion.fps);
 		const anim = doc.createAnimation(name).setExtras({ motion: motion.source, license: motion.license });
@@ -1020,7 +1027,7 @@ function replaceWithCc0Clips(doc, motion) {
 async function assertOnlyCc0Clips(file, motion) {
 	const anims = (await io().read(file)).getRoot().listAnimations();
 	const names = anims.map((a) => a.getName()).sort();
-	if (names.join() !== [...FIGURE_CLIPS].sort().join()) throw new Error(`${file}: clips are ${names.join()}`);
+	if (names.join() !== Object.keys(motion.clips).sort().join()) throw new Error(`${file}: clips are ${names.join()}`);
 	for (const a of anims) {
 		const clip = motion.clips[a.getName()];
 		const x = a.getExtras();
@@ -1148,12 +1155,14 @@ async function packFigure(spec) {
 	host.setMesh(mesh).setSkin(skin);
 	replaceWithCc0Clips(doc, motion);
 	// The engine reads this to match the walk to the ground speed. No figure is named in the engine.
-	(root.getDefaultScene() || root.listScenes()[0]).setExtras({ walk_speed: stride });
+	// A figure with a run (the player) also gets strides, as the mannequin player had.
+	const strides = motion.clips.run ? { walk: stride, run: measureStride(body, poser, motion, joints, "run") } : null;
+	(root.getDefaultScene() || root.listScenes()[0]).setExtras(strides ? { walk_speed: stride, strides } : { walk_speed: stride });
 	const file = path.join(OUT, `${spec.id}.glb`);
 	const r = await finish(doc, file, null);
 	await assertOnlyCc0Clips(file, motion);
 	const shipped = Object.fromEntries(solid.map((q) => [q.name, q.idx.length / 3]));
-	return { ...r, walk_speed: stride, back_faces: backFaces, parts: shipped, motion: motion.source, weapons_removed: [...new Set(removed)], unskinned_dropped: [...new Set(unskinned)] };
+	return { ...r, walk_speed: stride, strides, back_faces: backFaces, parts: shipped, motion: motion.source, weapons_removed: [...new Set(removed)], unskinned_dropped: [...new Set(unskinned)] };
 }
 
 // The CC0 mannequin, dressed as a restorer from today by colouring it per bone.

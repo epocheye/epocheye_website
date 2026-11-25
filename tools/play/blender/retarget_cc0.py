@@ -36,7 +36,9 @@ CLIPS = {"walk": "Walk_Loop", "idle": "Idle_Loop", "talk": "Idle_Talking_Loop"}
 # The library's arms hang wide of its slim mannequin. These figures wear wide clothes, so a walking
 # or standing arm is brought in by this many degrees about the figure's front-back axis. The talking
 # gesture is left as it is: its hands are already in front of the body.
-ARMS_IN_DEG = {"walk": 10.0, "idle": 10.0, "talk": 0.0}
+ARMS_IN_DEG = {"walk": 10.0, "idle": 10.0, "talk": 0.0, "run": 8.0, "sit": 0.0}
+# A figure may name its own clips in the world config ("clips": {"run": "Jog_Fwd_Loop", ...}), as the
+# player does: it needs a run and a seat as well as the townspeople's three.
 
 # Source joint -> target joint. Bones the map skips (spine05, spine02, neck02, the twist halves)
 # follow their parent.
@@ -206,8 +208,8 @@ def periodic_smooth(values, passes=2):
     return np.append(v, v[0])
 
 
-def retarget(src, world_s0, fig, out_name, K, report):
-    clip_name = CLIPS[out_name]
+def retarget(src, world_s0, fig, out_name, K, report, clip_name=None):
+    clip_name = clip_name or CLIPS[out_name]
     world_t0 = fig.world_rest()
     tracks, end = src.clip(clip_name)
     n = int(round(end * FPS))
@@ -233,7 +235,7 @@ def retarget(src, world_s0, fig, out_name, K, report):
     ground0 = min(float(p[:, 1].min()) for p in soles.values())
 
     # Left arm is on +X, so it comes in with a negative turn about +Z.
-    angle = math.radians(ARMS_IN_DEG[out_name])
+    angle = math.radians(ARMS_IN_DEG.get(out_name, 0.0))
     arms_in = {}
     for side, sign in (("L", -1), ("R", 1)):
         turn = Quaternion(Vector((0, 0, 1)), sign * angle)
@@ -347,7 +349,8 @@ def main():
             raise SystemExit(f"{a['id']}: rig lacks {missing}")
         K = calibrate(src, world_s0, fig)
         rep = {}
-        clips = {to: retarget(src, world_s0, fig, to, K, rep) for to in CLIPS}
+        wanted = a.get("clips") or CLIPS
+        clips = {to: retarget(src, world_s0, fig, to, K, rep, wanted[to]) for to in wanted}
         data = {"figure": a["id"], "fps": FPS, "license": "CC0-1.0",
                 "source": "Universal Animation Library (Standard) by Quaternius",
                 "made_by": "tools/play/blender/retarget_cc0.py", "clips": clips}

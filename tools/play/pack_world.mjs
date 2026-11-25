@@ -1,6 +1,6 @@
 // Packs a baked open-world cell into web assets. Run by `export_world.py publish`, which swaps the
 // finished folder into public/ only after checking it.
-//   node tools/play/pack_world.mjs <cell> --out <version-dir> --groups a,b --textures a_now,b_then
+//   node tools/play/pack_world.mjs <cell> --out <version-dir> --groups a,b --textures a_now,b_then [--sizes a_now=1024,4096;b_then=512,1024]
 //
 // Reads tools/play/out/world/<cell>/ and writes <version-dir>/<cell>/. Only the named groups and
 // textures are packed, and a missing one is an error:
@@ -22,6 +22,11 @@ const flag = (name) => (process.argv.includes(name) ? process.argv[process.argv.
 const versionDir = flag("--out");
 const groups = flag("--groups").split(",").filter(Boolean);
 const textures = flag("--textures").split(",").filter(Boolean);
+// A hero atlas can name its own sizes, so its full size never raises what a phone downloads.
+const namedSizes = Object.fromEntries(flag("--sizes").split(";").filter(Boolean).map((e) => {
+	const [name, list] = e.split("=");
+	return [name, list.split(",").map(Number)];
+}));
 if (!cell || cell.startsWith("--") || !versionDir || !groups.length || !textures.length) {
 	console.error("Usage: node tools/play/pack_world.mjs <cell> --out <version-dir> --groups a,b --textures a_now,b_then");
 	process.exit(1);
@@ -101,7 +106,8 @@ for (const name of groups) {
 for (const name of textures) {
 	const src = await readFile(path.join(texDir, `${name}.png`));
 	const { width } = await sharp(src).metadata();
-	const sizes = [...new Set([Math.max(256, width >> 1), width])];
+	const sizes = namedSizes[name] ?? [...new Set([Math.max(256, width >> 1), width])];
+	if (sizes.some((px) => px > width)) throw new Error(`Texture ${name} is ${width} px, smaller than its sizes ${sizes}`);
 	manifest.textures[name] = sizes;
 	for (const px of sizes) {
 		const png = await sharp(src).resize(px, px, { fit: "fill" }).png().toBuffer();
@@ -114,6 +120,9 @@ for (const name of textures) {
 }
 // Tree cards are shared by every cell. Only the cards world.json will name are packed.
 const cardDir = "tools/play/out/world/cards";
+// Two sizes: <key>_<view>.ktx2 at 512 for the small-atlas presets (phones), <key>_<view>_1024.ktx2
+// for the large one. Cards stream in after the first view, but on slow 4G they share its bandwidth.
+const CARD_SIZES = [[512, ""], [1024, "_1024"]];
 const cardsJson = path.join(cardDir, "cards.json");
 if (existsSync(cardsJson) && !process.argv.includes("--no-cards")) {
 	const dest = path.join(versionDir, "cards");
@@ -121,10 +130,12 @@ if (existsSync(cardsJson) && !process.argv.includes("--no-cards")) {
 	for (const key of Object.keys(JSON.parse(await readFile(cardsJson, "utf8")))) {
 		for (const view of ["front", "side"]) {
 			const f = `${key}_${view}.png`;
-			const png = await sharp(path.join(cardDir, f)).resize(512, 512, { fit: "fill" }).png().toBuffer();
-			const out = await encodeToKTX2(new Uint8Array(png), KTX);
-			await writeFile(path.join(dest, f.replace(".png", ".ktx2")), out);
-			console.log(`card ${f} ${(out.byteLength / 1024).toFixed(0)} KB`);
+			for (const [px, suffix] of CARD_SIZES) {
+				const png = await sharp(path.join(cardDir, f)).resize(px, px, { fit: "fill" }).png().toBuffer();
+				const out = await encodeToKTX2(new Uint8Array(png), KTX);
+				await writeFile(path.join(dest, f.replace(".png", `${suffix}.ktx2`)), out);
+				console.log(`card ${f} ${px} ${(out.byteLength / 1024).toFixed(0)} KB`);
+			}
 		}
 	}
 }

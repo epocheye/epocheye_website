@@ -19,10 +19,12 @@ site = json.load(open(cfg["site"], encoding="utf-8"))
 b = cfg.get("terrain", {}).get("bounds") or cfg["cells"][a["cell"]]["bounds"]
 out = a["out"]
 os.makedirs(out, exist_ok=True)
-px = int(a.get("px", 512))
+px = int(a.get("px", 1024))
 samples = int(a.get("samples", 48))
 src_scene = bpy.context.scene
 C.remap_missing_images(site.get("search_dirs", []))
+# The same sun as the world's bake, as a lamp, so shaded leaves get clean sky light.
+sun_info = None if a.get("list-only") else C.split_sky_sun(src_scene, out, a.get("device", "GPU"))
 
 SPECIES = cfg["cards"]
 dg = bpy.context.evaluated_depsgraph_get()
@@ -55,7 +57,9 @@ if a.get("list-only"):
     sys.exit(0)
 
 # Sun direction and strength from the scene.
-sun = next((o for o in src_scene.objects if o.type == "LIGHT" and o.data.type == "SUN"), None)
+# A sun lamp the scene keeps switched off for render stays off here too.
+sun = bpy.data.objects.get(sun_info["object"]) if sun_info else next(
+    (o for o in src_scene.objects if o.type == "LIGHT" and o.data.type == "SUN" and not o.hide_render), None)
 report = {}
 for key, spec in SPECIES.items():
     f = found[key]
@@ -93,7 +97,7 @@ for key, spec in SPECIES.items():
     if sun:
         ld = sun.data.copy()
         so = bpy.data.objects.new("c_sun", ld)
-        so.rotation_euler = sun.matrix_world.to_euler()
+        so.rotation_euler = (sun.rotation_quaternion.to_euler() if sun.rotation_mode == "QUATERNION" else sun.matrix_world.to_euler())
         scene.collection.objects.link(so)
     w = max(hi.x - lo.x, hi.y - lo.y) * 1.04
     h = (hi.z - lo.z) * 1.02

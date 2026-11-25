@@ -1,7 +1,7 @@
 {
   "slug": "tipu-summer-palace-bengaluru",
   "site": "tools/play/sites/tipu-summer-palace-bengaluru.json",
-  "version": 3,
+  "version": 4,
   "_note": "Open-world export config. Read by tools/play/export_world.py. Blender coordinates, metres, Z up.",
   "moment": {
     "date": "1791-03-01",
@@ -45,10 +45,16 @@
             "TSP_Palace_columns",
             "TSP_Palace_stairs_rebuilt"
           ],
-          "target_tris": 70000,
-          "atlas": 2048,
+          "target_tris": 76000,
+          "detail_floor_tris": 64,
+          "keep_piece_m": 2.5,
+          "planar_merge": true,
+          "drop_buried": true,
+          "atlas": 4096,
+          "sample_scale": 2,
+          "uv_focus": { "bounds": [-75, -65, 65, 90], "step": 3, "heights": [1.6, 3.4], "hidden": 0.2 },
+          "_states_note": "Only today's palace atlas ships (palace_then carries a CC BY wall texture and is not published), so only today is baked. The past is today's atlas under the past grade.",
           "states": [
-            "then",
             "now"
           ],
           "extra": {
@@ -75,7 +81,8 @@
           ],
           "web": {
             "collide": true,
-            "collide_min_area": 0.04
+            "collide_min_area": 0.04,
+            "sizes": [1024, 3072]
           }
         },
         "near": {
@@ -86,7 +93,8 @@
           ],
           "match": "TSP_awning|TSP_basket|TSP_pot|TSP_sack|TSP_lota|TSP_well|TSP_hearth|TSP_tree_platform|TSP_fortR_interior|MW_INT_Courts|MW_INT_Tanks",
           "clip": true,
-          "target_tris": 22000,
+          "target_tris": 20000,
+          "keep_piece_m": 2.5,
           "atlas": 1024,
           "states": [
             "then"
@@ -104,6 +112,8 @@
           ],
           "match": "MW_Rampart_(?!MERLONS)|MW_AdditionalRampart|TSP_fortR_towers|TSP_fortR_great|MW_Cavaliers|MW_GateBastions|TSP_fortR_delhi_gate|TSP_fortR_gate_outwork|PLAY_walk",
           "target_tris": 13000,
+          "detail_floor_tris": 12,
+          "drop_buried": true,
           "atlas": 1024,
           "states": [
             "then"
@@ -526,21 +536,16 @@
   "actors": [
     {
       "id": "player",
-      "kind": "player",
-      "src": "tools/play/assets/cc0/universal-animation-library/AnimationLibrary_Godot_Standard.glb",
-      "tris": 14000,
+      "kind": "figure",
+      "_note": "The player wears the bearer's clothes (MPFB body, CC0; our own costume), with CC0 Quaternius clips retargeted by retarget_cc0.py. It replaced the bare library mannequin. Strides are measured by pack_actors.mjs.",
+      "src": "E:/heritage_assets/tipu-summer-palace-bengaluru/assets/tsp_town/humans/bearer.glb",
+      "atlas": 1024,
       "clips": {
-        "Idle_Loop": "idle",
-        "Walk_Loop": "walk",
-        "Jog_Fwd_Loop": "run",
-        "Sprint_Loop": "sprint",
-        "Interact": "interact",
-        "Sitting_Idle_Loop": "sit",
-        "Idle_Talking_Loop": "talk"
-      },
-      "strides": {
-        "walk": 1.083,
-        "run": 5.305
+        "idle": "Idle_Loop",
+        "walk": "Walk_Loop",
+        "run": "Jog_Fwd_Loop",
+        "sit": "Sitting_Idle_Loop",
+        "talk": "Idle_Talking_Loop"
       }
     },
     {
@@ -1421,7 +1426,7 @@
     "MW_GROUND",
     "MW_SKY"
   ],
-  "previous_version": 3,
+  "previous_version": 4,
   "edits": {
     "_note": "Game edits, in memory only. Every one is logged in docs/play/DECISIONS.md. The source doors are INFERRED; the opening behind them, the ramp and the causeway fill are ours.",
     "remove_faces": [
@@ -1561,6 +1566,13 @@
       "points": 48
     },
     "base_px": 1280
+  },
+  "ground_detail": {
+    "_note": "Grain from Poly Haven's Red Laterite Soil Stones (CC0), see the LICENSE beside it. Two metres a repeat, the texture's own scale.",
+    "src": "tools/play/assets/cc0/ground_detail/laterite_grain_512.png",
+    "tile_m": 2,
+    "px": 160,
+    "quality": 70
   },
   "start_cell": "court"
 }

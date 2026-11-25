@@ -4,6 +4,7 @@
   python tools/play/export_world.py <slug> bake     [--cell court] [--groups a,b] [--states then,now] [--samples 96] [--device GPU|CPU] [--yes]
   python tools/play/export_world.py <slug> cards    [--cell court]      render the tree cards
   python tools/play/export_world.py <slug> publish  [--cell court]      pack everything into public/play/worlds/<slug>/v<N>/
+  python tools/play/export_world.py <slug> inspect                      report the scene's light and materials (CPU, no render)
 
 Before any GPU work it checks nvidia-smi, then takes E:\\konark\\locks\\gpu.lock and releases it
 when done, after Blender has exited. If the lock exists it stops at once: it never waits, and never
@@ -28,10 +29,18 @@ _lock_text = None  # the exact text this run wrote to the lock, or None if it ho
 
 
 def gpu_state():
-    q = subprocess.run(["nvidia-smi", "--query-gpu=utilization.gpu,memory.used,memory.total",
+    q = subprocess.run(["nvidia-smi", "--query-gpu=utilization.gpu,memory.used,memory.total,pstate,power.draw,power.default_limit",
                         "--format=csv,noheader,nounits"], capture_output=True, text=True, timeout=30)
-    util, used, total = [int(x) for x in q.stdout.strip().split(",")]
-    return util, used, total
+    util, used, total, pstate, draw, limit = [x.strip() for x in q.stdout.strip().split(",")]
+    util, used, total = int(util), int(used), int(total)
+    # Under Windows' display driver a browser drawing its window shows as 20 to 30 % load while the
+    # card sits in its idle state at a few watts. Any real job (a render, a bake) lifts the card out
+    # of it. So load only counts as busy when the card is not idling.
+    try:
+        idle = int(pstate.lstrip("P")) >= 8 and float(draw) < 0.2 * float(limit)
+    except ValueError:
+        idle = False
+    return (0 if idle else util), used, total
 
 
 def read_lock():
@@ -140,8 +149,10 @@ def referenced_files(world, missions):
                 for px in sizes or []:
                     files.add(f"{cid}/tex/{tex}_{px}.ktx2")
     files.update(world["minimap"]["images"].values())
+    if world.get("ground_detail"):
+        files.add(world["ground_detail"]["file"])
     for key in world["cards"]:
-        files.update(f"cards/{key}_{view}.ktx2" for view in ("front", "side"))
+        files.update(f"cards/{key}_{view}{size}.ktx2" for view in ("front", "side") for size in ("", "_1024"))
     actors = {world["actors"]["player"]} | {r["id"] for r in world["actors"].get("rides", {}).values()}
     actors |= {p["figure"] for p in world["people"]} | {n["figure"] for n in missions.get("npcs", [])}
     files.update(f"actors/{a}.glb" for a in actors)
@@ -314,6 +325,12 @@ def publish(slug, cfg):
         # Only what the game loads is packed, so debug and unused atlases can never reach public/.
         cmd = ["node", "tools/play/pack_world.mjs", cid, "--out", str(staged), "--groups", ",".join(groups),
                "--textures", ",".join(sorted(needed))]
+        # A group's web.sizes: its atlas sizes, smallest first. The smallest is what a phone loads.
+        named = {t: (cfg["cells"][cid]["groups"][n].get("web", {}).get("sizes") if cid in cfg["cells"] and n in cfg["cells"][cid]["groups"] else None)
+                 for n, g in groups.items() for t in (g["now"], g["then"]) if t}
+        named = ";".join(f"{t}={','.join(map(str, px))}" for t, px in sorted(named.items()) if px)
+        if named:
+            cmd += ["--sizes", named]
         subprocess.run(cmd + ([] if cards else ["--no-cards"]), cwd=ROOT, check=True, shell=False)
         manifest = json.loads((staged / cid / "manifest.json").read_text(encoding="utf-8"))
         return {k: v for k, v in manifest["textures"].items() if k in needed}
@@ -378,6 +395,15 @@ def publish(slug, cfg):
     water = water_block(cfg)
     if water:
         world["water"] = water
+    # The tiling grain the game lays over the ground near the player, from a licensed tile on disk.
+    detail = cfg.get("ground_detail")
+    if detail:
+        rel = "detail/ground_grain.webp"
+        (staged / "detail").mkdir(exist_ok=True)
+        px = int(detail.get("px", 256))  # it is in the first playable, so it stays small
+        Image.open(ROOT / detail["src"]).convert("L").resize((px, px), Image.LANCZOS).save(
+            staged / rel, quality=int(detail.get("quality", 72)), method=6)
+        world["ground_detail"] = {"file": rel, "tile_m": float(detail.get("tile_m", 2))}
     # The ground connected to the mission start, from docs/play/lighthouse/scripts/world-reach.mjs.
     reach = TOOLS / "worlds" / f"{slug}.reach.json"
     if reach.exists():
@@ -399,10 +425,10 @@ def publish(slug, cfg):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("slug"); ap.add_argument("cmd", choices=["estimate", "bake", "cards", "publish", "plan"])
+    ap.add_argument("slug"); ap.add_argument("cmd", choices=["estimate", "bake", "cards", "publish", "plan", "inspect"])
     ap.add_argument("--cell", default="court"); ap.add_argument("--groups"); ap.add_argument("--states")
     ap.add_argument("--samples", type=int, default=96); ap.add_argument("--device", default="GPU")
-    ap.add_argument("--yes", action="store_true"); ap.add_argument("--geometry-only", action="store_true"); ap.add_argument("--list-only", action="store_true")
+    ap.add_argument("--rays", help="inspect: x,y,z;x,y,z points to trace toward the sun"); ap.add_argument("--scale", type=float, help="bake at this share of the atlas size, for a quick test"); ap.add_argument("--bake-root", help="bake into tools/play/out/world/<name>/<cell>, leaving the live bake alone"); ap.add_argument("--yes", action="store_true"); ap.add_argument("--geometry-only", action="store_true"); ap.add_argument("--target-only", action="store_true", help="bake: stop after the low meshes, written as <group>_target.npz"); ap.add_argument("--list-only", action="store_true")
     a = ap.parse_args()
     world = TOOLS / "worlds" / f"{a.slug}.json"
     cfg = json.loads(world.read_text(encoding="utf-8"))
@@ -430,6 +456,16 @@ def main():
             sys.exit(f"Plan failed. See {OUT / 'plan.log'}")
         print(next(l for l in r.stdout.splitlines() if l.startswith("WORLD_PLAN_DONE")))
         return
+    if a.cmd == "inspect":
+        # CPU only and read only: a report on the scene's light and materials, no render.
+        dest = OUT / "inspect.json"
+        cmd = [BLENDER, "-b", site["blend"], "--python", str(TOOLS / "blender" / "world_inspect.py"), "--",
+               "--world", str(world), "--out", str(dest)] + (["--rays", a.rays] if a.rays else []) + (["--state", a.states] if a.states else [])
+        r = subprocess.run(cmd, cwd=ROOT, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, errors="replace")
+        if "WORLD_INSPECT_DONE2" not in r.stdout:
+            sys.exit("Inspect failed: " + r.stdout[-1500:])
+        print(dest)
+        return
     if a.cmd == "cards" and a.list_only:
         cmd = [BLENDER, "-b", site["blend"], "--python", str(TOOLS / "blender" / "world_cards.py"), "--", "--world", str(world),
                "--cell", a.cell, "--out", str(OUT / "cards"), "--list-only"]
@@ -438,12 +474,12 @@ def main():
             sys.exit("Card listing failed: " + r.stdout[-800:])
         print(" ".join(l for l in r.stdout.splitlines() if l.startswith("@@card")))
         return
-    if a.device.upper() == "GPU" and not a.geometry_only:
+    if a.device.upper() == "GPU" and not (a.geometry_only or a.target_only):
         take_lock()
 
     if a.cmd == "cards":
         cmd = [BLENDER, "-b", site["blend"], "--python", str(TOOLS / "blender" / "world_cards.py"), "--", "--world", str(world),
-               "--cell", a.cell, "--out", str(OUT / "cards"), "--device", a.device]
+               "--cell", a.cell, "--out", str(OUT / a.bake_root / "cards" if a.bake_root else OUT / "cards"), "--device", a.device]
         r = subprocess.run(cmd, cwd=ROOT, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, errors="replace")
         with open(log, "a", encoding="utf-8") as lf:
             lf.write(r.stdout)
@@ -478,8 +514,8 @@ def main():
             for g in (list(c["groups"]) + ["ground"]) if all_cells else groups:
                 spec = c["ground"] if g == "ground" else c["groups"][g]
                 for _state in spec.get("states", ["then"]):
-                    lpx = max(128, spec["atlas"] // 2)
-                    secs += light_fixed + lpx ** 2 * light_px * a.samples / 32
+                    lpx = max(128, int(spec["atlas"] * float(spec.get("light_scale", 0.5))))
+                    secs += light_fixed + lpx ** 2 * light_px * a.samples * float(spec.get("sample_scale", 1)) / 32
                     secs += albedo_fixed + spec["atlas"] ** 2 * albedo_px
             per_cell[cid] = round(secs / 60, 1)
             total += secs
@@ -495,12 +531,17 @@ def main():
     for cid in cell_ids:
         c = cfg["cells"][cid]
         wanted = a.groups.split(",") if a.groups else list(c["groups"]) + ["ground"]
-        args = ["--cell", cid, "--out", str(OUT / cid), "--groups", ",".join(wanted),
+        dest = OUT / a.bake_root / cid if a.bake_root else OUT / cid
+        args = ["--cell", cid, "--out", str(dest), "--groups", ",".join(wanted),
                 "--samples", str(a.samples), "--device", a.device]
         if a.states:
             args += ["--states", a.states]
+        if a.scale:
+            args += ["--scale", str(a.scale)]
         if a.geometry_only:
             args += ["--geometry-only"]
+        if a.target_only:
+            args += ["--target-only"]
         reports, _ = run_build(world, site, args, OUT / f"{cid}.log")
         done += len(reports)
     print(json.dumps({"cells": cell_ids, "baked": done, "minutes": round((time.time() - t0) / 60, 1)}))

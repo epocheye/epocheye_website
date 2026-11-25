@@ -4,6 +4,8 @@ Draft during Phase 2. The commands below are the ones in use; sections on later 
 
 **State of the map (2026-11-23, world v3).** Eight streamed cells cover the whole fort, from outside the Delhi Gate, round the outwork, over the causeway, through the gate, along to the palace court and up the ramp to the rampart walk. Three tanks hold still water in 1791. The horse rides outside the walls and the elephant outside the palace court and on the avenue; their models load on demand. Whole world 12.66 MB plus the voice clips for Missions 2 to 5. The full-screen map is not built yet.
 
+**World v4 (2026-11-25): the court rebaked.** The palace keeps its walls whole, simplifies each piece of detail on its own, drops faces nothing can see, and packs its atlas with thin gutters, so the walls get about 37 texels a metre in the 3072 atlas the High preset loads (12 before) and about 12 in the 1024 one phones load (6 before). Every atlas is tone mapped through the scene's own AgX view, the ground carries a CC0 laterite grain near the player, the grades are gentle, and the player wears the bearer's clothes. Whole world 14.97 MB. First playable on the phone preset, measured on `next start` with slow 4G: 4.30 MB, which is the budget, so anything added to the first view now has to be paid for.
+
 **All six missions are playable (2026-11-23).** Rooms the player cannot walk (the stair, the upper hall, the balcony) are the Story view panoramas, opened in place over the paused world.
 
 A world is two things: **exported assets** in `public/play/worlds/<slug>/v<N>/`, and **one hand-written file**, `content/play/<slug>/missions.json`. The engine (`lib/play/world/`, `components/play/world/`) has no site-specific code.
@@ -87,6 +89,8 @@ python tools/play/export_world.py <slug> cards --list-only
 python tools/play/export_world.py <slug> publish
 ```
 
+`compose_world.py` tone maps through `view_lut.npz`, the scene's own view (AgX and its Look) sampled from Blender's OpenColorIO config by `world_build.py` on every bake. The fitted AgX curve it used before lifted shade and drained colour; `--fit` still selects it. Any cell can be recomposed without a rebake, because the last bake also writes `tools/play/out/world/view_lut.npz`. To check a bake without the game, `tools/play/preview_bake.py` renders a cell's atlases from any eye on the CPU, and `bake --target-only` writes each group's simplified mesh before the slow steps.
+
 `plan` and `cards --list-only` use the CPU only and take no lock. `plan` writes the fort as triangles, and `build_terrain.py` turns them into the height map every cell's ground, colliders and walk rules come from. `--fill` lifts deep shade by a share of the median light. Use `--fill-groups` to limit it, so a cell you are not rebaking keeps its look.
 
 What the world config holds for this:
@@ -97,6 +101,14 @@ What the world config holds for this:
 | `cells.<id>.keep` | Never unloaded. The start cell has it |
 | `groups.<g>.clip`, `clip_bounds` | Keep only triangles inside the cell, or inside these bounds |
 | `groups.<g>.hi_match` | Bake against more than the group keeps, so neighbours still cast shadows on it |
+| `groups.<g>.keep_piece_m`, `keep_piece_tris_per_m2` | Pieces at least this big and this plain are kept exactly as modelled. A collapse across a whole wall pulled it through its own thickness and the wall baked black |
+| `groups.<g>.planar_merge` | Merge coplanar faces before simplifying. Only for groups with no clipped ground, where merged faces triangulate into spikes |
+| `groups.<g>.detail_floor_tris` | Every piece of detail is simplified on its own and keeps at least this many triangles (scaled by its size in metres), so finials and balusters are not crushed to shards |
+| `groups.<g>.drop_buried` | Remove faces nothing can see and with no room on either side (inside columns, between stacked slabs). On the palace a quarter of the triangles |
+| `groups.<g>.uv_focus` | Player eye points from the reach map. Faces no player can see get `hidden` of the texels |
+| `groups.<g>.light_scale`, `sample_scale` | Light bake size as a share of the atlas (default 0.5), and samples as a multiple of `--samples` |
+| `groups.<g>.web.sizes` | The atlas sizes shipped, smallest first. The KTX2 encoder stops above about 12 Mpix, so 3072 is the largest |
+| `ground_detail` | A licensed greyscale tile the game lays over the ground near the player: `src`, `tile_m`, `px` |
 | `web.defer` | Loaded after the first view, so it costs the first playable nothing |
 | `web.ring` | A coarse layer of the whole map. It is cut away wherever a cell's full detail is standing |
 | `web.mode` | `both` shows the group in both eras from one bake |
