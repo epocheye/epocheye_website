@@ -1,0 +1,7 @@
+laterite_grain_512.png is a greyscale grain tile made from Poly Haven's "Red Laterite Soil Stones"
+(https://polyhaven.com/a/red_laterite_soil_stones), diffuse map at 2k, as copied into the palace
+assets at E:/heritage_assets/tipu-summer-palace-bengaluru/output/mobile/tex/003_red_laterite_soil_stones_diff_2k_jpg.jpg.
+Licence: CC0 1.0 (https://polyhaven.com/license).
+Made by dividing the luminance by its own 48 px wrap-around blur (so only the grain is left and the
+tile still repeats cleanly), clipping at two standard deviations and resizing to 512 px.
+The game multiplies the baked ground by it near the player, so it carries no colour.

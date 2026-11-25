@@ -28,7 +28,24 @@ This is a record of what the sources say. It is not legal advice.
 - The other English voice packs in the repository (for example bf_emma, bm_george) are under
   the same licence. They were not rendered or measured here.
 - Accent: American (`a`) and British (`b`) English only. Kokoro has no Indian English voice.
-  Its Hindi voices are for Hindi text and were not used for English.
+  Its Hindi voices are made for Hindi text. The narration does not use them. The open world's
+  role figures do, for English lines (see the next section).
+
+### Kokoro-82M: `kokoro-hm-omega` and `kokoro-hm-psi` (voice packs hm_omega, hm_psi)
+
+Checked on **2026-11-22** at https://huggingface.co/hexgrad/Kokoro-82M and
+https://huggingface.co/hexgrad/Kokoro-82M/blob/main/VOICES.md .
+
+| Voice | Used for | VOICES.md listing | Licence |
+|---|---|---|---|
+| `hm_omega` | The carpenter (`w-carp-*`), English text | Hindi, male, target quality B, overall grade C | Apache-2.0, as a file in the model repository |
+| `hm_psi` | The mason (`w-mas-*`), English text | Hindi, male, target quality B, overall grade C | Apache-2.0, as a file in the model repository |
+
+- VOICES.md gives these two voices no licence of their own and names no speaker. The licence
+  above is the repository's (card metadata `license: apache-2.0`).
+- `render_world.py` feeds them English phonemes (`--lang a`). VOICES.md lists them under Hindi
+  (`lang_code='h'`), so this is a use their authors did not grade. It is a quality question, not
+  a licence one. Nobody has listened to these clips yet.
 
 ### MeloTTS-English: `melo-india` (speaker EN_INDIA)
 

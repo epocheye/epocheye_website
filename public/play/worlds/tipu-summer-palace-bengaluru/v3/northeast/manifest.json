@@ -1,0 +1,55 @@
+{
+ "cell": "northeast",
+ "groups": {
+  "fort": {
+   "tris": 7430,
+   "min": [
+    87.70899963378906,
+    121.0199966430664,
+    -5
+   ],
+   "max": [
+    231.9770050048828,
+    294.5360107421875,
+    11.564000129699707
+   ]
+  },
+  "ground": {
+   "tris": 2124,
+   "min": [
+    90,
+    135,
+    -4.679999828338623
+   ],
+   "max": [
+    340,
+    480,
+    0.9169999957084656
+   ]
+  }
+ },
+ "textures": {
+  "fort_then": [
+   512,
+   1024
+  ],
+  "ground_now": [
+   256,
+   512
+  ],
+  "ground_then": [
+   372,
+   744
+  ]
+ },
+ "bytes": {
+  "fort.glb": 70072,
+  "ground.glb": 14004,
+  "tex/fort_then_512.ktx2": 62881,
+  "tex/fort_then_1024.ktx2": 174998,
+  "tex/ground_now_256.ktx2": 13531,
+  "tex/ground_now_512.ktx2": 39506,
+  "tex/ground_then_372.ktx2": 34786,
+  "tex/ground_then_744.ktx2": 103413
+ }
+}

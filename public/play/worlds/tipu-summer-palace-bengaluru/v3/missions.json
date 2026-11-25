@@ -1,0 +1,2020 @@
+{
+	"slug": "tipu-summer-palace-bengaluru",
+	"version": 1,
+	"title": "Envy of Heaven",
+	"tagline": "Bangalore Fort. 1 March 1791. Walk it.",
+	"eras": {
+		"past": "1791",
+		"stages": {
+			"1831": {
+				"muted": 0.85,
+				"crowd": false,
+				"rides": false,
+				"dress": [
+					{
+						"type": "desk",
+						"at": [
+							4,
+							-4.95
+						],
+						"face_deg": 0
+					},
+					{
+						"type": "desk",
+						"at": [
+							-4.6,
+							-5.8
+						],
+						"face_deg": 12
+					},
+					{
+						"type": "shelf",
+						"at": [
+							6.4,
+							-4.4
+						],
+						"face_deg": 0
+					},
+					{
+						"type": "shelf",
+						"at": [
+							-1.6,
+							-3.9
+						],
+						"face_deg": 0
+					},
+					{
+						"type": "chest",
+						"at": [
+							8.7,
+							-6.6
+						],
+						"face_deg": -20
+					},
+					{
+						"type": "chest",
+						"at": [
+							-7.4,
+							-4.6
+						],
+						"face_deg": 15
+					}
+				]
+			}
+		}
+	},
+	"credits": [
+		"World and reconstruction: Epocheye.",
+		"People: bodies, skin, eyes and hair from MakeHuman and MPFB assets (CC0). Clothes made for Epocheye.",
+		"People's walk, idle and talk: motion by Quaternius, Universal Animation Library (CC0), adapted to these figures.",
+		"Bullock cart: model created with Meshy (meshy.ai), simplified for the web. CC BY 4.0 (creativecommons.org/licenses/by/4.0) if made on Meshy's free plan.",
+		"You, the restorer: body and animation by Quaternius, Universal Animation Library (CC0), recoloured.",
+		"Tamarind tree: Tree Small 02 by Rico Cilliers, Poly Haven (CC0).",
+		"Palm trees: made for Epocheye.",
+		"Surfaces: textures from Poly Haven (CC0), Epocheye's own photographs, and pattern tiles used in the reconstruction.",
+		"Voices: synthetic, made with Kokoro (hexgrad/Kokoro-82M, Apache 2.0).",
+		"Titles set in Anton (SIL Open Font License 1.1).",
+		"Physics: Rapier by Dimforge (Apache 2.0).",
+		"The rooms you step into are Epocheye's panoramas of the palace:",
+		"Exterior colours after James Hunter, watercolour of the north front, February 1792. Yale Center for British Art, Paul Mellon Collection, B1974.12.1168. Public domain (CC0).",
+		"Interior wall texture derived from a photograph by Mike Prince, CC BY 2.0. https://commons.wikimedia.org/wiki/File:Tipu_Sultan%27s_Summer_Palace_(16414465309).jpg",
+		"Painted ceiling pattern after Epocheye's own photograph of the surviving ceiling, September 2026. Its extent across the upper floor is inferred.",
+		"Present-day surfaces from Epocheye's own photographs, September 2026.",
+		"Where paint survives today is not mapped; NOW shows plain surfaces.",
+		"The projecting front balcony is not shown, because its projection is unrecorded. The balcony viewpoint stands at the front arcade of the upper floor.",
+		"Evidence image: James Hunter, watercolour of the north front of the palace at Bangalore, February 1792. Yale Center for British Art, Paul Mellon Collection, B1974.12.1168. Public domain (CC0).",
+		"Evidence image: Robert Home, \"Inside View of the Palace at Bangalore\", engraved by Lowry, published 1 February 1794, in Select Views in Mysore (London: R. Bowyer, 1794). Scan: National Library of Norway. Public domain.",
+		"Evidence photographs of the palace today (the front, a painted wall panel, a painted ceiling): Epocheye, September 2026.",
+		"Textures and sky: Poly Haven, CC0.",
+		"Today's surroundings beyond the palace garden are not modelled and are shown as haze.",
+		"Narration: synthetic voice.",
+		"Office desks, shelves and chests: built in code for Epocheye."
+	],
+	"_note": "Hand-written open-world layer. Positions are Blender metres [x, y]. Story beats are referenced by id from story.json and never copied. A dialogue line that states a fact carries a fact id from story.json or world_facts.",
+	"world_facts": [
+		{
+			"id": "W01",
+			"claim": "Bullock carts were the standard transport of the Mysore country. Where these carts stand is our guess.",
+			"source": "Epocheye's period world log, row 16: type medium confidence, position none",
+			"tier": "reconstruction"
+		},
+		{
+			"id": "W02",
+			"claim": "The avenue through the fort is drawn on Mackenzie's survey of March 1791. Its width is not stated.",
+			"source": "Mackenzie survey, March 1791 (RCIN 735001), as traced in the fort project",
+			"tier": "record"
+		},
+		{
+			"id": "W03",
+			"claim": "Mackenzie's survey of March 1791 marks three tanks of good water inside the fort. Their depth, their stone edge and the look of the water are our reconstruction.",
+			"source": "Mackenzie survey, March 1791 (RCIN 735001), key 11, as traced in the fort project",
+			"tier": "record"
+		},
+		{
+			"id": "W21",
+			"claim": "Robert Home's account of 1794 calls the solid body of the fort's rampart red clay. The rampart was faced with stone.",
+			"source": "Robert Home, Select Views in Mysore (1794), quoted in the Bangalore Fort evidence ledger (bangalore-fort/research/evidence.md), section 5",
+			"tier": "record"
+		},
+		{
+			"id": "W22",
+			"claim": "The fort had two gateways: the Delhi Gate on the north and the Mysore Gate on the south.",
+			"source": "Home (1794), Wilks, Rice (1897) and Fortescue (1902), as compared in the Bangalore Fort evidence ledger, section 3",
+			"tier": "record"
+		},
+		{
+			"id": "W23",
+			"claim": "Robert Home, 1794: the fort's ditch was \"deep, and wide, but dry in most parts of it\". Its width and depth are not recorded.",
+			"source": "Robert Home, Select Views in Mysore (1794), quoted in the Bangalore Fort evidence ledger, sections 6 and 11",
+			"tier": "record"
+		},
+		{
+			"id": "W24",
+			"claim": "Mackenzie's survey of March 1791 names the granaries inside the fort, within a walled inclosure. Their heights are not recorded.",
+			"source": "Mackenzie survey, March 1791 (RCIN 735001), key 12, as read in bangalore-fort/research/magicwindow-build-record.md, section 12d.2",
+			"tier": "record"
+		},
+		{
+			"id": "W25",
+			"claim": "Mackenzie's survey of March 1791 marks work yards for smiths, carpenters and other artificers inside the fort.",
+			"source": "Mackenzie survey, March 1791 (RCIN 735001), key 13, as read in bangalore-fort/research/magicwindow-build-record.md, section 12d.2",
+			"tier": "record"
+		},
+		{
+			"id": "W26",
+			"claim": "Palanquins at the palace are our reconstruction of court transport. Hunter and Home show none here.",
+			"source": "Epocheye's period world log (TSP_period_assumptions.md), row 19: low confidence",
+			"tier": "reconstruction"
+		},
+		{
+			"id": "W27",
+			"claim": "This durbar is staged from Buchanan's account of how the court worked. No record describes a durbar on this day, and no record says which balcony the ruler used.",
+			"source": "Our staging of F12 and R2; Epocheye's period world log (TSP_period_assumptions.md), rows 9 and 22",
+			"tier": "reconstruction"
+		},
+		{
+			"id": "W28",
+			"claim": "The clerks, desks and ledgers shown here are our reconstruction. The records say the principal departments were in the palace from 1831, not how the rooms were laid out.",
+			"source": "Our staging of F14; no record of the layout of the offices has been found",
+			"tier": "reconstruction"
+		},
+		{
+			"id": "W29",
+			"claim": "Where Hunter's records lie in this world is our placement. Where he stood to draw is not fixed on this map, and the front he painted is not the front modelled here.",
+			"source": "Fact M2; Epocheye's period world log (TSP_period_assumptions.md), row 10 and 'Left out, and why'",
+			"tier": "reconstruction"
+		}
+	],
+	"voices": {
+		"narrator": "kokoro-heart",
+		"carpenter": "kokoro-hm-omega",
+		"mason": "kokoro-hm-psi",
+		"carpenter-m2": "kokoro-hm-omega",
+		"mason-m3": "kokoro-hm-psi",
+		"grain-trader": "kokoro-mix-trader",
+		"sepoy": "kokoro-mix-sepoy",
+		"bearer": "kokoro-mix-bearer",
+		"clerk": "kokoro-mix-clerk"
+	},
+	"npcs": [
+		{
+			"id": "carpenter",
+			"role": "The carpenter",
+			"figure": "bearer",
+			"at": [
+				-12.5,
+				-6.5
+			],
+			"face_deg": 200,
+			"dialogue": "d-carpenter",
+			"missions": [
+				"m1"
+			]
+		},
+		{
+			"id": "mason",
+			"role": "The mason",
+			"figure": "mysore_man",
+			"at": [
+				8,
+				-4.6
+			],
+			"face_deg": -25,
+			"dialogue": "d-mason",
+			"missions": [
+				"m1"
+			]
+		},
+		{
+			"id": "carpenter-m2",
+			"role": "The carpenter",
+			"figure": "bearer",
+			"at": [
+				-6,
+				-9
+			],
+			"face_deg": 200,
+			"dialogue": "d-carpenter-m2",
+			"missions": [
+				"m2"
+			]
+		},
+		{
+			"id": "sepoy",
+			"role": "The sepoy on the wall",
+			"figure": "mysore_man",
+			"at": [
+				189.4,
+				-24.8,
+				9.14
+			],
+			"face_deg": 120,
+			"dialogue": "d-sepoy",
+			"missions": [
+				"m2",
+				"m3"
+			],
+			"ambient": true,
+			"placement_note": "Where he stands is our placement. No record puts a sentry on this spot."
+		},
+		{
+			"id": "grain-trader",
+			"role": "The grain trader",
+			"figure": "merchant",
+			"at": [
+				-20,
+				-16
+			],
+			"face_deg": 90,
+			"dialogue": "d-grain-trader",
+			"missions": [
+				"m3"
+			]
+		},
+		{
+			"id": "bearer",
+			"role": "The palanquin bearer",
+			"figure": "bearer",
+			"at": [
+				22,
+				-16
+			],
+			"face_deg": -90,
+			"dialogue": "d-bearer",
+			"missions": [
+				"m3"
+			],
+			"note_facts": [
+				"W26"
+			]
+		},
+		{
+			"id": "mason-m3",
+			"role": "The mason",
+			"figure": "mysore_man",
+			"at": [
+				10,
+				-9
+			],
+			"face_deg": -25,
+			"dialogue": "d-mason-m3",
+			"missions": [
+				"m3"
+			]
+		},
+		{
+			"id": "clerk",
+			"role": "The clerk",
+			"figure": "merchant",
+			"at": [
+				4,
+				-6
+			],
+			"interior_at": [
+				0,
+				1.9,
+				0
+			],
+			"face_deg": 0,
+			"era": "1831",
+			"dialogue": "d-clerk",
+			"missions": [
+				"m4"
+			],
+			"note_facts": [
+				"W28"
+			]
+		}
+	],
+	"dialogue": {
+		"d-carpenter": [
+			{
+				"id": "w-carp-1",
+				"speaker": "carpenter",
+				"text": "Careful. Shavings everywhere.",
+				"pace": "steady",
+				"pause_after_ms": 600
+			},
+			{
+				"id": "w-carp-2",
+				"speaker": "carpenter",
+				"text": "You want to know what holds this place up? Teak.",
+				"say": "You want to know what holds this place up? The teak does.",
+				"facts": [
+					"F04"
+				],
+				"pace": "steady",
+				"pause_after_ms": 600
+			},
+			{
+				"id": "w-carp-3",
+				"speaker": "carpenter",
+				"text": "The pillars, the arches, the beams, the ceilings. All wood.",
+				"facts": [
+					"F04"
+				],
+				"pace": "steady",
+				"pause_after_ms": 600
+			},
+			{
+				"beat": "c1-e1"
+			},
+			{
+				"id": "w-carp-4",
+				"speaker": "carpenter",
+				"text": "Ask the mason about the rest. Masons always say it is all stone.",
+				"pace": "steady",
+				"pause_after_ms": 400
+			}
+		],
+		"d-mason": [
+			{
+				"id": "w-mas-1",
+				"speaker": "mason",
+				"text": "Mind your feet.",
+				"pace": "steady",
+				"pause_after_ms": 600
+			},
+			{
+				"id": "w-mas-2",
+				"speaker": "mason",
+				"text": "Look down. Every pillar stands on a stone base.",
+				"facts": [
+					"F04"
+				],
+				"pace": "steady",
+				"pause_after_ms": 600
+			},
+			{
+				"beat": "c1-e2"
+			},
+			{
+				"id": "w-mas-3",
+				"speaker": "mason",
+				"text": "The outer walls? Mud, under the plaster.",
+				"facts": [
+					"F04"
+				],
+				"pace": "steady",
+				"pause_after_ms": 600
+			},
+			{
+				"beat": "c1-e3"
+			},
+			{
+				"id": "w-mas-4",
+				"speaker": "mason",
+				"text": "The rest is further on. Take the cart, it is a long walk.",
+				"pace": "steady",
+				"pause_after_ms": 400
+			}
+		],
+		"d-carpenter-m2": [
+			{
+				"id": "w2-carp-1",
+				"speaker": "carpenter-m2",
+				"text": "You again. Still staring at the front?",
+				"pace": "steady",
+				"pause_after_ms": 600
+			},
+			{
+				"id": "w2-carp-2",
+				"speaker": "carpenter-m2",
+				"text": "Colour is not my trade. Ask me about wood.",
+				"pace": "steady",
+				"pause_after_ms": 600
+			},
+			{
+				"id": "w2-carp-3",
+				"speaker": "carpenter-m2",
+				"text": "Smiths, carpenters, all the trades have their work yards inside this fort.",
+				"facts": [
+					"W25"
+				],
+				"pace": "steady",
+				"pause_after_ms": 600
+			},
+			{
+				"id": "w2-carp-4",
+				"speaker": "carpenter-m2",
+				"text": "Want a picture of it? Find someone with time. I have none.",
+				"pace": "steady",
+				"pause_after_ms": 400
+			}
+		],
+		"d-sepoy": [
+			{
+				"id": "w2-sep-1",
+				"speaker": "sepoy",
+				"text": "Careful at the edge. It is a long way down.",
+				"pace": "steady",
+				"pause_after_ms": 600
+			},
+			{
+				"id": "w2-sep-2",
+				"speaker": "sepoy",
+				"text": "Two gates into this fort. The Delhi Gate to the north, the Mysore Gate to the south.",
+				"facts": [
+					"W22"
+				],
+				"pace": "steady",
+				"pause_after_ms": 600
+			},
+			{
+				"id": "w2-sep-3",
+				"speaker": "sepoy",
+				"text": "Look at the ditch. Deep and wide, and dry in most parts.",
+				"facts": [
+					"W23"
+				],
+				"pace": "steady",
+				"pause_after_ms": 600
+			},
+			{
+				"id": "w2-sep-4",
+				"speaker": "sepoy",
+				"text": "This wall looks like stone all the way through. Inside, it is red clay.",
+				"facts": [
+					"W21"
+				],
+				"pace": "steady",
+				"pause_after_ms": 600
+			},
+			{
+				"id": "w2-sep-5",
+				"speaker": "sepoy",
+				"text": "Go on down. The palace is the pretty part.",
+				"pace": "steady",
+				"pause_after_ms": 400
+			}
+		],
+		"d-grain-trader": [
+			{
+				"id": "w3-trad-1",
+				"speaker": "grain-trader",
+				"text": "Mind the bags. They are heavier than they look.",
+				"pace": "steady",
+				"pause_after_ms": 600
+			},
+			{
+				"id": "w3-trad-2",
+				"speaker": "grain-trader",
+				"text": "The granaries are inside the fort, behind their own wall.",
+				"facts": [
+					"W24"
+				],
+				"pace": "steady",
+				"pause_after_ms": 600
+			},
+			{
+				"id": "w3-trad-3",
+				"speaker": "grain-trader",
+				"text": "On a durbar day we are allowed into the open court.",
+				"say": "On a darbar day, we are allowed into the open court.",
+				"facts": [
+					"F12",
+					"W27"
+				],
+				"pace": "steady",
+				"pause_after_ms": 600
+			},
+			{
+				"id": "w3-trad-4",
+				"speaker": "grain-trader",
+				"text": "The court has fountains, to cool the air.",
+				"facts": [
+					"F12"
+				],
+				"pace": "steady",
+				"pause_after_ms": 600
+			},
+			{
+				"id": "w3-trad-5",
+				"speaker": "grain-trader",
+				"text": "Now look up. Everyone does.",
+				"facts": [
+					"F12",
+					"R2"
+				],
+				"pace": "steady",
+				"pause_after_ms": 400
+			}
+		],
+		"d-bearer": [
+			{
+				"id": "w3-bear-1",
+				"speaker": "bearer",
+				"text": "Please step around. We have only just set it down.",
+				"pace": "steady",
+				"pause_after_ms": 600
+			},
+			{
+				"id": "w3-bear-2",
+				"speaker": "bearer",
+				"text": "My shoulders know every road in this fort.",
+				"pace": "steady",
+				"pause_after_ms": 600
+			},
+			{
+				"id": "w3-bear-3",
+				"speaker": "bearer",
+				"text": "The highest officers get a balcony, at each end of the court.",
+				"facts": [
+					"F12"
+				],
+				"pace": "steady",
+				"pause_after_ms": 600
+			},
+			{
+				"id": "w3-bear-4",
+				"speaker": "bearer",
+				"text": "The lower officers have the hall under the ruler's balcony.",
+				"facts": [
+					"F12"
+				],
+				"pace": "steady",
+				"pause_after_ms": 600
+			},
+			{
+				"id": "w3-bear-5",
+				"speaker": "bearer",
+				"text": "Us? We wait out here with everybody else.",
+				"pace": "steady",
+				"pause_after_ms": 400
+			}
+		],
+		"d-mason-m3": [
+			{
+				"id": "w3-mas-1",
+				"speaker": "mason-m3",
+				"text": "Going up? Mind your head.",
+				"pace": "steady",
+				"pause_after_ms": 600
+			},
+			{
+				"id": "w3-mas-2",
+				"speaker": "mason-m3",
+				"text": "See these columns? They rise as high as the roof of the upper storey.",
+				"facts": [
+					"F25"
+				],
+				"pace": "steady",
+				"pause_after_ms": 600
+			},
+			{
+				"id": "w3-mas-3",
+				"speaker": "mason-m3",
+				"text": "On a durbar day, nobody like us goes up there.",
+				"facts": [
+					"F12",
+					"W27"
+				],
+				"pace": "steady",
+				"pause_after_ms": 600
+			},
+			{
+				"id": "w3-mas-4",
+				"speaker": "mason-m3",
+				"text": "But you are not from here. Go on.",
+				"pace": "steady",
+				"pause_after_ms": 400
+			}
+		],
+		"d-clerk": [
+			{
+				"id": "w4-clrk-1",
+				"speaker": "clerk",
+				"text": "Not there, please. That pile is in order.",
+				"pace": "steady",
+				"pause_after_ms": 600
+			},
+			{
+				"id": "w4-clrk-2",
+				"speaker": "clerk",
+				"text": "The principal departments of the government sit in this palace now.",
+				"facts": [
+					"F14"
+				],
+				"pace": "steady",
+				"pause_after_ms": 600
+			},
+			{
+				"id": "w4-clrk-3",
+				"speaker": "clerk",
+				"text": "A palace is a strange place to keep ledgers.",
+				"pace": "steady",
+				"pause_after_ms": 600
+			},
+			{
+				"id": "w4-clrk-4",
+				"speaker": "clerk",
+				"text": "Somebody has mixed up these dated papers. Put them in order for me, will you?",
+				"pace": "steady",
+				"pause_after_ms": 400
+			}
+		]
+	},
+	"records": [
+		{
+			"id": "r-buchanan",
+			"title": "Buchanan's journal",
+			"kind": "journal",
+			"at": [
+				-118,
+				86
+			],
+			"beats": [
+				"c1-e4"
+			],
+			"evidence": "e-buchanan"
+		},
+		{
+			"id": "r-inscription",
+			"title": "The inscription stone",
+			"kind": "stone",
+			"at": [
+				-5.5,
+				-2.6
+			],
+			"beats": [
+				"c1-e5"
+			],
+			"evidence": "e-inscription",
+			"placement_note": "The record says only that the stone is let into the wall. Where it sits here is our placement."
+		},
+		{
+			"id": "r-hunter-north",
+			"title": "Hunter's watercolour",
+			"kind": "sketch",
+			"at": [
+				-14,
+				-20
+			],
+			"beats": [
+				"c2-e1"
+			],
+			"evidence": "e-hunter-north",
+			"placement_note": "Where this lies is our placement. Hunter painted the north front, which is not the front you see here."
+		},
+		{
+			"id": "r-hunter-west",
+			"title": "Hunter's west front",
+			"kind": "print",
+			"at": [
+				14,
+				-20
+			],
+			"beats": [
+				"c2-e2"
+			],
+			"evidence": "e-hunter-west",
+			"placement_note": "Where this lies is our placement, not where Hunter stood. We have no copy of this print we are cleared to show."
+		},
+		{
+			"id": "r-hunter-square",
+			"title": "Hunter's square and entrance",
+			"kind": "print",
+			"at": [
+				-4,
+				-30
+			],
+			"beats": [
+				"c2-e3"
+			],
+			"evidence": "e-hunter-square",
+			"placement_note": "Where this lies is our placement, not where Hunter stood. We have no copy of this print we are cleared to show."
+		},
+		{
+			"id": "r-hunter-title",
+			"title": "The title page",
+			"kind": "print",
+			"at": [
+				18,
+				-24
+			],
+			"beats": [
+				"c2-e4"
+			],
+			"evidence": "e-hunter-title",
+			"placement_note": "Where this lies is our placement."
+		},
+		{
+			"id": "r-buchanan-people",
+			"title": "Buchanan on the open court",
+			"kind": "journal",
+			"at": [
+				-10,
+				-26
+			],
+			"beats": [
+				"c3-e6"
+			],
+			"evidence": "e-court-people",
+			"placement_note": "Where this lies is our placement. Where the fountains stood is not recorded."
+		},
+		{
+			"id": "r-buchanan-lower",
+			"title": "Buchanan on the lower officers",
+			"kind": "journal",
+			"at": [
+				-8,
+				-8
+			],
+			"beats": [
+				"c3-e5"
+			],
+			"evidence": "e-court-lower",
+			"placement_note": "Where this lies is our placement."
+		},
+		{
+			"id": "r-buchanan-officers",
+			"title": "Buchanan on the highest officers",
+			"kind": "journal",
+			"at": [
+				12,
+				-12
+			],
+			"beats": [
+				"c3-e4"
+			],
+			"evidence": "e-court-officers",
+			"placement_note": "Where this lies is our placement."
+		},
+		{
+			"id": "r-buchanan-halls",
+			"title": "Buchanan on the upper halls",
+			"kind": "journal",
+			"at": [
+				10,
+				-9
+			],
+			"interior_at": [
+				0.94,
+				2.9,
+				2.6
+			],
+			"pano_node": "upper-hall",
+			"beats": [
+				"c3-e1",
+				"c3-e2",
+				"c3-e3"
+			],
+			"evidence": "e-court-halls",
+			"placement_note": "Where this lies is our placement. This block is one part of the palace Buchanan walked through."
+		},
+		{
+			"id": "r-sankey",
+			"title": "The engineer's paper, 1873",
+			"kind": "ledger",
+			"at": [
+				6,
+				-8
+			],
+			"beats": [
+				"c4-06",
+				"c4-07",
+				"c4-08"
+			],
+			"placement_note": "Where this lies is our placement."
+		},
+		{
+			"id": "r-gazetteer",
+			"title": "The Mysore Gazetteer, 1897",
+			"kind": "ledger",
+			"at": [
+				-4,
+				-8
+			],
+			"beats": [
+				"c4-09"
+			],
+			"placement_note": "Where this lies is our placement."
+		}
+	],
+	"rides": [
+		{
+			"id": "cart-1",
+			"type": "cart",
+			"at": [
+				-31,
+				37
+			],
+			"face_deg": 60,
+			"note_facts": [
+				"W01"
+			],
+			"label": "Bullock cart"
+		},
+		{
+			"id": "horse-1",
+			"type": "horse",
+			"at": [
+				306,
+				30
+			],
+			"face_deg": 10,
+			"label": "Horse",
+			"keys": "Shift to gallop",
+			"keys_touch": "Push the stick all the way to gallop",
+			"credit": "Horse: model created with Meshy (meshy.ai), simplified and rigged for the web. CC BY 4.0 (creativecommons.org/licenses/by/4.0) if made on Meshy's free plan."
+		},
+		{
+			"id": "elephant-1",
+			"type": "elephant",
+			"at": [
+				-88,
+				42
+			],
+			"face_deg": 80,
+			"label": "Elephant",
+			"notice": {
+				"text": "Our reconstruction of court life. No record places this elephant here.",
+				"tier": "reconstruction"
+			},
+			"credit": "Elephant: model created with Meshy (meshy.ai), simplified and rigged for the web. CC BY 4.0 (creativecommons.org/licenses/by/4.0) if made on Meshy's free plan."
+		}
+	],
+	"places": [
+		{
+			"id": "court",
+			"name": "The palace court",
+			"at": [
+				0,
+				-16
+			]
+		},
+		{
+			"id": "avenue",
+			"name": "The avenue",
+			"at": [
+				-118,
+				84
+			],
+			"facts": [
+				"W02"
+			]
+		},
+		{
+			"id": "tank",
+			"name": "A tank of good water",
+			"at": [
+				165,
+				35
+			],
+			"radius": 30,
+			"era": "1791",
+			"facts": [
+				"W03"
+			]
+		},
+		{
+			"id": "open-court",
+			"name": "The open court",
+			"at": [
+				0,
+				-18
+			],
+			"facts": [
+				"W27"
+			],
+			"missions": [
+				"m3"
+			],
+			"era": "1791"
+		},
+		{
+			"id": "rampart-walk",
+			"name": "The rampart walk",
+			"at": [
+				189.4,
+				-24.8,
+				9.14
+			],
+			"facts": [
+				"W21",
+				"W23"
+			],
+			"era": "1791"
+		},
+		{
+			"id": "upper-hall",
+			"name": "The upper hall",
+			"at": [
+				10,
+				-9
+			],
+			"interior_at": [
+				0.94,
+				2.9,
+				2.6
+			],
+			"pano_node": "upper-hall",
+			"facts": [
+				"F12"
+			],
+			"missions": [
+				"m3"
+			]
+		}
+	],
+	"missions": [
+		{
+			"id": "m0",
+			"n": 0,
+			"title": "Nice. Old.",
+			"era": "today",
+			"place_line": "Bengaluru. Today.",
+			"chapter": "prologue",
+			"start": [
+				0,
+				-34
+			],
+			"start_face_deg": 0,
+			"objectives": [
+				{
+					"id": "m0-walk",
+					"kind": "goto",
+					"text": "Walk up to the palace",
+					"at": [
+						0,
+						-10
+					],
+					"radius": 6,
+					"why": "It is what you came here to restore."
+				},
+				{
+					"id": "m0-look",
+					"kind": "story",
+					"text": "Hear why this palace is a puzzle",
+					"beats": [
+						"p-01",
+						"p-02",
+						"p-03",
+						"p-04",
+						"p-05",
+						"p-06",
+						"p-07",
+						"p-08",
+						"p-09",
+						"p-10",
+						"p-11"
+					],
+					"why": "It looks plain, but its own wall calls it the Envy of Heaven.",
+					"why_facts": [
+						"F06",
+						"F17"
+					]
+				},
+				{
+					"id": "m0-wake",
+					"kind": "era",
+					"text": "Use your Epocheye to go back to 1791",
+					"to": "1791",
+					"why": "See this spot in 1791, one of the two dates on its own inscription.",
+					"why_facts": [
+						"F01"
+					],
+					"explain": {
+						"title": "Your Epocheye",
+						"lines": [
+							"This is the device you carry.",
+							"It shows this exact spot as it was in the past.",
+							"Use it to find the proof you need to put this palace back.",
+							"You can look and learn. You cannot change what happened."
+						],
+						"go": "Go back to 1791",
+						"facts": [
+							"F01",
+							"M1"
+						]
+					}
+				}
+			],
+			"job": "This palace looks plain today, yet its own wall calls it the Envy of Heaven. Walk up to it and hear why, then use your Epocheye to go back and see it.",
+			"job_facts": [
+				"F06",
+				"F17",
+				"M1"
+			]
+		},
+		{
+			"id": "m1",
+			"n": 1,
+			"title": "Ten Years",
+			"era": "1791",
+			"place_line": "Bangalore Fort. 1 March 1791.",
+			"chapter": "ch1",
+			"start": [
+				0,
+				-10
+			],
+			"start_face_deg": 0,
+			"objectives": [
+				{
+					"id": "m1-open",
+					"kind": "story",
+					"text": "Hear the question you must answer",
+					"beats": [
+						"c1-01",
+						"c1-01-2",
+						"c1-01-3",
+						"c1-02",
+						"c1-03",
+						"c1-04",
+						"c1-04-2",
+						"c1-q",
+						"c1-05"
+					],
+					"why": "Guidebooks say teak. A surveyor in 1800 said mud.",
+					"why_facts": [
+						"F04",
+						"F05"
+					]
+				},
+				{
+					"id": "m1-carp",
+					"kind": "talk",
+					"text": "Ask the carpenter what the palace is made of",
+					"npc": "carpenter",
+					"why": "He works the timber, so start with him."
+				},
+				{
+					"id": "m1-mason",
+					"kind": "talk",
+					"text": "Ask the mason about the base and the walls",
+					"npc": "mason",
+					"why": "The carpenter only knows the wood. The mason knows the rest."
+				},
+				{
+					"id": "m1-cart",
+					"kind": "ride",
+					"text": "Take the bullock cart to the avenue",
+					"ride": "cart-1",
+					"at": [
+						-112,
+						84
+					],
+					"radius": 12,
+					"why": "The next piece of evidence is a long walk away."
+				},
+				{
+					"id": "m1-journal",
+					"kind": "record",
+					"text": "Find Buchanan's journal",
+					"record": "r-buchanan",
+					"why": "He walked through this palace in 1800 and wrote that it is made of mud.",
+					"why_facts": [
+						"F05",
+						"F11"
+					]
+				},
+				{
+					"id": "m1-stone",
+					"kind": "record",
+					"text": "Go back and find the inscription stone",
+					"record": "r-inscription",
+					"why": "It is the palace's own record of when it was built.",
+					"why_facts": [
+						"F01",
+						"F06"
+					]
+				},
+				{
+					"id": "m1-choice",
+					"kind": "choice",
+					"text": "Decide what the palace is made of",
+					"beat": "c1-choice",
+					"why": "You have heard the workers and read the records. Choose what they support.",
+					"why_facts": [
+						"F04",
+						"F05"
+					]
+				},
+				{
+					"id": "m1-restore",
+					"kind": "restore",
+					"text": "Restore the structure",
+					"classes": [
+						"stone",
+						"mud",
+						"teak"
+					],
+					"slot": "S1",
+					"why": "Now you can prove it: stone, mud and teak.",
+					"why_facts": [
+						"F04"
+					],
+					"done": {
+						"title": "The structure is back",
+						"why": "Stone bases, mud walls and a teak frame: the palace as the record describes it.",
+						"facts": [
+							"F04"
+						]
+					}
+				},
+				{
+					"id": "m1-close",
+					"kind": "story",
+					"text": "Hear what you have proved",
+					"beats": [
+						"c1-answer",
+						"c1-answer-2",
+						"c1-know",
+						"c1-hook"
+					],
+					"why": "It sums up your proof and points to the next question."
+				}
+			],
+			"end": {
+				"splash": "MONUMENT RESTORED",
+				"place": "The Summer Palace",
+				"year": "1791",
+				"ask_app": true
+			},
+			"job": "Find out what this palace is really made of. Ask the people working on it, check the written records, then restore its structure.",
+			"job_facts": [
+				"F04",
+				"F05"
+			],
+			"where": "You are now in 1791, inside the fort around the palace. You can look and learn, but you cannot change what happens here.",
+			"where_facts": [
+				"F01"
+			]
+		},
+		{
+			"id": "m2",
+			"n": 2,
+			"title": "The Year It Was Finished",
+			"era": "1791",
+			"place_line": "Bangalore Fort. 1 March 1791.",
+			"chapter": "ch2",
+			"start": [
+				0,
+				-22
+			],
+			"start_face_deg": 0,
+			"objectives": [
+				{
+					"id": "m2-open",
+					"kind": "story",
+					"text": "Hear who painted this palace in 1792",
+					"beats": [
+						"c2-01",
+						"c2-03",
+						"c2-04",
+						"c2-05",
+						"c2-06",
+						"c2-07",
+						"c2-08",
+						"c2-09",
+						"c2-10",
+						"c2-11",
+						"c2-q"
+					],
+					"why": "His are the oldest dated pictures of it that we know of.",
+					"why_facts": [
+						"F08",
+						"R4"
+					]
+				},
+				{
+					"id": "m2-carp",
+					"kind": "talk",
+					"text": "Ask the carpenter about the colours",
+					"npc": "carpenter-m2",
+					"why": "See if anyone here can tell you what colour this front was."
+				},
+				{
+					"id": "m2-north",
+					"kind": "record",
+					"text": "Find Hunter's watercolour",
+					"record": "r-hunter-north",
+					"why": "He painted it himself, so it is your best guide to the colours.",
+					"why_facts": [
+						"F08",
+						"M2"
+					]
+				},
+				{
+					"id": "m2-compare",
+					"kind": "sketch_compare",
+					"text": "Hold his watercolour up against this front",
+					"evidence": "e-hunter-north",
+					"at": [
+						0,
+						-16
+					],
+					"radius": 6,
+					"lock": false,
+					"caption": "Hunter painted the north front. This is a different front. His colours can guide us here, but his picture does not show this wall.",
+					"facts": [
+						"F08",
+						"M2",
+						"W29"
+					],
+					"tier": "reconstruction",
+					"why": "Check what it can and cannot tell you about this wall.",
+					"why_facts": [
+						"F08",
+						"M2"
+					]
+				},
+				{
+					"id": "m2-west",
+					"kind": "record",
+					"text": "Find Hunter's view of the west front",
+					"record": "r-hunter-west",
+					"why": "His other views show what stood where.",
+					"why_facts": [
+						"F08b"
+					]
+				},
+				{
+					"id": "m2-square",
+					"kind": "record",
+					"text": "Find Hunter's view of the square and entrance",
+					"record": "r-hunter-square",
+					"why": "It is another of the views made after his drawings.",
+					"why_facts": [
+						"F08b"
+					]
+				},
+				{
+					"id": "m2-title",
+					"kind": "record",
+					"text": "Find the title page of his prints",
+					"record": "r-hunter-title",
+					"why": "It tells you when his views were printed, and by whom.",
+					"why_facts": [
+						"F08d"
+					]
+				},
+				{
+					"id": "m2-choice",
+					"kind": "choice",
+					"text": "Decide how to use Hunter's pictures",
+					"beat": "c2-choice",
+					"why": "A print made after he died is not the same as his own painting.",
+					"why_facts": [
+						"F08",
+						"F08c",
+						"F08d"
+					]
+				},
+				{
+					"id": "m2-restore",
+					"kind": "restore",
+					"text": "Restore the front's colour",
+					"restoration": "exterior-colour",
+					"classes": [],
+					"slot": "S2",
+					"label": "Colours after Hunter's watercolour of a different front. Where they sit on this front is our reconstruction.",
+					"facts": [
+						"M2"
+					],
+					"tier": "reconstruction",
+					"pano_node": "forecourt",
+					"why": "You know what his painting can prove, and what it cannot.",
+					"why_facts": [
+						"F08",
+						"M2"
+					],
+					"done": {
+						"title": "The front has its colour back",
+						"why": "The colours follow Hunter's watercolour. Where they sit on this front is our reconstruction.",
+						"facts": [
+							"F08",
+							"M2"
+						]
+					}
+				},
+				{
+					"id": "m2-close",
+					"kind": "story",
+					"text": "Hear what you have restored",
+					"beats": [
+						"c2-recon",
+						"c2-recon-2",
+						"c2-recon-3",
+						"c2-know-2",
+						"c2-know-3",
+						"c2-hook"
+					],
+					"why": "Then find out what this palace was like when it was full."
+				}
+			],
+			"end": {
+				"splash": "MONUMENT RESTORED",
+				"place": "The Summer Palace",
+				"year": "1792"
+			},
+			"job": "Find out what colour this palace was. Collect Hunter's pictures of it, decide how far to trust them, then restore the colour of the front.",
+			"job_facts": [
+				"F08",
+				"F08b",
+				"M2"
+			]
+		},
+		{
+			"id": "m3",
+			"n": 3,
+			"title": "A Machine for Being Seen",
+			"era": "1791",
+			"place_line": "The palace court. A durbar, as Buchanan's account arranges it.",
+			"place_note": "Our staging. No record describes a durbar on this day.",
+			"place_note_facts": [
+				"W27"
+			],
+			"chapter": "ch3",
+			"start": [
+				0,
+				-28
+			],
+			"start_face_deg": 0,
+			"staging": {
+				"id": "durbar",
+				"tier": "reconstruction",
+				"facts": [
+					"F12",
+					"R2",
+					"W27"
+				],
+				"ruler": {
+					"at": [
+						0.0,
+						1.5,
+						2.6
+					],
+					"silent": true,
+					"no_dialogue": true,
+					"no_label": true,
+					"min_view_distance_m": 14,
+					"visible_during": [
+						"m3-court",
+						"m3-trader",
+						"m3-bearer",
+						"m3-people",
+						"m3-look"
+					],
+					"placement_note": "A distant figure on the balcony of the block that survives. No record says which balcony he used.",
+					"figure": "merchant",
+					"face_deg": 0
+				}
+			},
+			"objectives": [
+				{
+					"id": "m3-open",
+					"kind": "story",
+					"text": "Hear who wrote down how the palace worked",
+					"beats": [
+						"c3-01",
+						"c3-02",
+						"c3-03",
+						"c3-04",
+						"c3-05",
+						"c3-06",
+						"c3-07",
+						"c3-08",
+						"c3-q"
+					],
+					"why": "He walked through it in 1800 and wrote down how it had worked.",
+					"why_facts": [
+						"F11",
+						"F12"
+					]
+				},
+				{
+					"id": "m3-court",
+					"kind": "goto",
+					"text": "Go and stand in the open court",
+					"at": [
+						0,
+						-18
+					],
+					"radius": 7,
+					"why": "This is where the public were let in.",
+					"why_facts": [
+						"F12"
+					]
+				},
+				{
+					"id": "m3-trader",
+					"kind": "talk",
+					"text": "Ask the grain trader what happens in this court",
+					"npc": "grain-trader",
+					"why": "He comes here with the public.",
+					"why_facts": [
+						"F12",
+						"W27"
+					]
+				},
+				{
+					"id": "m3-bearer",
+					"kind": "talk",
+					"text": "Ask the palanquin bearer who goes where",
+					"npc": "bearer",
+					"why": "He waits out here and sees everyone arrive."
+				},
+				{
+					"id": "m3-people",
+					"kind": "record",
+					"text": "Read what Buchanan wrote about the open court",
+					"record": "r-buchanan-people",
+					"why": "His account is your proof of where the public stood.",
+					"why_facts": [
+						"F12"
+					]
+				},
+				{
+					"id": "m3-look",
+					"kind": "look_at",
+					"text": "Look up at the balcony and hold your view",
+					"target": [
+						0.0,
+						1.5,
+						3.6
+					],
+					"from": [
+						0,
+						-20
+					],
+					"radius": 5,
+					"hold_ms": 2500,
+					"facts": [
+						"F12",
+						"R2",
+						"W27"
+					],
+					"why": "In Buchanan's account the ruler sat on an upper balcony, above everyone.",
+					"why_facts": [
+						"F12",
+						"R2",
+						"W27"
+					]
+				},
+				{
+					"id": "m3-lower",
+					"kind": "record",
+					"text": "Read where the lower officers were placed",
+					"record": "r-buchanan-lower",
+					"why": "The court was arranged by rank.",
+					"why_facts": [
+						"F12",
+						"R2"
+					]
+				},
+				{
+					"id": "m3-officers",
+					"kind": "record",
+					"text": "Read where the highest officers were placed",
+					"record": "r-buchanan-officers",
+					"why": "Compare it with the lower officers. Height is rank.",
+					"why_facts": [
+						"F12",
+						"R2"
+					]
+				},
+				{
+					"id": "m3-mason",
+					"kind": "talk",
+					"text": "Talk to the mason at the stair",
+					"npc": "mason-m3",
+					"why": "He can point you up to the gallery."
+				},
+				{
+					"id": "m3-climb",
+					"kind": "climb",
+					"text": "Climb to the gallery",
+					"at": [
+						10,
+						-9
+					],
+					"interior_at": [
+						8,
+						4.55,
+						2.6
+					],
+					"to_level_m": 2.6,
+					"pano_node": "upper-hall",
+					"why": "See the court from above.",
+					"why_facts": [
+						"F12"
+					]
+				},
+				{
+					"id": "m3-halls",
+					"kind": "record",
+					"text": "Read what Buchanan wrote about the upper halls",
+					"record": "r-buchanan-halls",
+					"why": "It tells you how the top floor was laid out.",
+					"why_facts": [
+						"F12"
+					]
+				},
+				{
+					"id": "m3-height",
+					"kind": "story",
+					"text": "Hear what this layout means",
+					"beats": [
+						"c3-09",
+						"c3-10",
+						"c3-11",
+						"c3-12",
+						"c3-13",
+						"c3-14"
+					],
+					"pano_node": "balcony",
+					"pano_look": [
+						0,
+						-14,
+						0.9
+					],
+					"why": "Who stood where tells you who mattered.",
+					"why_facts": [
+						"R2"
+					]
+				},
+				{
+					"id": "m3-choice",
+					"kind": "choice",
+					"text": "Decide what made it glitter",
+					"beat": "c3-choice",
+					"why": "Buchanan wrote down what he saw on these walls.",
+					"why_facts": [
+						"F13"
+					]
+				},
+				{
+					"id": "m3-restore",
+					"kind": "restore",
+					"text": "Restore the painted halls",
+					"restoration": "painted-walls",
+					"classes": [],
+					"slot": "S3",
+					"label": "Our reconstruction of the idiom. What was on each wall is not recorded.",
+					"facts": [
+						"M3",
+						"U4"
+					],
+					"tier": "reconstruction",
+					"pano_node": "upper-hall",
+					"why": "You can show the style. What was on each wall is not recorded.",
+					"why_facts": [
+						"M3",
+						"U4"
+					],
+					"done": {
+						"title": "The painted halls are back",
+						"why": "Buchanan saw rooms \"neatly painted, and ornamented with false gilding\". What was on each wall is not recorded.",
+						"facts": [
+							"F13",
+							"M3",
+							"U4"
+						]
+					}
+				},
+				{
+					"id": "m3-close",
+					"kind": "story",
+					"text": "Hear what you have restored",
+					"beats": [
+						"c3-recon",
+						"c3-know",
+						"c3-know-2",
+						"c3-hook"
+					],
+					"why": "Then find out what became of a palace with no court.",
+					"why_facts": [
+						"F10",
+						"F14"
+					]
+				}
+			],
+			"end": {
+				"splash": "MONUMENT RESTORED",
+				"place": "The Summer Palace",
+				"year": "1800"
+			},
+			"job": "Find out how the court used this building. Stand with the public, read who was placed where, go upstairs, then restore the painted halls.",
+			"job_facts": [
+				"F12",
+				"F13",
+				"R2"
+			]
+		},
+		{
+			"id": "m4",
+			"n": 4,
+			"title": "The Office",
+			"era": "1831",
+			"place_line": "The palace. 1831 to 1868.",
+			"place_note": "The clerks and ledgers are our reconstruction.",
+			"place_note_facts": [
+				"W28",
+				"U1"
+			],
+			"chapter": "ch4",
+			"start": [
+				0,
+				-14
+			],
+			"start_face_deg": 0,
+			"objectives": [
+				{
+					"id": "m4-shift",
+					"kind": "era",
+					"text": "Use your Epocheye to go forward to 1831",
+					"to": "1831",
+					"why": "By then the court is gone and the rooms have a new use.",
+					"why_facts": [
+						"F14"
+					],
+					"explain": {
+						"title": "Forward to 1831",
+						"lines": [
+							"Your Epocheye will show this same spot in 1831.",
+							"The court is gone. Government offices are moving in.",
+							"You can look and learn. You cannot change what happened."
+						],
+						"go": "Go to 1831",
+						"facts": [
+							"F14"
+						]
+					},
+					"arrive": {
+						"title": "You are in 1831",
+						"lines": [
+							"This is the same palace. It now holds the principal departments of the Administration.",
+							"The clerks and desks you see are our reconstruction."
+						],
+						"facts": [
+							"F14",
+							"W28"
+						]
+					}
+				},
+				{
+					"id": "m4-open",
+					"kind": "story",
+					"text": "Hear how the palace became an office",
+					"beats": [
+						"c4-01",
+						"c4-02",
+						"c4-03",
+						"c4-04",
+						"c4-05",
+						"c4-q"
+					],
+					"why": "In 1831 the British put their offices here.",
+					"why_facts": [
+						"F14"
+					]
+				},
+				{
+					"id": "m4-clerk",
+					"kind": "talk",
+					"text": "Talk to the clerk",
+					"npc": "clerk",
+					"why": "He can tell you what this place is now.",
+					"why_facts": [
+						"F14",
+						"W28"
+					]
+				},
+				{
+					"id": "m4-order",
+					"kind": "order",
+					"text": "Put the dated records in order",
+					"beat": "c4-order",
+					"why": "The dates show what happened to the palace, and when."
+				},
+				{
+					"id": "m4-sankey",
+					"kind": "record",
+					"text": "Read the engineer's paper",
+					"record": "r-sankey",
+					"why": "It says why the offices moved out.",
+					"why_facts": [
+						"F15"
+					]
+				},
+				{
+					"id": "m4-gazetteer",
+					"kind": "record",
+					"text": "Read the Gazetteer",
+					"record": "r-gazetteer",
+					"why": "It says what happened to the palace after that.",
+					"why_facts": [
+						"F19"
+					]
+				},
+				{
+					"id": "m4-close",
+					"kind": "story",
+					"text": "Hear how this part survived",
+					"beats": [
+						"c4-10",
+						"c4-12",
+						"c4-13",
+						"c4-turn",
+						"c4-14",
+						"c4-15",
+						"c4-know",
+						"c4-know-2",
+						"c4-hook"
+					],
+					"why": "We think the offices helped keep it standing. No record says so.",
+					"why_facts": [
+						"R3",
+						"F19"
+					]
+				}
+			],
+			"end": {
+				"splash": "RECORD IN ORDER",
+				"place": "The Office",
+				"year": "1831 to 1868"
+			},
+			"job": "Find out what became of the palace when the court was gone. Go forward to 1831, put the dated records in order, and see what may have kept this part standing.",
+			"job_facts": [
+				"F14",
+				"F19",
+				"R3"
+			]
+		},
+		{
+			"id": "m5",
+			"n": 5,
+			"title": "What Nobody Wrote Down",
+			"era": "today",
+			"place_line": "Bengaluru. Today.",
+			"chapter": "ch5",
+			"start": [
+				0,
+				-14
+			],
+			"start_face_deg": 0,
+			"objectives": [
+				{
+					"id": "m5-shift",
+					"kind": "era",
+					"text": "Use your Epocheye to come back to today",
+					"to": "today",
+					"why": "The last part of the case is in the rooms that still stand.",
+					"why_facts": [
+						"F19"
+					],
+					"explain": {
+						"title": "Back to today",
+						"lines": [
+							"Your Epocheye will bring you back to this spot as it is now.",
+							"Almost all of the paint is gone, so what is left is your evidence."
+						],
+						"go": "Come back to today",
+						"facts": [
+							"F17",
+							"F18"
+						]
+					},
+					"arrive": {
+						"title": "You are back in the present",
+						"lines": [
+							"This is the palace as it stands now: dark wood and faded walls."
+						],
+						"facts": [
+							"F18"
+						]
+					}
+				},
+				{
+					"id": "m5-up",
+					"kind": "climb",
+					"text": "Go up to the hall",
+					"at": [
+						10,
+						-9
+					],
+					"interior_at": [
+						0.94,
+						2.9,
+						2.6
+					],
+					"to_level_m": 2.6,
+					"pano_node": "upper-hall",
+					"why": "The last evidence is up here, on the walls and ceiling.",
+					"why_facts": [
+						"F18"
+					]
+				},
+				{
+					"id": "m5-open",
+					"kind": "story",
+					"text": "Hear what went missing",
+					"beats": [
+						"c5-01",
+						"c5-02",
+						"c5-03",
+						"c5-04",
+						"c5-05",
+						"c5-06",
+						"c5-q"
+					],
+					"why": "Nobody recorded when the paint was lost.",
+					"why_facts": [
+						"U1"
+					]
+				},
+				{
+					"id": "m5-look",
+					"kind": "look_at",
+					"text": "Look up at the empty ceiling and hold your view",
+					"target": [
+						-2.8,
+						5,
+						5.7
+					],
+					"from": [
+						0.94,
+						2.9,
+						2.6
+					],
+					"radius": 8,
+					"hold_ms": 2500,
+					"pano_node": "upper-hall",
+					"facts": [
+						"F17"
+					],
+					"why": "Almost all of the painting is gone.",
+					"why_facts": [
+						"F17"
+					]
+				},
+				{
+					"id": "m5-traces",
+					"kind": "story",
+					"text": "See what traces are left",
+					"beats": [
+						"c5-e1",
+						"c5-e2",
+						"c5-e3",
+						"c5-e4",
+						"c5-e5"
+					],
+					"why": "These faint fragments are all the proof you have.",
+					"why_facts": [
+						"F17",
+						"F18"
+					]
+				},
+				{
+					"id": "m5-choice",
+					"kind": "choice",
+					"text": "Decide what to do with the empty panel",
+					"beat": "c5-choice",
+					"why": "You may only use what you can prove.",
+					"why_facts": [
+						"M1"
+					]
+				},
+				{
+					"id": "m5-restore",
+					"kind": "restore",
+					"text": "Restore the ceiling",
+					"restoration": "painted-ceiling",
+					"classes": [],
+					"slot": "S5",
+					"label": "Our reconstruction. The one recorded pattern is repeated and labelled. No pattern is invented.",
+					"facts": [
+						"M4"
+					],
+					"tier": "reconstruction",
+					"pano_node": "upper-hall",
+					"why": "The one recorded pattern is repeated and labelled. Nothing is invented.",
+					"why_facts": [
+						"M4"
+					],
+					"done": {
+						"title": "The ceiling is back",
+						"why": "The one recorded pattern, repeated and labelled as our reconstruction. No pattern is invented.",
+						"facts": [
+							"M4"
+						]
+					}
+				},
+				{
+					"id": "m5-reveal",
+					"kind": "reveal",
+					"text": "See the whole palace put back",
+					"beat": "c5-reveal",
+					"why": "This is everything you have restored.",
+					"why_facts": [
+						"M2",
+						"M3",
+						"M4"
+					]
+				},
+				{
+					"id": "m5-lines",
+					"kind": "story",
+					"text": "Hear what you are looking at",
+					"beats": [
+						"c5-07",
+						"c5-08"
+					],
+					"why": "This is the answer to the question you started with.",
+					"why_facts": [
+						"F06"
+					]
+				},
+				{
+					"id": "m5-proof",
+					"kind": "proof",
+					"text": "Press the switch to show only what is proved",
+					"beat": "c5-proof",
+					"why": "See how much is on record and how much is our reconstruction.",
+					"why_facts": [
+						"M1"
+					]
+				},
+				{
+					"id": "m5-vote",
+					"kind": "vote",
+					"text": "Choose which year you would put back",
+					"beat": "c5-vote",
+					"why": "You have the evidence. The choice is yours.",
+					"why_facts": [
+						"M1"
+					]
+				},
+				{
+					"id": "m5-last",
+					"kind": "story",
+					"text": "Hear how the story ends",
+					"beats": [
+						"c5-09",
+						"c5-10",
+						"c5-11"
+					],
+					"why": "It sums up what you have learned."
+				},
+				{
+					"id": "m5-know",
+					"kind": "ending",
+					"text": "See what you now know",
+					"why": "It gathers everything you have proved."
+				}
+			],
+			"end": {
+				"splash": "MONUMENT RESTORED",
+				"place": "The Summer Palace",
+				"year": "Today",
+				"ask_app": true
+			},
+			"job": "Come back to today and face what nobody wrote down. Look at the empty ceiling, decide what to do about it, then see the whole palace put back.",
+			"job_facts": [
+				"U1",
+				"F17",
+				"M4"
+			]
+		}
+	],
+	"premise": [
+		{
+			"label": "You are",
+			"text": "A restorer from today."
+		},
+		{
+			"label": "You carry",
+			"text": "An Epocheye. It shows a place as it was in the past."
+		},
+		{
+			"label": "Your job",
+			"text": "This palace looks plain, but its own wall calls it the Envy of Heaven. Find out why, and put it back, using only what you can prove.",
+			"facts": [
+				"F06",
+				"F17",
+				"M1"
+			]
+		}
+	]
+}

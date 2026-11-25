@@ -1,0 +1,272 @@
+[
+ {
+  "id": "w2-carp-1",
+  "voice": "kokoro-hm-omega",
+  "text": "You again. Still staring at the front?",
+  "heard": "You again, still staring at the front.",
+  "match": true,
+  "wpm": 143,
+  "target_wpm": 150,
+  "speed": 0.8
+ },
+ {
+  "id": "w2-carp-2",
+  "voice": "kokoro-hm-omega",
+  "text": "Colour is not my trade. Ask me about wood.",
+  "heard": "Color is not my trade. Ask me about wood.",
+  "match": true,
+  "wpm": 140,
+  "target_wpm": 150,
+  "speed": 0.773
+ },
+ {
+  "id": "w2-carp-3",
+  "voice": "kokoro-hm-omega",
+  "text": "Smiths, carpenters, all the trades have their work yards inside this fort.",
+  "heard": "Smiths, carpenters, all the trades have their work yards inside this fort.",
+  "match": true,
+  "wpm": 145,
+  "target_wpm": 150,
+  "speed": 0.9
+ },
+ {
+  "id": "w2-carp-4",
+  "voice": "kokoro-hm-omega",
+  "text": "Want a picture of it? Find someone with time. I have none.",
+  "heard": "Want a picture of it find someone with time I have none",
+  "match": true,
+  "wpm": 149,
+  "target_wpm": 150,
+  "speed": 0.7
+ },
+ {
+  "id": "w2-sep-1",
+  "voice": "kokoro-mix-sepoy",
+  "text": "Careful at the edge. It is a long way down.",
+  "heard": "Careful at the edge. It is a long way down.",
+  "match": true,
+  "wpm": 152,
+  "target_wpm": 150,
+  "speed": 0.7
+ },
+ {
+  "id": "w2-sep-2",
+  "voice": "kokoro-mix-sepoy",
+  "text": "Two gates into this fort. The Delhi Gate to the north, the Mysore Gate to the south.",
+  "heard": "Two gates into this fort, the Delhi gate to the north, the Mysore gate to the south.",
+  "match": true,
+  "wpm": 146,
+  "target_wpm": 150,
+  "speed": 0.7
+ },
+ {
+  "id": "w2-sep-3",
+  "voice": "kokoro-mix-sepoy",
+  "text": "Look at the ditch. Deep and wide, and dry in most parts.",
+  "heard": "Look at the ditch, deep and wide, and dry in most parts.",
+  "match": true,
+  "wpm": 142,
+  "target_wpm": 150,
+  "speed": 0.7
+ },
+ {
+  "id": "w2-sep-4",
+  "voice": "kokoro-mix-sepoy",
+  "text": "This wall looks like stone all the way through. Inside, it is red clay.",
+  "heard": "This wall looks like stone all the way through, inside it is red clay.",
+  "match": true,
+  "wpm": 143,
+  "target_wpm": 150,
+  "speed": 0.764
+ },
+ {
+  "id": "w2-sep-5",
+  "voice": "kokoro-mix-sepoy",
+  "text": "Go on down. The palace is the pretty part.",
+  "heard": "Go on down. The palace is the pretty part.",
+  "match": true,
+  "wpm": 143,
+  "target_wpm": 150,
+  "speed": 0.74
+ },
+ {
+  "id": "w3-trad-1",
+  "voice": "kokoro-mix-trader",
+  "text": "Mind the bags. They are heavier than they look.",
+  "heard": "Mind the bags, they are heavier than they look.",
+  "match": true,
+  "wpm": 146,
+  "target_wpm": 150,
+  "speed": 0.7
+ },
+ {
+  "id": "w3-trad-2",
+  "voice": "kokoro-mix-trader",
+  "text": "The granaries are inside the fort, behind their own wall.",
+  "heard": "The granaries are inside the fort behind their own wall.",
+  "match": true,
+  "wpm": 164,
+  "target_wpm": 150,
+  "speed": 0.9
+ },
+ {
+  "id": "w3-trad-3",
+  "voice": "kokoro-mix-trader",
+  "text": "On a darbar day, we are allowed into the open court.",
+  "heard": "On a Darbar day, we are allowed into the open court.",
+  "match": true,
+  "wpm": 146,
+  "target_wpm": 150,
+  "speed": 0.7
+ },
+ {
+  "id": "w3-trad-4",
+  "voice": "kokoro-mix-trader",
+  "text": "The court has fountains, to cool the air.",
+  "heard": "The court has fountains to cool the air.",
+  "match": true,
+  "wpm": 137,
+  "target_wpm": 150,
+  "speed": 0.7
+ },
+ {
+  "id": "w3-trad-5",
+  "voice": "kokoro-mix-trader",
+  "text": "Now look up. Everyone does.",
+  "heard": "Now look up, everyone does.",
+  "match": true,
+  "wpm": 158,
+  "target_wpm": 150,
+  "speed": 0.9
+ },
+ {
+  "id": "w3-bear-1",
+  "voice": "kokoro-mix-bearer",
+  "text": "Please step around. We have only just set it down.",
+  "heard": "Please step around. We have only just set it down.",
+  "match": true,
+  "wpm": 139,
+  "target_wpm": 150,
+  "speed": 0.7
+ },
+ {
+  "id": "w3-bear-2",
+  "voice": "kokoro-mix-bearer",
+  "text": "My shoulders know every road in this fort.",
+  "heard": "My shoulders know every road in this fort.",
+  "match": true,
+  "wpm": 168,
+  "target_wpm": 150,
+  "speed": 0.9
+ },
+ {
+  "id": "w3-bear-3",
+  "voice": "kokoro-mix-bearer",
+  "text": "The highest officers get a balcony, at each end of the court.",
+  "heard": "The highest officers get a balcony at each end of the court.",
+  "match": true,
+  "wpm": 142,
+  "target_wpm": 150,
+  "speed": 0.7
+ },
+ {
+  "id": "w3-bear-4",
+  "voice": "kokoro-mix-bearer",
+  "text": "The lower officers have the hall under the ruler's balcony.",
+  "heard": "The lower officers have the hall under the ruler's balcony.",
+  "match": true,
+  "wpm": 152,
+  "target_wpm": 150,
+  "speed": 0.9
+ },
+ {
+  "id": "w3-bear-5",
+  "voice": "kokoro-mix-bearer",
+  "text": "Us? We wait out here with everybody else.",
+  "heard": "Us, we wait out here with everybody else.",
+  "match": true,
+  "wpm": 138,
+  "target_wpm": 150,
+  "speed": 0.723
+ },
+ {
+  "id": "w3-mas-1",
+  "voice": "kokoro-hm-psi",
+  "text": "Going up? Mind your head.",
+  "heard": "Going up, mind your head.",
+  "match": true,
+  "wpm": 142,
+  "target_wpm": 150,
+  "speed": 0.732
+ },
+ {
+  "id": "w3-mas-2",
+  "voice": "kokoro-hm-psi",
+  "text": "See these columns? They rise as high as the roof of the upper storey.",
+  "heard": "See these columns, they rise as high as the roof of the upper story.",
+  "match": true,
+  "wpm": 151,
+  "target_wpm": 150,
+  "speed": 0.7
+ },
+ {
+  "id": "w3-mas-3",
+  "voice": "kokoro-hm-psi",
+  "text": "On a durbar day, nobody like us goes up there.",
+  "heard": "On a Durbar day, nobody like us goes up there.",
+  "match": true,
+  "wpm": 150,
+  "target_wpm": 150,
+  "speed": 0.7
+ },
+ {
+  "id": "w3-mas-4",
+  "voice": "kokoro-hm-psi",
+  "text": "But you are not from here. Go on.",
+  "heard": "But you are not from here. Go on.",
+  "match": true,
+  "wpm": 165,
+  "target_wpm": 150,
+  "speed": 0.7
+ },
+ {
+  "id": "w4-clrk-1",
+  "voice": "kokoro-mix-clerk",
+  "text": "Not there, please. That pile is in order.",
+  "heard": "Not there, please. That pile is in order.",
+  "match": true,
+  "wpm": 141,
+  "target_wpm": 150,
+  "speed": 0.783
+ },
+ {
+  "id": "w4-clrk-2",
+  "voice": "kokoro-mix-clerk",
+  "text": "The principal departments of the government sit in this palace now.",
+  "heard": "The principal departments of the government sit in this palace now.",
+  "match": true,
+  "wpm": 133,
+  "target_wpm": 150,
+  "speed": 0.797
+ },
+ {
+  "id": "w4-clrk-3",
+  "voice": "kokoro-mix-clerk",
+  "text": "A palace is a strange place to keep ledgers.",
+  "heard": "A palace is a strange place to keep ledgers.",
+  "match": true,
+  "wpm": 137,
+  "target_wpm": 150,
+  "speed": 0.705
+ },
+ {
+  "id": "w4-clrk-4",
+  "voice": "kokoro-mix-clerk",
+  "text": "Somebody has mixed up these dated papers. Put them in order for me, will you?",
+  "heard": "Somebody has mixed up these dated papers, put them in order for me, will you?",
+  "match": true,
+  "wpm": 144,
+  "target_wpm": 150,
+  "speed": 0.7
+ }
+]

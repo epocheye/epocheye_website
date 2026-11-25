@@ -6,11 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint && node scripts/check-monument-claims.mjs && node scripts/play/validate-story.mjs",
+    "lint": "eslint && node scripts/check-monument-claims.mjs && node scripts/play/validate-story.mjs && node scripts/play/validate-missions.mjs",
     "check:claims": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-monument-claims.mjs",
     "seed:crowd": "node scripts/seedFromCsv.mjs",
     "models:optimize": "node scripts/optimize-models.mjs",
-    "play:validate": "node scripts/play/validate-story.mjs"
+    "play:validate": "node scripts/play/validate-story.mjs && node scripts/play/validate-missions.mjs"
   },
   "dependencies": {
     "@clerk/nextjs": "^7.9.4",
@@ -20,6 +20,7 @@
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.5.0",
     "@react-three/postprocessing": "^3.0.4",
+    "@react-three/rapier": "^2.2.0",
     "@sentry/nextjs": "^10.32.1",
     "@supabase/supabase-js": "^2.47.0",
     "@vercel/analytics": "^1.6.1",

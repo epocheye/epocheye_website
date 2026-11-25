@@ -1,0 +1,22 @@
+[
+ {
+  "id": "w-carp-2",
+  "voice": "kokoro-hm-omega",
+  "text": "You want to know what holds this place up? The teak does.",
+  "heard": "You want to know what holds this place up, the teak does.",
+  "match": true,
+  "wpm": 147,
+  "target_wpm": 150,
+  "speed": 0.7
+ },
+ {
+  "id": "w-mas-4",
+  "voice": "kokoro-hm-psi",
+  "text": "The rest is further on. Take the cart, it is a long walk.",
+  "heard": "The rest is further on. Take the cart. It is a long walk.",
+  "match": true,
+  "wpm": 148,
+  "target_wpm": 150,
+  "speed": 0.7
+ }
+]

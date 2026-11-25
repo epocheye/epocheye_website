@@ -1,0 +1,1578 @@
+{
+  "slug": "tipu-summer-palace-bengaluru",
+  "site": "tools/play/sites/tipu-summer-palace-bengaluru.json",
+  "version": 4,
+  "_note": "Open-world export config. Read by tools/play/export_world.py. Blender coordinates, metres, Z up.",
+  "moment": {
+    "date": "1791-03-01",
+    "time": "17:10",
+    "sun_elevation_deg": 13.3,
+    "sun_azimuth_deg": 258.5,
+    "model_y_bearing_deg": 286.8
+  },
+  "ground_z": -0.7,
+  "bake_hide_modifiers": [
+    "TSP_Scatter"
+  ],
+  "bake_hide_collections": [
+    "TSP_INFERRED_people",
+    "TSP_INFERRED_people_walking",
+    "TSP_Throne_rebuilt",
+    "Throne__COURT_1791"
+  ],
+  "never_export": [
+    "TSP_fortR_guns",
+    "TSP_throne",
+    "Throne",
+    "TSP_fig_",
+    "TSP_person_",
+    "TSP_walker_",
+    "char1"
+  ],
+  "cells": {
+    "court": {
+      "bounds": [
+        -290,
+        -80,
+        90,
+        135
+      ],
+      "groups": {
+        "palace": {
+          "collections": [
+            "TSP_Palace_rebuilt",
+            "TSP_Palace_detail",
+            "TSP_Palace_columns",
+            "TSP_Palace_stairs_rebuilt"
+          ],
+          "target_tris": 76000,
+          "detail_floor_tris": 64,
+          "keep_piece_m": 2.5,
+          "planar_merge": true,
+          "drop_buried": true,
+          "atlas": 4096,
+          "sample_scale": 2,
+          "uv_focus": { "bounds": [-75, -65, 65, 90], "step": 3, "heights": [1.6, 3.4], "hidden": 0.2 },
+          "_states_note": "Only today's palace atlas ships (palace_then carries a CC BY wall texture and is not published), so only today is baked. The past is today's atlas under the past grade.",
+          "states": [
+            "now"
+          ],
+          "extra": {
+            "now": [
+              "Wall_ground_"
+            ]
+          },
+          "classes": [
+            {
+              "id": 1,
+              "name": "stone",
+              "match": "PLINTH|PILLAR_STONE|BASE_EXT|FLOOR|floor_granite|Platform"
+            },
+            {
+              "id": 2,
+              "name": "mud",
+              "match": "WALL_|lime_fresh|limewash|roof_lime"
+            },
+            {
+              "id": 3,
+              "name": "teak",
+              "match": "SHAFT|PILLAR_SHAFT|ARCH|CAP_EXT|ENTABLATURE|CEILING|BALUSTRADE|window|TIMBER|eave"
+            }
+          ],
+          "web": {
+            "collide": true,
+            "collide_min_area": 0.04,
+            "sizes": [1024, 3072]
+          }
+        },
+        "near": {
+          "collections": [
+            "TSP_INFERRED_life_props",
+            "TSP_R1_grounds",
+            "TSP_R3_fort_mackenzie_1791"
+          ],
+          "match": "TSP_awning|TSP_basket|TSP_pot|TSP_sack|TSP_lota|TSP_well|TSP_hearth|TSP_tree_platform|TSP_fortR_interior|MW_INT_Courts|MW_INT_Tanks",
+          "clip": true,
+          "target_tris": 20000,
+          "keep_piece_m": 2.5,
+          "atlas": 1024,
+          "states": [
+            "then"
+          ],
+          "web": {
+            "collide": true,
+            "collide_min_area": 0.25,
+            "collide_era": "then"
+          }
+        },
+        "far": {
+          "collections": [
+            "TSP_R3_fort_mackenzie_1791",
+            "PLAY_added"
+          ],
+          "match": "MW_Rampart_(?!MERLONS)|MW_AdditionalRampart|TSP_fortR_towers|TSP_fortR_great|MW_Cavaliers|MW_GateBastions|TSP_fortR_delhi_gate|TSP_fortR_gate_outwork|PLAY_walk",
+          "target_tris": 13000,
+          "detail_floor_tris": 12,
+          "drop_buried": true,
+          "atlas": 1024,
+          "states": [
+            "then"
+          ],
+          "web": {
+            "ring": true
+          }
+        },
+        "fort": {
+          "collections": [
+            "TSP_R3_fort_mackenzie_1791",
+            "PLAY_added"
+          ],
+          "match": "MW_Rampart|MW_AdditionalRampart|TSP_fortR_towers|TSP_fortR_great|MW_Cavaliers|MW_GateBastions|TSP_fortR_gate_outwork|TSP_fortR_interior|MW_INT_Courts|MW_INT_Tanks|PLAY_walk|PLAY_ramp|PLAY_passage_inner",
+          "clip": true,
+          "target_tris": 9000,
+          "atlas": 512,
+          "states": [
+            "then"
+          ],
+          "web": {
+            "collide": true,
+            "collide_min_area": 0.12,
+            "collide_era": "then",
+            "defer": true
+          }
+        }
+      },
+      "ground": {
+        "atlas": 2048,
+        "states": [
+          "then",
+          "now"
+        ],
+        "sources": {
+          "then": [
+            "TSP_court_packed",
+            "TSP_verge_scatter_base",
+            "TSP_fortR_ditch_glacis",
+            "MW_INT_Avenue"
+          ],
+          "now": [
+            "Site_lawn",
+            "Garden_"
+          ]
+        },
+        "grid": 2
+      },
+      "keep": true
+    },
+    "gate": {
+      "bounds": [
+        90,
+        -40,
+        340,
+        135
+      ],
+      "groups": {
+        "fort": {
+          "collections": [
+            "TSP_R3_fort_mackenzie_1791",
+            "PLAY_added"
+          ],
+          "match": "MW_Rampart|MW_AdditionalRampart|TSP_fortR_towers|TSP_fortR_great|MW_Cavaliers|MW_GateBastions|TSP_fortR_gate_outwork|TSP_fortR_interior|MW_INT_Courts|MW_INT_Tanks|PLAY_walk|PLAY_ramp|PLAY_passage_inner",
+          "clip": true,
+          "target_tris": 16000,
+          "atlas": 2048,
+          "states": [
+            "then"
+          ],
+          "web": {
+            "collide": true,
+            "collide_min_area": 0.12,
+            "collide_era": "then"
+          }
+        },
+        "gatehouse": {
+          "collections": [
+            "TSP_R3_fort_mackenzie_1791",
+            "PLAY_added"
+          ],
+          "match": "TSP_fortR_delhi_gate|PLAY_passage_gate",
+          "hi_match": "MW_Rampart|MW_AdditionalRampart|TSP_fortR_towers|TSP_fortR_great|MW_Cavaliers|MW_GateBastions|TSP_fortR_gate_outwork|TSP_fortR_interior|MW_INT_Courts|MW_INT_Tanks|PLAY_walk|PLAY_ramp|PLAY_passage_inner|TSP_fortR_delhi_gate|PLAY_passage_gate",
+          "target_tris": 2600,
+          "atlas": 1024,
+          "states": [
+            "then"
+          ],
+          "web": {
+            "collide": true,
+            "collide_min_area": 0.04,
+            "mode": "both"
+          }
+        },
+        "pettah": {
+          "collections": [
+            "TSP_R3_fort_mackenzie_1791"
+          ],
+          "match": "^Pettah_house",
+          "clip": true,
+          "clip_bounds": [
+            336,
+            -130,
+            640,
+            280
+          ],
+          "target_tris": 3200,
+          "atlas": 512,
+          "states": [
+            "then"
+          ],
+          "web": {
+            "collide": false
+          }
+        }
+      },
+      "ground": {
+        "atlas": 2048,
+        "grid": 2,
+        "states": [
+          "then"
+        ],
+        "sources": {
+          "then": [
+            "TSP_court_packed",
+            "TSP_verge_scatter_base",
+            "TSP_fortR_ditch_glacis",
+            "MW_INT_Avenue",
+            "MW_C2_Route",
+            "PLAY_causeway",
+            "MW_Ditch_WET",
+            "MW_INT_Tanks"
+          ]
+        }
+      }
+    },
+    "northeast": {
+      "bounds": [
+        90,
+        135,
+        340,
+        480
+      ],
+      "groups": {
+        "fort": {
+          "collections": [
+            "TSP_R3_fort_mackenzie_1791",
+            "PLAY_added"
+          ],
+          "match": "MW_Rampart|MW_AdditionalRampart|TSP_fortR_towers|TSP_fortR_great|MW_Cavaliers|MW_GateBastions|TSP_fortR_gate_outwork|TSP_fortR_interior|MW_INT_Courts|MW_INT_Tanks|PLAY_walk|PLAY_ramp|PLAY_passage_inner",
+          "clip": true,
+          "target_tris": 12000,
+          "atlas": 1024,
+          "states": [
+            "then"
+          ],
+          "web": {
+            "collide": true,
+            "collide_min_area": 0.12,
+            "collide_era": "then"
+          }
+        }
+      },
+      "ground": {
+        "atlas": 1024,
+        "grid": 2,
+        "states": [
+          "then"
+        ],
+        "sources": {
+          "then": [
+            "TSP_court_packed",
+            "TSP_verge_scatter_base",
+            "TSP_fortR_ditch_glacis",
+            "MW_INT_Avenue",
+            "MW_C2_Route",
+            "PLAY_causeway",
+            "MW_Ditch_WET",
+            "MW_INT_Tanks"
+          ]
+        }
+      }
+    },
+    "north": {
+      "bounds": [
+        -150,
+        135,
+        90,
+        480
+      ],
+      "groups": {
+        "fort": {
+          "collections": [
+            "TSP_R3_fort_mackenzie_1791",
+            "PLAY_added"
+          ],
+          "match": "MW_Rampart|MW_AdditionalRampart|TSP_fortR_towers|TSP_fortR_great|MW_Cavaliers|MW_GateBastions|TSP_fortR_gate_outwork|TSP_fortR_interior|MW_INT_Courts|MW_INT_Tanks|PLAY_walk|PLAY_ramp|PLAY_passage_inner",
+          "clip": true,
+          "target_tris": 12000,
+          "atlas": 1024,
+          "states": [
+            "then"
+          ],
+          "web": {
+            "collide": true,
+            "collide_min_area": 0.12,
+            "collide_era": "then"
+          }
+        }
+      },
+      "ground": {
+        "atlas": 1024,
+        "grid": 2,
+        "states": [
+          "then"
+        ],
+        "sources": {
+          "then": [
+            "TSP_court_packed",
+            "TSP_verge_scatter_base",
+            "TSP_fortR_ditch_glacis",
+            "MW_INT_Avenue",
+            "MW_C2_Route",
+            "PLAY_causeway",
+            "MW_Ditch_WET",
+            "MW_INT_Tanks"
+          ]
+        }
+      }
+    },
+    "northwest": {
+      "bounds": [
+        -460,
+        135,
+        -150,
+        480
+      ],
+      "groups": {
+        "fort": {
+          "collections": [
+            "TSP_R3_fort_mackenzie_1791",
+            "PLAY_added"
+          ],
+          "match": "MW_Rampart|MW_AdditionalRampart|TSP_fortR_towers|TSP_fortR_great|MW_Cavaliers|MW_GateBastions|TSP_fortR_gate_outwork|TSP_fortR_interior|MW_INT_Courts|MW_INT_Tanks|PLAY_walk|PLAY_ramp|PLAY_passage_inner",
+          "clip": true,
+          "target_tris": 12000,
+          "atlas": 1024,
+          "states": [
+            "then"
+          ],
+          "web": {
+            "collide": true,
+            "collide_min_area": 0.12,
+            "collide_era": "then"
+          }
+        }
+      },
+      "ground": {
+        "atlas": 1024,
+        "grid": 2,
+        "states": [
+          "then"
+        ],
+        "sources": {
+          "then": [
+            "TSP_court_packed",
+            "TSP_verge_scatter_base",
+            "TSP_fortR_ditch_glacis",
+            "MW_INT_Avenue",
+            "MW_C2_Route",
+            "PLAY_causeway",
+            "MW_Ditch_WET",
+            "MW_INT_Tanks"
+          ]
+        }
+      }
+    },
+    "west": {
+      "bounds": [
+        -460,
+        -250,
+        -290,
+        135
+      ],
+      "groups": {
+        "fort": {
+          "collections": [
+            "TSP_R3_fort_mackenzie_1791",
+            "PLAY_added"
+          ],
+          "match": "MW_Rampart|MW_AdditionalRampart|TSP_fortR_towers|TSP_fortR_great|MW_Cavaliers|MW_GateBastions|TSP_fortR_gate_outwork|TSP_fortR_interior|MW_INT_Courts|MW_INT_Tanks|PLAY_walk|PLAY_ramp|PLAY_passage_inner",
+          "clip": true,
+          "target_tris": 10000,
+          "atlas": 1024,
+          "states": [
+            "then"
+          ],
+          "web": {
+            "collide": true,
+            "collide_min_area": 0.12,
+            "collide_era": "then"
+          }
+        }
+      },
+      "ground": {
+        "atlas": 1024,
+        "grid": 2,
+        "states": [
+          "then"
+        ],
+        "sources": {
+          "then": [
+            "TSP_court_packed",
+            "TSP_verge_scatter_base",
+            "TSP_fortR_ditch_glacis",
+            "MW_INT_Avenue",
+            "MW_C2_Route",
+            "PLAY_causeway",
+            "MW_Ditch_WET",
+            "MW_INT_Tanks"
+          ]
+        }
+      }
+    },
+    "south": {
+      "bounds": [
+        -290,
+        -250,
+        90,
+        -80
+      ],
+      "groups": {
+        "fort": {
+          "collections": [
+            "TSP_R3_fort_mackenzie_1791",
+            "PLAY_added"
+          ],
+          "match": "MW_Rampart|MW_AdditionalRampart|TSP_fortR_towers|TSP_fortR_great|MW_Cavaliers|MW_GateBastions|TSP_fortR_gate_outwork|TSP_fortR_interior|MW_INT_Courts|MW_INT_Tanks|PLAY_walk|PLAY_ramp|PLAY_passage_inner",
+          "clip": true,
+          "target_tris": 12000,
+          "atlas": 1024,
+          "states": [
+            "then"
+          ],
+          "web": {
+            "collide": true,
+            "collide_min_area": 0.12,
+            "collide_era": "then"
+          }
+        }
+      },
+      "ground": {
+        "atlas": 1024,
+        "grid": 2,
+        "states": [
+          "then"
+        ],
+        "sources": {
+          "then": [
+            "TSP_court_packed",
+            "TSP_verge_scatter_base",
+            "TSP_fortR_ditch_glacis",
+            "MW_INT_Avenue",
+            "MW_C2_Route",
+            "PLAY_causeway",
+            "MW_Ditch_WET",
+            "MW_INT_Tanks"
+          ]
+        }
+      }
+    },
+    "southeast": {
+      "bounds": [
+        90,
+        -250,
+        340,
+        -40
+      ],
+      "groups": {
+        "fort": {
+          "collections": [
+            "TSP_R3_fort_mackenzie_1791",
+            "PLAY_added"
+          ],
+          "match": "MW_Rampart|MW_AdditionalRampart|TSP_fortR_towers|TSP_fortR_great|MW_Cavaliers|MW_GateBastions|TSP_fortR_gate_outwork|TSP_fortR_interior|MW_INT_Courts|MW_INT_Tanks|PLAY_walk|PLAY_ramp|PLAY_passage_inner",
+          "clip": true,
+          "target_tris": 10000,
+          "atlas": 1024,
+          "states": [
+            "then"
+          ],
+          "web": {
+            "collide": true,
+            "collide_min_area": 0.12,
+            "collide_era": "then"
+          }
+        }
+      },
+      "ground": {
+        "atlas": 1024,
+        "grid": 2,
+        "states": [
+          "then"
+        ],
+        "sources": {
+          "then": [
+            "TSP_court_packed",
+            "TSP_verge_scatter_base",
+            "TSP_fortR_ditch_glacis",
+            "MW_INT_Avenue",
+            "MW_C2_Route",
+            "PLAY_causeway",
+            "MW_Ditch_WET",
+            "MW_INT_Tanks"
+          ]
+        }
+      }
+    }
+  },
+  "actors": [
+    {
+      "id": "player",
+      "kind": "figure",
+      "_note": "The player wears the bearer's clothes (MPFB body, CC0; our own costume), with CC0 Quaternius clips retargeted by retarget_cc0.py. It replaced the bare library mannequin. Strides are measured by pack_actors.mjs.",
+      "src": "E:/heritage_assets/tipu-summer-palace-bengaluru/assets/tsp_town/humans/bearer.glb",
+      "atlas": 1024,
+      "clips": {
+        "idle": "Idle_Loop",
+        "walk": "Walk_Loop",
+        "run": "Jog_Fwd_Loop",
+        "sit": "Sitting_Idle_Loop",
+        "talk": "Idle_Talking_Loop"
+      }
+    },
+    {
+      "id": "bearer",
+      "kind": "figure",
+      "src": "E:/heritage_assets/tipu-summer-palace-bengaluru/assets/tsp_town/humans/bearer.glb",
+      "atlas": 1024
+    },
+    {
+      "id": "mysore_man",
+      "kind": "figure",
+      "src": "E:/heritage_assets/tipu-summer-palace-bengaluru/assets/tsp_town/humans/mysore_man.glb",
+      "atlas": 1024
+    },
+    {
+      "id": "merchant",
+      "kind": "figure",
+      "src": "E:/heritage_assets/tipu-summer-palace-bengaluru/assets/tsp_town/humans/merchant.glb",
+      "atlas": 1024
+    },
+    {
+      "id": "mysore_woman",
+      "kind": "figure",
+      "src": "E:/heritage_assets/tipu-summer-palace-bengaluru/assets/tsp_town/humans/mysore_woman.glb",
+      "atlas": 1024
+    },
+    {
+      "id": "bullock_cart",
+      "kind": "prop",
+      "src": "E:/heritage_assets/hampi/assets/generated/meshy/fig_bullock_cart/fig_bullock_cart.glb",
+      "tris": 7000,
+      "atlas": 512,
+      "error": 0.3
+    },
+    {
+      "id": "horse",
+      "kind": "rigged",
+      "src": "tools/play/out/rides/horse_rigged.glb",
+      "atlas": 1024
+    },
+    {
+      "id": "elephant",
+      "kind": "rigged",
+      "src": "tools/play/out/rides/elephant_rigged.glb",
+      "atlas": 1024
+    }
+  ],
+  "cards": {
+    "tamarind": {
+      "parts": [
+        "tree_small_02_LOD0"
+      ],
+      "anchor": "tree_small_02_LOD0",
+      "reach": 1
+    },
+    "palm": {
+      "parts": [
+        "Tree_palm_wood",
+        "Tree_palm_leaf"
+      ],
+      "anchor": "Tree_palm_wood",
+      "reach": 14
+    }
+  },
+  "play_bounds": [
+    -285,
+    -75,
+    85,
+    130
+  ],
+  "no_ride": [
+    [
+      -25,
+      -5.5,
+      16,
+      28
+    ],
+    [
+      218,
+      74,
+      233,
+      134
+    ]
+  ],
+  "resolve_top": 9,
+  "web_actors": {
+    "player": "player",
+    "ride_zones": {
+      "_note": "Where each animal may go, in Blender metres. allow: the whole footprint must be inside one of these. deny: no part of it may be inside any of these. A ride also obeys no_ride, the map edge, water, walls and steep ground. outside_walls: the line runs just outside the ditch, the gate outwork and every wall. court_and_avenue: the ground outside the palace court's north edge (the court is packed earth to y 26) and the avenue from Mackenzie's survey (object MW_INT_Avenue, half width 6.6 m, plus 0.9 m of verge).",
+      "outside_walls": { "deny": [[[275.7,107.6],[271.5,134.9],[265.0,161.6],[256.2,187.3],[244.3,211.6],[228.8,233.5],[212.4,254.1],[193.8,272.2],[175.5,289.5],[154.5,303.4],[134.2,316.7],[113.0,327.9],[91.7,337.9],[69.8,345.9],[47.6,351.9],[26.0,358.7],[3.7,362.6],[-18.6,367.6],[-41.3,370.6],[-64.5,372.6],[-88.2,373.5],[-112.5,373.2],[-136.7,369.8],[-161.8,365.9],[-186.8,359.6],[-211.7,350.9],[-236.7,340.5],[-260.5,326.8],[-283.4,310.7],[-305.1,292.3],[-324.5,271.1],[-341.3,247.5],[-354.2,221.5],[-363.0,193.8],[-369.3,165.4],[-373.1,136.6],[-374.3,107.6],[-371.1,78.7],[-364.3,50.6],[-353.3,24.0],[-339.2,-0.8],[-323.2,-23.9],[-305.5,-44.9],[-285.4,-63.3],[-265.0,-80.1],[-242.8,-93.9],[-221.3,-106.9],[-199.1,-117.7],[-176.8,-127.1],[-154.2,-134.4],[-131.6,-140.5],[-108.9,-144.5],[-86.5,-148.5],[-64.0,-151.4],[-41.3,-153.4],[-18.4,-154.4],[4.7,-153.4],[28.3,-152.3],[52.1,-149.0],[75.7,-143.5],[99.7,-136.6],[123.3,-127.5],[147.0,-116.9],[168.7,-102.4],[190.8,-87.2],[210.2,-68.5],[228.0,-47.9],[244.2,-25.5],[258.6,-1.6],[268.9,24.5],[275.0,51.8],[278.6,79.6]]] },
+      "court_and_avenue": { "allow": [[[-59.5,62.9],[-269.8,98.8],[-267.3,113.6],[-56.9,77.7]], [[-112,33],[-36,33],[-36,52],[-58,62],[-58,72.5],[-112,82]]] }
+    },
+    "ride_load_m": 75,
+    "rides": {
+      "cart": {
+        "id": "bullock_cart",
+        "length": 5.2,
+        "yaw": 180,
+        "seat": [
+          0,
+          1.45,
+          1.3
+        ],
+        "speed": 3.6,
+        "turn": 0.9
+      },
+      "horse": {
+        "id": "horse",
+        "lazy": true,
+        "yaw": 180,
+        "half": [0.42, 1.0],
+        "top": 2.0,
+        "seat": [0, -0.03, 0],
+        "pose": { "thigh": [0.5, -0.74, 0.46], "shin": [0.14, -0.94, -0.3], "foot": [0.1, -0.45, 0.88] },
+        "zone": "outside_walls",
+        "walk": 2.0,
+        "speed": 7.6,
+        "accel": 2.4,
+        "turn": 1.5,
+        "pivot": 0.55,
+        "sound": "hoof",
+        "cam": { "height": 3.0, "dist": 6.6, "dist_portrait": 8.2 }
+      },
+      "elephant": {
+        "id": "elephant",
+        "lazy": true,
+        "yaw": 180,
+        "half": [0.92, 2.3],
+        "top": 3.0,
+        "seat": [0, 0.06, 0],
+        "pose": { "thigh": [0.82, -0.42, 0.4], "shin": [0.26, -0.88, -0.38], "foot": [0.15, -0.5, 0.85] },
+        "zone": "court_and_avenue",
+        "speed": 1.7,
+        "accel": 1.3,
+        "turn": 0.55,
+        "pivot": 0.6,
+        "sound": "elephant",
+        "cam": { "height": 5.2, "dist": 9.4, "dist_portrait": 11.5 }
+      }
+    }
+  },
+  "people": [
+    {
+      "figure": "merchant",
+      "route": [
+        [
+          -38,
+          -30
+        ],
+        [
+          -20,
+          -44
+        ],
+        [
+          12,
+          -46
+        ],
+        [
+          32,
+          -28
+        ]
+      ]
+    },
+    {
+      "figure": "mysore_woman",
+      "route": [
+        [
+          30,
+          -14
+        ],
+        [
+          34,
+          -34
+        ],
+        [
+          14,
+          -52
+        ],
+        [
+          -8,
+          -50
+        ]
+      ]
+    },
+    {
+      "figure": "mysore_man",
+      "route": [
+        [
+          -44,
+          -6
+        ],
+        [
+          -40,
+          12
+        ],
+        [
+          -34,
+          34
+        ],
+        [
+          -52,
+          58
+        ]
+      ]
+    },
+    {
+      "figure": "bearer",
+      "route": [
+        [
+          -20,
+          -22
+        ],
+        [
+          -2,
+          -26
+        ],
+        [
+          18,
+          -20
+        ]
+      ]
+    },
+    {
+      "figure": "mysore_woman",
+      "route": [
+        [
+          -60,
+          62
+        ],
+        [
+          -90,
+          74
+        ],
+        [
+          -124,
+          84
+        ],
+        [
+          -160,
+          92
+        ]
+      ]
+    },
+    {
+      "figure": "merchant",
+      "route": [
+        [
+          -170,
+          96
+        ],
+        [
+          -130,
+          90
+        ],
+        [
+          -96,
+          80
+        ],
+        [
+          -64,
+          70
+        ]
+      ]
+    },
+    {
+      "figure": "mysore_man",
+      "route": [
+        [
+          26,
+          8
+        ],
+        [
+          32,
+          22
+        ],
+        [
+          26,
+          38
+        ],
+        [
+          6,
+          44
+        ]
+      ]
+    },
+    {
+      "figure": "bearer",
+      "route": [
+        [
+          -12,
+          40
+        ],
+        [
+          -30,
+          46
+        ],
+        [
+          -46,
+          40
+        ]
+      ]
+    },
+    {
+      "figure": "merchant",
+      "route": [
+        [
+          -200,
+          100
+        ],
+        [
+          -150,
+          86
+        ],
+        [
+          -110,
+          78
+        ]
+      ]
+    },
+    {
+      "figure": "mysore_woman",
+      "route": [
+        [
+          40,
+          -48
+        ],
+        [
+          20,
+          -36
+        ],
+        [
+          40,
+          -22
+        ]
+      ]
+    },
+    {
+      "figure": "merchant",
+      "route": [
+        [
+          316,
+          68
+        ],
+        [
+          300,
+          60
+        ],
+        [
+          284,
+          58
+        ],
+        [
+          272,
+          62
+        ]
+      ]
+    },
+    {
+      "figure": "mysore_woman",
+      "route": [
+        [
+          272,
+          62
+        ],
+        [
+          267,
+          71
+        ],
+        [
+          259,
+          78
+        ],
+        [
+          248,
+          77
+        ],
+        [
+          244,
+          69
+        ],
+        [
+          245,
+          61
+        ]
+      ]
+    },
+    {
+      "figure": "mysore_man",
+      "route": [
+        [
+          248,
+          58.2
+        ],
+        [
+          232,
+          61
+        ],
+        [
+          222,
+          62.6
+        ],
+        [
+          212,
+          64.2
+        ],
+        [
+          200,
+          66.2
+        ],
+        [
+          178,
+          70
+        ]
+      ]
+    },
+    {
+      "figure": "bearer",
+      "route": [
+        [
+          198,
+          66
+        ],
+        [
+          150,
+          68
+        ],
+        [
+          115,
+          40
+        ],
+        [
+          86,
+          8
+        ],
+        [
+          64,
+          -6
+        ]
+      ]
+    },
+    {
+      "figure": "merchant",
+      "route": [
+        [
+          150,
+          92
+        ],
+        [
+          172,
+          128
+        ],
+        [
+          160,
+          168
+        ],
+        [
+          132,
+          180
+        ]
+      ]
+    },
+    {
+      "figure": "mysore_woman",
+      "route": [
+        [
+          -122,
+          30
+        ],
+        [
+          -170,
+          18
+        ],
+        [
+          -200,
+          20
+        ],
+        [
+          -248,
+          30
+        ]
+      ]
+    },
+    {
+      "figure": "merchant",
+      "route": [
+        [
+          -204,
+          101
+        ],
+        [
+          -238,
+          106
+        ],
+        [
+          -262,
+          110
+        ]
+      ]
+    },
+    {
+      "figure": "mysore_man",
+      "route": [
+        [
+          -40,
+          -72
+        ],
+        [
+          20,
+          -78
+        ],
+        [
+          70,
+          -62
+        ],
+        [
+          110,
+          -30
+        ]
+      ]
+    },
+    {
+      "figure": "mysore_woman",
+      "route": [
+        [
+          -130,
+          170
+        ],
+        [
+          -110,
+          215
+        ],
+        [
+          -60,
+          250
+        ],
+        [
+          -20,
+          215
+        ]
+      ]
+    },
+    {
+      "figure": "bearer",
+      "route": [
+        [
+          -290,
+          90
+        ],
+        [
+          -285,
+          130
+        ],
+        [
+          -268,
+          165
+        ],
+        [
+          -262,
+          130
+        ]
+      ]
+    },
+    {
+      "figure": "mysore_man",
+      "role": "sentry",
+      "route": [
+        [
+          96.1,
+          283.6,
+          9.14
+        ],
+        [
+          72.5,
+          295.2,
+          9.14
+        ],
+        [
+          50.1,
+          304.2,
+          9.14
+        ],
+        [
+          27.2,
+          311.8,
+          9.14
+        ],
+        [
+          1.6,
+          318.2,
+          9.14
+        ]
+      ],
+      "speed": 0.9
+    },
+    {
+      "figure": "mysore_man",
+      "role": "sentry",
+      "route": [
+        [
+          -87.8,
+          326.1,
+          9.14
+        ],
+        [
+          -114.0,
+          324.1,
+          9.14
+        ],
+        [
+          -140.0,
+          320.2,
+          9.14
+        ],
+        [
+          -165.5,
+          314.1,
+          9.14
+        ],
+        [
+          -192.5,
+          305.1,
+          9.14
+        ]
+      ],
+      "speed": 0.9
+    },
+    {
+      "figure": "mysore_man",
+      "role": "sentry",
+      "route": [
+        [
+          -283.8,
+          244.0,
+          9.14
+        ],
+        [
+          -303.4,
+          218.3,
+          9.14
+        ],
+        [
+          -317.2,
+          191.5,
+          9.14
+        ],
+        [
+          -326.5,
+          160.7,
+          9.14
+        ],
+        [
+          -329.7,
+          128.7,
+          9.14
+        ]
+      ],
+      "speed": 0.9
+    },
+    {
+      "figure": "mysore_man",
+      "role": "sentry",
+      "route": [
+        [
+          -293.4,
+          19.7,
+          9.14
+        ],
+        [
+          -274.5,
+          -4.2,
+          9.14
+        ],
+        [
+          -254.4,
+          -24.2,
+          9.14
+        ],
+        [
+          -232.4,
+          -42.1,
+          9.14
+        ],
+        [
+          -210.6,
+          -56.8,
+          9.14
+        ]
+      ],
+      "speed": 0.9
+    },
+    {
+      "figure": "mysore_man",
+      "role": "sentry",
+      "route": [
+        [
+          -105.3,
+          -99.2,
+          9.14
+        ],
+        [
+          -81.6,
+          -103.7,
+          9.14
+        ],
+        [
+          -57.7,
+          -106.7,
+          9.14
+        ],
+        [
+          -33.6,
+          -108.2,
+          9.14
+        ],
+        [
+          -7.2,
+          -107.8,
+          9.14
+        ]
+      ],
+      "speed": 0.9
+    },
+    {
+      "figure": "mysore_man",
+      "role": "sentry",
+      "route": [
+        [
+          89.0,
+          -88.6,
+          9.14
+        ],
+        [
+          115.1,
+          -77.4,
+          9.14
+        ],
+        [
+          124.8,
+          -74.2,
+          9.14
+        ],
+        [
+          138.7,
+          -66.3,
+          9.14
+        ],
+        [
+          141.6,
+          -62.4,
+          9.14
+        ],
+        [
+          165.9,
+          -44.1,
+          9.14
+        ],
+        [
+          187.3,
+          -22.7,
+          9.14
+        ]
+      ],
+      "speed": 0.9
+    }
+  ],
+  "water": {
+    "_note": "Still water in the tanks, 1791 only. The tanks are key 11 on Mackenzie's sheet (fact W03). Their plan comes from the named objects. Level, rim and colours are ours: no source records them.",
+    "objects": "MW_INT_Tanks",
+    "fact": "W03",
+    "level": -0.5,
+    "rim_top": -0.34,
+    "rim_base": -0.85,
+    "rim_width": 0.6,
+    "keep_out": 0.4,
+    "deep": "#1b2c33",
+    "shallow": "#46564f",
+    "stone": "#a8927a"
+  },
+  "today": {
+    "_note": "Schematic. The palace in its garden, the Delhi Gate, plain city blocks. Street lines are not surveyed.",
+    "roads": [
+      {
+        "id": "gate_road",
+        "width": 16,
+        "points": [
+          [
+            176.6,
+            -396.4
+          ],
+          [
+            331.2,
+            510.7
+          ]
+        ]
+      },
+      {
+        "id": "palace_street",
+        "width": 9,
+        "color": [
+          70,
+          70,
+          71
+        ],
+        "points": [
+          [
+            240,
+            60
+          ],
+          [
+            150,
+            62
+          ],
+          [
+            96,
+            18
+          ],
+          [
+            62,
+            -14
+          ]
+        ]
+      }
+    ],
+    "blocks": {
+      "count": 190,
+      "seed": 11,
+      "inner": 112,
+      "outer": 560,
+      "center": [
+        -4,
+        -15
+      ],
+      "clear": [
+        [
+          -100,
+          -112,
+          92,
+          86
+        ],
+        [
+          218,
+          36,
+          276,
+          84
+        ]
+      ]
+    },
+    "map_marks": [
+      {
+        "id": "delhi_gate",
+        "points": [
+          [
+            240.0,
+            52.1
+          ],
+          [
+            242.5,
+            66.4
+          ],
+          [
+            226.8,
+            69.1
+          ],
+          [
+            224.3,
+            54.7
+          ]
+        ],
+        "color": [
+          176,
+          136,
+          96
+        ]
+      }
+    ]
+  },
+  "bake_no_ray": [
+    "MW_GROUND",
+    "MW_SKY"
+  ],
+  "previous_version": 4,
+  "edits": {
+    "_note": "Game edits, in memory only. Every one is logged in docs/play/DECISIONS.md. The source doors are INFERRED; the opening behind them, the ramp and the causeway fill are ours.",
+    "remove_faces": [
+      {
+        "object": "TSP_fortR_delhi_gate",
+        "material": "TIMBER_TEAK"
+      }
+    ],
+    "passages": [
+      {
+        "id": "gate",
+        "origin": [
+          240.12,
+          59.49
+        ],
+        "inward": [
+          -0.986,
+          0.168
+        ],
+        "from": 2.0,
+        "to": 15.1,
+        "half": 1.8,
+        "spring": 3.3,
+        "apex": 5.2,
+        "material": "TSP_MAT_fort_granite",
+        "cut": [
+          "TSP_fortR_delhi_gate",
+          "MW_Rampart_ESCARP_faced",
+          "MW_Rampart_INNER-FACE_red",
+          "MW_GateBastions"
+        ],
+        "frame": 0.7
+      },
+      {
+        "id": "gate_front",
+        "origin": [
+          240.12,
+          59.49
+        ],
+        "inward": [
+          -0.986,
+          0.168
+        ],
+        "from": -1.7,
+        "to": 2.0,
+        "half": 1.8,
+        "spring": 3.3,
+        "apex": 5.2,
+        "material": "TSP_MAT_fort_granite",
+        "line": false,
+        "cut": [
+          "MW_GateBastions"
+        ]
+      },
+      {
+        "id": "inner",
+        "origin": [
+          240.12,
+          59.49
+        ],
+        "inward": [
+          -0.986,
+          0.168
+        ],
+        "from": 25.3,
+        "to": 34.0,
+        "half": 1.8,
+        "spring": 3.0,
+        "apex": 4.7,
+        "material": "TSP_MAT_fort_granite",
+        "cut": [
+          "MW_AdditionalRampart_20ft",
+          "MW_AdditionalRampart_INNER"
+        ]
+      }
+    ],
+    "walk_strips": [
+      {
+        "id": "rampart",
+        "outer": "MW_Rampart_ESCARP_EXTENDS",
+        "inner": "MW_Rampart_INNER-FACE_EXTENDS",
+        "z": 9.14,
+        "material": "TSP_MAT_earth_laterite"
+      }
+    ],
+    "ramps": [
+      {
+        "id": "gate_north",
+        "along": "MW_Rampart_INNER-FACE_EXTENDS",
+        "wall_z": 9.14,
+        "from": [
+          228.0,
+          76.0
+        ],
+        "to": [
+          212.0,
+          128.0
+        ],
+        "width": 4.0,
+        "z0": -0.7,
+        "z1": 9.14,
+        "material": "TSP_MAT_earth_laterite"
+      }
+    ],
+    "causeways": [
+      {
+        "id": "delhi",
+        "route": "MW_C2_Route__",
+        "half": 3.6,
+        "shoulder": 9.0,
+        "foot": -5.0,
+        "material": "TSP_MAT_earth_laterite"
+      }
+    ],
+    "keep_inside": [
+      {
+        "object": "TSP_verge_scatter_base",
+        "wall": "MW_AdditionalRampart_INNER",
+        "wall_z": 5.4
+      }
+    ]
+  },
+  "terrain": {
+    "bounds": [
+      -460,
+      -250,
+      680,
+      480
+    ],
+    "step": 1.0,
+    "sources": "TSP_fortR_ditch_glacis|TSP_court_packed|TSP_verge_scatter|PLAY_causeway",
+    "min_walk_y": -1.7,
+    "grid": 2.0,
+    "limit": {
+      "around": "MW_Rampart_ESCARP_faced",
+      "offset": 85,
+      "points": 48
+    },
+    "base_px": 1280
+  },
+  "ground_detail": {
+    "_note": "Grain from Poly Haven's Red Laterite Soil Stones (CC0), see the LICENSE beside it. Two metres a repeat, the texture's own scale.",
+    "src": "tools/play/assets/cc0/ground_detail/laterite_grain_512.png",
+    "tile_m": 2,
+    "px": 160,
+    "quality": 70
+  },
+  "start_cell": "court"
+}

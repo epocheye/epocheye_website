@@ -1,0 +1,14 @@
+# Open world, Phase 0 report (2026-11-22)
+
+1. **The world.** `TSP_period_world.blend` is 320 MB with 7,068 objects, and renders 226 million triangles once scatter is expanded. It spans about 1.46 km by 1.81 km.
+2. **Where the triangles are.** Ground scatter (grass and boulders) 187.5M, trees 35.2M, people 1.6M, fort 1.08M, palace 0.44M, props 0.06M. The buildings are small; the scatter is what must be replaced.
+3. **What is in it.** Fort circuit, 26 towers, Delhi Gate, ditch, avenue, palace, 4 bullock carts, 12 standing people, 6 rigged walkers. No animals: the world's own log says none were modelled.
+4. **Export plan.** `tools/play/export_world.py` runs Blender headless and read only. It keeps real geometry for the palace and fort, swaps scatter for instanced low-poly cards, merges by material per cell, bakes light into vertex colours first (lightmaps only where those look poor), builds collision, compresses with meshopt and KTX2, and writes `world.json`.
+5. **People and animals.** People come from the owner's rigged period figures (66k triangles each, cut to about 3k). Horse, elephant and bullock come from the owner's static Meshy models in the Hampi folder, given a simple rig and few moves. The player is the CC0 Quaternius mannequin, recoloured as a restorer.
+6. **Licences.** Quaternius animation library: CC0. Rapier: Apache-2.0, its React bindings MIT. Anton display font: OFL. Poly Haven textures: CC0.
+7. **Licence still to confirm.** Meshy rights follow the plan active when each model was made: private if paid, CC BY 4.0 if free. The ledger shows a 1,000 credit balance but not the plan name, so `CREDITS.md` credits Meshy, which satisfies both cases. I did not read clause 2.4 of Meshy's terms.
+8. **Device budget.** First playable under 8 MB: code about 1.5 MB (Rapier is 0.76 MB gzipped), court and avenue about 4.5 MB, player and people about 1.5 MB. Whole world under 40 MB. Low preset targets 120k triangles on screen with no real-time shadow; High targets 500k with one sun shadow.
+9. **Left out on purpose.** The 80 tower guns are not exported, because the brief bars weapons. Moment B in the joined-story file, the night the fort fell, is never built. `palace_SIEGE_1791.blend` is never opened. Its first-person closing line is not used either, because it puts invented words in a real person's mouth.
+10. **What I would cut first if budgets slip.** Real-time shadows, then grass cards, then fort interior buildings to plain massing, then the number of walking people, then texture size. The palace and the era shift are cut last.
+
+**Limits I can already see.** I have no real phone, so frame rate and load time on a mid-range Android will be emulated until someone runs them on a device. I also cannot make the phone and PC screen recordings a real device would give, so GATE 1 will carry headless recordings, labelled as such.
