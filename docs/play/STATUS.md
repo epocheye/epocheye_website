@@ -1,5 +1,80 @@
 # Epocheye Play: status
 
+## Open world: WAITING at GATE 3 (2026-11-25)
+
+**WAITING: the owner merges `feat/open-world` into `main`.** Nothing about the open world is on production. Live `/play` is unchanged.
+
+**Preview (needs your Vercel sign-in):** https://epocheye-website-git-feat-open-world-sambit-singhas-projects.vercel.app/play/tipu-summer-palace-bengaluru/world
+
+### What is done
+
+- All six missions play from the title screen to the end, on PC and phone settings, with the era shift between today, 1791 and 1831.
+- The bullock cart, horse and elephant can be ridden. In every test drive they kept 0.5 m from people and stayed out of the palace.
+- Walk and run work with keyboard and mouse, touch and a gamepad. There is a minimap, waypoints, quality presets, credits and a local save.
+- Role figures speak in Kokoro voices. Real people do not speak; their records are objects to find.
+- **Your feedback after playing (2026-11-24), fixed in commit `1f3c10b`.**
+  - The title screen now says who you are, what the Epocheye does and what your job is.
+  - Every mission opens with a "Your job" card.
+  - Every step shows what to do, why, and "Step n of N".
+  - A story only starts when you choose "Hear what happened here", and you can skip it.
+  - "Wake the Epocheye" is now explained by a card, then a "Go back to 1791" button.
+- **The palace look, fixed in commit `8b205cf` (world v4).**
+  - Walls no longer bake black. Small details no longer collapse into black shards.
+  - The palace texture is about 4 times sharper on PC.
+  - Colour is now converted the same way Blender's own view converts it.
+  - The ground is clean laterite, without purple blotches.
+  - The player wears our own clothes instead of the grey mannequin.
+  - Before and after pictures, with the old version on the left: `scratchpad/bake2/final/compare_*.jpg` in the session folder.
+
+### Measured (headless Chrome on this PC)
+
+| | Target | Result |
+|---|---|---|
+| Missions 0 to 5, PC settings | all finish | all finish, 0 stuck, 59.9 fps |
+| Missions 0 to 5, phone settings (emulated) | all finish | all finish, 0 stuck, 58.7 fps |
+| Rides and route checks | 0 failed | 0 failed (one elephant run failed once, then passed twice) |
+| First playable size, phone preset, production build | under 8 MB | 4.30 MB |
+| First playable time, slow 4G | under 8 s | **about 24 s at the last measurement, misses** |
+| Whole world | under 40 MB | 14.97 MB |
+| `npm run lint` | 0 errors | 0 errors |
+
+### Cut by your word, not built
+
+On 2026-11-24 you said: "Let's finish it quickly. We can build it later also. Just finish it quickly. Don't have to build any other new things." So these were not built:
+- the full-screen map and fast travel
+- side activities and photo mode
+- the app question, the browser install and the email list
+- the load-time work, so the 8 s target on slow 4G is still missed
+- the automatic fall back to Story view at `/play/<slug>`; the open world stays at `/play/<slug>/world`
+- a walkable palace interior; the rooms use the Story view panoramas
+- licensed music
+
+### Not tested
+
+- A real phone, a real gamepad, or a live database.
+- Nobody has listened to the voice clips.
+- Admin sign-in with a real password. The fix that stops `/admin/login` redirecting to itself is live on `main`.
+
+### Still weak
+
+- On phones the palace is softer than on PC, and the phone download has no room to spare (4.30 MB against the 4.3 MB we set for ourselves).
+- Today's ground is blurry close up. Some arch tips still show dark jagged bits.
+- `?debug=1` still sends the share card write.
+- The voice row in `CREDITS.md` miscounts the clips.
+- In Mission 4, the place notes appear before the era shift and cover the screen on a phone.
+
+### Decisions I need from you
+
+1. **GATE 3:** merge `feat/open-world` into `main`, or tell me what to change.
+2. **Mission 2:** keep the compare with Hunter's watercolour without a lock, or build the north front so his sketch can match.
+3. **Story lines:** whether `c3-01`, `c4-o2` and `p-02` are acceptable as they stand.
+4. **Meshy plan:** which plan made the cart, horse and elephant. See `CREDITS.md`.
+5. **Gilding tile:** where it came from.
+6. **Display font:** buy the game licence, or stay with Anton (OFL).
+7. **GPU check:** `tools/play/export_world.py` now ignores the card's load while the card is idle (P8 or lower and under 20% power). Before, a browser's 30% load blocked every bake. Keep this change, or revert it.
+
+---
+
 ## Open world: Phase 2 in progress (2026-11-22)
 
 GATE 1 was answered: "Yes, start Phase 2". Phase 1 is on `feat/open-world`. Nothing is merged and live `/play` is unchanged. The notes below describe the state at GATE 1.
