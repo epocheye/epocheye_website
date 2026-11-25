@@ -1,8 +1,8 @@
 # Epocheye Play: status
 
-## Open world: WAITING at GATE 3 (2026-11-25)
+## Open world: merged and live (2026-11-25)
 
-**WAITING: the owner merges `feat/open-world` into `main`.** Nothing about the open world is on production. Live `/play` is unchanged.
+GATE 3 was answered on 2026-11-25: "Merge it". `feat/open-world` is merged into `main` (merge commit `daeb6a5`) and the open world is live at https://www.epocheye.com/play/tipu-summer-palace-bengaluru/world. `/play/<slug>` still opens Story view.
 
 **Preview (needs your Vercel sign-in):** https://epocheye-website-git-feat-open-world-sambit-singhas-projects.vercel.app/play/tipu-summer-palace-bengaluru/world
 
